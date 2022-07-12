@@ -5,13 +5,16 @@ import {NetworkComponent} from "./tabs/network/network.component";
 import {MissionsComponent} from "./tabs/missions/missions.component";
 import {ModsComponent} from "./tabs/mods/mods.component";
 import {LoggingComponent} from "./tabs/logging/logging.component";
+import {LoginComponent} from "./login/login.component";
+import {AuthService} from "./service/auth.service";
 
 const routes: Routes = [
-  {path: 'general', component: GeneralComponent},
-  {path: 'network', component: NetworkComponent},
-  {path: 'missions', component: MissionsComponent},
-  {path: 'mods', component: ModsComponent},
-  {path: 'logging', component: LoggingComponent}
+  {path: 'general', component: GeneralComponent, canActivate: [AuthService]},
+  {path: 'network', component: NetworkComponent, canActivate: [AuthService]},
+  {path: 'missions', component: MissionsComponent, canActivate: [AuthService]},
+  {path: 'mods', component: ModsComponent, canActivate: [AuthService]},
+  {path: 'logging', component: LoggingComponent, canActivate: [AuthService]},
+  {path: 'login', component: LoginComponent}
 ];
 
 @NgModule({

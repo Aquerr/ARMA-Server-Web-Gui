@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
+
 @Component
 public class JwtServerAuthenticationConverter implements ServerAuthenticationConverter
 {
@@ -14,9 +16,13 @@ public class JwtServerAuthenticationConverter implements ServerAuthenticationCon
     public Mono<Authentication> convert(ServerWebExchange exchange)
     {
         return Mono.justOrEmpty(exchange)
-                .flatMap(serverWebExchange -> Mono.justOrEmpty(serverWebExchange.getRequest().getCookies().getFirst("X-Auth")))
-                .filter(httpCookie -> httpCookie != null)
-                .map(httpCookie -> httpCookie.getValue())
+                .flatMap(serverWebExchange -> Mono.justOrEmpty(serverWebExchange.getRequest().getHeaders().getFirst("auth-token")))
+                .filter(Objects::nonNull)
                 .map(jwt -> new UsernamePasswordAuthenticationToken(jwt, jwt));
+//        return Mono.justOrEmpty(exchange)
+//                .flatMap(serverWebExchange -> Mono.justOrEmpty(serverWebExchange.getRequest().getCookies().getFirst("auth-token")))
+//                .filter(httpCookie -> httpCookie != null)
+//                .map(httpCookie -> httpCookie.getValue())
+//                .map(jwt -> new UsernamePasswordAuthenticationToken(jwt, jwt));
     }
 }

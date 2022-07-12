@@ -2,15 +2,9 @@ package pl.bartlomiejstepien.armaserverwebgui.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.bartlomiejstepien.armaserverwebgui.model.UserProfile;
 import pl.bartlomiejstepien.armaserverwebgui.service.UserService;
 import reactor.core.publisher.Mono;
@@ -25,20 +19,21 @@ public class AuthRestController
     private final UserService userService;
 
     @PostMapping
-    public Mono<ResponseEntity<Void>> authenticate(@RequestBody UserCredentials userCredentials)
+    public Mono<ResponseEntity<JwtTokenResponse>> authenticate(@RequestBody UserCredentials userCredentials)
     {
         return Mono.justOrEmpty(userService.authenticate(userCredentials.getUsername(), userCredentials.getPassword()))
                 .map(jwt -> {
-                    ResponseCookie authCookie = ResponseCookie.fromClientResponse("X-Auth", jwt)
-                            .maxAge(3600)
-                            .httpOnly(true)
-                            .path("/")
-                            .secure(false)
-                            .build();
+//                    ResponseCookie authCookie = ResponseCookie.fromClientResponse("auth-token", jwt)
+//                            .maxAge(3600)
+//                            .httpOnly(true)
+//                            .path("/")
+//                            .secure(false)
+//                            .build();
 
-                    return ResponseEntity.noContent()
-                            .header(HttpHeaders.SET_COOKIE, authCookie.toString())
-                            .<Void>build();
+                    return ResponseEntity.ok()
+                            .body(JwtTokenResponse.of(jwt));
+//                            .header(HttpHeaders.SET_COOKIE, authCookie.toString())
+//                            .<String>build();
                 })
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
     }
@@ -56,5 +51,11 @@ public class AuthRestController
     {
         String username;
         String password;
+    }
+
+    @Value(staticConstructor = "of")
+    private static class JwtTokenResponse
+    {
+        String value;
     }
 }

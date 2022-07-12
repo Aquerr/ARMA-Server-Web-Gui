@@ -1,1 +1,19 @@
-<p>login works!</p>
+<div>
+  <h1 style="margin-left: 5px;">Login in</h1>
+  <div>
+    <div class="login-form" [formGroup]="form">
+      <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input name="username" formControlName="username" matInput type="text">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input name="password" formControlName="password" matInput [type]="'password'">
+      </mat-form-field>
+    </div>
+    <p style="color:red;" *ngIf="errorMessage">{{errorMessage}}</p>
+  </div>
+  <div>
+    <button mat-flat-button color="primary" (click)="login()">Log in</button>
+  </div>
+</div>
