@@ -13,6 +13,10 @@ import { SideMenuComponent } from './side-menu/side-menu.component';
 import { LoginComponent } from './login/login.component';
 import {RouterModule} from "@angular/router";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatListModule} from "@angular/material/list";
+import {MatRippleModule} from "@angular/material/core";
+import { AswgSpinnerComponent } from './aswg-spinner/aswg-spinner.component';
+import {NgxSpinnerModule} from "ngx-spinner";
 
 @NgModule({
   declarations: [
@@ -24,13 +28,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MissionsComponent,
     LoggingComponent,
     SideMenuComponent,
-    LoginComponent
+    LoginComponent,
+    AswgSpinnerComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     RouterModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatListModule,
+    MatRippleModule,
+    NgxSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
