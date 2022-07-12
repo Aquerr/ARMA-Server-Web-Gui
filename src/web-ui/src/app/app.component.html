@@ -1,13 +1,17 @@
-<div class="container-fluid">
-  <div>
-    <app-header></app-header>
-  </div>
+<div class="container mt-4">
+  <app-header class="row mb-4"></app-header>
   <div class="row">
-    <div class="col-sm-3">
+    <div class="col-sm-2">
       <app-side-menu></app-side-menu>
     </div>
-    <div class="col-md-9">
+    <div class="col page-content">
       <router-outlet></router-outlet>
     </div>
   </div>
+  <hr>
+  <footer>
+    <div class="float-end">
+      &copy; ASWG 2022
+    </div>
+  </footer>
 </div>

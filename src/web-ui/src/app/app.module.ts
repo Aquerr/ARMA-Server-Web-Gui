@@ -11,6 +11,8 @@ import { MissionsComponent } from './tabs/missions/missions.component';
 import { LoggingComponent } from './tabs/logging/logging.component';
 import { SideMenuComponent } from './side-menu/side-menu.component';
 import { LoginComponent } from './login/login.component';
+import {RouterModule} from "@angular/router";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { LoginComponent } from './login/login.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    RouterModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
