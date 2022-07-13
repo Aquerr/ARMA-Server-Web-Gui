@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.config.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -39,6 +40,7 @@ public class SecurityConfig
             .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .formLogin().disable()
             .httpBasic().disable()
+        .cors().and()
         .csrf().disable();
         return http.build();
     }
@@ -49,12 +51,12 @@ public class SecurityConfig
         return authentication -> {
             return Mono.just(authentication)
                     .map(authentication1 -> jwtService.validateJwt(String.valueOf(authentication1.getCredentials())))
-                    .onErrorResume((exception) -> Mono.empty())
-                    .map(jws -> {
+                    .onErrorResume(Exception.class, err -> Mono.error(new BadCredentialsException("Bad auth token!")))
+                    .mapNotNull(jws -> {
                         return new UsernamePasswordAuthenticationToken(
                                 jws.getBody().getSubject(),
                                 String.valueOf(authentication.getCredentials()),
-                                List.of(new SimpleGrantedAuthority("USER")));
+                                List.of(new SimpleGrantedAuthority("USER"))); // Needed to make user authenticated!
                     });
         };
     }

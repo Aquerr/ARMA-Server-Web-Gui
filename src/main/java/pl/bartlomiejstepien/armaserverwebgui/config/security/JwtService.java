@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -13,6 +14,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 @Service
+@Slf4j
 public class JwtService
 {
     //TODO: Move to application.properties
@@ -41,8 +43,8 @@ public class JwtService
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
-            return null;
+            log.error(exception.getMessage());
+            throw exception;
         }
     }
 }

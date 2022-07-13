@@ -14,9 +14,9 @@ export class GeneralComponent implements OnInit {
 
   ngOnInit(): void {
     this.maskService.show();
-    setTimeout(() => {this.maskService.hide()}, 4000);
-
-
-    this.serverGeneralService.home();
+    this.serverGeneralService.home().subscribe(response => {
+      console.log(response);
+      this.maskService.hide();
+    });
   }
 }

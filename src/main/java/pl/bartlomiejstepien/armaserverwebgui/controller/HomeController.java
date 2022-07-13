@@ -11,6 +11,6 @@ public class HomeController
     @GetMapping
     public String home()
     {
-        return "Siema!";
+        return "{\"value\": \"HOME!\"}";
     }
 }
