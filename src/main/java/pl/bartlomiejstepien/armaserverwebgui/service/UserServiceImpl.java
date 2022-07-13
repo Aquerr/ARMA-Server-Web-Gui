@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.service;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
+import pl.bartlomiejstepien.armaserverwebgui.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.config.security.JwtService;
 import pl.bartlomiejstepien.armaserverwebgui.model.AppUser;
 import pl.bartlomiejstepien.armaserverwebgui.model.UserProfile;
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService
 {
+    private final ASWGConfig aswgConfig;
     private final JwtService jwtService;
 
     @Override
@@ -46,7 +48,7 @@ public class UserServiceImpl implements UserService
     private List<AppUser> getUsers()
     {
         return List.of(
-                new AppUser("test", "test", List.of("USER"), OffsetDateTime.now())
+                new AppUser(this.aswgConfig.getUsername(), this.aswgConfig.getPassword(), List.of("USER"), OffsetDateTime.now())
         );
     }
 }

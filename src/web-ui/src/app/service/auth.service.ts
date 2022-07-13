@@ -16,7 +16,7 @@ export class AuthService implements CanActivate {
   }
 
   authenticate(username: string, password: string): Observable<any> {
-    return this.httpClient.post<JwtTokenResponse>(API_BASE_URL + '/api/v1/auth', {username, password},
+    return this.httpClient.post<JwtTokenResponse>(API_BASE_URL + '/auth', {username, password},
       {
         observe: "response"
       })

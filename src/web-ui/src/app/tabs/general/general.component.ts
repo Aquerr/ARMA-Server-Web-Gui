@@ -9,13 +9,22 @@ import {ServerGeneralService} from "../../service/server-general.service";
 })
 export class GeneralComponent implements OnInit {
 
+  serverDirectory: string = "";
+
   constructor(private maskService: MaskService,
               private serverGeneralService: ServerGeneralService) { }
 
   ngOnInit(): void {
     this.maskService.show();
-    this.serverGeneralService.home().subscribe(response => {
-      console.log(response);
+    this.serverGeneralService.getServerDirectory().subscribe(response => {
+      this.serverDirectory = response.path;
+      this.maskService.hide();
+    });
+  }
+
+  save() {
+    this.maskService.show();
+    this.serverGeneralService.saveServerDirectory(this.serverDirectory).subscribe(response => {
       this.maskService.hide();
     });
   }

@@ -23,17 +23,8 @@ public class AuthRestController
     {
         return Mono.justOrEmpty(userService.authenticate(userCredentials.getUsername(), userCredentials.getPassword()))
                 .map(jwt -> {
-//                    ResponseCookie authCookie = ResponseCookie.fromClientResponse("auth-token", jwt)
-//                            .maxAge(3600)
-//                            .httpOnly(true)
-//                            .path("/")
-//                            .secure(false)
-//                            .build();
-
                     return ResponseEntity.ok()
                             .body(JwtTokenResponse.of(jwt));
-//                            .header(HttpHeaders.SET_COOKIE, authCookie.toString())
-//                            .<String>build();
                 })
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
     }
