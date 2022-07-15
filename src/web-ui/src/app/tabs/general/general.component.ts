@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {MaskService} from "../../service/mask.service";
 import {ServerGeneralService} from "../../service/server-general.service";
+import {NotificationService} from "../../service/notification.service";
 
 @Component({
   selector: 'app-general',
@@ -12,7 +13,8 @@ export class GeneralComponent implements OnInit {
   serverDirectory: string = "";
 
   constructor(private maskService: MaskService,
-              private serverGeneralService: ServerGeneralService) { }
+              private serverGeneralService: ServerGeneralService,
+              private notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.maskService.show();
@@ -26,6 +28,7 @@ export class GeneralComponent implements OnInit {
     this.maskService.show();
     this.serverGeneralService.saveServerDirectory(this.serverDirectory).subscribe(response => {
       this.maskService.hide();
+      this.notificationService.successNotification('Server directory has been updated!');
     });
   }
 }

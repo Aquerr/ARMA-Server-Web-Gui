@@ -23,6 +23,7 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/ngx-toastr/toastr.css",
               "node_modules/ngx-spinner/animations/ball-clip-rotate-multiple.css",
               "node_modules/ngx-spinner/animations/cog.css",
               "src/custom-theme.scss",
