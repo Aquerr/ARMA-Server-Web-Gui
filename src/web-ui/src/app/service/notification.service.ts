@@ -18,21 +18,21 @@ export class NotificationService {
   }
 
   errorNotification(message?: string, title?: string) {
-    this.toastrService.success(message, title, {
+    this.toastrService.error(message, title, {
       timeOut: this.notificationDurationInSeconds * 1000,
       positionClass: 'toast-top-right'
     });
   }
 
   warningNotification(message?: string, title?: string) {
-    this.toastrService.success(message, title, {
+    this.toastrService.warning(message, title, {
       timeOut: this.notificationDurationInSeconds * 1000,
       positionClass: 'toast-top-right'
     });
   }
 
   infoNotification(message?: string, title?: string) {
-    this.toastrService.success(message, title, {
+    this.toastrService.info(message, title, {
       timeOut: this.notificationDurationInSeconds * 1000,
       positionClass: 'toast-top-right'
     });

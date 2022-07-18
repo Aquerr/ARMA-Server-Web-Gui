@@ -26,7 +26,7 @@ class GeneralControllerTest
     @WithMockUser
     void getServerDirectoryShouldReturnServerDirectoryFromASWGConfig()
     {
-        given(aswgConfig.getServerDirectory()).willReturn("fake/fakeServerDirectory");
+        given(aswgConfig.getServerDirectoryPath()).willReturn("fake/fakeServerDirectory");
 
         webTestClient.get()
                 .uri("/api/v1/general/server-directory")
@@ -61,7 +61,7 @@ class GeneralControllerTest
                 .expectStatus()
                 .isOk();
 
-        verify(aswgConfig).setServerDirectory("fake/fakeServerDirectory");
+        verify(aswgConfig).setServerDirectoryPath("fake/fakeServerDirectory");
     }
 
     @Test

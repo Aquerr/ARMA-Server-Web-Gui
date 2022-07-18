@@ -19,14 +19,14 @@ public class GeneralController
     @GetMapping("/server-directory")
     public Mono<ServerDirectoryResponse> getServerDirectory()
     {
-        return Mono.just(aswgConfig.getServerDirectory())
+        return Mono.just(aswgConfig.getServerDirectoryPath())
                 .map(ServerDirectoryResponse::of);
     }
 
     @PostMapping("/server-directory")
     public Mono<ResponseEntity<Void>> updateServerDirectory(@RequestBody UpdateServerDirectoryRequest updateServerDirectoryRequest)
     {
-        this.aswgConfig.setServerDirectory(updateServerDirectoryRequest.getPath());
+        this.aswgConfig.setServerDirectoryPath(updateServerDirectoryRequest.getPath());
         return Mono.just(ResponseEntity.ok().build());
     }
 

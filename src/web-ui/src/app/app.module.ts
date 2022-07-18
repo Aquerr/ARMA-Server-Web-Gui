@@ -24,6 +24,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {ToastrModule} from "ngx-toastr";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import {ToastrModule} from "ngx-toastr";
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatIconModule,
     NgxSpinnerModule,
     HttpClientModule,
     ReactiveFormsModule,
