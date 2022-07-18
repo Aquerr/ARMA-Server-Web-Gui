@@ -19,6 +19,7 @@ public class ASWGConfig
     private static final String SERVER_DIRECTORY_PATH_PROPERTY = "server-directory-path";
     private static final String USERNAME_PROPERTY = "username";
     private static final String PASSWORD_PROPERTY = "password";
+    private static final String SERVER_COMMAND_LINE_PARAMETERS_PROPERTY = "server-command-line-parameters";
 
     private Properties configurationProperties = new Properties();
 
@@ -39,6 +40,7 @@ public class ASWGConfig
             configurationProperties.setProperty(SERVER_DIRECTORY_PATH_PROPERTY, "");
             configurationProperties.setProperty(USERNAME_PROPERTY, "user");
             configurationProperties.setProperty(PASSWORD_PROPERTY, "changeme");
+            configurationProperties.setProperty(SERVER_COMMAND_LINE_PARAMETERS_PROPERTY, "");
 
             saveProperties();
         }
@@ -73,6 +75,11 @@ public class ASWGConfig
     {
         this.configurationProperties.setProperty(SERVER_DIRECTORY_PATH_PROPERTY, path);
         saveProperties();
+    }
+
+    public String getServerCommandLineParameters()
+    {
+        return this.configurationProperties.getProperty(SERVER_COMMAND_LINE_PARAMETERS_PROPERTY, "");
     }
 
     private void saveProperties()
