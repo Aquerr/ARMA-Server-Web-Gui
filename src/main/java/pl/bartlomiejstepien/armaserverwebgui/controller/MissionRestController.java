@@ -46,6 +46,13 @@ public class MissionRestController
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
+    @DeleteMapping(value = "/{missionName}", consumes = MediaType.ALL_VALUE)
+    public Mono<ResponseEntity<?>> deleteMission(@PathVariable("missionName") String missionName)
+    {
+        return Mono.just(this.missionService.deleteMission(missionName))
+                .thenReturn(ResponseEntity.ok().build());
+    }
+
     @ExceptionHandler(value = MissionFileAlreadyExistsException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorResponse onMissionFileAlreadyExistsException(MissionFileAlreadyExistsException exception)

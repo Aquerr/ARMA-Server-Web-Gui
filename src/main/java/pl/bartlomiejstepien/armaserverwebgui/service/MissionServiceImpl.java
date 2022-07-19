@@ -37,4 +37,10 @@ public class MissionServiceImpl implements MissionService
     {
         return this.missionStorage.getInstalledMissionNames();
     }
+
+    @Override
+    public boolean deleteMission(String missionName)
+    {
+        return this.missionStorage.deleteMission(missionName);
+    }
 }

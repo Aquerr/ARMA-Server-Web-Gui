@@ -22,6 +22,10 @@ export class ServerMissionsService {
   getInstalledMissions(): Observable<GetInstalledMissionsResponse> {
     return this.httpClient.get<GetInstalledMissionsResponse>(this.MISSIONS_URL);
   }
+
+  deleteMission(missionName: string): Observable<any> {
+    return this.httpClient.delete(`${this.MISSIONS_URL}/` + missionName, {body: {}});
+  }
 }
 
 export interface GetInstalledMissionsResponse {

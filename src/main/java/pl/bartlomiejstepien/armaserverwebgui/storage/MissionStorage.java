@@ -13,4 +13,6 @@ public interface MissionStorage
     boolean doesMissionExists(String filename);
 
     List<String> getInstalledMissionNames();
+
+    boolean deleteMission(String missionName);
 }

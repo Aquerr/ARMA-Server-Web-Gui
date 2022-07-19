@@ -1,7 +1,9 @@
-<div>
+<div appDragAndDropFile (fileDropped)="onFileDropped($event)">
   <h1>Missions</h1>
-  <div>
-    <app-list-missions></app-list-missions>
+  <div class="app-list-missions">
+    <app-list-missions [reloadMissionsDataSubject]="reloadMissionsDataSubject"></app-list-missions>
   </div>
-  <app-upload-mission></app-upload-mission>
+  <div class="app-upload-mission">
+    <app-upload-mission #uploadMission (missionUploaded)="onMissionUploaded()"></app-upload-mission>
+  </div>
 </div>

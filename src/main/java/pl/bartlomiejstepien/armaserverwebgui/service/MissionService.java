@@ -10,4 +10,6 @@ public interface MissionService
     Mono<Void> save(FilePart multipartFile);
 
     List<String> getInstalledMissionNames();
+
+    boolean deleteMission(String missionName);
 }

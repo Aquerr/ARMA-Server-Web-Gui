@@ -27,6 +27,9 @@ import {ToastrModule} from "ngx-toastr";
 import {MatIconModule} from "@angular/material/icon";
 import { UploadMissionComponent } from './tabs/missions/upload-mission/upload-mission.component';
 import { ListMissionsComponent } from './tabs/missions/list-missions/list-missions.component';
+import { DragAndDropFileDirective } from './directive/drag-and-drop-file.directive';
+import {MatTableModule} from "@angular/material/table";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -41,7 +44,8 @@ import { ListMissionsComponent } from './tabs/missions/list-missions/list-missio
     LoginComponent,
     AswgSpinnerComponent,
     UploadMissionComponent,
-    ListMissionsComponent
+    ListMissionsComponent,
+    DragAndDropFileDirective
   ],
   imports: [
     BrowserModule,
@@ -54,6 +58,8 @@ import { ListMissionsComponent } from './tabs/missions/list-missions/list-missio
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatTableModule,
+    MatCheckboxModule,
     NgxSpinnerModule,
     HttpClientModule,
     ReactiveFormsModule,

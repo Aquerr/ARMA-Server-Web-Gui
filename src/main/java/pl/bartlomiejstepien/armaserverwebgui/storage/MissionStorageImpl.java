@@ -51,4 +51,22 @@ public class MissionStorageImpl implements MissionStorage
                         .map(File::getName).collect(Collectors.toList()))
                 .orElse(Collections.emptyList());
     }
+
+    @Override
+    public boolean deleteMission(String missionName)
+    {
+        final File[] files = this.missionsDirectory.toFile().listFiles();
+        if (files != null)
+        {
+            for (final File file : files)
+            {
+                if (file.getName().equals(missionName))
+                {
+                    return file.delete();
+                }
+            }
+        }
+
+        return false;
+    }
 }

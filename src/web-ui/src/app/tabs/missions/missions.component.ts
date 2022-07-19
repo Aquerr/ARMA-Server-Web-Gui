@@ -1,4 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {UploadMissionComponent} from "./upload-mission/upload-mission.component";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-missions',
@@ -7,9 +9,22 @@ import {Component, OnInit} from '@angular/core';
 })
 export class MissionsComponent implements OnInit {
 
-  constructor() { }
+  @ViewChild('uploadMission') uploadMissionComponent!: UploadMissionComponent;
 
-  ngOnInit(): void {
+  reloadMissionsDataSubject: Subject<any>
 
+  constructor() {
+    this.reloadMissionsDataSubject = new Subject();
+  }
+
+  ngOnInit(): void {}
+
+  onFileDropped(file: File) {
+    console.log('GOT FILE! ' + file);
+    this.uploadMissionComponent.uploadFile(file);
+  }
+
+  onMissionUploaded() {
+    this.reloadMissionsDataSubject.next(null);
   }
 }
