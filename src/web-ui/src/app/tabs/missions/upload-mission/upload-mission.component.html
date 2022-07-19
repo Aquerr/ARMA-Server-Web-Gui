@@ -1,0 +1,7 @@
+<div>
+  <input style="display: none;" type="file" #fileInput (change)="onFileSelected($event)" accept=".pbo">
+  Upload mission file
+  <button mat-mini-fab color="primary" (click)="fileInput.click()">
+    <mat-icon>attach_file</mat-icon>
+  </button>
+</div>

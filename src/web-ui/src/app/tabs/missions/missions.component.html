@@ -1,10 +1,7 @@
 <div>
   <h1>Missions</h1>
   <div>
-    <input style="display: none;" type="file" #fileInput (change)="onFileSelected($event)" accept=".pbo">
-    Upload mission file
-    <button mat-mini-fab color="primary" (click)="fileInput.click()">
-      <mat-icon>attach_file</mat-icon>
-    </button>
+    <app-list-missions></app-list-missions>
   </div>
+  <app-upload-mission></app-upload-mission>
 </div>

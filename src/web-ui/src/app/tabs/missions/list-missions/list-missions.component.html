@@ -1,0 +1,5 @@
+<mat-selection-list #missionsList (selectionChange)="onSelectionChange($event)">
+  <mat-list-option *ngFor="let mission of missions" [value]="mission" (click)="onMissionClick(mission)">
+    {{mission}}
+  </mat-list-option>
+</mat-selection-list>

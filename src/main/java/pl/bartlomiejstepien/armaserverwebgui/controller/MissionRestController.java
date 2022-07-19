@@ -14,6 +14,8 @@ import pl.bartlomiejstepien.armaserverwebgui.exception.NotAllowedFileTypeExcepti
 import pl.bartlomiejstepien.armaserverwebgui.service.MissionService;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/missions")
 @AllArgsConstructor
@@ -22,6 +24,13 @@ public class MissionRestController
 {
     private final MissionService missionService;
     private final MissionFileValidator missionFileValidator;
+
+    @GetMapping
+    public Mono<GetInstalledMissionsResponse> getInstalledMissions()
+    {
+        return Mono.just(this.missionService.getInstalledMissionNames())
+                .map(GetInstalledMissionsResponse::of);
+    }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Mono<ResponseEntity<?>> uploadMissionFile(@RequestPart("file") Mono<FilePart> multipartFile)
@@ -56,5 +65,11 @@ public class MissionRestController
     {
         String message;
         int code;
+    }
+
+    @Value(staticConstructor = "of")
+    private static class GetInstalledMissionsResponse
+    {
+        List<String> missions;
     }
 }

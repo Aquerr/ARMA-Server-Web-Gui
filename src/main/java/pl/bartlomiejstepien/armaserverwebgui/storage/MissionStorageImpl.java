@@ -1,6 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.storage;
 
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Repository;
@@ -12,6 +11,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Repository
 public class MissionStorageImpl implements MissionStorage
@@ -37,5 +41,14 @@ public class MissionStorageImpl implements MissionStorage
     public boolean doesMissionExists(String filename)
     {
         return Files.exists(missionsDirectory.resolve(filename));
+    }
+
+    @Override
+    public List<String> getInstalledMissionNames()
+    {
+        return Optional.ofNullable(missionsDirectory.toFile().listFiles())
+                .map(files -> Stream.of(files)
+                        .map(File::getName).collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
     }
 }

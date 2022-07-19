@@ -8,6 +8,7 @@ import pl.bartlomiejstepien.armaserverwebgui.storage.MissionStorage;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -29,5 +30,11 @@ public class MissionServiceImpl implements MissionService
         {
             throw new RuntimeException(exception);
         }
+    }
+
+    @Override
+    public List<String> getInstalledMissionNames()
+    {
+        return this.missionStorage.getInstalledMissionNames();
     }
 }

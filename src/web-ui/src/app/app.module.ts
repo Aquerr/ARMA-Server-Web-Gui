@@ -25,6 +25,8 @@ import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {ToastrModule} from "ngx-toastr";
 import {MatIconModule} from "@angular/material/icon";
+import { UploadMissionComponent } from './tabs/missions/upload-mission/upload-mission.component';
+import { ListMissionsComponent } from './tabs/missions/list-missions/list-missions.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import {MatIconModule} from "@angular/material/icon";
     LoggingComponent,
     SideMenuComponent,
     LoginComponent,
-    AswgSpinnerComponent
+    AswgSpinnerComponent,
+    UploadMissionComponent,
+    ListMissionsComponent
   ],
   imports: [
     BrowserModule,

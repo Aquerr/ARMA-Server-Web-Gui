@@ -8,17 +8,22 @@ import {Observable} from "rxjs";
 })
 export class ServerMissionsService {
 
+  private readonly MISSIONS_URL = `${API_BASE_URL}/missions`;
+
   constructor(private httpClient: HttpClient) { }
 
   uploadMission(formData: FormData): Observable<any> {
-
-    const request = new HttpRequest('POST', API_BASE_URL + "/missions", formData, {
+    const request = new HttpRequest('POST', this.MISSIONS_URL, formData, {
       reportProgress: true
     });
-
-    console.log(request);
-
     return this.httpClient.request(request);
-    // return this.httpClient.post(API_BASE_URL + "/missions", formData);
   }
+
+  getInstalledMissions(): Observable<GetInstalledMissionsResponse> {
+    return this.httpClient.get<GetInstalledMissionsResponse>(this.MISSIONS_URL);
+  }
+}
+
+export interface GetInstalledMissionsResponse {
+  missions: string[];
 }
