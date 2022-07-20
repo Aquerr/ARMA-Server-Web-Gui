@@ -5,8 +5,10 @@ import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgClassParser;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgIntegerParser;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgMissionsClassParser;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgParser;
+import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgRawStringParser;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgStringArrayParser;
-import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgStringParser;
+import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgQuotedStringParser;
+import pl.bartlomiejstepien.armaserverwebgui.util.cfg.type.PropertyType;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,14 +20,15 @@ import java.util.Map;
 @Component
 public class CfgConfigReader
 {
-    public static final Map<Class<?>, CfgParser<?>> PARSERS = Map.of(
-            String.class, new CfgStringParser(),
-            Integer.class, new CfgIntegerParser(),
-            String[].class, new CfgStringArrayParser()
+    public static final Map<PropertyType, CfgParser<?>> PARSERS = Map.of(
+            PropertyType.QUOTED_STRING, new CfgQuotedStringParser(),
+            PropertyType.RAW_STRING, new CfgRawStringParser(),
+            PropertyType.INTEGER, new CfgIntegerParser(),
+            PropertyType.STRING_ARRAY, new CfgStringArrayParser()
     );
 
-    public static final Map<Class<?>, CfgClassParser<?>> classParsers = Map.of(
-            ArmaServerConfig.Missions.class, new CfgMissionsClassParser()
+    public static final Map<PropertyType, CfgClassParser<?>> classParsers = Map.of(
+            PropertyType.MISSIONS, new CfgMissionsClassParser()
     );
 
     public ArmaServerConfig readConfig(String filePath)
@@ -180,6 +183,6 @@ public class CfgConfigReader
 
     public void saveConfig(ArmaServerConfig armaServerConfig)
     {
-        
+
     }
 }

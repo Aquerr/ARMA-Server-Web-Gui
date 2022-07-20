@@ -1,0 +1,22 @@
+<div>
+  <h1>Security</h1>
+  <div>
+    <div class="security-fields">
+      <mat-form-field class="server-password">
+        <mat-label>Password</mat-label>
+        <input name="server-password" [(ngModel)]="serverPassword" matInput type="text">
+      </mat-form-field>
+      <mat-form-field class="server-admin-password">
+        <mat-label>Admin Password</mat-label>
+        <input name="server-password" [(ngModel)]="serverAdminPassword" matInput type="text">
+      </mat-form-field>
+      <mat-form-field class="server-command-password">
+        <mat-label>Command Password</mat-label>
+        <input name="server-password" [(ngModel)]="serverCommandPassword" matInput type="text">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="security-save-container">
+    <button mat-flat-button color="primary" (click)="save()">Save</button>
+  </div>
+</div>

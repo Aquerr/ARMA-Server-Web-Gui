@@ -7,9 +7,11 @@ import {ModsComponent} from "./tabs/mods/mods.component";
 import {LoggingComponent} from "./tabs/logging/logging.component";
 import {LoginComponent} from "./login/login.component";
 import {AuthService} from "./service/auth.service";
+import {SecurityComponent} from "./tabs/security/security.component";
 
 const routes: Routes = [
   {path: 'general', component: GeneralComponent, canActivate: [AuthService]},
+  {path: 'security', component: SecurityComponent, canActivate: [AuthService]},
   {path: 'network', component: NetworkComponent, canActivate: [AuthService]},
   {path: 'missions', component: MissionsComponent, canActivate: [AuthService]},
   {path: 'mods', component: ModsComponent, canActivate: [AuthService]},

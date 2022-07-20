@@ -30,6 +30,7 @@ import { ListMissionsComponent } from './tabs/missions/list-missions/list-missio
 import { DragAndDropFileDirective } from './directive/drag-and-drop-file.directive';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { SecurityComponent } from './tabs/security/security.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     AswgSpinnerComponent,
     UploadMissionComponent,
     ListMissionsComponent,
-    DragAndDropFileDirective
+    DragAndDropFileDirective,
+    SecurityComponent
   ],
   imports: [
     BrowserModule,

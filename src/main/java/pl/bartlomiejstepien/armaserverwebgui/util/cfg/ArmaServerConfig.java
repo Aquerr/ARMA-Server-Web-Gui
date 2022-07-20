@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.util.cfg;
 
 import lombok.Data;
+import pl.bartlomiejstepien.armaserverwebgui.util.cfg.type.PropertyType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,28 +9,28 @@ import java.util.List;
 @Data
 public class ArmaServerConfig
 {
-    @CfgProperty(name = "hostname", type = String.class)
+    @CfgProperty(name = "hostname", type = PropertyType.QUOTED_STRING)
     private String hostname;
 
-    @CfgProperty(name = "password", type = String.class)
+    @CfgProperty(name = "password", type = PropertyType.QUOTED_STRING)
     private String password;
 
-    @CfgProperty(name = "passwordAdmin", type = String.class)
+    @CfgProperty(name = "passwordAdmin", type = PropertyType.QUOTED_STRING)
     private String passwordAdmin;
 
-    @CfgProperty(name = "serverCommandPassword", type = String.class)
+    @CfgProperty(name = "serverCommandPassword", type = PropertyType.QUOTED_STRING)
     private String serverCommandPassword;
 
-    @CfgProperty(name = "logFile", type = String.class)
+    @CfgProperty(name = "logFile", type = PropertyType.QUOTED_STRING)
     private String logFile;
 
-    @CfgProperty(name = "maxPlayers", type = Integer.class)
+    @CfgProperty(name = "maxPlayers", type = PropertyType.INTEGER)
     private int maxPlayers;
 
-    @CfgProperty(name = "motd[]", type = String[].class)
+    @CfgProperty(name = "motd[]", type = PropertyType.STRING_ARRAY)
     private String[] motd;
 
-    @CfgProperty(name = "Missions", type = Missions.class)
+    @CfgProperty(name = "Missions", type = PropertyType.MISSIONS)
     private Missions missions;
 
     @Data
@@ -40,11 +41,11 @@ public class ArmaServerConfig
         @Data
         public static class Mission
         {
-            @CfgProperty(name = "template", type = String.class)
+            @CfgProperty(name = "template", type = PropertyType.RAW_STRING)
             private String template;
-            @CfgProperty(name = "difficulty", type = String.class)
+            @CfgProperty(name = "difficulty", type = PropertyType.QUOTED_STRING)
             private String difficulty;
-            @CfgProperty(name = "params", type = Params.class)
+            @CfgProperty(name = "params", type = PropertyType.PARAMS)
             private Params params;
 
             @Data

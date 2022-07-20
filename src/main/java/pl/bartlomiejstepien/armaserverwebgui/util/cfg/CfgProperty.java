@@ -1,5 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.util.cfg;
 
+import pl.bartlomiejstepien.armaserverwebgui.util.cfg.type.PropertyType;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,5 +13,5 @@ public @interface CfgProperty
 {
     String name();
 
-    Class<?> type();
+    PropertyType type();
 }
