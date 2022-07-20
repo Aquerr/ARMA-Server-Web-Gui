@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.codec.multipart.DefaultPartHttpMessageReader;
+import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 @Configuration
