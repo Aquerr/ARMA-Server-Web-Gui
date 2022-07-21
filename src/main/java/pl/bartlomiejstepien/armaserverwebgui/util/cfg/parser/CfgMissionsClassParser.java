@@ -1,6 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser;
 
-import pl.bartlomiejstepien.armaserverwebgui.util.cfg.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.CfgConfigReader;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.CfgReflectionUtil;
@@ -127,7 +127,27 @@ public class CfgMissionsClassParser implements CfgClassParser<ArmaServerConfig.M
         {
             exception.printStackTrace();
         }
-        return null;
+        return missions;
+    }
+
+    @Override
+    public String parseToString(Object value)
+    {
+        if (value == null)
+            return "";
+
+        ArmaServerConfig.Missions missions = (ArmaServerConfig.Missions)value;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("class Missions\n")
+                .append("{\n");
+
+        for (final ArmaServerConfig.Missions.Mission mission : missions.getMissions())
+        {
+            stringBuilder.append(cfgMissionClassParser.parseToString(mission));
+        }
+
+        stringBuilder.append("};\n");
+        return stringBuilder.toString();
     }
 
     private void parseProperty(ArmaServerConfig.Missions missions, String property) throws IllegalAccessException

@@ -3,9 +3,8 @@ package pl.bartlomiejstepien.armaserverwebgui.controller;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import pl.bartlomiejstepien.armaserverwebgui.model.ServerSecurity;
 import pl.bartlomiejstepien.armaserverwebgui.service.ServerSecurityService;
 import reactor.core.publisher.Mono;
@@ -24,6 +23,22 @@ public class ServerSecurityRestController
                 .map(this::toViewResponse);
     }
 
+    @PostMapping
+    public Mono<ResponseEntity<?>> saveServerSecurity(@RequestBody SaveServerSecurityRequest saveServerSecurityRequest)
+    {
+        this.serverSecurityService.saveServerSecurity(toDomainModel(saveServerSecurityRequest));
+        return Mono.just(ResponseEntity.ok().build());
+    }
+
+    private ServerSecurity toDomainModel(SaveServerSecurityRequest saveServerSecurityRequest)
+    {
+        return ServerSecurity.builder()
+                .serverPassword(saveServerSecurityRequest.getServerPassword())
+                .serverAdminPassword(saveServerSecurityRequest.getServerAdminPassword())
+                .serverCommandPassword(saveServerSecurityRequest.getServerCommandPassword())
+                .build();
+    }
+
     private GetServerSecurity toViewResponse(ServerSecurity serverSecurity)
     {
         return GetServerSecurity.builder()
@@ -31,6 +46,15 @@ public class ServerSecurityRestController
                 .serverAdminPassword(serverSecurity.getServerAdminPassword())
                 .serverCommandPassword(serverSecurity.getServerCommandPassword())
                 .build();
+    }
+
+    @Data
+    @Builder
+    private static class SaveServerSecurityRequest
+    {
+        private String serverPassword;
+        private String serverAdminPassword;
+        private String serverCommandPassword;
     }
 
     @Data

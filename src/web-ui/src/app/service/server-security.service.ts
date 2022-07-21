@@ -15,6 +15,16 @@ export class ServerSecurityService {
   getServerSecurity(): Observable<GetServerSecurityResponse> {
     return this.httpClient.get<GetServerSecurityResponse>(this.SECURITY_URL);
   }
+
+  saveServerSecurity(saveServerSecurityRequest: SaveServerSecurityRequest): Observable<any> {
+    return this.httpClient.post(this.SECURITY_URL, saveServerSecurityRequest);
+  }
+}
+
+export interface SaveServerSecurityRequest {
+  serverPassword: string;
+  serverAdminPassword: string;
+  serverCommandPassword: string;
 }
 
 export interface GetServerSecurityResponse {

@@ -1,10 +1,11 @@
 package pl.bartlomiejstepien.armaserverwebgui.util.cfg;
 
 import org.springframework.stereotype.Component;
+import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgClassParser;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgIntegerParser;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgMissionsClassParser;
-import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgParser;
+import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgSimpleParser;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgRawStringParser;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgStringArrayParser;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgQuotedStringParser;
@@ -20,7 +21,7 @@ import java.util.Map;
 @Component
 public class CfgConfigReader
 {
-    public static final Map<PropertyType, CfgParser<?>> PARSERS = Map.of(
+    public static final Map<PropertyType, CfgSimpleParser<?>> PARSERS = Map.of(
             PropertyType.QUOTED_STRING, new CfgQuotedStringParser(),
             PropertyType.RAW_STRING, new CfgRawStringParser(),
             PropertyType.INTEGER, new CfgIntegerParser(),
@@ -31,9 +32,8 @@ public class CfgConfigReader
             PropertyType.MISSIONS, new CfgMissionsClassParser()
     );
 
-    public ArmaServerConfig readConfig(String filePath)
+    public ArmaServerConfig readConfig(File file)
     {
-        File file = new File(filePath);
         if (!file.exists())
             return new ArmaServerConfig();
 
@@ -179,10 +179,5 @@ public class CfgConfigReader
                 return field;
         }
         return null;
-    }
-
-    public void saveConfig(ArmaServerConfig armaServerConfig)
-    {
-
     }
 }

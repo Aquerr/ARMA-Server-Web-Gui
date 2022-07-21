@@ -14,4 +14,6 @@ public @interface CfgProperty
     String name();
 
     PropertyType type();
+
+    boolean isClass() default false;
 }

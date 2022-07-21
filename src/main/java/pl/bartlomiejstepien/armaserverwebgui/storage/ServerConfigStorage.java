@@ -1,6 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.storage;
 
-import pl.bartlomiejstepien.armaserverwebgui.util.cfg.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerConfig;
 
 public interface ServerConfigStorage
 {

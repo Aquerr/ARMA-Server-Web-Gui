@@ -3,7 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CfgStringArrayParser implements CfgParser<String[]>
+public class CfgStringArrayParser implements CfgSimpleParser<String[]>
 {
     @Override
     public String[] parse(String text)
@@ -33,5 +33,25 @@ public class CfgStringArrayParser implements CfgParser<String[]>
             stringBuilder.append(character);
         }
         return strings.toArray(new String[0]);
+    }
+
+    @Override
+    public String parseToString(Object value)
+    {
+        String[] array = (String[]) value;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("{");
+        for (String text : array)
+        {
+            stringBuilder.append("\"")
+                    .append(text)
+                    .append("\",");
+        }
+        if (stringBuilder.toString().endsWith(","))
+        {
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        }
+        stringBuilder.append("};");
+        return stringBuilder.toString();
     }
 }

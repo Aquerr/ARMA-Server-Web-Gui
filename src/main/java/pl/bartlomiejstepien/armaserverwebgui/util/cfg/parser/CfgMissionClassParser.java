@@ -1,11 +1,13 @@
 package pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser;
 
-import pl.bartlomiejstepien.armaserverwebgui.util.cfg.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.CfgConfigReader;
+import pl.bartlomiejstepien.armaserverwebgui.util.cfg.CfgConfigWriter;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.CfgReflectionUtil;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
@@ -131,6 +133,36 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
         return mission;
     }
 
+    @Override
+    public String parseToString(Object value)
+    {
+        if (value == null)
+            return "";
+
+        ArmaServerConfig.Missions.Mission mission = (ArmaServerConfig.Missions.Mission) value;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("class ")
+                .append(mission.getTemplate())
+                .append("\n")
+                .append("{");
+
+        Field[] declaredFields = ArmaServerConfig.Missions.Mission.class.getDeclaredFields();
+
+        for (Field field : declaredFields)
+        {
+            try
+            {
+                writeFileToStringBuilder(mission, field, stringBuilder);
+            }
+            catch (IllegalAccessException | IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        return stringBuilder.toString();
+    }
+
     private void parseProperty(ArmaServerConfig.Missions.Mission mission, String property) throws IllegalAccessException
     {
         String propertyName = property.substring(0, property.indexOf("=")).trim();
@@ -143,5 +175,26 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
         field.setAccessible(true);
         field.set(mission, value);
         field.setAccessible(false);
+    }
+
+    private void writeFileToStringBuilder(ArmaServerConfig.Missions.Mission mission, Field field, StringBuilder stringBuilder) throws IllegalAccessException, IOException
+    {
+        CfgProperty cfgProperty = field.getAnnotation(CfgProperty.class);
+        field.setAccessible(true);
+        Object fieldValue = field.get(mission);
+        field.setAccessible(false);
+        String fieldValueAsString = CfgConfigWriter.PARSERS.get(cfgProperty.type()).parseToString(fieldValue);
+
+        if (cfgProperty.isClass())
+        {
+            stringBuilder.append(fieldValueAsString);
+        }
+        else
+        {
+            stringBuilder.append(cfgProperty.name())
+                    .append(" = ")
+                    .append(fieldValueAsString)
+                    .append("\n");
+        }
     }
 }

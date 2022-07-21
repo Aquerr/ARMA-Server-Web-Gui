@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {ServerSecurityService} from "../../service/server-security.service";
+import {SaveServerSecurityRequest, ServerSecurityService} from "../../service/server-security.service";
 import {MaskService} from "../../service/mask.service";
+import {NotificationService} from "../../service/notification.service";
 
 @Component({
   selector: 'app-security',
@@ -13,7 +14,8 @@ export class SecurityComponent implements OnInit {
   serverCommandPassword: string = "";
 
   constructor(private serverSecurityService: ServerSecurityService,
-              private maskService: MaskService) { }
+              private maskService: MaskService,
+              private notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.maskService.show();
@@ -26,6 +28,17 @@ export class SecurityComponent implements OnInit {
   }
 
   save() {
-    console.log("Saving!");
+    this.maskService.show();
+
+    const serverSecurityRequest = {
+      serverPassword: this.serverPassword,
+      serverAdminPassword: this.serverAdminPassword,
+      serverCommandPassword: this.serverCommandPassword
+    } as SaveServerSecurityRequest;
+
+    this.serverSecurityService.saveServerSecurity(serverSecurityRequest).subscribe(response => {
+      this.maskService.hide();
+      this.notificationService.successNotification("Server security updated!");
+    });
   }
 }
