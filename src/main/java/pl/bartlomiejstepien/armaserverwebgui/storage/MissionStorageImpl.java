@@ -27,7 +27,7 @@ public class MissionStorageImpl implements MissionStorage
     public MissionStorageImpl(final ASWGConfig aswgConfig)
     {
         this.aswgConfig = aswgConfig;
-        this.missionsDirectory = Paths.get(aswgConfig.getServerDirectoryPath() + File.separator + "Missions");
+        this.missionsDirectory = Paths.get(aswgConfig.getServerDirectoryPath() + File.separator + "MPMissions");
     }
 
     @Override
@@ -48,7 +48,9 @@ public class MissionStorageImpl implements MissionStorage
     {
         return Optional.ofNullable(missionsDirectory.toFile().listFiles())
                 .map(files -> Stream.of(files)
-                        .map(File::getName).collect(Collectors.toList()))
+                        .map(File::getName)
+                        .filter(name -> name.endsWith(".pbo"))
+                        .collect(Collectors.toList()))
                 .orElse(Collections.emptyList());
     }
 

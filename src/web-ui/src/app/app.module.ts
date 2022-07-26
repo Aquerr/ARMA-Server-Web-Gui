@@ -31,6 +31,8 @@ import { DragAndDropFileDirective } from './directive/drag-and-drop-file.directi
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { SecurityComponent } from './tabs/security/security.component';
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import { MissionDeleteConfirmDialogComponent } from './tabs/missions/list-missions/mission-delete-confirm-dialog/mission-delete-confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,8 @@ import { SecurityComponent } from './tabs/security/security.component';
     UploadMissionComponent,
     ListMissionsComponent,
     DragAndDropFileDirective,
-    SecurityComponent
+    SecurityComponent,
+    MissionDeleteConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -62,6 +65,7 @@ import { SecurityComponent } from './tabs/security/security.component';
     MatIconModule,
     MatTableModule,
     MatCheckboxModule,
+    MatDialogModule,
     NgxSpinnerModule,
     HttpClientModule,
     ReactiveFormsModule,

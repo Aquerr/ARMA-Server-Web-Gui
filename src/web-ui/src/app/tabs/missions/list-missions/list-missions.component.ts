@@ -5,6 +5,8 @@ import {MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
 import {Subject, Subscription} from "rxjs";
 import {MaskService} from "../../../service/mask.service";
+import {MatDialog} from "@angular/material/dialog";
+import {MissionDeleteConfirmDialogComponent} from "./mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
 
 @Component({
   selector: 'app-list-missions',
@@ -25,7 +27,8 @@ export class ListMissionsComponent implements OnInit, OnDestroy {
   reloadMissionDataSubscription!: Subscription;
 
   constructor(private missionsService: ServerMissionsService,
-              private maskService: MaskService) {
+              private maskService: MaskService,
+              private matDialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -62,26 +65,6 @@ export class ListMissionsComponent implements OnInit, OnDestroy {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row + 1}`
   }
 
-
-
-
-
-
-
-
-
-  onSelectionChange(event: MatSelectionListChange) {
-    // console.log(event);
-  }
-
-  onMissionClick($event: any) {
-    // console.log($event);
-  }
-
-  deleteMission($event: MouseEvent) {
-
-  }
-
   selectMission($event: MouseEvent, missionName: string) {
     if (this.selection.isSelected(missionName)) {
       this.selection.deselect(missionName);
@@ -99,11 +82,25 @@ export class ListMissionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  onMissionDelete(missionName: string) {
+  deleteMission(missionName: string) {
     this.maskService.show();
     this.missionsService.deleteMission(missionName).subscribe(response => {
       this.maskService.hide();
       this.reloadMissionsDataSubject.next(null);
+    });
+  }
+
+  showMissionDeleteConfirmationDialog(missionName: string): void {
+    const dialogRef = this.matDialog.open(MissionDeleteConfirmDialogComponent, {
+      width: '250px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteMission(missionName);
+      }
     });
   }
 }
