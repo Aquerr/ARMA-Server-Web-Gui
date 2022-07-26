@@ -8,11 +8,12 @@ import {
 import {Observable, tap} from 'rxjs';
 import {Router} from "@angular/router";
 import {AuthService} from "../service/auth.service";
+import {MaskService} from "../service/mask.service";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private maskService: MaskService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (sessionStorage.getItem('username') && sessionStorage.getItem('auth-token')) {
@@ -28,6 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (error.status === 401) {
           this.authService.logout();
           this.router.navigate(['login']);
+          this.maskService.hide();
         } else {
           console.warn(error.message);
         }
