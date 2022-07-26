@@ -93,8 +93,8 @@ export class ListMissionsComponent implements OnInit, OnDestroy {
   showMissionDeleteConfirmationDialog(missionName: string): void {
     const dialogRef = this.matDialog.open(MissionDeleteConfirmDialogComponent, {
       width: '250px',
-      enterAnimationDuration: '0ms',
-      exitAnimationDuration: '0ms'
+      enterAnimationDuration: '200ms',
+      exitAnimationDuration: '200ms'
     });
 
     dialogRef.afterClosed().subscribe(result => {
