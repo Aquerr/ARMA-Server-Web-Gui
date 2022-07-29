@@ -37,9 +37,8 @@ public class GeneralController
     }
 
     @Data
-    @RequiredArgsConstructor
     private static class UpdateServerDirectoryRequest
     {
-        String path;
+        private String path;
     }
 }

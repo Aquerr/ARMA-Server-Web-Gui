@@ -9,11 +9,15 @@ import {Observable, tap} from 'rxjs';
 import {Router} from "@angular/router";
 import {AuthService} from "../service/auth.service";
 import {MaskService} from "../service/mask.service";
+import {NotificationService} from "../service/notification.service";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private router: Router, private authService: AuthService, private maskService: MaskService) {}
+  constructor(private router: Router,
+              private authService: AuthService,
+              private maskService: MaskService,
+              private notificationService: NotificationService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (sessionStorage.getItem('username') && sessionStorage.getItem('auth-token')) {
@@ -30,6 +34,11 @@ export class AuthInterceptor implements HttpInterceptor {
           this.authService.logout();
           this.router.navigate(['login']);
           this.maskService.hide();
+          this.notificationService.warningNotification("You are not authorized.", "Unauthorized");
+        } else if (error.status === 404) {
+          this.router.navigate(['']);
+          this.maskService.hide();
+          this.notificationService.errorNotification("Resource has not been found.", "Error 404");
         } else {
           console.warn(error.message);
         }

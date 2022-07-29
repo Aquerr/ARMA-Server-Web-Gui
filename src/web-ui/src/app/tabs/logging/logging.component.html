@@ -1,1 +1,14 @@
-<p>logging works!</p>
+<div>
+  <h1>General</h1>
+  <div>
+    <div>
+      <mat-form-field class="log-file-field">
+        <mat-label>Log file</mat-label>
+        <input name="log-file" [(ngModel)]="logFile" matInput type="text">
+      </mat-form-field>
+    </div>
+  </div>
+  <div>
+    <button mat-flat-button color="primary" (click)="save()">Save</button>
+  </div>
+</div>
