@@ -10,20 +10,21 @@ export class ServerGeneralService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getServerDirectory(): Observable<GetServerDirectoryResponse> {
-    return this.httpClient.get<GetServerDirectoryResponse>(API_BASE_URL + "/general/server-directory");
+  getGeneralProperties(): Observable<GeneralProperties> {
+    return this.httpClient.get<GeneralProperties>(API_BASE_URL + "/general/properties");
   }
 
-  saveServerDirectory(serverDirectory: string) {
-    return this.httpClient.post<void>(API_BASE_URL + "/general/server-directory",
-      {path: serverDirectory} as UpdateServerDirectoryRequest);
+  saveGeneralProperties(saveGeneralProperties: SaveGeneralProperties) {
+    return this.httpClient.post<void>(API_BASE_URL + "/general/properties", saveGeneralProperties);
   }
 }
 
-export interface UpdateServerDirectoryRequest {
+export interface SaveGeneralProperties {
   path: string;
+  maxPlayers: number;
 }
 
-export interface GetServerDirectoryResponse {
-  path: string;
+export interface GeneralProperties {
+  serverDirectory: string;
+  maxPlayers: number;
 }

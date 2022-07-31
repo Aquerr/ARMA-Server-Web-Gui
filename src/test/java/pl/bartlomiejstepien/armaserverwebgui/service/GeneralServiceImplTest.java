@@ -8,7 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerConfig;
-import pl.bartlomiejstepien.armaserverwebgui.model.LoggingProperties;
+import pl.bartlomiejstepien.armaserverwebgui.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.storage.ServerConfigStorage;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,65 +16,68 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class LoggingServiceImplTest
+class GeneralServiceImplTest
 {
-    private static final String LOG_FILE_PATH = "log/logFilepath";
-    private static final int MAX_PLAYERS = 15;
-    private static final String PASSWORD = "testPassword";
+    private static final int MAX_PLAYERS = 10;
+    private static final String PASSWORD = "test";
+    private static final String LOG_FILE = "logFile";
 
     @Mock
     private ServerConfigStorage serverConfigStorage;
     @InjectMocks
-    private LoggingServiceImpl loggingService;
+    private GeneralServiceImpl generalService;
 
     @Captor
     private ArgumentCaptor<ArmaServerConfig> armaServerConfigArgumentCaptor;
 
     @Test
-    void getLoggingPropertiesShouldUseServerConfigStorageAndReturnLoggingProperties()
+    void getGeneralPropertiesShouldUseServerConfigStorageAndReturnGeneralProperties()
     {
         ArmaServerConfig armaServerConfig = new ArmaServerConfig();
-        armaServerConfig.setLogFile(LOG_FILE_PATH);
-        given(serverConfigStorage.getServerConfig()).willReturn(armaServerConfig);
-
-        LoggingProperties loggingProperties = loggingService.getLoggingProperties();
-
-        assertThat(loggingProperties.getLogFile()).isEqualTo(LOG_FILE_PATH);
-    }
-
-    @Test
-    void saveLoggingPropertiesShouldSaveArmaServerConfigWithNewLoggingProperties()
-    {
-        given(serverConfigStorage.getServerConfig()).willReturn(new ArmaServerConfig());
-
-        loggingService.saveLoggingProperties(prepareLoggingProperties());
-
-        verify(serverConfigStorage).saveServerConfig(armaServerConfigArgumentCaptor.capture());
-        assertThat(armaServerConfigArgumentCaptor.getValue().getLogFile()).isEqualTo(LOG_FILE_PATH);
-    }
-
-    @Test
-    void saveLoggingPropertiesShouldNotModifyOtherConfigFiles()
-    {
-        ArmaServerConfig armaServerConfig = new ArmaServerConfig();
-        armaServerConfig.setPassword(PASSWORD);
         armaServerConfig.setMaxPlayers(MAX_PLAYERS);
         given(serverConfigStorage.getServerConfig()).willReturn(armaServerConfig);
 
-        loggingService.saveLoggingProperties(prepareLoggingProperties());
+        GeneralProperties generalProperties = generalService.getGeneralProperties();
+
+        assertThat(generalProperties.getMaxPlayers()).isEqualTo(MAX_PLAYERS);
+    }
+
+    @Test
+    void saveGeneralPropertiesShouldUseServerConfigStorageAndSaveGeneralProperties()
+    {
+        ArmaServerConfig armaServerConfig = new ArmaServerConfig();
+        armaServerConfig.setPassword(PASSWORD);
+        armaServerConfig.setLogFile(LOG_FILE);
+        given(serverConfigStorage.getServerConfig()).willReturn(armaServerConfig);
+
+        generalService.saveGeneralProperties(prepareGeneralProperties());
+
+        verify(serverConfigStorage).saveServerConfig(armaServerConfigArgumentCaptor.capture());
+        assertThat(armaServerConfigArgumentCaptor.getValue().getMaxPlayers()).isEqualTo(MAX_PLAYERS);
+    }
+
+    @Test
+    void saveGeneralPropertiesShouldNotModifyOtherConfigFiles()
+    {
+        ArmaServerConfig armaServerConfig = new ArmaServerConfig();
+        armaServerConfig.setPassword(PASSWORD);
+        armaServerConfig.setLogFile(LOG_FILE);
+        given(serverConfigStorage.getServerConfig()).willReturn(armaServerConfig);
+
+        generalService.saveGeneralProperties(prepareGeneralProperties());
 
         verify(serverConfigStorage).saveServerConfig(armaServerConfigArgumentCaptor.capture());
         ArmaServerConfig expectedArmaServerConfig = new ArmaServerConfig();
         expectedArmaServerConfig.setPassword(PASSWORD);
-        expectedArmaServerConfig.setLogFile(LOG_FILE_PATH);
+        expectedArmaServerConfig.setLogFile(LOG_FILE);
         expectedArmaServerConfig.setMaxPlayers(MAX_PLAYERS);
         assertThat(armaServerConfigArgumentCaptor.getValue()).isEqualTo(expectedArmaServerConfig);
     }
 
-    private LoggingProperties prepareLoggingProperties()
+    private GeneralProperties prepareGeneralProperties()
     {
-        return LoggingProperties.builder()
-                .logFile(LOG_FILE_PATH)
+        return GeneralProperties.builder()
+                .maxPlayers(MAX_PLAYERS)
                 .build();
     }
 }

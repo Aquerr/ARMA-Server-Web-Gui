@@ -8,6 +8,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.bartlomiejstepien.armaserverwebgui.IntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.model.GeneralProperties;
+import pl.bartlomiejstepien.armaserverwebgui.service.GeneralService;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -16,34 +18,42 @@ import static pl.bartlomiejstepien.armaserverwebgui.TestUtils.loadJsonIntegratio
 @IntegrationTest
 class GeneralControllerTest
 {
+    private static final int MAX_PLAYERS = 10;
+    private static final String API_GENERAL_PROPERTIES_URL = "/api/v1/general/properties";
+
     @Autowired
     private WebTestClient webTestClient;
 
+    @MockBean
+    private GeneralService generalService;
     @MockBean
     private ASWGConfig aswgConfig;
 
     @Test
     @WithMockUser
-    void getServerDirectoryShouldReturnServerDirectoryFromASWGConfig()
+    void getGeneralPropertiesShouldReturnServerDirectoryFromASWGConfig()
     {
         given(aswgConfig.getServerDirectoryPath()).willReturn("fake/fakeServerDirectory");
+        given(generalService.getGeneralProperties()).willReturn(GeneralProperties.builder()
+                .maxPlayers(MAX_PLAYERS)
+                .build());
 
         webTestClient.get()
-                .uri("/api/v1/general/server-directory")
+                .uri(API_GENERAL_PROPERTIES_URL)
                 .exchange()
                 .expectStatus()
                     .isOk()
                 .expectHeader()
                     .contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
-                    .json(loadJsonIntegrationContractFor("general/get-server-directory-response.json"));
+                    .json(loadJsonIntegrationContractFor("general/get-general-properties-response.json"));
     }
 
     @Test
-    void getServerDirectoryShouldTriggerUnauthorizedErrorWhenUserNotAuthorized()
+    void getGeneralPropertiesShouldTriggerUnauthorizedErrorWhenUserNotAuthorized()
     {
         webTestClient.get()
-                .uri("/api/v1/general/server-directory")
+                .uri(API_GENERAL_PROPERTIES_URL)
                 .exchange()
                 .expectStatus()
                 .isUnauthorized();
@@ -51,26 +61,29 @@ class GeneralControllerTest
 
     @Test
     @WithMockUser
-    void updateServerDirectoryShouldUpdateServerDirectoryInASWGConfig()
+    void saveGeneralPropertiesShouldUpdateServerDirectoryInASWGConfig()
     {
         webTestClient.post()
-                .uri("/api/v1/general/server-directory")
+                .uri(API_GENERAL_PROPERTIES_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(loadJsonIntegrationContractFor("general/update-server-directory-request.json"))
+                .bodyValue(loadJsonIntegrationContractFor("general/save-general-properties-request.json"))
                 .exchange()
                 .expectStatus()
                 .isOk();
 
         verify(aswgConfig).setServerDirectoryPath("fake/fakeServerDirectory");
+        verify(generalService).saveGeneralProperties(GeneralProperties.builder()
+                .maxPlayers(MAX_PLAYERS)
+                .build());
     }
 
     @Test
-    void updateServerDirectoryShouldTriggerUnauthorizedErrorWhenUserNotAuthorized()
+    void saveGeneralPropertiesShouldTriggerUnauthorizedErrorWhenUserNotAuthorized()
     {
         webTestClient.post()
-                .uri("/api/v1/general/server-directory")
+                .uri(API_GENERAL_PROPERTIES_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(loadJsonIntegrationContractFor("general/update-server-directory-request.json"))
+                .bodyValue(loadJsonIntegrationContractFor("general/save-general-properties-request.json"))
                 .exchange()
                 .expectStatus()
                 .isUnauthorized();

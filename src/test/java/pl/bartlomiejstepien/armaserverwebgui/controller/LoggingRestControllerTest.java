@@ -30,7 +30,7 @@ class LoggingRestControllerTest
     @WithMockUser
     void getLoggingPropertiesShouldReturnLoggingSectionData()
     {
-        given(loggingService.getLoggingSectionData()).willReturn(prepareLoggingProperties());
+        given(loggingService.getLoggingProperties()).willReturn(prepareLoggingProperties());
 
         webTestClient.get()
                 .uri(LOGGING_PROPERTIES_URL)
@@ -65,7 +65,7 @@ class LoggingRestControllerTest
                 .expectStatus()
                 .isOk();
 
-        verify(loggingService).saveLoggingSectionData(LoggingProperties.builder()
+        verify(loggingService).saveLoggingProperties(LoggingProperties.builder()
                 .logFile(LOG_FILE_PATH)
                 .build());
     }

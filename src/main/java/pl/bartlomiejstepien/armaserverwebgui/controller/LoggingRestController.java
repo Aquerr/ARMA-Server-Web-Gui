@@ -3,8 +3,6 @@ package pl.bartlomiejstepien.armaserverwebgui.controller;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +23,7 @@ public class LoggingRestController
     @GetMapping("/properties")
     public Mono<LoggingProperties> getLoggingProperties()
     {
-        return Mono.just(loggingService.getLoggingSectionData())
+        return Mono.just(loggingService.getLoggingProperties())
                 .map(this::toViewResponse);
     }
 
@@ -33,7 +31,7 @@ public class LoggingRestController
     public Mono<ResponseEntity<Void>> saveLoggingProperties(@RequestBody LoggingProperties loggingProperties)
     {
         return Mono.just(loggingProperties).map(this::toDomainModel)
-                .doOnNext(this.loggingService::saveLoggingSectionData)
+                .doOnNext(this.loggingService::saveLoggingProperties)
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 

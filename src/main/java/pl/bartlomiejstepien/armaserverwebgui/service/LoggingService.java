@@ -4,7 +4,7 @@ import pl.bartlomiejstepien.armaserverwebgui.model.LoggingProperties;
 
 public interface LoggingService
 {
-    LoggingProperties getLoggingSectionData();
+    LoggingProperties getLoggingProperties();
 
-    void saveLoggingSectionData(LoggingProperties loggingProperties);
+    void saveLoggingProperties(LoggingProperties loggingProperties);
 }

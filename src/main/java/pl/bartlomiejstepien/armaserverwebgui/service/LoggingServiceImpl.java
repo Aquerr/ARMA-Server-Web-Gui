@@ -13,7 +13,7 @@ public class LoggingServiceImpl implements LoggingService
     private final ServerConfigStorage serverConfigStorage;
 
     @Override
-    public LoggingProperties getLoggingSectionData()
+    public LoggingProperties getLoggingProperties()
     {
         ArmaServerConfig armaServerConfig = this.serverConfigStorage.getServerConfig();
         return LoggingProperties.builder()
@@ -22,7 +22,7 @@ public class LoggingServiceImpl implements LoggingService
     }
 
     @Override
-    public void saveLoggingSectionData(LoggingProperties loggingProperties)
+    public void saveLoggingProperties(LoggingProperties loggingProperties)
     {
         ArmaServerConfig armaServerConfig = this.serverConfigStorage.getServerConfig();
         armaServerConfig.setLogFile(loggingProperties.getLogFile());

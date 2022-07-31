@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {MaskService} from "../../service/mask.service";
-import {ServerGeneralService} from "../../service/server-general.service";
+import {SaveGeneralProperties, ServerGeneralService} from "../../service/server-general.service";
 import {NotificationService} from "../../service/notification.service";
 
 @Component({
@@ -11,6 +11,7 @@ import {NotificationService} from "../../service/notification.service";
 export class GeneralComponent implements OnInit {
 
   serverDirectory: string = "";
+  maxPlayers: number = 64;
 
   constructor(private maskService: MaskService,
               private serverGeneralService: ServerGeneralService,
@@ -18,15 +19,22 @@ export class GeneralComponent implements OnInit {
 
   ngOnInit(): void {
     this.maskService.show();
-    this.serverGeneralService.getServerDirectory().subscribe(response => {
-      this.serverDirectory = response.path;
+    this.serverGeneralService.getGeneralProperties().subscribe(response => {
+      this.serverDirectory = response.serverDirectory;
+      this.maxPlayers = response.maxPlayers;
       this.maskService.hide();
     });
   }
 
   save() {
     this.maskService.show();
-    this.serverGeneralService.saveServerDirectory(this.serverDirectory).subscribe(response => {
+
+    const saveGeneralProperties = {
+      path: this.serverDirectory,
+      maxPlayers: this.maxPlayers
+    } as SaveGeneralProperties;
+
+    this.serverGeneralService.saveGeneralProperties(saveGeneralProperties).subscribe(response => {
       this.maskService.hide();
       this.notificationService.successNotification('Server directory has been updated!');
     });

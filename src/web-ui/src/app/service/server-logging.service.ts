@@ -12,19 +12,19 @@ export class ServerLoggingService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getLoggingSectionData(): Observable<LoggingSectionDataResponse> {
-    return this.httpClient.get<LoggingSectionDataResponse>(this.LOGGING_URL);
+  getLoggingSectionData(): Observable<LoggingProperties> {
+    return this.httpClient.get<LoggingProperties>(this.LOGGING_URL);
   }
 
-  saveLoggingSectionData(loggingSectionDataRequest: SaveLoggingSectionDataRequest): Observable<any> {
+  saveLoggingSectionData(loggingSectionDataRequest: SaveLoggingPropertiesRequest): Observable<any> {
     return this.httpClient.post(this.LOGGING_URL, loggingSectionDataRequest);
   }
 }
 
-export interface LoggingSectionDataResponse {
+export interface LoggingProperties {
   logFile: string
 }
 
-export interface SaveLoggingSectionDataRequest {
+export interface SaveLoggingPropertiesRequest {
   logFile: string
 }
