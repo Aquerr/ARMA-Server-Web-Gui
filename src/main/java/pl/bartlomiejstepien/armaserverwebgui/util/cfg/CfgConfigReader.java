@@ -164,6 +164,10 @@ public class CfgConfigReader
         String propertyName = property.substring(0, property.indexOf("=")).trim();
         String propertyValue = property.substring(property.indexOf("=") + 1).trim();
         Field field = findFieldForPropertyName(fields, propertyName);
+        if (field == null)
+        {
+            return;
+        }
         Object value = PARSERS.get(field.getAnnotation(CfgProperty.class).type()).parse(propertyValue);
         field.setAccessible(true);
         field.set(armaServerConfig, value);
