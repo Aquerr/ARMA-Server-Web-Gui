@@ -38,9 +38,9 @@ public class ASWGConfig
     private String username;
     @Value("${aswg.password}")
     private String password;
-    @Value("${aswg.server-directory-path}")
+    @Value("${aswg.server-directory-path:}")
     private String serverDirectoryPath;
-    @Value("${aswg.server-command-line-parameters}")
+    @Value("${aswg.server-command-line-parameters:}")
     private String serverCommandLineParameters;
 
     @EventListener(ApplicationReadyEvent.class)

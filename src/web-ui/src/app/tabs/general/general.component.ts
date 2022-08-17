@@ -12,6 +12,9 @@ export class GeneralComponent implements OnInit {
 
   serverDirectory: string = "";
   maxPlayers: number = 64;
+  motd: string[] = [];
+
+  motdLine: string = "";
 
   constructor(private maskService: MaskService,
               private serverGeneralService: ServerGeneralService,
@@ -30,7 +33,7 @@ export class GeneralComponent implements OnInit {
     this.maskService.show();
 
     const saveGeneralProperties = {
-      path: this.serverDirectory,
+      serverDirectory: this.serverDirectory,
       maxPlayers: this.maxPlayers
     } as SaveGeneralProperties;
 

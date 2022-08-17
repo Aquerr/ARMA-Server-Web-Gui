@@ -18,7 +18,7 @@ import {MatRippleModule} from "@angular/material/core";
 import { AswgSpinnerComponent } from './aswg-spinner/aswg-spinner.component';
 import {NgxSpinnerModule} from "ngx-spinner";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {AuthInterceptor} from "./interceptors/auth.interceptor";
+import {AswgHttpInterceptor} from "./interceptors/aswg-http.interceptor";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
@@ -73,7 +73,7 @@ import { MissionDeleteConfirmDialogComponent } from './tabs/missions/list-missio
     ToastrModule.forRoot()
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

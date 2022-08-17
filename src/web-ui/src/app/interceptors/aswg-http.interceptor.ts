@@ -12,7 +12,7 @@ import {MaskService} from "../service/mask.service";
 import {NotificationService} from "../service/notification.service";
 
 @Injectable()
-export class AuthInterceptor implements HttpInterceptor {
+export class AswgHttpInterceptor implements HttpInterceptor {
 
   constructor(private router: Router,
               private authService: AuthService,
@@ -38,7 +38,11 @@ export class AuthInterceptor implements HttpInterceptor {
         } else if (error.status === 404) {
           this.router.navigate(['']);
           this.maskService.hide();
-          this.notificationService.errorNotification("Resource has not been found.", "Error 404");
+          this.notificationService.errorNotification("Resource has not been found.", "Not found");
+        } else if (error.status === 500) {
+          this.router.navigate(['']);
+          this.maskService.hide();
+          this.notificationService.errorNotification("An error occurred on the server.", "Server error");
         } else {
           console.warn(error.message);
         }

@@ -24,7 +24,7 @@ public class GeneralController
     public Mono<GeneralPropertiesResponse> getGeneralProperties()
     {
         return Mono.zip(
-                Mono.just(aswgConfig.getServerDirectoryPath()),
+                Mono.justOrEmpty(aswgConfig.getServerDirectoryPath()),
                 Mono.just(generalService.getGeneralProperties())
         ).map(this::mapToResponse);
     }

@@ -1,16 +1,25 @@
 <div>
   <h1>General</h1>
   <div>
-    <div>
+    <div class="fields">
       <mat-form-field class="server-directory-field">
         <mat-label>Server directory</mat-label>
         <input name="server-directory" [(ngModel)]="serverDirectory" matInput type="text">
       </mat-form-field>
       <mat-form-field class="max-players-field">
         <mat-label>Max players</mat-label>
-        <input name="max-players" [(ngModel)]="maxPlayers" matInput type="number">
+        <input name="max-players" [(ngModel)]="maxPlayers" matInput type="number" min="0">
       </mat-form-field>
     </div>
+    <section class="motd-section">
+      <mat-form-field class="motd-line-input">
+        <mat-label>Motd Line</mat-label>
+        <input name="motd-line" [(ngModel)]="motdLine" matInput type="text">
+      </mat-form-field>
+      <mat-list class="mtod-list">
+        <mat-list-item role="listitem" *ngFor="let motdLine of motd">{{motdLine}}</mat-list-item>
+      </mat-list>
+    </section>
   </div>
   <div>
     <button mat-flat-button color="primary" (click)="save()">Save</button>

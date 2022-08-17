@@ -20,7 +20,7 @@ export class ServerGeneralService {
 }
 
 export interface SaveGeneralProperties {
-  path: string;
+  serverDirectory: string;
   maxPlayers: number;
 }
 
