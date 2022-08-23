@@ -31,8 +31,10 @@ import { DragAndDropFileDirective } from './directive/drag-and-drop-file.directi
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { SecurityComponent } from './tabs/security/security.component';
-import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import { MatDialogModule} from "@angular/material/dialog";
 import { MissionDeleteConfirmDialogComponent } from './tabs/missions/list-missions/mission-delete-confirm-dialog/mission-delete-confirm-dialog.component';
+import { MotdListComponent } from './tabs/general/motd-list/motd-list.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,8 @@ import { MissionDeleteConfirmDialogComponent } from './tabs/missions/list-missio
     ListMissionsComponent,
     DragAndDropFileDirective,
     SecurityComponent,
-    MissionDeleteConfirmDialogComponent
+    MissionDeleteConfirmDialogComponent,
+    MotdListComponent
   ],
   imports: [
     BrowserModule,
@@ -70,6 +73,7 @@ import { MissionDeleteConfirmDialogComponent } from './tabs/missions/list-missio
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    DragDropModule,
     ToastrModule.forRoot()
   ],
   providers: [

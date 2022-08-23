@@ -22,9 +22,11 @@ export class ServerGeneralService {
 export interface SaveGeneralProperties {
   serverDirectory: string;
   maxPlayers: number;
+  motd: string[];
 }
 
 export interface GeneralProperties {
   serverDirectory: string;
   maxPlayers: number;
+  motd: string[];
 }
