@@ -1,0 +1,12 @@
+<div>
+  <h1>Server Status</h1>
+  <div>
+    Status: <span [ngStyle]="getServerStatus() == 'OFFLINE' ? {'color': 'red'} : {'color': 'green'}">{{getServerStatus()}}</span>
+  </div>
+  <div>
+    Player list: TODO
+  </div>
+  <div style="margin-top: 5px;">
+    <button mat-flat-button color="primary">{{getServerStatus() == 'OFFLINE' ? 'START' : 'STOP'}}</button>
+  </div>
+</div>

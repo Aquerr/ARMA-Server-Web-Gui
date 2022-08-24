@@ -35,6 +35,7 @@ import { MatDialogModule} from "@angular/material/dialog";
 import { MissionDeleteConfirmDialogComponent } from './tabs/missions/list-missions/mission-delete-confirm-dialog/mission-delete-confirm-dialog.component';
 import { MotdListComponent } from './tabs/general/motd-list/motd-list.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { StatusComponent } from './tabs/status/status.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     DragAndDropFileDirective,
     SecurityComponent,
     MissionDeleteConfirmDialogComponent,
-    MotdListComponent
+    MotdListComponent,
+    StatusComponent
   ],
   imports: [
     BrowserModule,

@@ -5,6 +5,7 @@ import lombok.Builder;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.storage.ServerConfigStorage;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -16,13 +17,15 @@ import java.util.List;
 public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGenerator
 {
     @Resource
-    private final ArmaServerConfig armaServerConfig;
+    private final ServerConfigStorage serverConfigStorage;
     @Resource
     private final ASWGConfig aswgConfig;
 
     @Override
     public String generateParameters()
     {
+        ArmaServerConfig armaServerConfig = serverConfigStorage.getServerConfig();
+
         return ArmaServerParametersBuilder.builder()
                 .serverName(armaServerConfig.getHostname())
                 .configPath(aswgConfig.getServerDirectoryPath() + File.separator + "server.cfg")
