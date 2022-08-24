@@ -12,6 +12,8 @@ import pl.bartlomiejstepien.armaserverwebgui.service.GeneralService;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/general")
 @AllArgsConstructor
@@ -41,6 +43,7 @@ public class GeneralController
             this.aswgConfig.setServerDirectoryPath(properties.getServerDirectory());
             this.generalService.saveGeneralProperties(GeneralProperties.builder()
                     .maxPlayers(properties.getMaxPlayers())
+                    .motd(properties.getMotd())
                     .build());
         }).then(Mono.just(ResponseEntity.ok().build()));
     }
@@ -51,12 +54,14 @@ public class GeneralController
     {
         String serverDirectory;
         int maxPlayers;
+        List<String> motd;
 
         static GeneralPropertiesResponse of(String serverDirectory, GeneralProperties generalProperties)
         {
             return GeneralPropertiesResponse.builder()
                     .serverDirectory(serverDirectory)
                     .maxPlayers(generalProperties.getMaxPlayers())
+                    .motd(generalProperties.getMotd())
                     .build();
         }
     }
@@ -66,5 +71,6 @@ public class GeneralController
     {
         private String serverDirectory;
         private int maxPlayers;
+        private List<String> motd;
     }
 }

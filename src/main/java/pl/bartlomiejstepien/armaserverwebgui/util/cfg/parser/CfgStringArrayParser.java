@@ -11,7 +11,7 @@ public class CfgStringArrayParser implements CfgSimpleParser<String[]>
         StringBuilder stringBuilder = new StringBuilder();
         List<String> strings = new ArrayList<>();
         boolean isString = false;
-        for (char character : text.toCharArray())
+        for (char character : text.substring(1).toCharArray())
         {
             if ('\n' == character || '\t' == character)
             {
@@ -24,13 +24,17 @@ public class CfgStringArrayParser implements CfgSimpleParser<String[]>
                 continue;
             }
 
-            if (',' == character && !isString)
+            if (('}' == character || ',' == character) && !isString)
             {
-                strings.add(stringBuilder.toString());
+                strings.add(stringBuilder.toString().trim());
                 stringBuilder.setLength(0);
+                continue;
             }
 
-            stringBuilder.append(character);
+            if (isString)
+            {
+                stringBuilder.append(character);
+            }
         }
         return strings.toArray(new String[0]);
     }

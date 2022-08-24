@@ -1,6 +1,6 @@
 <div>
   <h1>General</h1>
-  <div>
+  <div class="general-properties">
     <div class="fields">
       <mat-form-field class="server-directory-field">
         <mat-label>Server directory</mat-label>
@@ -12,13 +12,7 @@
       </mat-form-field>
     </div>
     <section class="motd-section">
-      <mat-form-field class="motd-line-input">
-        <mat-label>Motd Line</mat-label>
-        <input name="motd-line" [(ngModel)]="motdLine" matInput type="text">
-      </mat-form-field>
-      <mat-list class="mtod-list">
-        <mat-list-item role="listitem" *ngFor="let motdLine of motd">{{motdLine}}</mat-list-item>
-      </mat-list>
+      <app-motd-list [motd]="motd"></app-motd-list>
     </section>
   </div>
   <div>
