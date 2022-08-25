@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.config.security;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,57 +21,81 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 @Configuration
-@EnableWebFluxSecurity
 public class SecurityConfig
 {
-    @Bean
-    public SecurityWebFilterChain filterChain(ServerHttpSecurity http,
-                                              ReactiveAuthenticationManager jwtAuthenticationManager,
-                                              JwtServerAuthenticationConverter jwtServerAuthenticationConverter)
+    @EnableWebFluxSecurity
+    @ConditionalOnProperty(value = "aswg.security.enabled", havingValue = "true")
+    public static class EnabledSecurityConfiguration
     {
-        AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(jwtAuthenticationManager);
-        authenticationWebFilter.setServerAuthenticationConverter(jwtServerAuthenticationConverter);
+        @Bean
+        public SecurityWebFilterChain filterChain(ServerHttpSecurity http,
+                                                  ReactiveAuthenticationManager jwtAuthenticationManager,
+                                                  JwtServerAuthenticationConverter jwtServerAuthenticationConverter)
+        {
+            AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(jwtAuthenticationManager);
+            authenticationWebFilter.setServerAuthenticationConverter(jwtServerAuthenticationConverter);
 
 
-        http.authorizeExchange(auths -> {
-            auths.pathMatchers("/api/v1/auth").permitAll();
-            auths.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-            auths.anyExchange().authenticated();
-        })
-            .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-            .formLogin().disable()
-            .httpBasic().disable()
-        .cors().and()
-        .csrf().disable();
-        return http.build();
-    }
+            http.authorizeExchange(auths -> {
+                        auths.pathMatchers("/api/v1/auth").permitAll();
+                        auths.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                        auths.anyExchange().authenticated();
+                    })
+                    .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                    .formLogin().disable()
+                    .httpBasic().disable()
+                    .cors().and()
+                    .csrf().disable();
+            return http.build();
+        }
 
-    @Bean
-    public ReactiveAuthenticationManager jwtAuthenticationManager(JwtService jwtService)
-    {
-        return authentication -> {
-            return Mono.just(authentication)
-                    .map(authentication1 -> jwtService.validateJwt(String.valueOf(authentication1.getCredentials())))
-                    .onErrorResume(Exception.class, err -> Mono.error(new BadCredentialsException("Bad auth token!")))
-                    .mapNotNull(jws -> {
-                        return new UsernamePasswordAuthenticationToken(
-                                jws.getBody().getSubject(),
-                                String.valueOf(authentication.getCredentials()),
-                                List.of(new SimpleGrantedAuthority("USER"))); // Needed to make user authenticated!
-                    });
-        };
-    }
+        @Bean
+        public ReactiveAuthenticationManager jwtAuthenticationManager(JwtService jwtService)
+        {
+            return authentication -> {
+                return Mono.just(authentication)
+                        .map(authentication1 -> jwtService.validateJwt(String.valueOf(authentication1.getCredentials())))
+                        .onErrorResume(Exception.class, err -> Mono.error(new BadCredentialsException("Bad auth token!")))
+                        .mapNotNull(jws -> {
+                            return new UsernamePasswordAuthenticationToken(
+                                    jws.getBody().getSubject(),
+                                    String.valueOf(authentication.getCredentials()),
+                                    List.of(new SimpleGrantedAuthority("USER"))); // Needed to make user authenticated!
+                        });
+            };
+        }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource()
-    {
-        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-        corsConfiguration.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.HEAD.name(), HttpMethod.POST.name(), HttpMethod.DELETE.name()));
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource()
+        {
+            CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+            corsConfiguration.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.HEAD.name(), HttpMethod.POST.name(), HttpMethod.DELETE.name()));
 //        corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
-        corsConfiguration.setAllowedOrigins(List.of("*"));
+            corsConfiguration.setAllowedOrigins(List.of("*"));
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            source.registerCorsConfiguration("/**", corsConfiguration);
+            return source;
+        }
+    }
+
+    @EnableWebFluxSecurity
+    @ConditionalOnProperty(value = "aswg.security.enabled", matchIfMissing = true, havingValue = "false")
+    public static class DisabledSecurityConfiguration
+    {
+        @Bean
+        public SecurityWebFilterChain filterChain(ServerHttpSecurity http)
+        {
+            http.cors()
+                .and()
+                .headers().frameOptions().disable()
+                .and()
+                .authorizeExchange(authorizeExchangeSpec -> {
+                    authorizeExchangeSpec.pathMatchers("/**").permitAll();
+                })
+                .csrf().disable()
+                .httpBasic();
+            return http.build();
+        }
     }
 }
