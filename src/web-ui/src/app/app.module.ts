@@ -36,6 +36,7 @@ import { MissionDeleteConfirmDialogComponent } from './tabs/missions/list-missio
 import { MotdListComponent } from './tabs/general/motd-list/motd-list.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { StatusComponent } from './tabs/status/status.component';
+import { ListModsComponent } from './tabs/mods/list-mods/list-mods.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { StatusComponent } from './tabs/status/status.component';
     LoginComponent,
     AswgSpinnerComponent,
     UploadMissionComponent,
+    ListModsComponent,
     ListMissionsComponent,
     DragAndDropFileDirective,
     SecurityComponent,

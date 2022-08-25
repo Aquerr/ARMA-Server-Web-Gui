@@ -17,12 +17,14 @@ public class ModStorageImpl implements ModStorage
 {
     private final Path modDirectory;
 
-    public ModStorageImpl(ASWGConfig aswgConfig) {
+    public ModStorageImpl(ASWGConfig aswgConfig)
+    {
         this.modDirectory = Paths.get(aswgConfig.getServerDirectoryPath());
     }
 
     @Override
-    public List<String> getInstalledModNames() {
+    public List<String> getInstalledModNames()
+    {
         return Optional.ofNullable(modDirectory.toFile().listFiles())
                 .map(files -> Stream.of(files)
                         .map(File::getName)
