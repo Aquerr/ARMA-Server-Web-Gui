@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,32 +22,32 @@ import java.util.stream.Stream;
 public class MissionStorageImpl implements MissionStorage
 {
     private final ASWGConfig aswgConfig;
-    private final Path missionsDirectory;
+    private final Supplier<Path> missionsDirectory;
 
     @Autowired
     public MissionStorageImpl(final ASWGConfig aswgConfig)
     {
         this.aswgConfig = aswgConfig;
-        this.missionsDirectory = Paths.get(aswgConfig.getServerDirectoryPath() + File.separator + "MPMissions");
+        this.missionsDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath() + File.separator + "MPMissions");
     }
 
     @Override
     public Mono<Void> save(FilePart multipartFile) throws IOException
     {
-        Files.createDirectories(missionsDirectory);
-        return multipartFile.transferTo(missionsDirectory.resolve(multipartFile.filename()));
+        Files.createDirectories(missionsDirectory.get());
+        return multipartFile.transferTo(missionsDirectory.get().resolve(multipartFile.filename()));
     }
 
     @Override
     public boolean doesMissionExists(String filename)
     {
-        return Files.exists(missionsDirectory.resolve(filename));
+        return Files.exists(missionsDirectory.get().resolve(filename));
     }
 
     @Override
     public List<String> getInstalledMissionNames()
     {
-        return Optional.ofNullable(missionsDirectory.toFile().listFiles())
+        return Optional.ofNullable(missionsDirectory.get().toFile().listFiles())
                 .map(files -> Stream.of(files)
                         .map(File::getName)
                         .filter(name -> name.endsWith(".pbo"))
@@ -57,7 +58,7 @@ public class MissionStorageImpl implements MissionStorage
     @Override
     public boolean deleteMission(String missionName)
     {
-        final File[] files = this.missionsDirectory.toFile().listFiles();
+        final File[] files = this.missionsDirectory.get().toFile().listFiles();
         if (files != null)
         {
             for (final File file : files)

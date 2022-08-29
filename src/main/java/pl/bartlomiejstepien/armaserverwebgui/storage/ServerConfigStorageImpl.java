@@ -9,6 +9,7 @@ import pl.bartlomiejstepien.armaserverwebgui.util.cfg.CfgConfigWriter;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.util.function.Supplier;
 
 @Repository
 @RequiredArgsConstructor
@@ -17,23 +18,23 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
     private final ASWGConfig aswgConfig;
     private final CfgConfigReader cfgConfigReader;
     private final CfgConfigWriter cfgConfigWriter;
-    private String cfgFilePath;
+    private Supplier<String> cfgFilePath;
 
     @PostConstruct
     private void postConstruct()
     {
-        this.cfgFilePath = aswgConfig.getServerDirectoryPath() + File.separator + "server.cfg";
+        this.cfgFilePath = () -> aswgConfig.getServerDirectoryPath() + File.separator + "server.cfg";
     }
 
     @Override
     public ArmaServerConfig getServerConfig()
     {
-        return cfgConfigReader.readConfig(new File(cfgFilePath));
+        return cfgConfigReader.readConfig(new File(cfgFilePath.get()));
     }
 
     @Override
     public void saveServerConfig(ArmaServerConfig armaServerConfig)
     {
-        cfgConfigWriter.saveConfig(new File(cfgFilePath), armaServerConfig);
+        cfgConfigWriter.saveConfig(new File(cfgFilePath.get()), armaServerConfig);
     }
 }

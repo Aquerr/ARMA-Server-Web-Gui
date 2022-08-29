@@ -11,6 +11,9 @@ import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.storage.ServerConfigStorage;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -21,6 +24,7 @@ class GeneralServiceImplTest
     private static final int MAX_PLAYERS = 10;
     private static final String PASSWORD = "test";
     private static final String LOG_FILE = "logFile";
+    private static final List<String> MOTD = Arrays.asList("testmod");
 
     @Mock
     private ServerConfigStorage serverConfigStorage;
@@ -62,6 +66,7 @@ class GeneralServiceImplTest
         ArmaServerConfig armaServerConfig = new ArmaServerConfig();
         armaServerConfig.setPassword(PASSWORD);
         armaServerConfig.setLogFile(LOG_FILE);
+        armaServerConfig.setMotd(new String[]{"testmod"});
         given(serverConfigStorage.getServerConfig()).willReturn(armaServerConfig);
 
         generalService.saveGeneralProperties(prepareGeneralProperties());
@@ -71,6 +76,7 @@ class GeneralServiceImplTest
         expectedArmaServerConfig.setPassword(PASSWORD);
         expectedArmaServerConfig.setLogFile(LOG_FILE);
         expectedArmaServerConfig.setMaxPlayers(MAX_PLAYERS);
+        expectedArmaServerConfig.setMotd(new String[]{"testmod"});
         assertThat(armaServerConfigArgumentCaptor.getValue()).isEqualTo(expectedArmaServerConfig);
     }
 
@@ -78,6 +84,7 @@ class GeneralServiceImplTest
     {
         return GeneralProperties.builder()
                 .maxPlayers(MAX_PLAYERS)
+                .motd(MOTD)
                 .build();
     }
 }

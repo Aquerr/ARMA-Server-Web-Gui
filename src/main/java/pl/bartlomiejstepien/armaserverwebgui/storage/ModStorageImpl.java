@@ -9,23 +9,24 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Repository
 public class ModStorageImpl implements ModStorage
 {
-    private final Path modDirectory;
+    private final Supplier<Path> modDirectory;
 
     public ModStorageImpl(ASWGConfig aswgConfig)
     {
-        this.modDirectory = Paths.get(aswgConfig.getServerDirectoryPath());
+        this.modDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath());
     }
 
     @Override
     public List<String> getInstalledModNames()
     {
-        return Optional.ofNullable(modDirectory.toFile().listFiles())
+        return Optional.ofNullable(modDirectory.get().toFile().listFiles())
                 .map(files -> Stream.of(files)
                         .map(File::getName)
                         .filter(name -> name.startsWith("@"))
