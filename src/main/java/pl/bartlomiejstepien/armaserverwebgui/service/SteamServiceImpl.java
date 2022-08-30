@@ -28,7 +28,7 @@ public class SteamServiceImpl implements SteamService
     private final ASWGConfig aswgConfig;
 
     @Override
-    public boolean getServerStatus()
+    public boolean isServerRunning()
     {
         try
         {

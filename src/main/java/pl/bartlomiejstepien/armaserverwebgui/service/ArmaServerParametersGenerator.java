@@ -1,6 +1,8 @@
 package pl.bartlomiejstepien.armaserverwebgui.service;
 
+import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerParameters;
+
 public interface ArmaServerParametersGenerator
 {
-    String generateParameters();
+    ArmaServerParameters generateParameters();
 }
