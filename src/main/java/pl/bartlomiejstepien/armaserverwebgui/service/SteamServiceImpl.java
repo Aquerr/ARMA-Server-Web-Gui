@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class SteamServiceImpl implements SteamService
 {
     private static final String LOCALHOST_ADDRESS = "localhost";
-    private static final int DEFAULT_SERVER_PORT = 2302;
+    private static final int DEFAULT_SERVER_STEAM_QUERY_PORT = 2303;
 
     private final ASWGConfig aswgConfig;
 
@@ -32,7 +32,7 @@ public class SteamServiceImpl implements SteamService
     {
         try
         {
-            GoldSrcServer goldSrcServer = new GoldSrcServer(LOCALHOST_ADDRESS, DEFAULT_SERVER_PORT);
+            GoldSrcServer goldSrcServer = new GoldSrcServer(LOCALHOST_ADDRESS, DEFAULT_SERVER_STEAM_QUERY_PORT);
             goldSrcServer.initialize();
             return true;
         }
@@ -47,7 +47,7 @@ public class SteamServiceImpl implements SteamService
     {
         try
         {
-            GoldSrcServer goldSrcServer = new GoldSrcServer(LOCALHOST_ADDRESS, DEFAULT_SERVER_PORT);
+            GoldSrcServer goldSrcServer = new GoldSrcServer(LOCALHOST_ADDRESS, DEFAULT_SERVER_STEAM_QUERY_PORT);
             goldSrcServer.initialize();
             return goldSrcServer.getPlayers().values().stream()
                     .map(this::mapToArmaServerPlayer)

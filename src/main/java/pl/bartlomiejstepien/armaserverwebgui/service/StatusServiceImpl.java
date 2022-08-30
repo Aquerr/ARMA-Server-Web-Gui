@@ -32,7 +32,6 @@ public class StatusServiceImpl implements StatusService
         ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command(serverParams.asList());
-        processBuilder.directory(new File("/home/nerdi/Pulpit/arma3server"));
         try
         {
             Process process = processBuilder.start();

@@ -25,12 +25,19 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
     {
         ArmaServerConfig armaServerConfig = serverConfigStorage.getServerConfig();
 
+        String serverExecToUse = is64Bit() ? "arma3server_x64" : "arma3server";
+
         return ArmaServerParameters.builder()
                 .serverName(armaServerConfig.getHostname())
                 .configPath(aswgConfig.getServerDirectoryPath() + File.separator + "server.cfg")
-                .executablePath(aswgConfig.getServerDirectoryPath() + File.separator + "arma3server")
+                .executablePath(aswgConfig.getServerDirectoryPath() + File.separator + serverExecToUse)
                 .port(2302) //TODO: Allow specifying server port
                 .mods(Collections.emptyList()) //TODO...
                 .build();
+    }
+
+    private boolean is64Bit()
+    {
+        return System.getProperty("os.arch").contains("64");
     }
 }
