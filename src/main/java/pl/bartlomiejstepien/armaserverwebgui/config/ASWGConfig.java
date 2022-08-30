@@ -31,6 +31,7 @@ public class ASWGConfig
     private static final String USERNAME_PROPERTY = "aswg.username";
     private static final String PASSWORD_PROPERTY = "aswg.password";
     private static final String SERVER_COMMAND_LINE_PARAMETERS_PROPERTY = "aswg.server-command-line-parameters";
+    private static final String STEAMCMD_PATH = "aswg.steamcmd.path";
 
 //    private Properties configurationProperties = new Properties();
 
@@ -40,6 +41,8 @@ public class ASWGConfig
     private String password;
     @Value("${aswg.server-directory-path:}")
     private String serverDirectoryPath;
+    @Value("${aswg.steamcmd.path}")
+    private String steamCmdPath;
     @Value("${aswg.server-command-line-parameters:}")
     private String serverCommandLineParameters;
 
@@ -48,7 +51,6 @@ public class ASWGConfig
     {
         // Create configuration file on startup
         createConfigFileIfNotExists();
-//        loadProperties();
     }
 
     private void createConfigFileIfNotExists() throws IOException
@@ -61,47 +63,11 @@ public class ASWGConfig
             configurationProperties.setProperty(USERNAME_PROPERTY, this.username);
             configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
             configurationProperties.setProperty(SERVER_COMMAND_LINE_PARAMETERS_PROPERTY, this.serverCommandLineParameters);
+            configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
 
             saveProperties();
         }
     }
-
-//    private void loadProperties() throws IOException
-//    {
-//        try(InputStream inputStream = new FileInputStream(ASWG_CONFIGURATION_FILE_PATH.toFile());
-//            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-//            BufferedReader bufferedReader = new BufferedReader(inputStreamReader))
-//        {
-//            configurationProperties.load(bufferedReader);
-//        }
-//    }
-
-//    public String getUsername()
-//    {
-//        return this.configurationProperties.getProperty(USERNAME_PROPERTY, "user");
-//    }
-//
-//    public String getPassword()
-//    {
-//        return this.configurationProperties.getProperty(PASSWORD_PROPERTY, "changeme");
-//    }
-//
-//    public String getServerDirectory()
-//    {
-//        return this.configurationProperties.getProperty(SERVER_DIRECTORY_PATH_PROPERTY, "");
-//    }
-//
-//    public void setServerDirectory(String path)
-//    {
-//        this.configurationProperties.setProperty(SERVER_DIRECTORY_PATH_PROPERTY, path);
-//        saveProperties();
-//    }
-//
-//    public String getServerCommandLineParameters()
-//    {
-//        return this.configurationProperties.getProperty(SERVER_COMMAND_LINE_PARAMETERS_PROPERTY, "");
-//    }
-
 
     public String getUsername()
     {
@@ -123,6 +89,11 @@ public class ASWGConfig
         return serverCommandLineParameters;
     }
 
+    public String getSteamCmdPath()
+    {
+        return this.steamCmdPath;
+    }
+
     public void setServerDirectoryPath(String serverDirectoryPath)
     {
         this.serverDirectoryPath = serverDirectoryPath;
@@ -139,6 +110,7 @@ public class ASWGConfig
             configurationProperties.setProperty(USERNAME_PROPERTY, this.username);
             configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
             configurationProperties.setProperty(SERVER_COMMAND_LINE_PARAMETERS_PROPERTY, this.serverCommandLineParameters);
+            configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
             configurationProperties.store(bufferedWriter, "ASWG Configuration File");
         }
         catch (IOException e)
