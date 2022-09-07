@@ -19,15 +19,24 @@ export class ServerMissionsService {
     return this.httpClient.request(request);
   }
 
-  getInstalledMissions(): Observable<GetInstalledMissionsResponse> {
-    return this.httpClient.get<GetInstalledMissionsResponse>(this.MISSIONS_URL);
+  getInstalledMissions(): Observable<GetMissionsResponse> {
+    return this.httpClient.get<GetMissionsResponse>(this.MISSIONS_URL);
   }
 
   deleteMission(missionName: string): Observable<any> {
     return this.httpClient.delete(`${this.MISSIONS_URL}/` + missionName, {body: {}});
   }
+
+  saveEnabledMissions(saveEnabledMissionsRequest: SaveEnabledMissionsRequest): Observable<any> {
+    return this.httpClient.post(`${this.MISSIONS_URL}/enabled`, saveEnabledMissionsRequest);
+  }
 }
 
-export interface GetInstalledMissionsResponse {
+export interface GetMissionsResponse {
+  disabledMissions: string[];
+  enabledMissions: string[];
+}
+
+export interface SaveEnabledMissionsRequest {
   missions: string[];
 }

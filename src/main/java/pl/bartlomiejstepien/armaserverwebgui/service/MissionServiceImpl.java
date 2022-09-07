@@ -4,17 +4,22 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.exception.MissionFileAlreadyExistsException;
+import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.model.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.storage.MissionStorage;
+import pl.bartlomiejstepien.armaserverwebgui.storage.ServerConfigStorage;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class MissionServiceImpl implements MissionService
 {
     private final MissionStorage missionStorage;
+    private final ServerConfigStorage serverConfigStorage;
 
     @Override
     public Mono<Void> save(FilePart multipartFile)
@@ -42,5 +47,44 @@ public class MissionServiceImpl implements MissionService
     public boolean deleteMission(String missionName)
     {
         return this.missionStorage.deleteMission(missionName);
+    }
+
+    @Override
+    public void saveEnabledMissionList(List<String> missions)
+    {
+        ArmaServerConfig armaServerConfig = this.serverConfigStorage.getServerConfig();
+        ArmaServerConfig.Missions missionsConfigObject = new ArmaServerConfig.Missions();
+        armaServerConfig.setMissions(missionsConfigObject);
+
+        missionsConfigObject.setMissions(missions.stream()
+                .map(this::convertToMissionObject)
+                .collect(Collectors.toList()));
+
+        this.serverConfigStorage.saveServerConfig(armaServerConfig);
+    }
+
+    @Override
+    public Missions getMissions()
+    {
+        List<String> installedMissions = getInstalledMissionNames();
+        List<String> enabledMissions = this.serverConfigStorage.getServerConfig().getMissions().getMissions().stream()
+                .map(ArmaServerConfig.Missions.Mission::getTemplate)
+                .collect(Collectors.toList());
+        Missions missions = new Missions();
+        missions.setEnabledMissions(enabledMissions);
+        missions.setDisabledMissions(installedMissions.stream()
+                .filter(mission -> !enabledMissions.contains(mission))
+                .collect(Collectors.toList()));
+
+        return missions;
+    }
+
+    private ArmaServerConfig.Missions.Mission convertToMissionObject(String missionName)
+    {
+        ArmaServerConfig.Missions.Mission mission = new ArmaServerConfig.Missions.Mission();
+        mission.setTemplate(missionName);
+        mission.setDifficulty("regular");
+        mission.setParams(new ArmaServerConfig.Missions.Mission.Params());
+        return mission;
     }
 }

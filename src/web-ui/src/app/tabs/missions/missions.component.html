@@ -1,10 +1,13 @@
 <div appDragAndDropFile (fileDropped)="onFileDropped($event)">
   <h1>Missions</h1>
   <div class="app-list-missions" cdkDropListGroup>
-    <aswg-drag-drop-list [items]="missions" [header]="'Disabled'" class="mods-list" (deleteClicked)="showMissionDeleteConfirmationDialog($event)"></aswg-drag-drop-list>
-    <aswg-drag-drop-list [header]="'Enabled'" class="mods-list" (deleteClicked)="showMissionDeleteConfirmationDialog($event)"></aswg-drag-drop-list>
+    <aswg-drag-drop-list [items]="disabledMissions" [header]="'Disabled'" class="mods-list" (deleteClicked)="showMissionDeleteConfirmationDialog($event)"></aswg-drag-drop-list>
+    <aswg-drag-drop-list #enabledMissionsList [items]="enabledMissions" [header]="'Enabled'" class="mods-list" (deleteClicked)="showMissionDeleteConfirmationDialog($event)"></aswg-drag-drop-list>
   </div>
   <div class="app-upload-mission">
     <app-upload-mission #uploadMission (missionUploaded)="onMissionUploaded()"></app-upload-mission>
+  </div>
+  <div>
+    <button mat-flat-button color="primary" (click)="save()">Save</button>
   </div>
 </div>

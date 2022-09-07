@@ -51,6 +51,7 @@ public class MissionStorageImpl implements MissionStorage
                 .map(files -> Stream.of(files)
                         .map(File::getName)
                         .filter(name -> name.endsWith(".pbo"))
+                        .map(name -> name.substring(0, name.length() - 4))
                         .collect(Collectors.toList()))
                 .orElse(Collections.emptyList());
     }

@@ -94,11 +94,11 @@ public class CfgMissionsClassParser implements CfgClassParser<ArmaServerConfig.M
                 if ('{' == character)
                 {
                     String possibleClassProperty = stringBuilder.toString();
-                    if (possibleClassProperty.startsWith("class"))
+                    if (possibleClassProperty.trim().startsWith("class"))
                     {
                         ArmaServerConfig.Missions.Mission mission = this.cfgMissionClassParser.parse(bufferedReader);
                         missions.getMissions().add(mission);
-                        stringBuilder = new StringBuilder();
+                        stringBuilder.setLength(0);
                     }
 
                     continue;

@@ -6,7 +6,9 @@ import {MaskService} from "../../service/mask.service";
 import {MatDialog} from "@angular/material/dialog";
 import {
   MissionDeleteConfirmDialogComponent
-} from "./list-missions/mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
+} from "./mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
+import {AswgDragDropListComponent} from "../../common-ui/aswg-drag-drop-list/aswg-drag-drop-list.component";
+import {NotificationService} from "../../service/notification.service";
 
 @Component({
   selector: 'app-missions',
@@ -16,13 +18,16 @@ import {
 export class MissionsComponent implements OnInit, OnDestroy {
 
   @ViewChild('uploadMission') uploadMissionComponent!: UploadMissionComponent;
+  @ViewChild('enabledMissionsList') enabledMissionsList!: AswgDragDropListComponent;
 
-  missions: string[] = [];
+  disabledMissions: string[] = [];
+  enabledMissions: string[] = [];
   reloadMissionsDataSubject: Subject<any>;
   reloadMissionDataSubscription!: Subscription;
 
   constructor(private missionsService: ServerMissionsService,
               private maskService: MaskService,
+              private notificationService: NotificationService,
               private matDialog: MatDialog) {
     this.reloadMissionsDataSubject = new Subject();
   }
@@ -39,7 +44,6 @@ export class MissionsComponent implements OnInit, OnDestroy {
   }
 
   onFileDropped(file: File) {
-    console.log('GOT FILE! ' + file);
     this.uploadMissionComponent.uploadFile(file);
   }
 
@@ -50,7 +54,8 @@ export class MissionsComponent implements OnInit, OnDestroy {
   private reloadMissions(): void {
     this.maskService.show();
     this.missionsService.getInstalledMissions().subscribe(response => {
-      this.missions = response.missions;
+      this.disabledMissions = response.disabledMissions;
+      this.enabledMissions = response.enabledMissions;
       this.maskService.hide();
     });
   }
@@ -74,6 +79,15 @@ export class MissionsComponent implements OnInit, OnDestroy {
     this.missionsService.deleteMission(missionName).subscribe(response => {
       this.maskService.hide();
       this.reloadMissionsDataSubject.next(null);
+    });
+  }
+
+  save() {
+    this.maskService.show();
+    console.log(this.enabledMissionsList.items);
+    this.missionsService.saveEnabledMissions({missions: this.enabledMissionsList.items}).subscribe(response => {
+      this.maskService.hide();
+      this.notificationService.successNotification('Active mission list saved!', 'Success');
     });
   }
 }

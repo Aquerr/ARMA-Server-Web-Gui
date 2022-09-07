@@ -133,8 +133,7 @@ public class CfgMissionParamsClassParser implements CfgClassParser<ArmaServerCon
     @Override
     public String parseToString(Object value)
     {
-        //TODO...
-        return "{};";
+        return "class Params {};";
     }
 
     private void parseProperty(ArmaServerConfig.Missions.Mission.Params params, String property) throws IllegalAccessException

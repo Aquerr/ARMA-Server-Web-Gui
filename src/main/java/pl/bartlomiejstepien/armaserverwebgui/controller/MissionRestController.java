@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.bartlomiejstepien.armaserverwebgui.controller.validator.MissionFileValidator;
 import pl.bartlomiejstepien.armaserverwebgui.exception.MissionFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.exception.NotAllowedFileTypeException;
+import pl.bartlomiejstepien.armaserverwebgui.model.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.service.MissionService;
 import reactor.core.publisher.Mono;
 
@@ -26,10 +28,17 @@ public class MissionRestController
     private final MissionFileValidator missionFileValidator;
 
     @GetMapping
-    public Mono<GetInstalledMissionsResponse> getInstalledMissions()
+    public Mono<GetModsResponse> getMissions()
     {
-        return Mono.just(this.missionService.getInstalledMissionNames())
-                .map(GetInstalledMissionsResponse::of);
+        return Mono.just(this.missionService.getMissions())
+                .map(GetModsResponse::of);
+    }
+
+    @PostMapping("/enabled")
+    public Mono<ResponseEntity<?>> saveEnabledMissionList(@RequestBody SaveEnabledMissionListRequest saveEnabledMissionListRequest)
+    {
+        return Mono.empty().doFirst(() -> this.missionService.saveEnabledMissionList(saveEnabledMissionListRequest.getMissions()))
+                .then(Mono.just(ResponseEntity.ok().build()));
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -75,7 +84,19 @@ public class MissionRestController
     }
 
     @Value(staticConstructor = "of")
-    private static class GetInstalledMissionsResponse
+    private static class GetModsResponse
+    {
+        List<String> disabledMissions;
+        List<String> enabledMissions;
+
+        private static GetModsResponse of(Missions missions)
+        {
+            return new GetModsResponse(missions.getDisabledMissions(), missions.getEnabledMissions());
+        }
+    }
+
+    @Data
+    private static class SaveEnabledMissionListRequest
     {
         List<String> missions;
     }

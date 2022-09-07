@@ -7,7 +7,6 @@ import pl.bartlomiejstepien.armaserverwebgui.util.cfg.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.CfgReflectionUtil;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
@@ -96,7 +95,7 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
                 if ('{' == character)
                 {
                     String possibleClassProperty = stringBuilder.toString();
-                    if (possibleClassProperty.startsWith("class Params"))
+                    if (possibleClassProperty.trim().startsWith("class Params"))
                     {
                         ArmaServerConfig.Missions.Mission.Params params = this.cfgMissionParamsClassParser.parse(bufferedReader);
                         mission.setParams(params);
@@ -142,7 +141,7 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
         ArmaServerConfig.Missions.Mission mission = (ArmaServerConfig.Missions.Mission) value;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("class ")
-                .append(mission.getTemplate().replaceAll("\\.", "_"))
+                .append(mission.getTemplate().replaceAll("\\.", "_").replaceAll("-", "_"))
                 .append("\n")
                 .append("{");
 
@@ -159,6 +158,8 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
                 e.printStackTrace();
             }
         }
+
+        stringBuilder.append("};\n");
 
         return stringBuilder.toString();
     }
