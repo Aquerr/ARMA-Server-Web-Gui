@@ -1,0 +1,13 @@
+<h1>{{header}}</h1>
+<div
+    cdkDropList
+    [cdkDropListData]="items"
+    class="list"
+    cdkDropListSortingDisabled
+    (cdkDropListDropped)="drop($event)">
+    <div class="list-item-container" *ngFor="let item of items" cdkDrag>{{item}}
+      <button mat-icon-button (click)="deleteClick(item)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+</div>

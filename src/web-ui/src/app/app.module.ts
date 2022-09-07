@@ -27,7 +27,7 @@ import {ToastrModule} from "ngx-toastr";
 import {MatIconModule} from "@angular/material/icon";
 import { UploadMissionComponent } from './tabs/missions/upload-mission/upload-mission.component';
 import { ListMissionsComponent } from './tabs/missions/list-missions/list-missions.component';
-import { DragAndDropFileDirective } from './directive/drag-and-drop-file.directive';
+import { DragAndDropFileDirective } from './common-ui/directive/drag-and-drop-file.directive';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { SecurityComponent } from './tabs/security/security.component';
@@ -37,6 +37,7 @@ import { MotdListComponent } from './tabs/general/motd-list/motd-list.component'
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { StatusComponent } from './tabs/status/status.component';
 import { ListModsComponent } from './tabs/mods/list-mods/list-mods.component';
+import {AswgDragDropListComponent} from "./common-ui/aswg-drag-drop-list/aswg-drag-drop-list.component";
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { ListModsComponent } from './tabs/mods/list-mods/list-mods.component';
     SecurityComponent,
     MissionDeleteConfirmDialogComponent,
     MotdListComponent,
-    StatusComponent
+    StatusComponent,
+    AswgDragDropListComponent
   ],
   imports: [
     BrowserModule,
