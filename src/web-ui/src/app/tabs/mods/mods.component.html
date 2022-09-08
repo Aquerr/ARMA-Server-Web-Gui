@@ -1,7 +1,10 @@
 <div>
     <h1>Mods</h1>
     <div class="app-list-mods" cdkDropListGroup>
-        <app-list-mods [mods]="mods" [header]="'Disabled'" class="mods-list-tab"></app-list-mods>
-        <app-list-mods [header]="'Enabled'"class="mods-list-tab"></app-list-mods>
+        <aswg-drag-drop-list [items]="mods" [header]="'Disabled'" class="mods-list-tab"></aswg-drag-drop-list>
+        <aswg-drag-drop-list [header]="'Enabled'"class="mods-list-tab"></aswg-drag-drop-list>
     </div>
+    <div class="app-upload-mod">
+        <app-upload-mod #uploadMod (modUploaded)="onModUploaded()"></app-upload-mod>
+      </div>
 </div>

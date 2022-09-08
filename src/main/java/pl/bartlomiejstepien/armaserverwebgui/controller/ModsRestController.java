@@ -24,7 +24,6 @@ public class ModsRestController
     private final ModService modService;
     private final ModFileValidator modFileValidator;
 
-
     @GetMapping
     public Mono<GetInstalledModsResponse> getInstalledMods()
     {

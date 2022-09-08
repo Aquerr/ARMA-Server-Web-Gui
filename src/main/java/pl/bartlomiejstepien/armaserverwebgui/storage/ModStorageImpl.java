@@ -1,5 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.storage;
 
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Repository;
 import pl.bartlomiejstepien.armaserverwebgui.config.ASWGConfig;
@@ -16,7 +18,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.zip.ZipFile;
 
 @Repository
 public class ModStorageImpl implements ModStorage
@@ -32,8 +33,46 @@ public class ModStorageImpl implements ModStorage
     public Mono<Void> save(FilePart multipartFile) throws IOException
     {
         Files.createDirectories(modDirectory.get());
-        return multipartFile.transferTo(modDirectory.get().resolve(multipartFile.filename()));
-        ZipFile zipFile = new ZipFile(multipartFile);
+
+        // Zapis .zip
+        Path filePath = modDirectory.get().resolve(multipartFile.filename());
+        return saveFileAtPath(multipartFile, filePath).doOnSuccess(next -> {
+            // Wypakowanie .zip
+            unpackZipFile(filePath);
+        }).doOnSuccess(next -> {
+            try
+            {
+                // Usunięcie .zip
+                deleteZipFile(filePath);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
+            }
+        });
+    }
+
+    private Mono<Void> saveFileAtPath(FilePart multipartFile, Path saveLocation)
+    {
+        return multipartFile.transferTo(saveLocation);
+    }
+
+    private void unpackZipFile(Path filePath)
+    {
+        try
+        {
+            new ZipFile(filePath.toAbsolutePath().toString()).extractAll(filePath.getParent().toAbsolutePath().toString());
+        }
+        catch (ZipException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteZipFile(Path filePath) throws IOException
+    {
+        Files.deleteIfExists(filePath);
     }
 
     @Override
