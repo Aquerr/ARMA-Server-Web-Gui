@@ -28,10 +28,10 @@ public class MissionRestController
     private final MissionFileValidator missionFileValidator;
 
     @GetMapping
-    public Mono<GetModsResponse> getMissions()
+    public Mono<GetMissionsResponse> getMissions()
     {
         return Mono.just(this.missionService.getMissions())
-                .map(GetModsResponse::of);
+                .map(GetMissionsResponse::of);
     }
 
     @PostMapping("/enabled")
@@ -84,14 +84,14 @@ public class MissionRestController
     }
 
     @Value(staticConstructor = "of")
-    private static class GetModsResponse
+    private static class GetMissionsResponse
     {
         List<String> disabledMissions;
         List<String> enabledMissions;
 
-        private static GetModsResponse of(Missions missions)
+        private static GetMissionsResponse of(Missions missions)
         {
-            return new GetModsResponse(missions.getDisabledMissions(), missions.getEnabledMissions());
+            return new GetMissionsResponse(missions.getDisabledMissions(), missions.getEnabledMissions());
         }
     }
 
