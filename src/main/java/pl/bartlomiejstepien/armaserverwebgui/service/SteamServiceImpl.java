@@ -38,7 +38,7 @@ public class SteamServiceImpl implements SteamService
         }
         catch (SteamCondenserException | TimeoutException e)
         {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return false;
         }
     }

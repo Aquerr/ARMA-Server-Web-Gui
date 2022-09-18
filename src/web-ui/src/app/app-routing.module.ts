@@ -18,7 +18,8 @@ const routes: Routes = [
   {path: 'missions', component: MissionsComponent, canActivate: [AuthService]},
   {path: 'mods', component: ModsComponent, canActivate: [AuthService]},
   {path: 'logging', component: LoggingComponent, canActivate: [AuthService]},
-  {path: 'login', component: LoginComponent}
+  {path: 'login', component: LoginComponent},
+  {path: '**', redirectTo: 'status'}
 ];
 
 @NgModule({
