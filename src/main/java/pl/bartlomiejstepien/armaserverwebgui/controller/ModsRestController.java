@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.controller;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.bartlomiejstepien.armaserverwebgui.controller.validator.ModFileValidator;
 import pl.bartlomiejstepien.armaserverwebgui.exception.ModFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.exception.NotAllowedFileTypeException;
+import pl.bartlomiejstepien.armaserverwebgui.model.Mods;
 import pl.bartlomiejstepien.armaserverwebgui.service.ModService;
 import reactor.core.publisher.Mono;
 
@@ -27,9 +29,16 @@ public class ModsRestController
     private final ModFileValidator modFileValidator;
 
     @GetMapping
-    public Mono<GetInstalledModsResponse> getInstalledMods()
+    public Mono<GetModsResponse> getMods()
     {
-        return Mono.just(this.modService.getInstalledModNames()).map(GetInstalledModsResponse::of);
+        return Mono.just(this.modService.getMods()).map(GetModsResponse::of);
+    }
+
+    @PostMapping("/enabled")
+    public Mono<ResponseEntity<?>> saveEnabledModsList(@RequestBody SaveEnabledModsListRequest saveEnabledModsListRequest)
+    {
+        return Mono.empty().doFirst(() -> this.modService.saveEnabledModList(saveEnabledModsListRequest.getMods()))
+                .then(Mono.just(ResponseEntity.ok().build()));
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -68,9 +77,15 @@ public class ModsRestController
     }
 
     @Value(staticConstructor = "of")
-    private static class GetInstalledModsResponse
+    private static class GetModsResponse
     {
-        List<String> mods;
+        List<String> disabledMods;
+        List<String> enabledMods;
+
+        private static GetModsResponse of(Mods mods)
+        {
+            return new GetModsResponse(mods.getDisabledMods(), mods.getEnabledMods());
+        }
     }
 
     @Value(staticConstructor = "of")
@@ -78,5 +93,11 @@ public class ModsRestController
     {
         String message;
         int code;
+    }
+
+    @Data
+    private static class SaveEnabledModsListRequest
+    {
+        List<String> mods;
     }
 }

@@ -19,15 +19,24 @@ export class ServerModsService {
     return this.httpClient.request(request);
   }
 
-  getInstalledMods(): Observable<GetInstalledModsResponse>{
-    return this.httpClient.get<GetInstalledModsResponse>(this.MODS_URL);
+  getInstalledMods(): Observable<GetModsResponse>{
+    return this.httpClient.get<GetModsResponse>(this.MODS_URL);
   }
 
   deleteMod(modName: string): Observable<any> {
     return this.httpClient.delete(`${this.MODS_URL}/` + modName, {body: {}});
   }
+
+  saveEnabledMods(saveEnabledModsRequest: SaveEnabledModsRequest) {
+    return this.httpClient.post(`${this.MODS_URL}/enabled`, saveEnabledModsRequest);
+  }
 }
 
-export interface GetInstalledModsResponse{
+export interface GetModsResponse{
+  disabledMods: string[];
+  enabledMods: string[];
+}
+
+export interface SaveEnabledModsRequest {
   mods: string[];
 }

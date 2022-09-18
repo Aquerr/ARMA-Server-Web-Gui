@@ -15,6 +15,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 @Component
@@ -32,6 +34,7 @@ public class ASWGConfig
     private static final String PASSWORD_PROPERTY = "aswg.password";
     private static final String SERVER_COMMAND_LINE_PARAMETERS_PROPERTY = "aswg.server-command-line-parameters";
     private static final String STEAMCMD_PATH = "aswg.steamcmd.path";
+    private static final String ACTIVE_MODS = "aswg.active-mods";
 
 //    private Properties configurationProperties = new Properties();
 
@@ -45,6 +48,8 @@ public class ASWGConfig
     private String steamCmdPath;
     @Value("${aswg.server-command-line-parameters:}")
     private String serverCommandLineParameters;
+    @Value("${aswg.active-mods:}")
+    private String activeMods;
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationRead() throws IOException
@@ -64,6 +69,7 @@ public class ASWGConfig
             configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
             configurationProperties.setProperty(SERVER_COMMAND_LINE_PARAMETERS_PROPERTY, this.serverCommandLineParameters);
             configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
+            configurationProperties.setProperty(ACTIVE_MODS, this.activeMods);
 
             saveProperties();
         }
@@ -111,11 +117,23 @@ public class ASWGConfig
             configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
             configurationProperties.setProperty(SERVER_COMMAND_LINE_PARAMETERS_PROPERTY, this.serverCommandLineParameters);
             configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
+            configurationProperties.setProperty(ACTIVE_MODS, this.activeMods);
             configurationProperties.store(bufferedWriter, "ASWG Configuration File");
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
+    }
+
+    public void setActiveMods(List<String> mods)
+    {
+        this.activeMods = String.join(";", mods);
+        saveProperties();
+    }
+
+    public List<String> getMods()
+    {
+        return Arrays.stream(this.activeMods.split(";")).toList();
     }
 }
