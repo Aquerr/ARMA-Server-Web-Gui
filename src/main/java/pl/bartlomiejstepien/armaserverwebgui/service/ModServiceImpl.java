@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.exception.MissionFileAlreadyExistsException;
+import pl.bartlomiejstepien.armaserverwebgui.exception.ModFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.storage.ModStorage;
 import reactor.core.publisher.Mono;
 
@@ -20,7 +21,7 @@ public class ModServiceImpl implements ModService
     public Mono<Void> save(FilePart multipartFile)
     {
         if(modStorage.doesModExists(multipartFile.filename()))
-            throw new MissionFileAlreadyExistsException();
+            throw new ModFileAlreadyExistsException();
 
         try
         {
@@ -36,5 +37,11 @@ public class ModServiceImpl implements ModService
     public List<String> getInstalledModNames()
     {
         return this.modStorage.getInstalledModNames();
+    }
+
+    @Override
+    public boolean deleteMod(String modName)
+    {
+        return this.modStorage.deleteMod(modName);
     }
 }

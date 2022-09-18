@@ -13,4 +13,6 @@ public interface ModStorage {
     boolean doesModExists(String filename);
 
     List<String> getInstalledModNames();
+
+    boolean deleteMod(String modName);
 }

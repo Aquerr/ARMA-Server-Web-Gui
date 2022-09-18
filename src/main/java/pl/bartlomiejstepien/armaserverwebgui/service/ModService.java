@@ -10,4 +10,6 @@ public interface ModService
     Mono<Void> save(FilePart multipartFile);
 
     List<String> getInstalledModNames();
+
+    boolean deleteMod(String modName);
 }

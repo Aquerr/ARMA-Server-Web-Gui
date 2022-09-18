@@ -4,6 +4,7 @@ import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.FileSystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.config.ASWGConfig;
 import reactor.core.publisher.Mono;
 
@@ -90,5 +91,23 @@ public class ModStorageImpl implements ModStorage
                         .filter(name -> name.startsWith("@"))
                         .collect(Collectors.toList()))
                 .orElse(Collections.emptyList());
+    }
+
+    @Override
+    public boolean deleteMod(String modName)
+    {
+        final File[] files = this.modDirectory.get().toFile().listFiles();
+        if (files != null)
+        {
+            for (final File file : files)
+            {
+                if (file.getName().equals(modName))
+                {
+                    FileSystemUtils.deleteRecursively(file);
+                }
+            }
+        }
+
+        return false;
     }
 }
