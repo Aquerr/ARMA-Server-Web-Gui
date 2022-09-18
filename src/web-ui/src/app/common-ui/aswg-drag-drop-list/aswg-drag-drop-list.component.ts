@@ -11,6 +11,8 @@ export class AswgDragDropListComponent implements OnInit, OnDestroy {
     @Input() items: string[] = [];
     @Input() header: string = '';
 
+    @Input() canDelete: boolean = false;
+
     @Output() deleteClicked: EventEmitter<string> = new EventEmitter<string>();
 
     constructor(){}

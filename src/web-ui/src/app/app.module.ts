@@ -37,6 +37,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { StatusComponent } from './tabs/status/status.component';
 import {AswgDragDropListComponent} from "./common-ui/aswg-drag-drop-list/aswg-drag-drop-list.component";
 import { UploadModComponent } from './tabs/mods/upload-mod/upload-mod.component';
+import {
+  ModDeleteConfirmDialogComponent
+} from "./tabs/mods/mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
 
 @NgModule({
   declarations: [
@@ -57,7 +60,8 @@ import { UploadModComponent } from './tabs/mods/upload-mod/upload-mod.component'
     MotdListComponent,
     StatusComponent,
     AswgDragDropListComponent,
-    UploadModComponent
+    UploadModComponent,
+    ModDeleteConfirmDialogComponent
   ],
   imports: [
     BrowserModule,

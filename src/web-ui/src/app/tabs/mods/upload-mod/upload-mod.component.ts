@@ -10,7 +10,7 @@ import { ServerModsService } from 'src/app/service/server-mods.service';
 })
 export class UploadModComponent implements OnInit {
 
-  @Output() missionUploaded: EventEmitter<any> = new EventEmitter<any>();
+  @Output() modUploaded: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private maskService: MaskService,
               private modService: ServerModsService,
@@ -43,7 +43,7 @@ export class UploadModComponent implements OnInit {
         if (response.type == 4)
         {
           this.maskService.hide();
-          this.missionUploaded.emit();
+          this.modUploaded.emit();
           this.notificationService.successNotification("Mod has been uploaded!");
         }
       },

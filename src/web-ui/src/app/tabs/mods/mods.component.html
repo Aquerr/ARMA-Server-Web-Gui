@@ -1,8 +1,8 @@
-<div>
+<div appDragAndDropFile (fileDropped)="onFileDropped($event)">
     <h1>Mods</h1>
     <div class="app-list-mods" cdkDropListGroup>
-        <aswg-drag-drop-list [items]="mods" [header]="'Disabled'" class="mods-list-tab"></aswg-drag-drop-list>
-        <aswg-drag-drop-list [header]="'Enabled'"class="mods-list-tab"></aswg-drag-drop-list>
+        <aswg-drag-drop-list [canDelete]="true" [items]="mods" [header]="'Disabled'" class="mods-list-tab" (deleteClicked)="showModDeleteConfirmationDialog($event)"></aswg-drag-drop-list>
+        <aswg-drag-drop-list [canDelete]="true" [header]="'Enabled'"class="mods-list-tab" (deleteClicked)="showModDeleteConfirmationDialog($event)"></aswg-drag-drop-list>
     </div>
     <div class="app-upload-mod">
         <app-upload-mod #uploadMod (modUploaded)="onModUploaded()"></app-upload-mod>

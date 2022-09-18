@@ -8,7 +8,7 @@ import { API_BASE_URL } from 'src/environments/environment';
 })
 export class ServerModsService {
 
-  private readonly  MODS_URL = `${API_BASE_URL}/mods`
+  private readonly MODS_URL = `${API_BASE_URL}/mods`
 
   constructor(private httpClient: HttpClient) { }
 
@@ -21,6 +21,10 @@ export class ServerModsService {
 
   getInstalledMods(): Observable<GetInstalledModsResponse>{
     return this.httpClient.get<GetInstalledModsResponse>(this.MODS_URL);
+  }
+
+  deleteMod(modName: string): Observable<any> {
+    return this.httpClient.delete(`${this.MODS_URL}/` + modName, {body: {}});
   }
 }
 
