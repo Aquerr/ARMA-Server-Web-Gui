@@ -40,6 +40,7 @@ import { UploadModComponent } from './tabs/mods/upload-mod/upload-mod.component'
 import {
   ModDeleteConfirmDialogComponent
 } from "./tabs/mods/mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -63,27 +64,28 @@ import {
     UploadModComponent,
     ModDeleteConfirmDialogComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    RouterModule,
-    BrowserAnimationsModule,
-    MatListModule,
-    MatRippleModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatDialogModule,
-    NgxSpinnerModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    DragDropModule,
-    ToastrModule.forRoot()
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        RouterModule,
+        BrowserAnimationsModule,
+        MatListModule,
+        MatRippleModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        NgxSpinnerModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        FormsModule,
+        DragDropModule,
+        ToastrModule.forRoot(),
+        MatSelectModule
+    ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}
   ],

@@ -20,6 +20,7 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
                 .serverPassword(armaServerConfig.getPassword())
                 .serverAdminPassword(armaServerConfig.getPasswordAdmin())
                 .serverCommandPassword(armaServerConfig.getServerCommandPassword())
+                .battleEye(armaServerConfig.getBattleEye() == 1)
                 .build();
     }
 
@@ -30,6 +31,7 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
         armaServerConfig.setPassword(serverSecurity.getServerPassword());
         armaServerConfig.setPasswordAdmin(serverSecurity.getServerAdminPassword());
         armaServerConfig.setServerCommandPassword(serverSecurity.getServerCommandPassword());
+        armaServerConfig.setBattleEye(serverSecurity.isBattleEye() ? 1 : 0);
         serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 }

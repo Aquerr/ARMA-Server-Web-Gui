@@ -25,10 +25,12 @@ export interface SaveServerSecurityRequest {
   serverPassword: string;
   serverAdminPassword: string;
   serverCommandPassword: string;
+  battleEye: boolean;
 }
 
 export interface GetServerSecurityResponse {
   serverPassword: string;
   serverAdminPassword: string;
   serverCommandPassword: string;
+  battleEye: boolean;
 }

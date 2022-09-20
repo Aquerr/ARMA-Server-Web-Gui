@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.model;
 
 import lombok.Data;
+import lombok.Getter;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.type.PropertyType;
 
@@ -30,6 +31,9 @@ public class ArmaServerConfig
 
     @CfgProperty(name = "motd[]", type = PropertyType.STRING_ARRAY)
     private String[] motd = new String[0];
+
+    @CfgProperty(name = "BattlEye", type = PropertyType.INTEGER)
+    private int battleEye = 1;
 
     @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
     private Missions missions = new Missions();

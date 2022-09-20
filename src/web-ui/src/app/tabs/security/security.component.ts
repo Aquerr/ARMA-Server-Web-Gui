@@ -12,6 +12,7 @@ export class SecurityComponent implements OnInit {
   serverPassword: string = "";
   serverAdminPassword: string = "";
   serverCommandPassword: string = "";
+  battleEye: boolean = true;
 
   constructor(private serverSecurityService: ServerSecurityService,
               private maskService: MaskService,
@@ -23,6 +24,7 @@ export class SecurityComponent implements OnInit {
       this.serverPassword = response.serverPassword;
       this.serverAdminPassword = response.serverAdminPassword;
       this.serverCommandPassword = response.serverCommandPassword;
+      this.battleEye = response.battleEye;
       this.maskService.hide();
     });
   }
@@ -33,7 +35,8 @@ export class SecurityComponent implements OnInit {
     const serverSecurityRequest = {
       serverPassword: this.serverPassword,
       serverAdminPassword: this.serverAdminPassword,
-      serverCommandPassword: this.serverCommandPassword
+      serverCommandPassword: this.serverCommandPassword,
+      battleEye: this.battleEye
     } as SaveServerSecurityRequest;
 
     this.serverSecurityService.saveServerSecurity(serverSecurityRequest).subscribe(response => {
