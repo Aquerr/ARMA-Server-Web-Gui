@@ -35,6 +35,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "BattlEye", type = PropertyType.INTEGER)
     private int battleEye = 1;
 
+    @CfgProperty(name = "persistent", type = PropertyType.INTEGER)
+    private int persistent = 0;
+
     @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
     private Missions missions = new Missions();
 

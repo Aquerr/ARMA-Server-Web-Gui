@@ -44,6 +44,7 @@ public class GeneralController
             this.generalService.saveGeneralProperties(GeneralProperties.builder()
                     .maxPlayers(properties.getMaxPlayers())
                     .motd(properties.getMotd())
+                    .persistent(properties.isPersistent())
                     .build());
         }).then(Mono.just(ResponseEntity.ok().build()));
     }
@@ -55,6 +56,7 @@ public class GeneralController
         String serverDirectory;
         int maxPlayers;
         List<String> motd;
+        boolean persistent;
 
         static GeneralPropertiesResponse of(String serverDirectory, GeneralProperties generalProperties)
         {
@@ -62,6 +64,7 @@ public class GeneralController
                     .serverDirectory(serverDirectory)
                     .maxPlayers(generalProperties.getMaxPlayers())
                     .motd(generalProperties.getMotd())
+                    .persistent(generalProperties.isPersistent())
                     .build();
         }
     }
@@ -72,5 +75,6 @@ public class GeneralController
         private String serverDirectory;
         private int maxPlayers;
         private List<String> motd;
+        private boolean persistent;
     }
 }

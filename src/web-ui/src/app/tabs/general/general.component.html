@@ -10,9 +10,16 @@
         <mat-label>Max players</mat-label>
         <input name="max-players" [(ngModel)]="maxPlayers" matInput type="number" min="0">
       </mat-form-field>
+      <mat-form-field>
+        <mat-label>Persistent</mat-label>
+        <mat-select [(ngModel)]="persistent" name="persistent">
+          <mat-option [value]="true">True</mat-option>
+          <mat-option [value]="false">False</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <section class="motd-section">
-      <app-motd-list [motd]="motd"></app-motd-list>
+      <app-motd-list #motdListComponent></app-motd-list>
     </section>
   </div>
   <div>

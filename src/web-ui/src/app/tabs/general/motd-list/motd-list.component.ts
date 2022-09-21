@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 
 @Component({
@@ -8,8 +8,7 @@ import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 })
 export class MotdListComponent implements OnInit {
 
-  @Input() motd: string[] = [];
-
+  motd: string[] = [];
   motdLine: string = "";
 
   constructor() { }

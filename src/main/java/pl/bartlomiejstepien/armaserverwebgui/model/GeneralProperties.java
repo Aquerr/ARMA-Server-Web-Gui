@@ -11,4 +11,5 @@ public class GeneralProperties
 {
     private int maxPlayers;
     private List<String> motd;
+    private boolean persistent;
 }

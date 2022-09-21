@@ -21,6 +21,7 @@ public class GeneralServiceImpl implements GeneralService
         return GeneralProperties.builder()
                 .maxPlayers(armaServerConfig.getMaxPlayers())
                 .motd(Arrays.stream(armaServerConfig.getMotd()).toList())
+                .persistent(armaServerConfig.getPersistent() == 1)
                 .build();
     }
 
@@ -30,6 +31,7 @@ public class GeneralServiceImpl implements GeneralService
         ArmaServerConfig armaServerConfig = serverConfigStorage.getServerConfig();
         armaServerConfig.setMaxPlayers(generalProperties.getMaxPlayers());
         armaServerConfig.setMotd(generalProperties.getMotd().toArray(new String[0]));
+        armaServerConfig.setPersistent(generalProperties.isPersistent() ? 1 : 0);
         serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 }

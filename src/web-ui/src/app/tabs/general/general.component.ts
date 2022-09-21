@@ -1,7 +1,8 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MaskService} from "../../service/mask.service";
 import {SaveGeneralProperties, ServerGeneralService} from "../../service/server-general.service";
 import {NotificationService} from "../../service/notification.service";
+import {MotdListComponent} from "./motd-list/motd-list.component";
 
 @Component({
   selector: 'app-general',
@@ -10,14 +11,11 @@ import {NotificationService} from "../../service/notification.service";
 })
 export class GeneralComponent implements OnInit {
 
-  // @ViewChild("motdList") motdListElement: ElementRef;
-
-  motd: string[] = [];
+  @ViewChild('motdListComponent') motdListComponent!: MotdListComponent;
 
   serverDirectory: string = "";
   maxPlayers: number = 64;
-
-  motdLine: string = "";
+  persistent: boolean = false;
 
   constructor(private maskService: MaskService,
               private serverGeneralService: ServerGeneralService,
@@ -29,7 +27,8 @@ export class GeneralComponent implements OnInit {
     this.serverGeneralService.getGeneralProperties().subscribe(response => {
       this.serverDirectory = response.serverDirectory;
       this.maxPlayers = response.maxPlayers;
-      this.motd = response.motd;
+      this.motdListComponent.motd = response.motd;
+      this.persistent = response.persistent;
       this.maskService.hide();
     });
   }
@@ -40,12 +39,13 @@ export class GeneralComponent implements OnInit {
     const saveGeneralProperties = {
       serverDirectory: this.serverDirectory,
       maxPlayers: this.maxPlayers,
-      motd: this.motd
+      motd: this.motdListComponent.motd,
+      persistent: this.persistent
     } as SaveGeneralProperties;
 
     this.serverGeneralService.saveGeneralProperties(saveGeneralProperties).subscribe(response => {
       this.maskService.hide();
-      this.notificationService.successNotification('Server directory has been updated!');
+      this.notificationService.successNotification('General settings have been updated!');
     });
   }
 }
