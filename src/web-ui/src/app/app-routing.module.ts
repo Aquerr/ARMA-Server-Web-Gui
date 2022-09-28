@@ -11,6 +11,7 @@ import {SecurityComponent} from "./tabs/security/security.component";
 import {StatusComponent} from "./tabs/status/status.component";
 
 const routes: Routes = [
+  {path: '', redirectTo: '/status', pathMatch: "full"},
   {path: 'status', component: StatusComponent, canActivate: [AuthService]},
   {path: 'general', component: GeneralComponent, canActivate: [AuthService]},
   {path: 'security', component: SecurityComponent, canActivate: [AuthService]},
