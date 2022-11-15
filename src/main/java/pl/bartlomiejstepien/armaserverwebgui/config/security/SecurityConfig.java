@@ -35,11 +35,13 @@ public class SecurityConfig
             AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(jwtAuthenticationManager);
             authenticationWebFilter.setServerAuthenticationConverter(jwtServerAuthenticationConverter);
 
-
             http.authorizeExchange(auths -> {
                         auths.pathMatchers("/api/v1/auth").permitAll();
+                        auths.pathMatchers("/api/**").authenticated();
+                        auths.pathMatchers("/static/**").permitAll();
+                        auths.pathMatchers("/public/**").permitAll();
                         auths.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                        auths.anyExchange().authenticated();
+                        auths.pathMatchers("/*").permitAll();
                     })
                     .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                     .formLogin().disable()
