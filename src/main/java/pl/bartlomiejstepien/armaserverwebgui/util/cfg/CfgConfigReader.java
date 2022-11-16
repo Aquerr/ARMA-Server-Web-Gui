@@ -54,7 +54,7 @@ public class CfgConfigReader
             {
                 char character = (char)bufferedReader.read();
 
-                if ('\n' == character)
+                if ('\n' == character || '\r' == character)
                 {
                     isComment = false;
                     lastSymbolSlash = false;
