@@ -28,7 +28,7 @@ public class MissionStorageImpl implements MissionStorage
     public MissionStorageImpl(final ASWGConfig aswgConfig)
     {
         this.aswgConfig = aswgConfig;
-        this.missionsDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath() + File.separator + "MPMissions");
+        this.missionsDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath() + File.separator + "mpmissions");
     }
 
     @Override

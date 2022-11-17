@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 @Component
 @PropertySources({
         @PropertySource(value = "classpath:aswg-default-config.properties"),
@@ -134,6 +136,6 @@ public class ASWGConfig
 
     public List<String> getMods()
     {
-        return Arrays.stream(this.activeMods.split(";")).toList();
+        return Arrays.stream(this.activeMods.split(";")).filter(mod -> !isBlank(mod)).toList();
     }
 }
