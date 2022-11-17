@@ -9,7 +9,6 @@ import pl.bartlomiejstepien.armaserverwebgui.storage.ServerConfigStorage;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.util.Collections;
 
 @AllArgsConstructor
 @Component
@@ -29,6 +28,7 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
 
         return ArmaServerParameters.builder()
                 .serverName(armaServerConfig.getHostname())
+                .serverDirectory(aswgConfig.getServerDirectoryPath())
                 .configPath(aswgConfig.getServerDirectoryPath() + File.separator + "server.cfg")
                 .executablePath(aswgConfig.getServerDirectoryPath() + File.separator + serverExecToUse)
                 .port(2302) //TODO: Allow specifying server port

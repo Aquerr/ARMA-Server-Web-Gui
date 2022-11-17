@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.util.cfg;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.parser.CfgClassParser;
@@ -19,6 +20,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class CfgConfigReader
 {
     public static final Map<PropertyType, CfgSimpleParser<?>> PARSERS = Map.of(
@@ -38,7 +40,7 @@ public class CfgConfigReader
             return new ArmaServerConfig();
 
         ArmaServerConfig armaServerConfig = new ArmaServerConfig();
-        Field[] declaredFields = ArmaServerConfig.class.getDeclaredFields();
+        Class<?> armaServerConfigClass = ArmaServerConfig.class;
 
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -118,11 +120,11 @@ public class CfgConfigReader
 
                 if ('{' == character)
                 {
-                    String possibleClassProperty = stringBuilder.toString();
+                    String possibleClassProperty = stringBuilder.toString().trim();
                     if (possibleClassProperty.startsWith("class"))
                     {
                         String classPropertyName = possibleClassProperty.substring(5, possibleClassProperty.length() - 1).trim();
-                        parseClassProperty(armaServerConfig, classPropertyName, bufferedReader, declaredFields);
+                        parseClassProperty(armaServerConfig, classPropertyName, bufferedReader, armaServerConfigClass);
                         stringBuilder.setLength(0);
                     }
 
@@ -136,7 +138,7 @@ public class CfgConfigReader
 
                 if (endValue)
                 {
-                    parseProperty(armaServerConfig, declaredFields, stringBuilder.toString());
+                    parseProperty(armaServerConfig, armaServerConfigClass, stringBuilder.toString().trim());
                     endValue = false;
                     stringBuilder.setLength(0);
                 }
@@ -144,44 +146,47 @@ public class CfgConfigReader
         }
         catch (IOException | IllegalAccessException e)
         {
-            e.printStackTrace();
+            log.error("Error during parsing of config file.", e);
         }
 
         return armaServerConfig;
     }
 
-    private static void parseClassProperty(ArmaServerConfig armaServerConfig, String classPropertyName, BufferedReader bufferedReader, Field[] declaredFields) throws IOException, IllegalAccessException
+    private static void parseClassProperty(ArmaServerConfig armaServerConfig, String classPropertyName, BufferedReader bufferedReader, Class<?> clazz)
     {
-        Field field = findFieldForPropertyName(declaredFields, classPropertyName);
-        Object object = classParsers.get(field.getAnnotation(CfgProperty.class).type()).parse(bufferedReader);
-        field.setAccessible(true);
-        field.set(armaServerConfig, object);
-        field.setAccessible(false);
+        try
+        {
+            Field field = CfgReflectionUtil.findClassFieldForCfgConfigProperty(clazz, classPropertyName);
+            Object object = classParsers.get(field.getAnnotation(CfgProperty.class).type()).parse(bufferedReader);
+            field.setAccessible(true);
+            field.set(armaServerConfig, object);
+            field.setAccessible(false);
+        }
+        catch (Exception exception)
+        {
+            log.error("Error with class property: {}", classPropertyName, exception);
+        }
     }
 
-    private static void parseProperty(ArmaServerConfig armaServerConfig, Field[] fields, String property) throws IllegalAccessException
+    private static void parseProperty(ArmaServerConfig armaServerConfig, Class<?> clazz, String property) throws IllegalAccessException
     {
-        String propertyName = property.substring(0, property.indexOf("=")).trim();
-        String propertyValue = property.substring(property.indexOf("=") + 1).trim();
-        Field field = findFieldForPropertyName(fields, propertyName);
-        if (field == null)
+        try
         {
-            return;
+            String propertyName = property.substring(0, property.indexOf("=")).trim();
+            String propertyValue = property.substring(property.indexOf("=") + 1).trim();
+            Field field = CfgReflectionUtil.findClassFieldForCfgConfigProperty(clazz, propertyName);
+            if (field == null)
+            {
+                return;
+            }
+            Object value = PARSERS.get(field.getAnnotation(CfgProperty.class).type()).parse(propertyValue);
+            field.setAccessible(true);
+            field.set(armaServerConfig, value);
+            field.setAccessible(false);
         }
-        Object value = PARSERS.get(field.getAnnotation(CfgProperty.class).type()).parse(propertyValue);
-        field.setAccessible(true);
-        field.set(armaServerConfig, value);
-        field.setAccessible(false);
-    }
-
-    private static Field findFieldForPropertyName(Field[] fields, String propertyName)
-    {
-        for (final Field field : fields)
+        catch (Exception exception)
         {
-            CfgProperty cfgProperty = field.getAnnotation(CfgProperty.class);
-            if (cfgProperty.name().equals(propertyName))
-                return field;
+            log.error("Error with parsing property: {}", property, exception);
         }
-        return null;
     }
 }

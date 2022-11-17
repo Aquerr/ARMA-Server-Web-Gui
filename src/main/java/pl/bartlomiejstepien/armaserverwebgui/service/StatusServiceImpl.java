@@ -30,11 +30,15 @@ public class StatusServiceImpl implements StatusService
     public boolean startServer()
     {
         ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
+
         ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.directory(new File(serverParams.getServerDirectory()));
         processBuilder.command(serverParams.asList());
+        log.info("Starting server process with params: {}", serverParams.asList());
         try
         {
             Process process = processBuilder.start();
+            log.info("Process started: {}", process.pid());
             this.lastServerPid = process.pid();
             final Thread ioThread = new Thread() {
                 @Override
@@ -44,11 +48,12 @@ public class StatusServiceImpl implements StatusService
                                 new InputStreamReader(process.getInputStream()));
                         String line = null;
                         while ((line = reader.readLine()) != null) {
-                            System.out.println(line);
+                            log.info(line);
                         }
                         reader.close();
                     } catch (final Exception e) {
                         e.printStackTrace();
+                        log.error("Error", e);
                     }
                 }
             };
@@ -57,7 +62,7 @@ public class StatusServiceImpl implements StatusService
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            log.error("Error", e);
             return false;
         }
     }

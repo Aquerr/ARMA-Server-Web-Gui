@@ -38,7 +38,7 @@ public class SteamServiceImpl implements SteamService
         }
         catch (SteamCondenserException | TimeoutException e)
         {
-            log.error(e.getMessage());
+            log.info("Server is offline");
             return false;
         }
     }
@@ -77,9 +77,10 @@ public class SteamServiceImpl implements SteamService
         //TODO: We need to inform GUI about the installation status!
         //TODO: Currently, not working... anonymous user cannot download arma server files.
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command(steamCmdPath, "+login anonymous",
-                "+force_install_dir " + serverDirectoryPath,
-                "+app_update 233780 validate",
+        processBuilder.command(steamCmdPath,
+                "+force_install_dir", serverDirectoryPath,
+                "+login", "anonymous",
+                "+app_update", "233780", "validate",
                 "+quit");
 
         try

@@ -9,6 +9,9 @@ public class CfgReflectionUtil
         for (final Field field : clazz.getDeclaredFields())
         {
             CfgProperty cfgProperty = field.getAnnotation(CfgProperty.class);
+            if (cfgProperty == null)
+                continue;
+
             if (cfgProperty.name().equals(propertyName))
                 return field;
         }
