@@ -87,6 +87,7 @@ public class ModStorageImpl implements ModStorage
     {
         return Optional.ofNullable(modDirectory.get().toFile().listFiles())
                 .map(files -> Stream.of(files)
+                        .filter(File::isDirectory)
                         .map(File::getName)
                         .filter(name -> name.startsWith("@"))
                         .collect(Collectors.toList()))
