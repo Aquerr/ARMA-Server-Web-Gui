@@ -32,7 +32,7 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
                 .configPath(aswgConfig.getServerDirectoryPath() + File.separator + "server.cfg")
                 .executablePath(aswgConfig.getServerDirectoryPath() + File.separator + serverExecToUse)
                 .port(2302) //TODO: Allow specifying server port
-                .mods(aswgConfig.getMods()) //TODO...
+                .mods(aswgConfig.getMods())
                 .build();
     }
 

@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import pl.bartlomiejstepien.armaserverwebgui.exception.ServerIsAlreadyRunningException;
 import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerParameters;
 import pl.bartlomiejstepien.armaserverwebgui.model.ServerStatus;
 
@@ -29,6 +30,9 @@ public class StatusServiceImpl implements StatusService
     @Override
     public boolean startServer()
     {
+        if (getServerStatus() == ServerStatus.ONLINE)
+            throw new ServerIsAlreadyRunningException("Server is already running!");
+
         ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
 
         ProcessBuilder processBuilder = new ProcessBuilder();

@@ -9,7 +9,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import pl.bartlomiejstepien.armaserverwebgui.controller.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.controller.validator.ModFileValidator;
 import pl.bartlomiejstepien.armaserverwebgui.exception.ModFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.exception.NotAllowedFileTypeException;
@@ -45,11 +55,7 @@ public class ModsRestController
     public Mono<ResponseEntity<?>> uploadModFile(@RequestPart("file") Mono<FilePart> multipartFile)
     {
         return multipartFile
-                .map(filePart -> {
-                    if(modFileValidator.isValid(filePart))
-                        return filePart;
-                    throw new NotAllowedFileTypeException("Wrong file type! Only .zip files are supported!");
-                })
+                .doOnNext(modFileValidator::validate)
                 .doOnNext(filePart -> log.info("Uploading mod '{}' ", filePart.filename()))
                 .flatMap(modService::save)
                 .then(Mono.just(ResponseEntity.ok().build()));
@@ -64,16 +70,16 @@ public class ModsRestController
 
     @ExceptionHandler(value = ModFileAlreadyExistsException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorResponse onModsFileAlreadyExistsException(ModFileAlreadyExistsException exception)
+    public RestErrorResponse onModsFileAlreadyExistsException(ModFileAlreadyExistsException exception)
     {
-        return ErrorResponse.of("Mod file already exists!", HttpStatus.BAD_REQUEST.value());
+        return RestErrorResponse.of("Mod file already exists!", HttpStatus.BAD_REQUEST.value());
     }
 
     @ExceptionHandler(value = NotAllowedFileTypeException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorResponse onNotAllowedFileTypeException(NotAllowedFileTypeException exception)
+    public RestErrorResponse onNotAllowedFileTypeException(NotAllowedFileTypeException exception)
     {
-        return ErrorResponse.of("Wrong file type! Only .zip files are supported!", HttpStatus.BAD_REQUEST.value());
+            return RestErrorResponse.of(exception.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
     @Value(staticConstructor = "of")
@@ -86,13 +92,6 @@ public class ModsRestController
         {
             return new GetModsResponse(mods.getDisabledMods(), mods.getEnabledMods());
         }
-    }
-
-    @Value(staticConstructor = "of")
-    private static class ErrorResponse
-    {
-        String message;
-        int code;
     }
 
     @Data
