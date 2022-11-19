@@ -43,7 +43,7 @@ export class StatusComponent implements OnInit {
     this.serverStatusService.toggleServer({
       requestedStatus: ServerStatus.ONLINE
     }).subscribe(response => {
-      this.notificationService.infoNotification("Server status", "Server is starting...");
+      this.notificationService.infoNotification("Server is starting...", "Server status");
     });
   }
 
@@ -51,7 +51,7 @@ export class StatusComponent implements OnInit {
     this.serverStatusService.toggleServer({
       requestedStatus: ServerStatus.OFFLINE
     }).subscribe(response => {
-      this.notificationService.infoNotification("Server status", "Server is stopping...");
+      this.notificationService.infoNotification("Server is stopping...", "Server status");
     });
   }
 
