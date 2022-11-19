@@ -21,6 +21,8 @@ public class StatusServiceImpl implements StatusService
     private final ArmaServerParametersGenerator serverParametersGenerator;
     private long lastServerPid;
 
+    private boolean serverStartScheduled;
+
     @Override
     public ServerStatus getServerStatus()
     {
@@ -30,20 +32,24 @@ public class StatusServiceImpl implements StatusService
     @Override
     public boolean startServer()
     {
-        if (getServerStatus() == ServerStatus.ONLINE && lastServerPid != 0)
+        if (getServerStatus() == ServerStatus.ONLINE && serverStartScheduled)
             throw new ServerIsAlreadyRunningException("Server is already running!");
 
-        ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
-
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.directory(new File(serverParams.getServerDirectory()));
-        processBuilder.command(serverParams.asList());
-        log.info("Starting server process with params: {}", serverParams.asList());
+        serverStartScheduled = true;
         try
         {
+            ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
+
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.directory(new File(serverParams.getServerDirectory()));
+            processBuilder.command(serverParams.asList());
+
+            log.info("Starting server process with params: {}", serverParams.asList());
             Process process = processBuilder.start();
+
             log.info("Process started: {}", process.pid());
             this.lastServerPid = process.pid();
+
             final Thread ioThread = new Thread() {
                 @Override
                 public void run() {
@@ -66,7 +72,9 @@ public class StatusServiceImpl implements StatusService
         }
         catch (IOException e)
         {
+            serverStartScheduled = false;
             log.error("Error", e);
+            stopServer();
             return false;
         }
     }
