@@ -4,7 +4,8 @@
     Status: <span [ngStyle]="isServerOffline() ? {'color': 'red'} : {'color': 'green'}">{{getServerStatus()}}</span>
   </div>
   <div>
-    <mat-list role="list">
+    <label for="player-list">Player list</label>
+    <mat-list id="player-list" role="list">
       <mat-list-item *ngFor="let player of playerList">
         <mat-icon matListItemIcon>person</mat-icon>
         <div matListItemTitle>{{player.name}}</div>
