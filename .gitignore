@@ -1,3 +1,6 @@
+# Logs
+*.log
+
 /target
 /.idea
 node_modules
