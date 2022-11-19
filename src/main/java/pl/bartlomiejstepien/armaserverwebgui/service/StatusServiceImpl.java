@@ -30,7 +30,7 @@ public class StatusServiceImpl implements StatusService
     @Override
     public boolean startServer()
     {
-        if (getServerStatus() == ServerStatus.ONLINE)
+        if (getServerStatus() == ServerStatus.ONLINE && lastServerPid != 0)
             throw new ServerIsAlreadyRunningException("Server is already running!");
 
         ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
