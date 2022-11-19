@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {API_BASE_URL} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {ServerStatus} from "../tabs/status/model/status.model";
+import {ArmaServerPlayer} from '../model/arma-server-player.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,5 +34,5 @@ export interface ToggleServerResponse {
 
 export interface ServerStatusResponse {
   status: ServerStatus;
-  playerList: string[];
+  playerList: ArmaServerPlayer[];
 }

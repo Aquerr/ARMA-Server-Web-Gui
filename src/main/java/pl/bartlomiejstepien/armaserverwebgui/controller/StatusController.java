@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.controller.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.exception.ServerIsAlreadyRunningException;
+import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.model.ServerStatus;
 import pl.bartlomiejstepien.armaserverwebgui.service.StatusService;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -30,7 +30,7 @@ public class StatusController
     @GetMapping
     public Mono<StatusResponse> getServerStatus()
     {
-        return Mono.just(new StatusResponse(statusService.getServerStatus(), Collections.emptyList()));
+        return Mono.just(new StatusResponse(statusService.getServerStatus(), statusService.getServerPlayers()));
     }
 
     @PostMapping("/toggle")
@@ -64,6 +64,6 @@ public class StatusController
     private static class StatusResponse
     {
         ServerStatus status;
-        List<String> playerList;
+        List<ArmaServerPlayer> playerList;
     }
 }

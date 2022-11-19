@@ -3,6 +3,7 @@ import {MaskService} from "../../service/mask.service";
 import {ServerStatusService} from "../../service/server-status.service";
 import {ServerStatus} from "./model/status.model";
 import {NotificationService} from "../../service/notification.service";
+import {ArmaServerPlayer} from '../../model/arma-server-player.model';
 
 @Component({
   selector: 'app-status',
@@ -12,7 +13,7 @@ import {NotificationService} from "../../service/notification.service";
 export class StatusComponent implements OnInit {
 
   serverStatus: ServerStatus = ServerStatus.OFFLINE;
-  playerList: string[] = [];
+  playerList: ArmaServerPlayer[] = [];
 
   constructor(private maskService: MaskService,
               private notificationService: NotificationService,

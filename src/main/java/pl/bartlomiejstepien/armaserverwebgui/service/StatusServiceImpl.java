@@ -5,12 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.exception.ServerIsAlreadyRunningException;
 import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerParameters;
+import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.model.ServerStatus;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -102,5 +104,11 @@ public class StatusServiceImpl implements StatusService
         {
             return false;
         }
+    }
+
+    @Override
+    public List<ArmaServerPlayer> getServerPlayers()
+    {
+        return this.steamService.getServerPlayers();
     }
 }
