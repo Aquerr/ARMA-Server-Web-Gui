@@ -26,6 +26,8 @@ public class StatusServiceImpl implements StatusService
     @Override
     public ServerStatus getServerStatus()
     {
+        if (serverStartScheduled)
+            return ServerStatus.STARTING;
         return this.steamService.isServerRunning() ? ServerStatus.ONLINE : ServerStatus.OFFLINE;
     }
 

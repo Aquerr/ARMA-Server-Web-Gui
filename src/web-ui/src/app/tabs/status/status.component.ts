@@ -32,8 +32,7 @@ export class StatusComponent implements OnInit {
   }
 
   toggleServer() {
-    console.log("Toggle server!")
-    if (this.getServerStatus() == ServerStatus.OFFLINE) {
+    if (this.isServerOffline()) {
       this.startServer();
     } else {
       this.stopServer();
@@ -44,7 +43,7 @@ export class StatusComponent implements OnInit {
     this.serverStatusService.toggleServer({
       requestedStatus: ServerStatus.ONLINE
     }).subscribe(response => {
-      this.notificationService.infoNotification("Server status", response.newStatus);
+      this.notificationService.infoNotification("Server status", "Server is starting...");
     });
   }
 
@@ -52,11 +51,19 @@ export class StatusComponent implements OnInit {
     this.serverStatusService.toggleServer({
       requestedStatus: ServerStatus.OFFLINE
     }).subscribe(response => {
-      this.notificationService.infoNotification("Server status", response.newStatus);
+      this.notificationService.infoNotification("Server status", "Server is stopping...");
     });
   }
 
-  isOffline() {
+  isServerOffline(): boolean {
     return this.serverStatus == ServerStatus.OFFLINE;
+  }
+
+  isServerStarting(): boolean {
+    return this.serverStatus == ServerStatus.STARTING;
+  }
+
+  canToggleServer(): boolean {
+    return this.serverStatus == ServerStatus.ONLINE || this.isServerOffline();
   }
 }

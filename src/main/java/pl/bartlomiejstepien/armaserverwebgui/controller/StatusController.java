@@ -38,7 +38,7 @@ public class StatusController
     {
         return Mono.just(toggleStatusRequest)
                 .map(request -> request.getRequestedStatus() == ServerStatus.OFFLINE ? this.statusService.stopServer() : this.statusService.startServer())
-                .map(serverStarted -> serverStarted ? ToggleStatusResponse.of(ServerStatus.ONLINE) : ToggleStatusResponse.of(ServerStatus.OFFLINE));
+                .map(serverStarted -> serverStarted ? ToggleStatusResponse.of(ServerStatus.STARTING) : ToggleStatusResponse.of(ServerStatus.OFFLINE));
     }
 
     @ExceptionHandler(value = ServerIsAlreadyRunningException.class)

@@ -1,4 +1,5 @@
 export enum ServerStatus {
   ONLINE = 'ONLINE',
-  OFFLINE = 'OFFLINE'
+  OFFLINE = 'OFFLINE',
+  STARTING = 'STARTING'
 }

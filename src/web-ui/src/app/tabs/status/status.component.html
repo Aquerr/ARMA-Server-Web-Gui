@@ -1,12 +1,19 @@
 <div>
   <h1>Server Status</h1>
   <div>
-    Status: <span [ngStyle]="isOffline() ? {'color': 'red'} : {'color': 'green'}">{{getServerStatus()}}</span>
+    Status: <span [ngStyle]="isServerOffline() ? {'color': 'red'} : {'color': 'green'}">{{getServerStatus()}}</span>
   </div>
   <div>
     Player list: TODO
   </div>
   <div style="margin-top: 5px;">
-    <button mat-flat-button color="primary" (click)="toggleServer()">{{isOffline() ? 'START' : 'STOP'}}</button>
+    <button *ngIf="isServerStarting()" mat-flat-button color="primary">
+      <ngx-spinner name="primary"
+                   [fullScreen]="false"
+                   type="cog"
+                   size="large"
+                   color="#fff"></ngx-spinner>
+    </button>
+    <button *ngIf="canToggleServer()" mat-flat-button color="primary" (click)="toggleServer()">{{isServerOffline() ? 'START' : 'STOP'}}</button>
   </div>
 </div>
