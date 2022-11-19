@@ -32,10 +32,11 @@ public class StatusServiceImpl implements StatusService
     @Override
     public boolean startServer()
     {
-        if (getServerStatus() == ServerStatus.ONLINE && serverStartScheduled)
+        if (getServerStatus() == ServerStatus.ONLINE || serverStartScheduled || lastServerPid != 0)
             throw new ServerIsAlreadyRunningException("Server is already running!");
 
         serverStartScheduled = true;
+
         try
         {
             ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
@@ -68,6 +69,7 @@ public class StatusServiceImpl implements StatusService
                 }
             };
             ioThread.start();
+            serverStartScheduled = false;
             return true;
         }
         catch (IOException e)
