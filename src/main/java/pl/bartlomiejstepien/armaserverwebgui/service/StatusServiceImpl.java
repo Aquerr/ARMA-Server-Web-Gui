@@ -94,11 +94,13 @@ public class StatusServiceImpl implements StatusService
         try
         {
             pid = getServerPid();
+            log.info("Found server pid={}", pid);
         }
         catch (IOException e)
         {
             throw new RuntimeException("Could not get server pid.", e);
         }
+
 
         ProcessHandle.of(pid).ifPresent(processHandle -> {
             processHandle.destroy();

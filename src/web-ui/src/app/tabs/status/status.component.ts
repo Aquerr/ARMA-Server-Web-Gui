@@ -27,7 +27,9 @@ export class StatusComponent implements OnInit {
       this.maskService.hide();
     });
 
-    setInterval(this.refreshServerStatus, 5000);
+    setInterval(() => {
+      this.refreshServerStatus();
+    }, 5000);
   }
 
   refreshServerStatus() {
