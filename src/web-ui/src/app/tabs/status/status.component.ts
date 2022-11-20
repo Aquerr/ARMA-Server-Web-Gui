@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MaskService} from "../../service/mask.service";
 import {ServerStatusService} from "../../service/server-status.service";
 import {ServerStatus} from "./model/status.model";
@@ -10,10 +10,12 @@ import {ArmaServerPlayer} from '../../model/arma-server-player.model';
   templateUrl: './status.component.html',
   styleUrls: ['./status.component.css']
 })
-export class StatusComponent implements OnInit {
+export class StatusComponent implements OnInit, OnDestroy {
 
   serverStatus: ServerStatus = ServerStatus.OFFLINE;
   playerList: ArmaServerPlayer[] = [];
+
+  refreshHandleId: number = 0;
 
   constructor(private maskService: MaskService,
               private notificationService: NotificationService,
@@ -27,9 +29,13 @@ export class StatusComponent implements OnInit {
       this.maskService.hide();
     });
 
-    setInterval(() => {
+    this.refreshHandleId = setInterval(() => {
       this.refreshServerStatus();
     }, 5000);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.refreshHandleId);
   }
 
   refreshServerStatus() {
