@@ -1,7 +1,13 @@
-# Logs
-*.log
-
-/target
+# Project files
 /.idea
 node_modules
 aswg-config.properties
+
+# Logs
+*.log
+
+# Other
+*.gz
+
+# Compile / Build
+/target

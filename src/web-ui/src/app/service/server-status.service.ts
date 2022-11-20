@@ -19,17 +19,13 @@ export class ServerStatusService {
     return this.httpClient.get<ServerStatusResponse>(this.API_SERVER_STATUS);
   }
 
-  toggleServer(toggleServerRequest: ToggleServerRequest): Observable<ToggleServerResponse> {
-    return this.httpClient.post<ToggleServerResponse>(this.API_SERVER_STATUS_TOGGLE, toggleServerRequest);
+  toggleServer(toggleServerRequest: ToggleServerRequest): Observable<void> {
+    return this.httpClient.post<void>(this.API_SERVER_STATUS_TOGGLE, toggleServerRequest);
   }
 }
 
 export interface ToggleServerRequest {
   requestedStatus: ServerStatus
-}
-
-export interface ToggleServerResponse {
-  newStatus: ServerStatus
 }
 
 export interface ServerStatusResponse {

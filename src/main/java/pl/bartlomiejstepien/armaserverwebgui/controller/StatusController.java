@@ -34,11 +34,17 @@ public class StatusController
     }
 
     @PostMapping("/toggle")
-    public Mono<ToggleStatusResponse> toggleServerStatus(@RequestBody() ToggleStatusRequest toggleStatusRequest)
+    public Mono<Void> toggleServerStatus(@RequestBody() ToggleStatusRequest toggleStatusRequest)
     {
         return Mono.just(toggleStatusRequest)
-                .map(request -> request.getRequestedStatus() == ServerStatus.OFFLINE ? this.statusService.stopServer() : this.statusService.startServer())
-                .map(serverStarted -> serverStarted ? ToggleStatusResponse.of(ServerStatus.STARTING) : ToggleStatusResponse.of(ServerStatus.OFFLINE));
+                .doOnSuccess(request ->
+                {
+                    if (request.getRequestedStatus() == ServerStatus.OFFLINE)
+                        this.statusService.stopServer();
+                    else
+                        this.statusService.startServer();
+                })
+                .then();
     }
 
     @ExceptionHandler(value = ServerIsAlreadyRunningException.class)
@@ -52,12 +58,6 @@ public class StatusController
     private static class ToggleStatusRequest
     {
         ServerStatus requestedStatus;
-    }
-
-    @Value(staticConstructor = "of")
-    private static class ToggleStatusResponse
-    {
-        ServerStatus newStatus;
     }
 
     @Value

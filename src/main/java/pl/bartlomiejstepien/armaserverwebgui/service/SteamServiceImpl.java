@@ -56,6 +56,7 @@ public class SteamServiceImpl implements SteamService
         }
         catch (SteamCondenserException | TimeoutException e)
         {
+            log.info("Could not get server players. Server seems to be offline.");
             e.printStackTrace();
             return Collections.emptyList();
         }

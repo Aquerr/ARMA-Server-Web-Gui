@@ -26,6 +26,15 @@ export class StatusComponent implements OnInit {
       this.playerList = response.playerList;
       this.maskService.hide();
     });
+
+    setInterval(this.refreshServerStatus, 5000);
+  }
+
+  refreshServerStatus() {
+    this.serverStatusService.getStatus().subscribe(response => {
+      this.serverStatus = response.status;
+      this.playerList = response.playerList;
+    });
   }
 
   getServerStatus() {
@@ -38,13 +47,14 @@ export class StatusComponent implements OnInit {
     } else {
       this.stopServer();
     }
+    this.refreshServerStatus();
   }
 
   private startServer() {
     this.serverStatusService.toggleServer({
       requestedStatus: ServerStatus.ONLINE
     }).subscribe(response => {
-      this.notificationService.infoNotification("Server is starting...", "Server status");
+      this.notificationService.infoNotification("Server is starting...", "Information");
     });
   }
 
@@ -52,7 +62,7 @@ export class StatusComponent implements OnInit {
     this.serverStatusService.toggleServer({
       requestedStatus: ServerStatus.OFFLINE
     }).subscribe(response => {
-      this.notificationService.infoNotification("Server is stopping...", "Server status");
+      this.notificationService.infoNotification("Server is stopping...", "Information");
     });
   }
 
