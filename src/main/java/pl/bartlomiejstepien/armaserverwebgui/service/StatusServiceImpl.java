@@ -158,6 +158,8 @@ public class StatusServiceImpl implements StatusService
     private int getServerPid() throws IOException
     {
         File pidFile = getPidFile();
+        if (!pidFile.exists())
+            saveServerPid(0L);
         try(FileReader fileReader = new FileReader(pidFile);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             Scanner scanner = new Scanner(bufferedReader))
