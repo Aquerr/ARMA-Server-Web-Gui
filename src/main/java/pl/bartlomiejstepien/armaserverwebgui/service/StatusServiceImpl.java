@@ -110,7 +110,7 @@ public class StatusServiceImpl implements StatusService
 
             try
             {
-                saveServerPid(processHandle.pid());
+                saveServerPid(0);
             }
             catch (IOException e)
             {
