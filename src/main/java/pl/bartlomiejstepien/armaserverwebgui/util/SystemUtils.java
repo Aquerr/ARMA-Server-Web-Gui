@@ -4,7 +4,6 @@ public class SystemUtils
 {
     public static boolean isWindows()
     {
-        final String osName = System.getProperty("os.name");
-        return osName.startsWith("Win") || osName.startsWith("win");
+        return org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
     }
 }

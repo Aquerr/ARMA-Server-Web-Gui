@@ -24,31 +24,11 @@ public class ArmaServerParameters
 
     private final String serverDirectory;
 
-    public String asString()
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(executablePath)
-                .append(" -port=").append(port)
-                .append(" -config=").append(configPath);
-
-        if (StringUtils.hasText(serverName))
-        {
-            stringBuilder.append(" -name=").append(serverName);
-        }
-        if (!mods.isEmpty())
-        {
-            stringBuilder.append(" -mod=").append(String.join(";", mods));
-        }
-        return stringBuilder.toString();
-    }
-
     public List<String> asList()
     {
         List<String> args = new ArrayList<>();
         if (!SystemUtils.isWindows())
         {
-//            args.add("bash");
-//            args.add("-c");
             args.add("nohup");
         }
 

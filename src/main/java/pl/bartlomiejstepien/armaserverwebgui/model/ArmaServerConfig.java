@@ -1,7 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.model;
 
 import lombok.Data;
-import lombok.Getter;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.util.cfg.type.PropertyType;
 
