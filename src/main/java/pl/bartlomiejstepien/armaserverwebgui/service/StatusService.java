@@ -9,9 +9,9 @@ public interface StatusService
 {
     ServerStatus getServerStatus();
 
-    boolean startServer();
+    void startServer();
 
-    boolean stopServer();
+    void stopServer();
 
     List<ArmaServerPlayer> getServerPlayers();
 }
