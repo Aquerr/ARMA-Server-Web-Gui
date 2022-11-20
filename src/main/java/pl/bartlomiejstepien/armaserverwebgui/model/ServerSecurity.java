@@ -11,4 +11,5 @@ public class ServerSecurity
     private String serverAdminPassword;
     private String serverCommandPassword;
     private boolean battleEye;
+    private boolean verifySignatures;
 }

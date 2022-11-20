@@ -17,8 +17,15 @@
       <mat-form-field>
         <mat-label>BattleEye</mat-label>
         <mat-select [(ngModel)]="battleEye" name="battleEye">
-          <mat-option [value]="true">True</mat-option>
-          <mat-option [value]="false">False</mat-option>
+          <mat-option [value]="true">Yes</mat-option>
+          <mat-option [value]="false">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Verify Addons Signatures</mat-label>
+        <mat-select [(ngModel)]="verifySignatures" name="verifySignatures">
+          <mat-option [value]="true">Yes</mat-option>
+          <mat-option [value]="false">No</mat-option>
         </mat-select>
       </mat-form-field>
     </div>

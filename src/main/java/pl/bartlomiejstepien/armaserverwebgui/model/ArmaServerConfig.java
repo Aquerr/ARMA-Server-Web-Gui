@@ -37,6 +37,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "persistent", type = PropertyType.INTEGER)
     private int persistent = 0;
 
+    @CfgProperty(name = "verifySignatures", type = PropertyType.INTEGER)
+    private int verifySignatures = 2;
+
     @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
     private Missions missions = new Missions();
 
