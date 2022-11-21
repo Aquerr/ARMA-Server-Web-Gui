@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class GeneralServiceImplTest
 {
+    private static final String HOSTNAME = "Hostname";
     private static final int MAX_PLAYERS = 10;
     private static final String PASSWORD = "test";
     private static final String LOG_FILE = "logFile";
@@ -73,18 +74,22 @@ class GeneralServiceImplTest
 
         verify(serverConfigStorage).saveServerConfig(armaServerConfigArgumentCaptor.capture());
         ArmaServerConfig expectedArmaServerConfig = new ArmaServerConfig();
+        expectedArmaServerConfig.setHostname(HOSTNAME);
         expectedArmaServerConfig.setPassword(PASSWORD);
         expectedArmaServerConfig.setLogFile(LOG_FILE);
         expectedArmaServerConfig.setMaxPlayers(MAX_PLAYERS);
         expectedArmaServerConfig.setMotd(new String[]{"testmod"});
+        expectedArmaServerConfig.setPersistent(1);
         assertThat(armaServerConfigArgumentCaptor.getValue()).isEqualTo(expectedArmaServerConfig);
     }
 
     private GeneralProperties prepareGeneralProperties()
     {
         return GeneralProperties.builder()
+                .hostname(HOSTNAME)
                 .maxPlayers(MAX_PLAYERS)
                 .motd(MOTD)
+                .persistent(true)
                 .build();
     }
 }

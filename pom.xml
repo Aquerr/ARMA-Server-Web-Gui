@@ -18,6 +18,15 @@
     <properties>
         <java.version>17</java.version>
         <logbook.version>2.14.0</logbook.version>
+        <steam-condenser.version>1.3.9</steam-condenser.version>
+        <jjwt.version>0.11.5</jjwt.version>
+        <zip4j.version>2.11.1</zip4j.version>
+
+        <!-- Tests -->
+        <assertj.version>3.23.1</assertj.version>
+
+        <!-- Front -->
+        <node.version>v16.17.0</node.version>
     </properties>
 
     <dependencies>
@@ -48,7 +57,7 @@
         <dependency>
             <groupId>net.lingala.zip4j</groupId>
             <artifactId>zip4j</artifactId>
-            <version>2.11.1</version>
+            <version>${zip4j.version}</version>
         </dependency>
 
         <dependency>
@@ -65,25 +74,25 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
-            <version>0.11.5</version>
+            <version>${jjwt.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
-            <version>0.11.5</version>
+            <version>${jjwt.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
-            <version>0.11.5</version>
+            <version>${jjwt.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.koraktor</groupId>
             <artifactId>steam-condenser</artifactId>
-            <version>1.3.9</version>
+            <version>${steam-condenser.version}</version>
         </dependency>
 
         <dependency>
@@ -104,7 +113,7 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.23.1</version>
+            <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -172,9 +181,19 @@
                             <arguments>run build</arguments>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>npm test</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration>
+                            <arguments>run test</arguments>
+                        </configuration>
+                    </execution>
                 </executions>
                 <configuration>
-                    <nodeVersion>v16.17.0</nodeVersion>
+                    <nodeVersion>${node.version}</nodeVersion>
                     <workingDirectory>src/web-ui</workingDirectory>
                     <installDirectory>src/web-ui</installDirectory>
                 </configuration>
@@ -183,8 +202,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
             <plugin>
