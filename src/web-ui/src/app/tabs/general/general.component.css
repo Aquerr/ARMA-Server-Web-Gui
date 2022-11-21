@@ -2,6 +2,10 @@
   width: 50%;
 }
 
+.hostname-field {
+  width: 50%;
+}
+
 .fields {
   display: flex;
   flex-direction: column;

@@ -19,6 +19,7 @@ public class GeneralServiceImpl implements GeneralService
     {
         ArmaServerConfig armaServerConfig = serverConfigStorage.getServerConfig();
         return GeneralProperties.builder()
+                .hostname(armaServerConfig.getHostname())
                 .maxPlayers(armaServerConfig.getMaxPlayers())
                 .motd(Arrays.stream(armaServerConfig.getMotd()).toList())
                 .persistent(armaServerConfig.getPersistent() == 1)
@@ -29,6 +30,7 @@ public class GeneralServiceImpl implements GeneralService
     public void saveGeneralProperties(GeneralProperties generalProperties)
     {
         ArmaServerConfig armaServerConfig = serverConfigStorage.getServerConfig();
+        armaServerConfig.setHostname(generalProperties.getHostname());
         armaServerConfig.setMaxPlayers(generalProperties.getMaxPlayers());
         armaServerConfig.setMotd(generalProperties.getMotd().toArray(new String[0]));
         armaServerConfig.setPersistent(generalProperties.isPersistent() ? 1 : 0);

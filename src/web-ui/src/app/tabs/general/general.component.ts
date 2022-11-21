@@ -14,6 +14,7 @@ export class GeneralComponent implements OnInit {
   @ViewChild('motdListComponent') motdListComponent!: MotdListComponent;
 
   serverDirectory: string = "";
+  hostname: string = "";
   maxPlayers: number = 64;
   persistent: boolean = false;
 
@@ -26,6 +27,7 @@ export class GeneralComponent implements OnInit {
     this.maskService.show();
     this.serverGeneralService.getGeneralProperties().subscribe(response => {
       this.serverDirectory = response.serverDirectory;
+      this.hostname = response.hostname;
       this.maxPlayers = response.maxPlayers;
       this.motdListComponent.motd = response.motd;
       this.persistent = response.persistent;
@@ -38,6 +40,7 @@ export class GeneralComponent implements OnInit {
 
     const saveGeneralProperties = {
       serverDirectory: this.serverDirectory,
+      hostname: this.hostname,
       maxPlayers: this.maxPlayers,
       motd: this.motdListComponent.motd,
       persistent: this.persistent

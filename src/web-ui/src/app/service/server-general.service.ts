@@ -20,6 +20,7 @@ export class ServerGeneralService {
 }
 
 export interface SaveGeneralProperties {
+  hostname: string;
   serverDirectory: string;
   maxPlayers: number;
   motd: string[];
@@ -27,6 +28,7 @@ export interface SaveGeneralProperties {
 }
 
 export interface GeneralProperties {
+  hostname: string;
   serverDirectory: string;
   maxPlayers: number;
   motd: string[];

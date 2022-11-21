@@ -6,6 +6,10 @@
         <mat-label>Server directory</mat-label>
         <input name="server-directory" [(ngModel)]="serverDirectory" matInput type="text">
       </mat-form-field>
+      <mat-form-field class="hostname-field">
+        <mat-label>Hostname</mat-label>
+        <input name="hostname" [(ngModel)]="hostname" matInput type="text">
+      </mat-form-field>
       <mat-form-field class="max-players-field">
         <mat-label>Max players</mat-label>
         <input name="max-players" [(ngModel)]="maxPlayers" matInput type="number" min="0">

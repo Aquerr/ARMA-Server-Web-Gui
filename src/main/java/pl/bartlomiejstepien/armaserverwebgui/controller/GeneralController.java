@@ -46,6 +46,7 @@ public class GeneralController
         return Mono.just(saveGeneralProperties).doOnNext(properties -> {
             this.aswgConfig.setServerDirectoryPath(properties.getServerDirectory());
             this.generalService.saveGeneralProperties(GeneralProperties.builder()
+                    .hostname(properties.getHostname())
                     .maxPlayers(properties.getMaxPlayers())
                     .motd(properties.getMotd())
                     .persistent(properties.isPersistent())
@@ -57,6 +58,7 @@ public class GeneralController
     @Builder
     private static class GeneralPropertiesResponse
     {
+        String hostname;
         String serverDirectory;
         int maxPlayers;
         List<String> motd;
@@ -65,6 +67,7 @@ public class GeneralController
         static GeneralPropertiesResponse of(String serverDirectory, GeneralProperties generalProperties)
         {
             return GeneralPropertiesResponse.builder()
+                    .hostname(generalProperties.getHostname())
                     .serverDirectory(serverDirectory)
                     .maxPlayers(generalProperties.getMaxPlayers())
                     .motd(generalProperties.getMotd())
@@ -76,6 +79,7 @@ public class GeneralController
     @Data
     private static class SaveGeneralProperties
     {
+        private String hostname;
         private String serverDirectory;
         private int maxPlayers;
         private List<String> motd;

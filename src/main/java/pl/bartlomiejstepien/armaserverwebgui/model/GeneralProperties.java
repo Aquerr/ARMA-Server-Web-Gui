@@ -9,6 +9,7 @@ import java.util.List;
 @Builder
 public class GeneralProperties
 {
+    private String hostname;
     private int maxPlayers;
     private List<String> motd;
     private boolean persistent;
