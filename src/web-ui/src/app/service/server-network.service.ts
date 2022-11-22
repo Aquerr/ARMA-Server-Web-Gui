@@ -9,7 +9,7 @@ import {Observable} from 'rxjs';
 export class ServerNetworkService {
 
   private readonly NETWORK_URL = `${API_BASE_URL}/network`;
-  private readonly NETWORK_PROPERTIES_URL = `${this.NETWORK_URL}/network/properties`
+  private readonly NETWORK_PROPERTIES_URL = `${this.NETWORK_URL}/properties`
 
   constructor(private httpClient: HttpClient) {}
 
