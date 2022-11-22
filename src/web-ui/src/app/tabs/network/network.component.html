@@ -1,1 +1,12 @@
-<p>network works!</p>
+<div>
+  <h1>Network</h1>
+  <div class="network-properties">
+    <mat-form-field>
+      <mat-label>Max Ping</mat-label>
+      <input name="maxping" [(ngModel)]="maxPing" matInput type="number" min="0">
+    </mat-form-field>
+  </div>
+  <div>
+    <button mat-flat-button color="primary" (click)="save()">Save</button>
+  </div>
+</div>
