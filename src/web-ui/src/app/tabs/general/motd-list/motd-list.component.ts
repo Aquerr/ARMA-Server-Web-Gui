@@ -10,6 +10,7 @@ export class MotdListComponent implements OnInit {
 
   motd: string[] = [];
   motdLine: string = "";
+  motdInterval: number = 5;
 
   constructor() { }
 

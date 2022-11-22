@@ -30,6 +30,7 @@ export class GeneralComponent implements OnInit {
       this.hostname = response.hostname;
       this.maxPlayers = response.maxPlayers;
       this.motdListComponent.motd = response.motd;
+      this.motdListComponent.motdInterval = response.motdInterval;
       this.persistent = response.persistent;
       this.maskService.hide();
     });
@@ -43,6 +44,7 @@ export class GeneralComponent implements OnInit {
       hostname: this.hostname,
       maxPlayers: this.maxPlayers,
       motd: this.motdListComponent.motd,
+      motdInterval: this.motdListComponent.motdInterval,
       persistent: this.persistent
     } as SaveGeneralProperties;
 

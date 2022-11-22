@@ -90,6 +90,7 @@ class GeneralServiceImplTest
                 .maxPlayers(MAX_PLAYERS)
                 .motd(MOTD)
                 .persistent(true)
+                .motdInterval(5)
                 .build();
     }
 }

@@ -12,5 +12,6 @@ public class GeneralProperties
     private String hostname;
     private int maxPlayers;
     private List<String> motd;
+    private int motdInterval;
     private boolean persistent;
 }

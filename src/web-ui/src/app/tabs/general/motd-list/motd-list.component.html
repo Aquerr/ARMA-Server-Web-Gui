@@ -11,6 +11,10 @@
       <input name="motd-line" [(ngModel)]="motdLine" matInput type="text">
     </mat-form-field>
     <button mat-flat-button class="float-end" color="primary" (click)="addNewMotdLine()">+</button>
+    <mat-form-field>
+      <mat-label>Motd Interval</mat-label>
+      <input name="motd-interval" [(ngModel)]="motdInterval" matInput type="number" min="0">
+    </mat-form-field>
   </div>
 </div>
 <!--<mat-list class="mtod-list">-->

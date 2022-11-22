@@ -49,6 +49,7 @@ public class GeneralController
                     .hostname(properties.getHostname())
                     .maxPlayers(properties.getMaxPlayers())
                     .motd(properties.getMotd())
+                    .motdInterval(properties.getMotdInterval())
                     .persistent(properties.isPersistent())
                     .build());
         }).then(Mono.just(ResponseEntity.ok().build()));
@@ -62,6 +63,7 @@ public class GeneralController
         String serverDirectory;
         int maxPlayers;
         List<String> motd;
+        int motdInterval;
         boolean persistent;
 
         static GeneralPropertiesResponse of(String serverDirectory, GeneralProperties generalProperties)
@@ -71,6 +73,7 @@ public class GeneralController
                     .serverDirectory(serverDirectory)
                     .maxPlayers(generalProperties.getMaxPlayers())
                     .motd(generalProperties.getMotd())
+                    .motdInterval(generalProperties.getMotdInterval())
                     .persistent(generalProperties.isPersistent())
                     .build();
         }
@@ -83,6 +86,7 @@ public class GeneralController
         private String serverDirectory;
         private int maxPlayers;
         private List<String> motd;
+        private int motdInterval;
         private boolean persistent;
     }
 }

@@ -31,6 +31,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "motd[]", type = PropertyType.STRING_ARRAY)
     private String[] motd = new String[0];
 
+    @CfgProperty(name = "motdInterval", type = PropertyType.INTEGER)
+    private int motdInterval = 5; // seconds
+
     @CfgProperty(name = "BattlEye", type = PropertyType.INTEGER)
     private int battleEye = 1;
 

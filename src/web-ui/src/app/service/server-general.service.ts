@@ -24,6 +24,7 @@ export interface SaveGeneralProperties {
   serverDirectory: string;
   maxPlayers: number;
   motd: string[];
+  motdInterval: number;
   persistent: boolean;
 }
 
@@ -32,5 +33,6 @@ export interface GeneralProperties {
   serverDirectory: string;
   maxPlayers: number;
   motd: string[];
+  motdInterval: number;
   persistent: boolean;
 }
