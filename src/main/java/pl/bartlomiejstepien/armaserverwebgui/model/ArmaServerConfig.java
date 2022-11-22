@@ -46,6 +46,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "allowedFilePatching", type = PropertyType.INTEGER)
     private int allowedFilePatching = 0; // 0 = Not allowed
 
+    @CfgProperty(name = "upnp", type = PropertyType.RAW_STRING)
+    private String upnp = "false";
+
     @CfgProperty(name = "maxping", type = PropertyType.INTEGER)
     private int maxPing = 500;
 

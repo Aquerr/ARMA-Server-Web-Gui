@@ -17,6 +17,7 @@ public class ServerNetworkServiceImpl implements ServerNetworkService
     {
         ArmaServerConfig armaServerConfig = serverConfigStorage.getServerConfig();
         return NetworkProperties.builder()
+                .upnp(Boolean.parseBoolean(armaServerConfig.getUpnp()))
                 .maxPing(armaServerConfig.getMaxPing())
                 .build();
     }
@@ -26,6 +27,7 @@ public class ServerNetworkServiceImpl implements ServerNetworkService
     {
         ArmaServerConfig armaServerConfig = serverConfigStorage.getServerConfig();
         armaServerConfig.setMaxPing(networkProperties.getMaxPing());
+        armaServerConfig.setUpnp(String.valueOf(networkProperties.isUpnp()));
         serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 }

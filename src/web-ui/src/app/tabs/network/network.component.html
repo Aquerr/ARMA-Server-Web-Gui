@@ -2,6 +2,13 @@
   <h1>Network</h1>
   <div class="network-properties">
     <mat-form-field>
+      <mat-label>Upnp</mat-label>
+      <mat-select [(ngModel)]="upnp" name="upnp">
+        <mat-option [value]="true">Yes</mat-option>
+        <mat-option [value]="false">No</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
       <mat-label>Max Ping</mat-label>
       <input name="maxping" [(ngModel)]="maxPing" matInput type="number" min="0">
     </mat-form-field>

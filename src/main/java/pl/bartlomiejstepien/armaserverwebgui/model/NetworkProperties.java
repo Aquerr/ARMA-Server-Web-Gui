@@ -7,5 +7,6 @@ import lombok.Data;
 @Data
 public class NetworkProperties
 {
+    private boolean upnp;
     private int maxPing;
 }

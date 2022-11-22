@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/api/v1/network")
 @AllArgsConstructor
-public class NetworkRestController
+public class ServerNetworkRestController
 {
     private final ServerNetworkService networkService;
 
@@ -37,6 +37,7 @@ public class NetworkRestController
     private NetworkProperties toDomainModel(SaveNetworkPropertiesRequest saveNetworkPropertiesRequest)
     {
         return NetworkProperties.builder()
+                .upnp(saveNetworkPropertiesRequest.isUpnp())
                 .maxPing(saveNetworkPropertiesRequest.getMaxPing())
                 .build();
     }
@@ -44,6 +45,7 @@ public class NetworkRestController
     private GetNetworkPropertiesResponse toViewResponse(NetworkProperties networkProperties)
     {
         return GetNetworkPropertiesResponse.builder()
+                .upnp(networkProperties.isUpnp())
                 .maxPing(networkProperties.getMaxPing())
                 .build();
     }
@@ -52,6 +54,7 @@ public class NetworkRestController
     @Data
     private static class SaveNetworkPropertiesRequest
     {
+        private boolean upnp;
         private int maxPing;
     }
 
@@ -59,6 +62,7 @@ public class NetworkRestController
     @Data
     private static class GetNetworkPropertiesResponse
     {
+        private boolean upnp;
         private int maxPing;
     }
 }

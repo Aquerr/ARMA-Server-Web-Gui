@@ -23,9 +23,11 @@ export class ServerNetworkService {
 }
 
 export interface SaveServerNetworkProperties {
+  upnp: boolean;
   maxPing: number;
 }
 
 export interface GetServerNetworkProperties {
+  upnp: boolean;
   maxPing: number;
 }

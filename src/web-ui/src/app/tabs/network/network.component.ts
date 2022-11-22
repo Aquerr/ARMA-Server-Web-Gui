@@ -10,6 +10,7 @@ import {NotificationService} from '../../service/notification.service';
 })
 export class NetworkComponent implements OnInit {
 
+  upnp: boolean = false;
   maxPing: number = 500;
 
   constructor(private maskService: MaskService,
@@ -17,12 +18,19 @@ export class NetworkComponent implements OnInit {
               private serverNetworkService: ServerNetworkService) { }
 
   ngOnInit(): void {
+    this.maskService.show();
+    this.serverNetworkService.getServerNetworkProperties().subscribe(response => {
+      this.upnp = response.upnp;
+      this.maxPing = response.maxPing;
+      this.maskService.hide();
+    });
   }
 
   save() {
      this.maskService.show();
 
     const saveNetworkProperties = {
+      upnp: this.upnp,
       maxPing: this.maxPing
     } as SaveServerNetworkProperties;
 
