@@ -27,6 +27,7 @@ export interface SaveServerSecurityRequest {
   serverCommandPassword: string;
   battleEye: boolean;
   verifySignatures: boolean;
+  allowedFilePatching: number;
 }
 
 export interface GetServerSecurityResponse {
@@ -35,4 +36,5 @@ export interface GetServerSecurityResponse {
   serverCommandPassword: string;
   battleEye: boolean;
   verifySignatures: boolean;
+  allowedFilePatching: number;
 }

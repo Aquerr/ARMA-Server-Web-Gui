@@ -28,6 +28,14 @@
           <mat-option [value]="false">No</mat-option>
         </mat-select>
       </mat-form-field>
+      <mat-form-field>
+        <mat-label>Allowed File Patching</mat-label>
+        <mat-select [(ngModel)]="allowedFilePatching" name="allowedFilePatching">
+          <mat-option [value]="0">NOT ALLOWED</mat-option>
+          <mat-option [value]="1">ALLOWED FOR HEADLESS CLIENTS</mat-option>
+          <mat-option [value]="2">ALLOWED FOR ALL CLIENTS</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
   <div class="security-save-container">

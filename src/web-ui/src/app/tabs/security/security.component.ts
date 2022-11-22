@@ -14,6 +14,7 @@ export class SecurityComponent implements OnInit {
   serverCommandPassword: string = "";
   battleEye: boolean = true;
   verifySignatures: boolean = true;
+  allowedFilePatching: number = 0;
 
   constructor(private serverSecurityService: ServerSecurityService,
               private maskService: MaskService,
@@ -27,6 +28,7 @@ export class SecurityComponent implements OnInit {
       this.serverCommandPassword = response.serverCommandPassword;
       this.battleEye = response.battleEye;
       this.verifySignatures = response.verifySignatures;
+      this.allowedFilePatching = response.allowedFilePatching;
       this.maskService.hide();
     });
   }
@@ -39,7 +41,8 @@ export class SecurityComponent implements OnInit {
       serverAdminPassword: this.serverAdminPassword,
       serverCommandPassword: this.serverCommandPassword,
       battleEye: this.battleEye,
-      verifySignatures: this.verifySignatures
+      verifySignatures: this.verifySignatures,
+      allowedFilePatching: this.allowedFilePatching
     } as SaveServerSecurityRequest;
 
     this.serverSecurityService.saveServerSecurity(serverSecurityRequest).subscribe(response => {

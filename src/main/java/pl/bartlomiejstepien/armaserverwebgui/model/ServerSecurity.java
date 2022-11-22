@@ -12,4 +12,5 @@ public class ServerSecurity
     private String serverCommandPassword;
     private boolean battleEye;
     private boolean verifySignatures;
+    private int allowedFilePatching;
 }

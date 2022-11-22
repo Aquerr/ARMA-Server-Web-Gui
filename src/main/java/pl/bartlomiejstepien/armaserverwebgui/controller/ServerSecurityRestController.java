@@ -42,6 +42,7 @@ public class ServerSecurityRestController
                 .serverCommandPassword(saveServerSecurityRequest.getServerCommandPassword())
                 .battleEye(saveServerSecurityRequest.isBattleEye())
                 .verifySignatures(saveServerSecurityRequest.isVerifySignatures())
+                .allowedFilePatching(saveServerSecurityRequest.getAllowedFilePatching())
                 .build();
     }
 
@@ -53,6 +54,7 @@ public class ServerSecurityRestController
                 .serverCommandPassword(serverSecurity.getServerCommandPassword())
                 .battleEye(serverSecurity.isBattleEye())
                 .verifySignatures(serverSecurity.isVerifySignatures())
+                .allowedFilePatching(serverSecurity.getAllowedFilePatching())
                 .build();
     }
 
@@ -65,6 +67,7 @@ public class ServerSecurityRestController
         private String serverCommandPassword;
         private boolean battleEye;
         private boolean verifySignatures;
+        private int allowedFilePatching;
     }
 
     @Data
@@ -76,5 +79,6 @@ public class ServerSecurityRestController
         private String serverCommandPassword;
         private boolean battleEye;
         private boolean verifySignatures;
+        private int allowedFilePatching;
     }
 }

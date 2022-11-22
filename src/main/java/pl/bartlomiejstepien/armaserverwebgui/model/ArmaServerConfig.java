@@ -43,6 +43,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "verifySignatures", type = PropertyType.INTEGER)
     private int verifySignatures = 2;
 
+    @CfgProperty(name = "allowedFilePatching", type = PropertyType.INTEGER)
+    private int allowedFilePatching = 0; // 0 = Not allowed
+
     @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
     private Missions missions = new Missions();
 
