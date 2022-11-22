@@ -34,7 +34,6 @@ public class ASWGConfig
     private static final String SERVER_DIRECTORY_PATH_PROPERTY = "aswg.server-directory-path";
     private static final String USERNAME_PROPERTY = "aswg.username";
     private static final String PASSWORD_PROPERTY = "aswg.password";
-    private static final String SERVER_COMMAND_LINE_PARAMETERS_PROPERTY = "aswg.server-command-line-parameters";
     private static final String STEAMCMD_PATH = "aswg.steamcmd.path";
     private static final String ACTIVE_MODS = "aswg.active-mods";
 
@@ -48,8 +47,6 @@ public class ASWGConfig
     private String serverDirectoryPath;
     @Value("${aswg.steamcmd.path}")
     private String steamCmdPath;
-    @Value("${aswg.server-command-line-parameters:}")
-    private String serverCommandLineParameters;
     @Value("${aswg.active-mods:}")
     private String activeMods;
 
@@ -69,7 +66,6 @@ public class ASWGConfig
             configurationProperties.setProperty(SERVER_DIRECTORY_PATH_PROPERTY, this.serverDirectoryPath);
             configurationProperties.setProperty(USERNAME_PROPERTY, this.username);
             configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
-            configurationProperties.setProperty(SERVER_COMMAND_LINE_PARAMETERS_PROPERTY, this.serverCommandLineParameters);
             configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
             configurationProperties.setProperty(ACTIVE_MODS, this.activeMods);
 
@@ -92,11 +88,6 @@ public class ASWGConfig
         return serverDirectoryPath;
     }
 
-    public String getServerCommandLineParameters()
-    {
-        return serverCommandLineParameters;
-    }
-
     public String getSteamCmdPath()
     {
         return this.steamCmdPath;
@@ -117,7 +108,6 @@ public class ASWGConfig
             configurationProperties.setProperty(SERVER_DIRECTORY_PATH_PROPERTY, this.serverDirectoryPath);
             configurationProperties.setProperty(USERNAME_PROPERTY, this.username);
             configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
-            configurationProperties.setProperty(SERVER_COMMAND_LINE_PARAMETERS_PROPERTY, this.serverCommandLineParameters);
             configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
             configurationProperties.setProperty(ACTIVE_MODS, this.activeMods);
             configurationProperties.store(bufferedWriter, "ASWG Configuration File");

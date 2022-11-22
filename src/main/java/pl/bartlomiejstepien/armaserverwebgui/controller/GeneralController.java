@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.model.ArmaServerParameters;
 import pl.bartlomiejstepien.armaserverwebgui.model.GeneralProperties;
+import pl.bartlomiejstepien.armaserverwebgui.service.ArmaServerParametersGenerator;
 import pl.bartlomiejstepien.armaserverwebgui.service.GeneralService;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
+import reactor.util.function.Tuple3;
 
 import java.util.List;
 
@@ -26,18 +28,21 @@ public class GeneralController
     private final ASWGConfig aswgConfig;
     private final GeneralService generalService;
 
+    private final ArmaServerParametersGenerator armaServerParametersGenerator;
+
     @GetMapping("/properties")
     public Mono<GeneralPropertiesResponse> getGeneralProperties()
     {
         return Mono.zip(
                 Mono.justOrEmpty(aswgConfig.getServerDirectoryPath()),
+                Mono.just(armaServerParametersGenerator.generateParameters()),
                 Mono.just(generalService.getGeneralProperties())
         ).map(this::mapToResponse);
     }
 
-    private GeneralPropertiesResponse mapToResponse(Tuple2<String, GeneralProperties> tuple2)
+    private GeneralPropertiesResponse mapToResponse(Tuple3<String, ArmaServerParameters, GeneralProperties> tuple)
     {
-        return GeneralPropertiesResponse.of(tuple2.getT1(), tuple2.getT2());
+        return GeneralPropertiesResponse.of(tuple.getT1(), tuple.getT2(), tuple.getT3());
     }
 
     @PostMapping("/properties")
@@ -59,18 +64,20 @@ public class GeneralController
     @Builder
     private static class GeneralPropertiesResponse
     {
-        String hostname;
         String serverDirectory;
+        String commandLineParams;
+        String hostname;
         int maxPlayers;
         List<String> motd;
         int motdInterval;
         boolean persistent;
 
-        static GeneralPropertiesResponse of(String serverDirectory, GeneralProperties generalProperties)
+        static GeneralPropertiesResponse of(String serverDirectory, ArmaServerParameters armaServerParameters, GeneralProperties generalProperties)
         {
             return GeneralPropertiesResponse.builder()
-                    .hostname(generalProperties.getHostname())
                     .serverDirectory(serverDirectory)
+                    .commandLineParams(armaServerParameters.asString())
+                    .hostname(generalProperties.getHostname())
                     .maxPlayers(generalProperties.getMaxPlayers())
                     .motd(generalProperties.getMotd())
                     .motdInterval(generalProperties.getMotdInterval())

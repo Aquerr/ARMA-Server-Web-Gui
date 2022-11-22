@@ -13,6 +13,7 @@ export class GeneralComponent implements OnInit {
 
   @ViewChild('motdListComponent') motdListComponent!: MotdListComponent;
 
+  commandLineParams: string = "";
   serverDirectory: string = "";
   hostname: string = "";
   maxPlayers: number = 64;
@@ -26,6 +27,7 @@ export class GeneralComponent implements OnInit {
   ngOnInit(): void {
     this.maskService.show();
     this.serverGeneralService.getGeneralProperties().subscribe(response => {
+      this.commandLineParams = response.commandLineParams;
       this.serverDirectory = response.serverDirectory;
       this.hostname = response.hostname;
       this.maxPlayers = response.maxPlayers;
@@ -50,7 +52,7 @@ export class GeneralComponent implements OnInit {
 
     this.serverGeneralService.saveGeneralProperties(saveGeneralProperties).subscribe(response => {
       this.maskService.hide();
-      this.notificationService.successNotification('General settings have been updated!');
+      this.notificationService.successNotification('General settings have been updated!', 'Success');
     });
   }
 }

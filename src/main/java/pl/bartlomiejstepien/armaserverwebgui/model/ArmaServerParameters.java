@@ -24,6 +24,11 @@ public class ArmaServerParameters
 
     private final String serverDirectory;
 
+    public String asString()
+    {
+        return String.join(" ", asList());
+    }
+
     public List<String> asList()
     {
         List<String> args = new ArrayList<>();
@@ -33,6 +38,18 @@ public class ArmaServerParameters
         }
 
         args.add(executablePath);
+        args.addAll(getArmaServerArgs());
+
+        if (!SystemUtils.isWindows())
+        {
+            args.add("&");
+        }
+        return args;
+    }
+
+    private List<String> getArmaServerArgs()
+    {
+        List<String> args = new ArrayList<>();
         args.add("-port=" + port);
         args.add("-config=" + configPath);
 
@@ -43,11 +60,6 @@ public class ArmaServerParameters
         if (!mods.isEmpty())
         {
             args.add("-mod=" + String.join(";", mods));
-        }
-
-        if (!SystemUtils.isWindows())
-        {
-            args.add("&");
         }
         return args;
     }

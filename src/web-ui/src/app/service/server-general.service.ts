@@ -29,8 +29,9 @@ export interface SaveGeneralProperties {
 }
 
 export interface GeneralProperties {
-  hostname: string;
   serverDirectory: string;
+  commandLineParams: string;
+  hostname: string;
   maxPlayers: number;
   motd: string[];
   motdInterval: number;
