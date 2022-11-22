@@ -1,5 +1,11 @@
-.motd-list {
+.motd-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
+.motd-list {
+  width: 100%;
 }
 
 .motd-list-item {

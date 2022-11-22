@@ -25,9 +25,10 @@
     <section class="motd-section">
       <app-motd-list #motdListComponent></app-motd-list>
     </section>
-  </div>
-  <div>
-    <input disabled [value]="commandLineParams">
+    <div>
+      <input style="width: 100%;" disabled [value]="commandLineParams" type="text">
+      <!--      <textarea style="width: 100%; white-space: nowrap; overflow-y: hidden;" disabled [value]="commandLineParams"></textarea>-->
+    </div>
   </div>
   <div>
     <button mat-flat-button color="primary" (click)="save()">Save</button>
