@@ -22,6 +22,7 @@ export class ServerGeneralService {
 export interface SaveGeneralProperties {
   hostname: string;
   serverDirectory: string;
+  port: number;
   maxPlayers: number;
   motd: string[];
   motdInterval: number;
@@ -31,6 +32,7 @@ export interface SaveGeneralProperties {
 export interface GeneralProperties {
   serverDirectory: string;
   commandLineParams: string;
+  port: number;
   hostname: string;
   maxPlayers: number;
   motd: string[];

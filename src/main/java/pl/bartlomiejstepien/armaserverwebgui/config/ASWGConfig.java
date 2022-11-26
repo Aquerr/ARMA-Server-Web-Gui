@@ -37,6 +37,8 @@ public class ASWGConfig
     private static final String STEAMCMD_PATH = "aswg.steamcmd.path";
     private static final String ACTIVE_MODS = "aswg.active-mods";
 
+    private static final String SERVER_PORT = "aswg.server-port";
+
 //    private Properties configurationProperties = new Properties();
 
     @Value("${aswg.username}")
@@ -49,6 +51,9 @@ public class ASWGConfig
     private String steamCmdPath;
     @Value("${aswg.active-mods:}")
     private String activeMods;
+
+    @Value("${aswg.server-port}")
+    private int serverPort;
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationRead() throws IOException
@@ -68,6 +73,7 @@ public class ASWGConfig
             configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
             configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
             configurationProperties.setProperty(ACTIVE_MODS, this.activeMods);
+            configurationProperties.setProperty(SERVER_PORT, String.valueOf(this.serverPort));
 
             saveProperties();
         }
@@ -110,6 +116,7 @@ public class ASWGConfig
             configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
             configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
             configurationProperties.setProperty(ACTIVE_MODS, this.activeMods);
+            configurationProperties.setProperty(SERVER_PORT, String.valueOf(this.serverPort));
             configurationProperties.store(bufferedWriter, "ASWG Configuration File");
         }
         catch (IOException e)
@@ -127,5 +134,10 @@ public class ASWGConfig
     public List<String> getMods()
     {
         return Arrays.stream(this.activeMods.split(";")).filter(mod -> !isBlank(mod)).toList();
+    }
+
+    public int getServerPort()
+    {
+        return this.serverPort;
     }
 }

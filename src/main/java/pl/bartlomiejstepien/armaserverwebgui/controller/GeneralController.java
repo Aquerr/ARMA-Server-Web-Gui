@@ -16,7 +16,7 @@ import pl.bartlomiejstepien.armaserverwebgui.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.service.ArmaServerParametersGenerator;
 import pl.bartlomiejstepien.armaserverwebgui.service.GeneralService;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple3;
+import reactor.util.function.Tuple4;
 
 import java.util.List;
 
@@ -35,14 +35,15 @@ public class GeneralController
     {
         return Mono.zip(
                 Mono.justOrEmpty(aswgConfig.getServerDirectoryPath()),
+                Mono.justOrEmpty(aswgConfig.getServerPort()),
                 Mono.just(armaServerParametersGenerator.generateParameters()),
                 Mono.just(generalService.getGeneralProperties())
         ).map(this::mapToResponse);
     }
 
-    private GeneralPropertiesResponse mapToResponse(Tuple3<String, ArmaServerParameters, GeneralProperties> tuple)
+    private GeneralPropertiesResponse mapToResponse(Tuple4<String, Integer, ArmaServerParameters, GeneralProperties> tuple)
     {
-        return GeneralPropertiesResponse.of(tuple.getT1(), tuple.getT2(), tuple.getT3());
+        return GeneralPropertiesResponse.of(tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4());
     }
 
     @PostMapping("/properties")
@@ -50,6 +51,7 @@ public class GeneralController
     {
         return Mono.just(saveGeneralProperties).doOnNext(properties -> {
             this.aswgConfig.setServerDirectoryPath(properties.getServerDirectory());
+            this.aswgConfig.setServerPort(properties.getPort());
             this.generalService.saveGeneralProperties(GeneralProperties.builder()
                     .hostname(properties.getHostname())
                     .maxPlayers(properties.getMaxPlayers())
@@ -67,16 +69,18 @@ public class GeneralController
         String serverDirectory;
         String commandLineParams;
         String hostname;
+        int port;
         int maxPlayers;
         List<String> motd;
         int motdInterval;
         boolean persistent;
 
-        static GeneralPropertiesResponse of(String serverDirectory, ArmaServerParameters armaServerParameters, GeneralProperties generalProperties)
+        static GeneralPropertiesResponse of(String serverDirectory, Integer port, ArmaServerParameters armaServerParameters, GeneralProperties generalProperties)
         {
             return GeneralPropertiesResponse.builder()
                     .serverDirectory(serverDirectory)
                     .commandLineParams(armaServerParameters.asString())
+                    .port(port)
                     .hostname(generalProperties.getHostname())
                     .maxPlayers(generalProperties.getMaxPlayers())
                     .motd(generalProperties.getMotd())
@@ -91,6 +95,7 @@ public class GeneralController
     {
         private String hostname;
         private String serverDirectory;
+        private int port;
         private int maxPlayers;
         private List<String> motd;
         private int motdInterval;
