@@ -11,6 +11,7 @@ export class AswgDragDropListComponent implements OnInit, OnDestroy {
     @Input() items: string[] = [];
     @Input() header: string = '';
 
+    @Input() sorted: boolean = false;
     @Input() canDelete: boolean = false;
 
     @Output() deleteClicked: EventEmitter<string> = new EventEmitter<string>();
@@ -36,7 +37,10 @@ export class AswgDragDropListComponent implements OnInit, OnDestroy {
                 event.currentIndex,
             );
         }
-        this.items.sort();
+        if (this.sorted)
+        {
+          this.items.sort();
+        }
     }
 
   deleteClick(item: string) {
