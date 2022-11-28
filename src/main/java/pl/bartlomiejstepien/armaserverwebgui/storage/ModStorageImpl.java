@@ -36,7 +36,7 @@ public class ModStorageImpl implements ModStorage
         Files.createDirectories(modDirectory.get());
 
         // Zapis .zip
-        Path filePath = modDirectory.get().resolve(multipartFile.filename());
+        Path filePath = modDirectory.get().resolve(multipartFile.filename().replaceAll(" ", "_"));
         return saveFileAtPath(multipartFile, filePath).doOnSuccess(next -> {
             // Wypakowanie .zip
             unpackZipFile(filePath);
@@ -79,7 +79,7 @@ public class ModStorageImpl implements ModStorage
     @Override
     public boolean doesModExists(String filename)
     {
-        return Files.exists(modDirectory.get().resolve(filename));
+        return Files.exists(modDirectory.get().resolve(filename.replaceAll(" ", "_")));
     }
 
     @Override
