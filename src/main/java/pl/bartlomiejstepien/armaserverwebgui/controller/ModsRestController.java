@@ -27,7 +27,7 @@ import pl.bartlomiejstepien.armaserverwebgui.model.Mods;
 import pl.bartlomiejstepien.armaserverwebgui.service.ModService;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/mods")
@@ -62,7 +62,7 @@ public class ModsRestController
     }
 
     @DeleteMapping(value = "/{modName}", consumes = MediaType.ALL_VALUE)
-    public Mono<ResponseEntity<?>> deleteMission(@PathVariable("modName") String modName)
+    public Mono<ResponseEntity<?>> deleteMod(@PathVariable("modName") String modName)
     {
         return Mono.just(this.modService.deleteMod(modName))
                 .thenReturn(ResponseEntity.ok().build());
@@ -85,8 +85,8 @@ public class ModsRestController
     @Value(staticConstructor = "of")
     private static class GetModsResponse
     {
-        List<String> disabledMods;
-        List<String> enabledMods;
+        Set<String> disabledMods;
+        Set<String> enabledMods;
 
         private static GetModsResponse of(Mods mods)
         {
@@ -97,6 +97,6 @@ public class ModsRestController
     @Data
     private static class SaveEnabledModsListRequest
     {
-        List<String> mods;
+        Set<String> mods;
     }
 }

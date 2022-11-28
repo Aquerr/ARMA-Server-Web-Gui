@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.config;
 
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.PropertySource;
@@ -16,8 +17,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -125,15 +128,19 @@ public class ASWGConfig
         }
     }
 
-    public void setActiveMods(List<String> mods)
+    public void setActiveMods(Set<String> mods)
     {
-        this.activeMods = String.join(";", mods);
+        this.activeMods = mods.stream()
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.joining(";"));
         saveProperties();
     }
 
-    public List<String> getMods()
+    public Set<String> getMods()
     {
-        return Arrays.stream(this.activeMods.split(";")).filter(mod -> !isBlank(mod)).toList();
+        return Arrays.stream(this.activeMods.split(";"))
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.toSet());
     }
 
     public int getServerPort()

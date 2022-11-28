@@ -2,11 +2,11 @@ package pl.bartlomiejstepien.armaserverwebgui.model;
 
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 public class Mods
 {
-    private List<String> disabledMods;
-    private List<String> enabledMods;
+    private Set<String> disabledMods;
+    private Set<String> enabledMods;
 }

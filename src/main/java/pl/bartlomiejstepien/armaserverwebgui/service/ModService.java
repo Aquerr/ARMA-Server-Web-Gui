@@ -5,6 +5,7 @@ import pl.bartlomiejstepien.armaserverwebgui.model.Mods;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ModService
 {
@@ -16,5 +17,5 @@ public interface ModService
 
     boolean deleteMod(String modName);
 
-    void saveEnabledModList(List<String> mods);
+    void saveEnabledModList(Set<String> mods);
 }

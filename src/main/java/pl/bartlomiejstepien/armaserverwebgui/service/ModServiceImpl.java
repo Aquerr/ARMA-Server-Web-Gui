@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,12 +41,12 @@ public class ModServiceImpl implements ModService
     public Mods getMods()
     {
         List<String> installedMods = getInstalledModNames();
-        List<String> enabledMods = this.aswgConfig.getMods();
+        Set<String> enabledMods = this.aswgConfig.getMods();
         Mods mods = new Mods();
         mods.setEnabledMods(enabledMods);
         mods.setDisabledMods(installedMods.stream()
                 .filter(mod -> !enabledMods.contains(mod))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toSet()));
 
         return mods;
     }
@@ -59,11 +60,14 @@ public class ModServiceImpl implements ModService
     @Override
     public boolean deleteMod(String modName)
     {
+        Set<String> enabledMods = this.aswgConfig.getMods();
+        enabledMods.remove(modName);
+        saveEnabledModList(enabledMods);
         return this.modStorage.deleteMod(modName);
     }
 
     @Override
-    public void saveEnabledModList(List<String> mods)
+    public void saveEnabledModList(Set<String> mods)
     {
         aswgConfig.setActiveMods(mods);
     }

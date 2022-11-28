@@ -7,7 +7,9 @@ import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.util.SystemUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @ToString
@@ -20,7 +22,7 @@ public class ArmaServerParameters
     private final String serverName;
     private final String executablePath;
     @Builder.Default
-    private final List<String> mods = new ArrayList<>();
+    private final Set<String> mods = new HashSet<>();
 
     private final String serverDirectory;
 
