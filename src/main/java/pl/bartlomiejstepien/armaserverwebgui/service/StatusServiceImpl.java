@@ -68,6 +68,7 @@ public class StatusServiceImpl implements StatusService
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.directory(new File(serverParams.getServerDirectory()));
             processBuilder.command(serverParams.asList());
+            processBuilder.inheritIO();
 
             log.info("Starting server process with params: {}", serverParams.asList());
             Process process = processBuilder.start();
