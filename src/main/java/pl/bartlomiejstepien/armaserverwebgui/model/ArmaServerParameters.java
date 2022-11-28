@@ -23,6 +23,8 @@ public class ArmaServerParameters
     private final String executablePath;
     @Builder.Default
     private final Set<String> mods = new HashSet<>();
+    @Builder.Default
+    private final Set<String> serverMods = new HashSet<>();
 
     private final String serverDirectory;
 
@@ -62,6 +64,10 @@ public class ArmaServerParameters
         if (!mods.isEmpty())
         {
             args.add("\"-mod=" + String.join(";", mods) + "\"");
+        }
+        if (!serverMods.isEmpty())
+        {
+            args.add("\"-serverMod=" + String.join(";", mods) + "\"");
         }
         return args;
     }
