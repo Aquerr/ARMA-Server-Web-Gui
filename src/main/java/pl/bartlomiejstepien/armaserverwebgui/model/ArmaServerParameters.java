@@ -53,15 +53,15 @@ public class ArmaServerParameters
     {
         List<String> args = new ArrayList<>();
         args.add("-port=" + port);
-        args.add("-config=" + configPath);
+        args.add("\"-config=" + configPath + "\"");
 
         if (StringUtils.hasText(serverName))
         {
-            args.add("-name=" + serverName);
+            args.add("\"-name=" + serverName + "\"");
         }
         if (!mods.isEmpty())
         {
-            args.add("-mod=" + String.join(";", mods));
+            args.add("\"-mod=" + String.join(";", mods) + "\"");
         }
         return args;
     }
