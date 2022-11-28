@@ -34,6 +34,9 @@ public class StatusServiceImpl implements StatusService
 
     private boolean serverStartScheduled;
 
+    private Thread ioServerThread;
+    private Thread ioServerErrorThread;
+
     @Override
     public ServerStatus getServerStatus()
     {
@@ -68,7 +71,6 @@ public class StatusServiceImpl implements StatusService
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.directory(new File(serverParams.getServerDirectory()));
             processBuilder.command(serverParams.asList());
-            processBuilder.inheritIO();
 
             log.info("Starting server process with params: {}", serverParams.asList());
             Process process = processBuilder.start();
@@ -109,6 +111,17 @@ public class StatusServiceImpl implements StatusService
                 log.info("Server process stopped for pid={}", processHandle1.pid());
             });
 
+            if (this.ioServerThread != null)
+            {
+                this.ioServerThread.interrupt();
+                this.ioServerThread = null;
+            }
+            if (this.ioServerErrorThread != null)
+            {
+                this.ioServerErrorThread.interrupt();
+                this.ioServerErrorThread = null;
+            }
+
             try
             {
                 saveServerPid(0);
@@ -128,7 +141,7 @@ public class StatusServiceImpl implements StatusService
 
     private void handleProcessInputOutput(Process process)
     {
-        final Thread ioThread = new Thread(() ->
+        this.ioServerThread = new Thread(() ->
         {
             try {
                 final BufferedReader reader = new BufferedReader(
@@ -143,7 +156,24 @@ public class StatusServiceImpl implements StatusService
                 log.error("Error", e);
             }
         });
-        ioThread.start();
+
+        this.ioServerErrorThread = new Thread(() ->
+        {
+            try {
+                final BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(process.getErrorStream()));
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    log.info(line);
+                }
+                reader.close();
+            } catch (final Exception e) {
+                e.printStackTrace();
+                log.error("Error", e);
+            }
+        });
+        this.ioServerErrorThread.start();
+        this.ioServerThread.start();
     }
 
     private void saveServerPid(long pid) throws IOException
