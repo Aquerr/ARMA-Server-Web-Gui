@@ -121,16 +121,16 @@ public class StatusServiceImpl implements StatusService
                 this.ioServerErrorThread.interrupt();
                 this.ioServerErrorThread = null;
             }
-
-            try
-            {
-                saveServerPid(0);
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException("Could not save server pid.", e);
-            }
         });
+
+        try
+        {
+            saveServerPid(0);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException("Could not save server pid.", e);
+        }
     }
 
     @Override
