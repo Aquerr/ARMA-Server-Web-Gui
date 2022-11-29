@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -17,17 +18,21 @@ import java.time.Instant;
 @Slf4j
 public class JwtService
 {
-    //TODO: Move to application.properties
     private static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private static final String KEY_ISSUER = "Arma-Server-Web-Gui";
+
+    @Value("${aswg.security.jwt.issuer}")
+    private String jwtIssuer;
+
+    @Value("${aswg.security.jwt.expiration-time}")
+    private Duration jwtExpirationTime;
 
     public String createJwt(String username)
     {
         return Jwts.builder()
                 .setSubject(username)
                 .signWith(KEY)
-                .setIssuer(KEY_ISSUER)
-                .setExpiration(Date.from(Instant.now().plus(Duration.ofHours(1))))
+                .setIssuer(jwtIssuer)
+                .setExpiration(Date.from(Instant.now().plus(jwtExpirationTime)))
                 .setIssuedAt(Date.from(Instant.now()))
                 .compact();
     }
@@ -38,6 +43,7 @@ public class JwtService
         {
             return Jwts.parserBuilder()
                     .setSigningKey(KEY)
+                    .requireIssuer(jwtIssuer)
                     .build()
                     .parseClaimsJws(jwt);
         }
