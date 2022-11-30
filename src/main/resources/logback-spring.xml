@@ -38,7 +38,7 @@
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
     </root>
-    <logger name="arma-server" level="INFO">
+    <logger name="arma-server" level="INFO" additivity="false">
         <appender-ref ref="SERVER_LOG_FILE" />
     </logger>
     <logger name="org.zalando.logbook" level="TRACE" additivity="false">
