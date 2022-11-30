@@ -2,6 +2,8 @@ package pl.bartlomiejstepien.armaserverwebgui.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.exception.ServerIsAlreadyRunningException;
@@ -25,6 +27,7 @@ import java.util.Scanner;
 @Slf4j
 public class StatusServiceImpl implements StatusService
 {
+    private static final Logger SERVER_LOGGER = LoggerFactory.getLogger("arma-server");
     private static final String PID_FILE_NAME = "arma_server.pid";
 
     private final SteamService steamService;
@@ -149,6 +152,7 @@ public class StatusServiceImpl implements StatusService
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     log.info(line);
+                    SERVER_LOGGER.info(line);
                 }
                 reader.close();
             } catch (final Exception e) {
@@ -165,6 +169,7 @@ public class StatusServiceImpl implements StatusService
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     log.info(line);
+                    SERVER_LOGGER.info(line);
                 }
                 reader.close();
             } catch (final Exception e) {
