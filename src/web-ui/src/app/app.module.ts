@@ -41,6 +41,11 @@ import {
   ModDeleteConfirmDialogComponent
 } from "./tabs/mods/mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
 import {MatSelectModule} from "@angular/material/select";
+import {
+  AswgDragDropListItemComponent
+} from "./common-ui/aswg-drag-drop-list/aswg-drag-drop-list-item/aswg-drag-drop-list-item.component";
+import { MissionModifyDialogComponent } from './tabs/missions/mission-modify-dialog/mission-modify-dialog.component';
+import { MissionParameterComponent } from './tabs/missions/mission-modify-dialog/mission-parameter/mission-parameter.component';
 
 @NgModule({
   declarations: [
@@ -61,8 +66,11 @@ import {MatSelectModule} from "@angular/material/select";
     MotdListComponent,
     StatusComponent,
     AswgDragDropListComponent,
+    AswgDragDropListItemComponent,
     UploadModComponent,
-    ModDeleteConfirmDialogComponent
+    ModDeleteConfirmDialogComponent,
+    MissionModifyDialogComponent,
+    MissionParameterComponent
   ],
     imports: [
         BrowserModule,

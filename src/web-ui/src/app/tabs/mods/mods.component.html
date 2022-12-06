@@ -2,18 +2,21 @@
     <h1>Mods</h1>
     <div class="app-list-mods" cdkDropListGroup>
         <aswg-drag-drop-list [canDelete]="true"
-                             [sorted]="true"
+                             [canSortManually]="false"
+                             [autoSort]="true"
                              [items]="disabledMods"
                              [header]="'Disabled'"
                              class="mods-list-tab"
                              (deleteClicked)="showModDeleteConfirmationDialog($event)"></aswg-drag-drop-list>
         <aswg-drag-drop-list #enabledModsList
                              [canDelete]="true"
-                             [sorted]="true"
+                             [autoSort]="true"
+                             [canSortManually]="false"
                              [items]="enabledMods"
                              [header]="'Enabled'"
                              class="mods-list-tab"
-                             (deleteClicked)="showModDeleteConfirmationDialog($event)"></aswg-drag-drop-list>
+                             (deleteClicked)="showModDeleteConfirmationDialog($event)">
+        </aswg-drag-drop-list>
     </div>
     <div class="app-upload-mod">
         <app-upload-mod #uploadMod (modUploaded)="onModUploaded()"></app-upload-mod>

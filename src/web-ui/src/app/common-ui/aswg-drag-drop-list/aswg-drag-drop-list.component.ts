@@ -11,10 +11,13 @@ export class AswgDragDropListComponent implements OnInit, OnDestroy {
     @Input() items: string[] = [];
     @Input() header: string = '';
 
-    @Input() sorted: boolean = false;
+    @Input() canSortManually: boolean = false;
+    @Input() autoSort: boolean = false;
     @Input() canDelete: boolean = false;
+    @Input() canModify: boolean = false;
 
     @Output() deleteClicked: EventEmitter<string> = new EventEmitter<string>();
+    @Output() modifyClicked: EventEmitter<string> = new EventEmitter<string>();
 
     constructor(){}
 
@@ -37,7 +40,7 @@ export class AswgDragDropListComponent implements OnInit, OnDestroy {
                 event.currentIndex,
             );
         }
-        if (this.sorted)
+        if (this.autoSort)
         {
           this.items.sort();
         }
@@ -45,5 +48,9 @@ export class AswgDragDropListComponent implements OnInit, OnDestroy {
 
   deleteClick(item: string) {
       this.deleteClicked.emit(item);
+  }
+
+  modifyClick(item: string) {
+      this.modifyClicked.emit(item);
   }
 }

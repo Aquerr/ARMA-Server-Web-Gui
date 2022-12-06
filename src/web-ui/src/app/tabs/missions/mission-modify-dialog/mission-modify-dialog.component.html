@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Modify Mission</h1>
+<div mat-dialog-content>
+  <h4>Mission Parameters</h4>
+  <form>
+    <ng-template #viewContainerRef></ng-template>
+  </form>
+  <div class="text-center">
+    <button class="center" mat-flat-button color="primary" (click)="createNewParameter()">+</button>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true">Save</button>
+  <button mat-button mat-dialog-close cdkFocusInitial>Close</button>
+</div>

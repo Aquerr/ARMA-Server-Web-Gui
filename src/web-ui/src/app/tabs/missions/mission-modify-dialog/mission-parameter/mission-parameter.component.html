@@ -1,0 +1,21 @@
+<table class="full-width" cellspacing="0">
+  <tr>
+    <td>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput type="text" required>
+      </mat-form-field>
+    </td>
+    <td>
+      <mat-form-field>
+        <mat-label>Value</mat-label>
+        <input matInput type="text" required>
+      </mat-form-field>
+    </td>
+    <td>
+      <button mat-icon-button (click)="deleteParameter($event)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </tr>
+</table>

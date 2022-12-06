@@ -2,17 +2,19 @@
   <h1>Missions</h1>
   <div class="app-list-missions" cdkDropListGroup>
     <aswg-drag-drop-list [canDelete]="true"
-                         [sorted]="false"
+                         [canSortManually]="true"
                          [items]="disabledMissions"
                          [header]="'Disabled'"
                          class="mods-list"
                          (deleteClicked)="showMissionDeleteConfirmationDialog($event)"></aswg-drag-drop-list>
     <aswg-drag-drop-list [canDelete]="true"
-                         [sorted]="false"
+                         [canModify]="true"
+                         [canSortManually]="true"
                          #enabledMissionsList
                          [items]="enabledMissions"
                          [header]="'Enabled'"
                          class="mods-list"
+                         (modifyClicked)="showMissionModifyDialog($event)"
                          (deleteClicked)="showMissionDeleteConfirmationDialog($event)"></aswg-drag-drop-list>
   </div>
   <div class="app-upload-mission">

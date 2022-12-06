@@ -9,6 +9,7 @@ import {
 } from "./mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
 import {AswgDragDropListComponent} from "../../common-ui/aswg-drag-drop-list/aswg-drag-drop-list.component";
 import {NotificationService} from "../../service/notification.service";
+import {MissionModifyDialogComponent} from "./mission-modify-dialog/mission-modify-dialog.component";
 
 @Component({
   selector: 'app-missions',
@@ -88,6 +89,18 @@ export class MissionsComponent implements OnInit, OnDestroy {
     this.missionsService.saveEnabledMissions({missions: this.enabledMissionsList.items}).subscribe(response => {
       this.maskService.hide();
       this.notificationService.successNotification('Active mission list saved!', 'Success');
+    });
+  }
+
+  showMissionModifyDialog(missionName: string) {
+    const dialogRef = this.matDialog.open(MissionModifyDialogComponent, {
+      // width: '250px',
+      enterAnimationDuration: '200ms',
+      exitAnimationDuration: '200ms'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
     });
   }
 }
