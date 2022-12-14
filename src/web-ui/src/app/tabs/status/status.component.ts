@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MaskService} from "../../service/mask.service";
 import {ServerStatusService} from "../../service/server-status.service";
-import {ServerStatus} from "./model/status.model";
+import {ServerStatus, Status} from "./model/status.model";
 import {NotificationService} from "../../service/notification.service";
 import {ArmaServerPlayer} from '../../model/arma-server-player.model';
 
@@ -12,7 +12,7 @@ import {ArmaServerPlayer} from '../../model/arma-server-player.model';
 })
 export class StatusComponent implements OnInit, OnDestroy {
 
-  serverStatus: ServerStatus = ServerStatus.OFFLINE;
+  serverStatus: ServerStatus = {status: Status.OFFLINE, statusText: "Offline"};
   playerList: ArmaServerPlayer[] = [];
 
   refreshHandleId: number = 0;
@@ -60,7 +60,7 @@ export class StatusComponent implements OnInit, OnDestroy {
 
   private startServer() {
     this.serverStatusService.toggleServer({
-      requestedStatus: ServerStatus.ONLINE
+      requestedStatus: Status.ONLINE
     }).subscribe(response => {
       this.notificationService.infoNotification("Server is starting...", "Information");
     });
@@ -68,21 +68,21 @@ export class StatusComponent implements OnInit, OnDestroy {
 
   private stopServer() {
     this.serverStatusService.toggleServer({
-      requestedStatus: ServerStatus.OFFLINE
+      requestedStatus: Status.OFFLINE
     }).subscribe(response => {
       this.notificationService.infoNotification("Server is stopping...", "Information");
     });
   }
 
   isServerOffline(): boolean {
-    return this.serverStatus == ServerStatus.OFFLINE;
+    return this.serverStatus.status == Status.OFFLINE;
   }
 
   isServerStarting(): boolean {
-    return this.serverStatus == ServerStatus.STARTING;
+    return this.serverStatus.status == Status.STARTING;
   }
 
   canToggleServer(): boolean {
-    return this.serverStatus == ServerStatus.ONLINE || this.isServerOffline();
+    return this.serverStatus.status == Status.ONLINE || this.isServerOffline();
   }
 }

@@ -1,7 +1,7 @@
 <div>
   <h1>Server Status</h1>
   <div>
-    Status: <span [ngStyle]="isServerOffline() ? {'color': 'red'} : {'color': 'green'}">{{getServerStatus()}}</span>
+    Status: <span [ngStyle]="isServerOffline() ? {'color': 'red'} : {'color': 'green'}">{{getServerStatus().statusText}}</span>
   </div>
   <div>
     <label for="player-list">Player list</label>

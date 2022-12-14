@@ -45,9 +45,9 @@ public class StatusServiceImpl implements StatusService
     public ServerStatus getServerStatus()
     {
         if (serverStartScheduled)
-            return ServerStatus.STARTING;
+            return ServerStatus.of(ServerStatus.Status.STARTING, "Starting");
         if (this.steamService.isServerRunning())
-            return ServerStatus.ONLINE;
+            return ServerStatus.of(ServerStatus.Status.ONLINE, "Online");
         long pid;
         try
         {
@@ -57,13 +57,14 @@ public class StatusServiceImpl implements StatusService
         {
             throw new RuntimeException("Could not get server pid.", e);
         }
-        return pid != 0 ? ServerStatus.ONLINE : ServerStatus.OFFLINE;
+        return pid != 0 ? ServerStatus.of(ServerStatus.Status.RUNNING_BUT_NOT_DETECTED_BY_STEAM, "Running but not detected by Steam")
+                : ServerStatus.of(ServerStatus.Status.OFFLINE, "Offline");
     }
 
     @Override
     public void startServer()
     {
-        if (getServerStatus() != ServerStatus.OFFLINE || serverStartScheduled)
+        if (getServerStatus().getStatus() != ServerStatus.Status.OFFLINE || serverStartScheduled)
             throw new ServerIsAlreadyRunningException("Server is already running!");
 
         serverStartScheduled = true;

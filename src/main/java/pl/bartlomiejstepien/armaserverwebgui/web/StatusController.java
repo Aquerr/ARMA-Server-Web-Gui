@@ -39,7 +39,7 @@ public class StatusController
         return Mono.just(toggleStatusRequest)
                 .doOnSuccess(request ->
                 {
-                    if (request.getRequestedStatus() == ServerStatus.OFFLINE)
+                    if (request.getRequestedStatus() == ServerStatus.Status.OFFLINE)
                         this.statusService.stopServer();
                     else
                         this.statusService.startServer();
@@ -57,7 +57,7 @@ public class StatusController
     @Data
     private static class ToggleStatusRequest
     {
-        ServerStatus requestedStatus;
+        ServerStatus.Status requestedStatus;
     }
 
     @Value

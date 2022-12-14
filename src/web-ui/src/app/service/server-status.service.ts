@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {API_BASE_URL} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {ServerStatus} from "../tabs/status/model/status.model";
+import {ServerStatus, Status} from "../tabs/status/model/status.model";
 import {ArmaServerPlayer} from '../model/arma-server-player.model';
 
 @Injectable({
@@ -25,7 +25,7 @@ export class ServerStatusService {
 }
 
 export interface ToggleServerRequest {
-  requestedStatus: ServerStatus
+  requestedStatus: Status
 }
 
 export interface ServerStatusResponse {
