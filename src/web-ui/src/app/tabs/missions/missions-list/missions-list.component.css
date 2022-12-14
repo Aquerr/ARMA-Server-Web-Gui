@@ -18,6 +18,7 @@
     cursor: move;
     background: white;
     font-size: 14px;
+    word-wrap: anywhere;
   }
 
   .cdk-drag-preview {
