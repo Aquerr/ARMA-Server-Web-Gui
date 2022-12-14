@@ -2,19 +2,19 @@
   <h1>Missions</h1>
   <mat-form-field>
     <mat-label>Search mission...</mat-label>
-    <input matInput type="text" placeholder="Search mission...">
+    <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mission...">
   </mat-form-field>
   <div class="app-list-missions" cdkDropListGroup>
     <app-missions-list
                [canSortManually]="true"
-               [missions]="disabledMissions"
+               [missions]="filteredDisabledMissions"
                [header]="'Disabled'"
                class="mods-list"
                (deleteClicked)="showMissionDeleteConfirmationDialog($event)"></app-missions-list>
     <app-missions-list
                [canSortManually]="true"
                #enabledMissionsList
-               [missions]="enabledMissions"
+               [missions]="filteredEnabledMissions"
                [header]="'Enabled'"
                class="mods-list"
                (modifyClicked)="showMissionModifyDialog($event)"

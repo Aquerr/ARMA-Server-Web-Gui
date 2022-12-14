@@ -8,6 +8,7 @@ import {ModDeleteConfirmDialogComponent} from "./mod-delete-confirm-dialog/mod-d
 import {NotificationService} from "../../service/notification.service";
 import {Mod} from "../../model/mod.model";
 import {ModsListComponent} from "./mods-list/mods-list.component";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-mods',
@@ -24,6 +25,10 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   disabledMods: Mod[] = [];
   enabledMods: Mod[] = [];
+  filteredDisabledMods: Mod[] = [];
+  filteredEnabledMods: Mod[] = [];
+
+  searchBoxControl!: FormControl;
 
   constructor(private modService: ServerModsService,
               private maskService: MaskService,
@@ -33,6 +38,10 @@ export class ModsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.searchBoxControl = new FormControl('');
+    this.searchBoxControl.valueChanges.subscribe(value => {
+      this.filterMods(value);
+    });
     this.reloadMods();
     this.reloadModsDataSubscription = this.reloadModsDataSubject.subscribe(() => {
       this.reloadMods();
@@ -78,7 +87,8 @@ export class ModsComponent implements OnInit, OnDestroy {
     this.modService.getInstalledMods().subscribe(modsResponse => {
       this.disabledMods = modsResponse.disabledMods;
       this.enabledMods = modsResponse.enabledMods;
-      console.log(modsResponse);
+      this.filteredDisabledMods = [...this.disabledMods];
+      this.filteredEnabledMods = [...this.enabledMods];
       this.maskService.hide();
     });
   }
@@ -90,5 +100,10 @@ export class ModsComponent implements OnInit, OnDestroy {
       this.maskService.hide();
       this.notificationService.successNotification('Active mods list saved!', 'Success');
     });
+  }
+
+  private filterMods(searchPhrase: string) {
+    this.filteredEnabledMods = this.enabledMods.filter(mod => mod.name.toLowerCase().includes(searchPhrase.toLowerCase()));
+    this.filteredDisabledMods = this.disabledMods.filter(mod => mod.name.toLowerCase().includes(searchPhrase.toLowerCase()));
   }
 }

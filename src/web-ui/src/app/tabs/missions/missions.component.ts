@@ -11,6 +11,7 @@ import {NotificationService} from "../../service/notification.service";
 import {MissionModifyDialogComponent} from "./mission-modify-dialog/mission-modify-dialog.component";
 import {Mission} from "../../model/mission.model";
 import {MissionsListComponent} from "./missions-list/missions-list.component";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-missions',
@@ -24,8 +25,12 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   disabledMissions: Mission[] = [];
   enabledMissions: Mission[] = [];
+  filteredDisabledMissions: Mission[] = [];
+  filteredEnabledMissions: Mission[] = [];
+
   reloadMissionsDataSubject: Subject<any>;
   reloadMissionDataSubscription!: Subscription;
+  searchBoxControl!: FormControl;
 
   constructor(private missionsService: ServerMissionsService,
               private maskService: MaskService,
@@ -35,6 +40,10 @@ export class MissionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.searchBoxControl = new FormControl('');
+    this.searchBoxControl.valueChanges.subscribe(value => {
+      this.filterMissions(value);
+    });
     this.reloadMissions();
     this.reloadMissionDataSubscription = this.reloadMissionsDataSubject.subscribe(() => {
       this.reloadMissions();
@@ -58,6 +67,8 @@ export class MissionsComponent implements OnInit, OnDestroy {
     this.missionsService.getInstalledMissions().subscribe(response => {
       this.disabledMissions = response.disabledMissions;
       this.enabledMissions = response.enabledMissions;
+      this.filteredDisabledMissions = [...this.disabledMissions];
+      this.filteredEnabledMissions = [...this.enabledMissions];
       this.maskService.hide();
     });
   }
@@ -105,5 +116,10 @@ export class MissionsComponent implements OnInit, OnDestroy {
       console.log("Modified mission");
       console.log(result);
     });
+  }
+
+  filterMissions(searchPhrase: String) {
+    this.filteredEnabledMissions = this.enabledMissions.filter(mission => mission.name.toLowerCase().includes(searchPhrase.toLowerCase()));
+    this.filteredDisabledMissions = this.disabledMissions.filter(mission => mission.name.toLowerCase().includes(searchPhrase.toLowerCase()));
   }
 }

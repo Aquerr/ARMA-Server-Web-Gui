@@ -1,17 +1,21 @@
 <div appDragAndDropFile (fileDropped)="onFileDropped($event)">
     <h1>Mods</h1>
+    <mat-form-field>
+      <mat-label>Search mission...</mat-label>
+      <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mission...">
+    </mat-form-field>
     <div class="app-list-mods" cdkDropListGroup>
         <app-mods-list
                              [canSortManually]="false"
                              [autoSort]="true"
-                             [mods]="disabledMods"
+                             [mods]="filteredDisabledMods"
                              [header]="'Disabled'"
                              class="mods-list-tab"
                              (deleteClicked)="showModDeleteConfirmationDialog($event)"></app-mods-list>
         <app-mods-list #enabledModsList
                              [autoSort]="true"
                              [canSortManually]="false"
-                             [mods]="enabledMods"
+                             [mods]="filteredEnabledMods"
                              [header]="'Enabled'"
                              class="mods-list-tab"
                              (deleteClicked)="showModDeleteConfirmationDialog($event)">

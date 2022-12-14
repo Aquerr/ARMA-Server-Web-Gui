@@ -10,6 +10,7 @@ import {Mission} from "../../../model/mission.model";
 export class MissionsListComponent implements OnInit, OnDestroy {
 
   @Input() missions: Mission[] = [];
+
   @Input() header: string = '';
 
   @Input() canSortManually: boolean = false;
@@ -26,9 +27,7 @@ export class MissionsListComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   drop(event: CdkDragDrop<Mission[]>){
       if (event.previousContainer === event.container){
