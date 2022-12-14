@@ -67,7 +67,7 @@ public class ArmaServerParameters
         }
         if (!serverMods.isEmpty())
         {
-            args.add("\"-serverMod=" + String.join(";", mods) + "\"");
+            args.add("\"-serverMod=" + String.join(";", serverMods) + "\"");
         }
         return args;
     }
