@@ -75,7 +75,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   isServerOffline(): boolean {
-    return this.serverStatus.status == Status.OFFLINE || this.serverStatus.status == Status.RUNNING_BUT_NOT_DETECTED_BY_STEAM;
+    return this.serverStatus.status == Status.OFFLINE;
   }
 
   isServerStarting(): boolean {
@@ -83,6 +83,6 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   canToggleServer(): boolean {
-    return this.serverStatus.status == Status.ONLINE || this.isServerOffline();
+    return this.serverStatus.status == Status.ONLINE || this.serverStatus.status == Status.RUNNING_BUT_NOT_DETECTED_BY_STEAM || this.isServerOffline();
   }
 }
