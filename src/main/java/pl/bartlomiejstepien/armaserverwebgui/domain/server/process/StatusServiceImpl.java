@@ -38,6 +38,7 @@ public class StatusServiceImpl implements StatusService
 
     private boolean serverStartScheduled;
 
+    private Thread serverThread;
     private Thread ioServerThread;
     private Thread ioServerErrorThread;
 
@@ -69,30 +70,35 @@ public class StatusServiceImpl implements StatusService
 
         serverStartScheduled = true;
 
-        try
-        {
-            ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
+        ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
 
-            ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.directory(new File(serverParams.getServerDirectory()));
-            processBuilder.command(serverParams.asList());
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.directory(new File(serverParams.getServerDirectory()));
+        processBuilder.command(serverParams.asList());
 
-            log.info("Starting server process with params: {}", serverParams.asList());
-            Process process = processBuilder.start();
+        log.info("Starting server process with params: {}", serverParams.asList());
 
-            long pid = process.pid();
-            log.info("Process started: {}", pid);
+        this.serverThread = new Thread(() -> {
+            try
+            {
+                Process process = processBuilder.start();
 
-            saveServerPid(pid);
-            handleProcessInputOutput(process);
-            serverStartScheduled = false;
-        }
-        catch (IOException e)
-        {
-            serverStartScheduled = false;
-            log.error("Error", e);
-            stopServer();
-        }
+                long pid = process.pid();
+                log.info("Process started: {}", pid);
+
+                saveServerPid(pid);
+                handleProcessInputOutput(process);
+                serverStartScheduled = false;
+            }
+            catch (IOException e)
+            {
+                serverStartScheduled = false;
+                log.error("Error", e);
+                stopServer();
+            }
+        });
+        this.serverThread.setDaemon(true);
+        this.serverThread.start();
     }
 
     @Override
@@ -125,6 +131,11 @@ public class StatusServiceImpl implements StatusService
             {
                 this.ioServerErrorThread.interrupt();
                 this.ioServerErrorThread = null;
+            }
+            if (this.serverThread != null)
+            {
+                this.serverThread.interrupt();
+                this.serverThread = null;
             }
         });
 
@@ -179,7 +190,9 @@ public class StatusServiceImpl implements StatusService
                 log.error("Error", e);
             }
         });
+        this.ioServerErrorThread.setDaemon(true);
         this.ioServerErrorThread.start();
+        this.ioServerThread.setDaemon(true);
         this.ioServerThread.start();
     }
 

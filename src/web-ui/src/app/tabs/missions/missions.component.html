@@ -1,5 +1,9 @@
 <div appDragAndDropFile (fileDropped)="onFileDropped($event)">
   <h1>Missions</h1>
+  <mat-form-field>
+    <mat-label>Search mission...</mat-label>
+    <input type="text" placeholder="Search mission...">
+  </mat-form-field>
   <div class="app-list-missions" cdkDropListGroup>
     <app-missions-list
                [canSortManually]="true"
