@@ -75,7 +75,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   isServerOffline(): boolean {
-    return this.serverStatus.status == Status.OFFLINE;
+    return this.serverStatus.status == Status.OFFLINE || this.serverStatus.status == Status.RUNNING_BUT_NOT_DETECTED_BY_STEAM;
   }
 
   isServerStarting(): boolean {
