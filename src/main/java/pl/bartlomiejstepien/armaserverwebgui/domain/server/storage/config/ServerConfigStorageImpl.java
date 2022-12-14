@@ -3,7 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.CfgConfigReader;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.CfgConfigWriter;
 

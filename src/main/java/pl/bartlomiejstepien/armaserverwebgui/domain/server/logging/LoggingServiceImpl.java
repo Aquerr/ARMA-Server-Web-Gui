@@ -2,7 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.logging;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.LoggingProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 

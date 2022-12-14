@@ -1,6 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.parser;
 
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.CfgConfigReader;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.CfgReflectionUtil;

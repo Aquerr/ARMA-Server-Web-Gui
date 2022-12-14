@@ -5,8 +5,9 @@ import { ServerModsService } from 'src/app/service/server-mods.service';
 import { UploadModComponent } from './upload-mod/upload-mod.component';
 import {MatDialog} from "@angular/material/dialog";
 import {ModDeleteConfirmDialogComponent} from "./mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
-import {AswgDragDropListComponent} from "../../common-ui/aswg-drag-drop-list/aswg-drag-drop-list.component";
 import {NotificationService} from "../../service/notification.service";
+import {Mod} from "../../model/mod.model";
+import {ModsListComponent} from "./mods-list/mods-list.component";
 
 @Component({
   selector: 'app-mods',
@@ -16,13 +17,13 @@ import {NotificationService} from "../../service/notification.service";
 export class ModsComponent implements OnInit, OnDestroy {
 
   @ViewChild('uploadMod') uploadModComponent!: UploadModComponent;
-  @ViewChild('enabledModsList') enabledModsList!: AswgDragDropListComponent;
+  @ViewChild('enabledModsList') enabledModsList!: ModsListComponent;
 
   reloadModsDataSubject: Subject<any>;
   reloadModsDataSubscription!: Subscription;
 
-  disabledMods: string[] = [];
-  enabledMods: string[] = [];
+  disabledMods: Mod[] = [];
+  enabledMods: Mod[] = [];
 
   constructor(private modService: ServerModsService,
               private maskService: MaskService,
@@ -77,14 +78,15 @@ export class ModsComponent implements OnInit, OnDestroy {
     this.modService.getInstalledMods().subscribe(modsResponse => {
       this.disabledMods = modsResponse.disabledMods;
       this.enabledMods = modsResponse.enabledMods;
+      console.log(modsResponse);
       this.maskService.hide();
     });
   }
 
   save() {
     this.maskService.show();
-    console.log(this.enabledModsList.items);
-    this.modService.saveEnabledMods({mods: this.enabledModsList.items}).subscribe(response => {
+    console.log(this.enabledModsList.mods);
+    this.modService.saveEnabledMods({mods: this.enabledModsList.mods}).subscribe(response => {
       this.maskService.hide();
       this.notificationService.successNotification('Active mods list saved!', 'Success');
     });

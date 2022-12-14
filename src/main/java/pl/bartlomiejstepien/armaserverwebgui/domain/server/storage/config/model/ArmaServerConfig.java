@@ -1,11 +1,13 @@
-package pl.bartlomiejstepien.armaserverwebgui.domain.model;
+package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model;
 
 import lombok.Data;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.type.PropertyType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class ArmaServerConfig
@@ -73,7 +75,7 @@ public class ArmaServerConfig
             @Data
             public static class Params
             {
-
+                private Map<String, String> params = new HashMap<>();
             }
         }
     }

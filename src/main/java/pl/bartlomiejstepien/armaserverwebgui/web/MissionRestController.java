@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.MissionFileValidator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionFileAlreadyExistsException;
@@ -85,8 +86,8 @@ public class MissionRestController
     @Value(staticConstructor = "of")
     private static class GetMissionsResponse
     {
-        List<String> disabledMissions;
-        List<String> enabledMissions;
+        List<Mission> disabledMissions;
+        List<Mission> enabledMissions;
 
         private static GetMissionsResponse of(Missions missions)
         {
@@ -97,6 +98,6 @@ public class MissionRestController
     @Data
     private static class SaveEnabledMissionListRequest
     {
-        List<String> missions;
+        List<Mission> missions;
     }
 }

@@ -2,7 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.parser.CfgClassParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.parser.CfgIntegerParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.parser.CfgMissionsClassParser;

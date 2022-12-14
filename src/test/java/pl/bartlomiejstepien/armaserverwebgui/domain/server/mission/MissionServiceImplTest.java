@@ -8,13 +8,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.codec.multipart.FilePart;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mission;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.mission.MissionStorage;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,9 @@ class MissionServiceImplTest
 {
     private static final String MISSION_NAME_1 = "MyMission";
     private static final String MISSION_NAME_2 = "MySecondMission";
+
+    private static final Mission MISSION_1 = new Mission(MISSION_NAME_1, Collections.emptyMap());
+    private static final Mission MISSION_2 = new Mission(MISSION_NAME_2, Collections.emptyMap());
 
     @Mock
     private MissionStorage missionStorage;
@@ -66,7 +71,7 @@ class MissionServiceImplTest
     @Test
     void shouldSaveEnabledMissionList()
     {
-        List<String> missions = List.of(MISSION_NAME_1, MISSION_NAME_2);
+        List<Mission> missions = List.of(MISSION_1, MISSION_2);
         given(serverConfigStorage.getServerConfig()).willReturn(prepareArmaServerConfig(List.of()));
 
         missionService.saveEnabledMissionList(missions);
@@ -86,8 +91,8 @@ class MissionServiceImplTest
 
         Missions missions = missionService.getMissions();
 
-        assertThat(missions.getDisabledMissions()).containsExactly(MISSION_NAME_2);
-        assertThat(missions.getEnabledMissions()).containsExactly(MISSION_NAME_1);
+        assertThat(missions.getDisabledMissions()).containsExactly(MISSION_2);
+        assertThat(missions.getEnabledMissions()).containsExactly(MISSION_1);
     }
 
     @Test

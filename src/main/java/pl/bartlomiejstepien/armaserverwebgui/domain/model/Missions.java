@@ -7,6 +7,6 @@ import java.util.List;
 @Data
 public class Missions
 {
-    private List<String> disabledMissions;
-    private List<String> enabledMissions;
+    private List<Mission> disabledMissions;
+    private List<Mission> enabledMissions;
 }

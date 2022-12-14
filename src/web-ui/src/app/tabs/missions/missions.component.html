@@ -1,21 +1,20 @@
 <div appDragAndDropFile (fileDropped)="onFileDropped($event)">
   <h1>Missions</h1>
   <div class="app-list-missions" cdkDropListGroup>
-    <aswg-drag-drop-list [canDelete]="true"
-                         [canSortManually]="true"
-                         [items]="disabledMissions"
-                         [header]="'Disabled'"
-                         class="mods-list"
-                         (deleteClicked)="showMissionDeleteConfirmationDialog($event)"></aswg-drag-drop-list>
-    <aswg-drag-drop-list [canDelete]="true"
-                         [canModify]="true"
-                         [canSortManually]="true"
-                         #enabledMissionsList
-                         [items]="enabledMissions"
-                         [header]="'Enabled'"
-                         class="mods-list"
-                         (modifyClicked)="showMissionModifyDialog($event)"
-                         (deleteClicked)="showMissionDeleteConfirmationDialog($event)"></aswg-drag-drop-list>
+    <app-missions-list
+               [canSortManually]="true"
+               [missions]="disabledMissions"
+               [header]="'Disabled'"
+               class="mods-list"
+               (deleteClicked)="showMissionDeleteConfirmationDialog($event)"></app-missions-list>
+    <app-missions-list
+               [canSortManually]="true"
+               #enabledMissionsList
+               [missions]="enabledMissions"
+               [header]="'Enabled'"
+               class="mods-list"
+               (modifyClicked)="showMissionModifyDialog($event)"
+               (deleteClicked)="showMissionDeleteConfirmationDialog($event)"></app-missions-list>
   </div>
   <div class="app-upload-mission">
     <app-upload-mission #uploadMission (missionUploaded)="onMissionUploaded()"></app-upload-mission>

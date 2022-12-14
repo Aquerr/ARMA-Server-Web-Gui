@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mods;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.mod.ModStorage;
@@ -41,13 +42,14 @@ public class ModServiceImpl implements ModService
     public Mods getMods()
     {
         List<String> installedMods = getInstalledModNames();
-        Set<String> enabledMods = this.aswgConfig.getMods();
+        Set<Mod> enabledMods = this.aswgConfig.getActiveMods();
         Mods mods = new Mods();
         mods.setEnabledMods(enabledMods);
         mods.setDisabledMods(installedMods.stream()
-                .filter(mod -> !enabledMods.contains(mod))
+                .filter(modName -> enabledMods.stream()
+                        .noneMatch(mod -> mod.getName().equals(modName)))
+                .map(modName -> new Mod(modName, false))
                 .collect(Collectors.toSet()));
-
         return mods;
     }
 
@@ -60,14 +62,14 @@ public class ModServiceImpl implements ModService
     @Override
     public boolean deleteMod(String modName)
     {
-        Set<String> enabledMods = this.aswgConfig.getMods();
-        enabledMods.remove(modName);
+        Set<Mod> enabledMods = this.aswgConfig.getActiveMods();
+        enabledMods.removeIf(mod -> mod.getName().equals(modName));
         saveEnabledModList(enabledMods);
         return this.modStorage.deleteMod(modName);
     }
 
     @Override
-    public void saveEnabledModList(Set<String> mods)
+    public void saveEnabledModList(Set<Mod> mods)
     {
         aswgConfig.setActiveMods(mods);
     }

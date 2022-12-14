@@ -1,22 +1,21 @@
 <div appDragAndDropFile (fileDropped)="onFileDropped($event)">
     <h1>Mods</h1>
     <div class="app-list-mods" cdkDropListGroup>
-        <aswg-drag-drop-list [canDelete]="true"
+        <app-mods-list
                              [canSortManually]="false"
                              [autoSort]="true"
-                             [items]="disabledMods"
+                             [mods]="disabledMods"
                              [header]="'Disabled'"
                              class="mods-list-tab"
-                             (deleteClicked)="showModDeleteConfirmationDialog($event)"></aswg-drag-drop-list>
-        <aswg-drag-drop-list #enabledModsList
-                             [canDelete]="true"
+                             (deleteClicked)="showModDeleteConfirmationDialog($event)"></app-mods-list>
+        <app-mods-list #enabledModsList
                              [autoSort]="true"
                              [canSortManually]="false"
-                             [items]="enabledMods"
+                             [mods]="enabledMods"
                              [header]="'Enabled'"
                              class="mods-list-tab"
                              (deleteClicked)="showModDeleteConfirmationDialog($event)">
-        </aswg-drag-drop-list>
+        </app-mods-list>
     </div>
     <div class="app-upload-mod">
         <app-upload-mod #uploadMod (modUploaded)="onModUploaded()"></app-upload-mod>

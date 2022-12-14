@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mod;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.ModFileValidator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
@@ -85,8 +86,8 @@ public class ModsRestController
     @Value(staticConstructor = "of")
     private static class GetModsResponse
     {
-        Set<String> disabledMods;
-        Set<String> enabledMods;
+        Set<Mod> disabledMods;
+        Set<Mod> enabledMods;
 
         private static GetModsResponse of(Mods mods)
         {
@@ -97,6 +98,6 @@ public class ModsRestController
     @Data
     private static class SaveEnabledModsListRequest
     {
-        Set<String> mods;
+        Set<Mod> mods;
     }
 }

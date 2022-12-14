@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
 import org.springframework.http.codec.multipart.FilePart;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mods;
 import reactor.core.publisher.Mono;
 
@@ -17,5 +18,5 @@ public interface ModService
 
     boolean deleteMod(String modName);
 
-    void saveEnabledModList(Set<String> mods);
+    void saveEnabledModList(Set<Mod> mods);
 }

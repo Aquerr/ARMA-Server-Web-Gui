@@ -2,6 +2,7 @@ import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from 'src/environments/environment';
+import {Mod} from "../model/mod.model";
 
 @Injectable({
   providedIn: 'root'
@@ -33,10 +34,10 @@ export class ServerModsService {
 }
 
 export interface GetModsResponse{
-  disabledMods: string[];
-  enabledMods: string[];
+  disabledMods: Mod[];
+  enabledMods: Mod[];
 }
 
 export interface SaveEnabledModsRequest {
-  mods: string[];
+  mods: Mod[];
 }

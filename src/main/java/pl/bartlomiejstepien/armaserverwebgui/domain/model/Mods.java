@@ -7,6 +7,6 @@ import java.util.Set;
 @Data
 public class Mods
 {
-    private Set<String> disabledMods;
-    private Set<String> enabledMods;
+    private Set<Mod> disabledMods;
+    private Set<Mod> enabledMods;
 }

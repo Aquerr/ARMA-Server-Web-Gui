@@ -1,7 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg;
 
 import org.springframework.stereotype.Component;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.parser.CfgIntegerParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.parser.CfgMissionParamsClassParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.parser.CfgMissionsClassParser;

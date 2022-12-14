@@ -7,9 +7,10 @@ import {MatDialog} from "@angular/material/dialog";
 import {
   MissionDeleteConfirmDialogComponent
 } from "./mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
-import {AswgDragDropListComponent} from "../../common-ui/aswg-drag-drop-list/aswg-drag-drop-list.component";
 import {NotificationService} from "../../service/notification.service";
 import {MissionModifyDialogComponent} from "./mission-modify-dialog/mission-modify-dialog.component";
+import {Mission} from "../../model/mission.model";
+import {MissionsListComponent} from "./missions-list/missions-list.component";
 
 @Component({
   selector: 'app-missions',
@@ -19,10 +20,10 @@ import {MissionModifyDialogComponent} from "./mission-modify-dialog/mission-modi
 export class MissionsComponent implements OnInit, OnDestroy {
 
   @ViewChild('uploadMission') uploadMissionComponent!: UploadMissionComponent;
-  @ViewChild('enabledMissionsList') enabledMissionsList!: AswgDragDropListComponent;
+  @ViewChild('enabledMissionsList') enabledMissionsListComponent!: MissionsListComponent;
 
-  disabledMissions: string[] = [];
-  enabledMissions: string[] = [];
+  disabledMissions: Mission[] = [];
+  enabledMissions: Mission[] = [];
   reloadMissionsDataSubject: Subject<any>;
   reloadMissionDataSubscription!: Subscription;
 
@@ -85,22 +86,24 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   save() {
     this.maskService.show();
-    console.log(this.enabledMissionsList.items);
-    this.missionsService.saveEnabledMissions({missions: this.enabledMissionsList.items}).subscribe(response => {
+    console.log(this.enabledMissionsListComponent.missions);
+    this.missionsService.saveEnabledMissions({missions: this.enabledMissionsListComponent.missions}).subscribe(response => {
       this.maskService.hide();
       this.notificationService.successNotification('Active mission list saved!', 'Success');
     });
   }
 
-  showMissionModifyDialog(missionName: string) {
+  showMissionModifyDialog(mission: Mission) {
     const dialogRef = this.matDialog.open(MissionModifyDialogComponent, {
       // width: '250px',
       enterAnimationDuration: '200ms',
-      exitAnimationDuration: '200ms'
+      exitAnimationDuration: '200ms',
+      data: mission.parameters
     });
 
     dialogRef.afterClosed().subscribe(result => {
-
+      console.log("Modified mission");
+      console.log(result);
     });
   }
 }

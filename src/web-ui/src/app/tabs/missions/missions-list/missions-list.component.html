@@ -1,0 +1,23 @@
+<h1>{{header}}</h1>
+<div
+    cdkDropList
+    [cdkDropListData]="missions"
+    class="list"
+    [cdkDropListSortingDisabled]="!canSortManually"
+    (cdkDropListDropped)="drop($event)">
+    <div class="list-item-container" *ngFor="let mission of missions" cdkDrag>
+      <div style="flex: 72%">
+        {{mission.name}}
+      </div>
+      <div class="text-center" style="flex: 14%">
+        <button mat-icon-button (click)="modifyClick(mission)">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </div>
+      <div class="text-center" style="flex: 14%">
+        <button mat-icon-button (click)="deleteClick(mission)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+</div>

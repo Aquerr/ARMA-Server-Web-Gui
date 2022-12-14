@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpRequest} from "@angular/common/http";
 import {API_BASE_URL} from "../../environments/environment";
 import {Observable} from "rxjs";
+import {Mission} from "../model/mission.model";
 
 @Injectable({
   providedIn: 'root'
@@ -33,10 +34,10 @@ export class ServerMissionsService {
 }
 
 export interface GetMissionsResponse {
-  disabledMissions: string[];
-  enabledMissions: string[];
+  disabledMissions: Mission[];
+  enabledMissions: Mission[];
 }
 
 export interface SaveEnabledMissionsRequest {
-  missions: string[];
+  missions: Mission[];
 }
