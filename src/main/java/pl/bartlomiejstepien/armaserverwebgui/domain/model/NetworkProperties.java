@@ -11,4 +11,6 @@ public class NetworkProperties
     private int maxPing;
     private boolean loopback;
     private int disconnectTimeout;
+    private int maxDesync;
+    private int maxPacketLoss;
 }

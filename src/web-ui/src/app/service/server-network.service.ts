@@ -27,6 +27,8 @@ export interface SaveServerNetworkProperties {
   maxPing: number;
   loopback: boolean;
   disconnectTimeout: number;
+  maxDesync: number;
+  maxPacketLoss: number;
 }
 
 export interface GetServerNetworkProperties {
@@ -34,4 +36,6 @@ export interface GetServerNetworkProperties {
   maxPing: number;
   loopback: boolean;
   disconnectTimeout: number;
+  maxDesync: number;
+  maxPacketLoss: number;
 }

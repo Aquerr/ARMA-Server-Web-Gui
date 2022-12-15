@@ -60,6 +60,12 @@ public class ArmaServerConfig
     @CfgProperty(name = "disconnectTimeout", type = PropertyType.INTEGER)
     private int disconnectTimeout = 90;
 
+    @CfgProperty(name = "maxdesync", type = PropertyType.INTEGER)
+    private int maxdesync = 150;
+
+    @CfgProperty(name = "maxpacketloss", type = PropertyType.INTEGER)
+    private int maxpacketloss = 150;
+
     @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
     private Missions missions = new Missions();
 

@@ -23,6 +23,14 @@
       <mat-label>Disconnect Timeout</mat-label>
       <input name="disconnectTimeout" [(ngModel)]="disconnectTimeout" matInput type="number" min="5">
     </mat-form-field>
+    <mat-form-field>
+      <mat-label>Max Desync</mat-label>
+      <input name="maxDesync" [(ngModel)]="maxDesync" matInput type="number" min="0">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Max Packet Loss</mat-label>
+      <input name="maxPacketLoss" [(ngModel)]="maxPacketLoss" matInput type="number" min="0">
+    </mat-form-field>
   </div>
   <div>
     <button mat-flat-button color="primary" (click)="save()">Save</button>

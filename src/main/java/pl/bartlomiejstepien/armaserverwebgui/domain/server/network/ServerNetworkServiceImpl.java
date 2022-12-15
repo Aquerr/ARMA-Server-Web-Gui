@@ -21,6 +21,8 @@ public class ServerNetworkServiceImpl implements ServerNetworkService
                 .maxPing(armaServerConfig.getMaxPing())
                 .loopback(Boolean.parseBoolean(armaServerConfig.getLoopback()))
                 .disconnectTimeout(armaServerConfig.getDisconnectTimeout())
+                .maxDesync(armaServerConfig.getMaxdesync())
+                .maxPacketLoss(armaServerConfig.getMaxpacketloss())
                 .build();
     }
 
@@ -32,6 +34,8 @@ public class ServerNetworkServiceImpl implements ServerNetworkService
         armaServerConfig.setUpnp(String.valueOf(networkProperties.isUpnp()));
         armaServerConfig.setLoopback(String.valueOf(networkProperties.isLoopback()));
         armaServerConfig.setDisconnectTimeout(networkProperties.getDisconnectTimeout());
+        armaServerConfig.setMaxdesync(networkProperties.getMaxDesync());
+        armaServerConfig.setMaxpacketloss(networkProperties.getMaxPacketLoss());
         serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 }

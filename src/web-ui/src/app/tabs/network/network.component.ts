@@ -14,6 +14,8 @@ export class NetworkComponent implements OnInit {
   maxPing: number = 500;
   loopback: boolean = false;
   disconnectTimeout: number = 5;
+  maxDesync: number = 150;
+  maxPacketLoss: number = 150;
 
   constructor(private maskService: MaskService,
               private notificationService: NotificationService,
@@ -26,6 +28,8 @@ export class NetworkComponent implements OnInit {
       this.maxPing = response.maxPing;
       this.loopback = response.loopback;
       this.disconnectTimeout = response.disconnectTimeout;
+      this.maxDesync = response.maxDesync;
+      this.maxPacketLoss = response.maxPacketLoss;
       this.maskService.hide();
     });
   }
@@ -37,7 +41,9 @@ export class NetworkComponent implements OnInit {
       upnp: this.upnp,
       maxPing: this.maxPing,
       loopback: this.loopback,
-      disconnectTimeout: this.disconnectTimeout
+      disconnectTimeout: this.disconnectTimeout,
+      maxDesync: this.maxDesync,
+      maxPacketLoss: this.maxPacketLoss
     } as SaveServerNetworkProperties;
 
     this.serverNetworkService.saveServerNetworkProperties(saveNetworkProperties).subscribe(response => {

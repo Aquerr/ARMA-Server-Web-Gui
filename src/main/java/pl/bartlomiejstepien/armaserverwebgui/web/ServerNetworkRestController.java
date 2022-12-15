@@ -41,6 +41,8 @@ public class ServerNetworkRestController
                 .maxPing(saveNetworkPropertiesRequest.getMaxPing())
                 .loopback(saveNetworkPropertiesRequest.isLoopback())
                 .disconnectTimeout(saveNetworkPropertiesRequest.getDisconnectTimeout())
+                .maxDesync(saveNetworkPropertiesRequest.getMaxDesync())
+                .maxPacketLoss(saveNetworkPropertiesRequest.getMaxPacketLoss())
                 .build();
     }
 
@@ -51,6 +53,8 @@ public class ServerNetworkRestController
                 .maxPing(networkProperties.getMaxPing())
                 .loopback(networkProperties.isLoopback())
                 .disconnectTimeout(networkProperties.getDisconnectTimeout())
+                .maxDesync(networkProperties.getMaxDesync())
+                .maxPacketLoss(networkProperties.getMaxPacketLoss())
                 .build();
     }
 
@@ -62,6 +66,8 @@ public class ServerNetworkRestController
         private int maxPing;
         private boolean loopback;
         private int disconnectTimeout;
+        private int maxDesync;
+        private int maxPacketLoss;
     }
 
     @Builder
@@ -72,5 +78,7 @@ public class ServerNetworkRestController
         private int maxPing;
         private boolean loopback;
         private int disconnectTimeout;
+        private int maxDesync;
+        private int maxPacketLoss;
     }
 }
