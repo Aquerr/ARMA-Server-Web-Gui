@@ -39,6 +39,7 @@ public class ServerNetworkRestController
         return NetworkProperties.builder()
                 .upnp(saveNetworkPropertiesRequest.isUpnp())
                 .maxPing(saveNetworkPropertiesRequest.getMaxPing())
+                .loopback(saveNetworkPropertiesRequest.isLoopback())
                 .build();
     }
 
@@ -47,6 +48,7 @@ public class ServerNetworkRestController
         return GetNetworkPropertiesResponse.builder()
                 .upnp(networkProperties.isUpnp())
                 .maxPing(networkProperties.getMaxPing())
+                .loopback(networkProperties.isLoopback())
                 .build();
     }
 
@@ -56,6 +58,7 @@ public class ServerNetworkRestController
     {
         private boolean upnp;
         private int maxPing;
+        private boolean loopback;
     }
 
     @Builder
@@ -64,5 +67,6 @@ public class ServerNetworkRestController
     {
         private boolean upnp;
         private int maxPing;
+        private boolean loopback;
     }
 }

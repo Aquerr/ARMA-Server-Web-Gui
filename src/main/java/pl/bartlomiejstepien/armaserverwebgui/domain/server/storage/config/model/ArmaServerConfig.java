@@ -54,6 +54,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "maxping", type = PropertyType.INTEGER)
     private int maxPing = 500;
 
+    @CfgProperty(name = "loopback", type = PropertyType.RAW_STRING)
+    private String loopback = "false";
+
     @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
     private Missions missions = new Missions();
 

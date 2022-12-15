@@ -12,6 +12,7 @@ export class NetworkComponent implements OnInit {
 
   upnp: boolean = false;
   maxPing: number = 500;
+  loopback: boolean = false;
 
   constructor(private maskService: MaskService,
               private notificationService: NotificationService,
@@ -22,6 +23,7 @@ export class NetworkComponent implements OnInit {
     this.serverNetworkService.getServerNetworkProperties().subscribe(response => {
       this.upnp = response.upnp;
       this.maxPing = response.maxPing;
+      this.loopback = response.loopback;
       this.maskService.hide();
     });
   }
@@ -31,7 +33,8 @@ export class NetworkComponent implements OnInit {
 
     const saveNetworkProperties = {
       upnp: this.upnp,
-      maxPing: this.maxPing
+      maxPing: this.maxPing,
+      loopback: this.loopback
     } as SaveServerNetworkProperties;
 
     this.serverNetworkService.saveServerNetworkProperties(saveNetworkProperties).subscribe(response => {
