@@ -57,6 +57,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "loopback", type = PropertyType.RAW_STRING)
     private String loopback = "false";
 
+    @CfgProperty(name = "disconnectTimeout", type = PropertyType.INTEGER)
+    private int disconnectTimeout = 90;
+
     @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
     private Missions missions = new Missions();
 

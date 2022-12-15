@@ -19,6 +19,10 @@
       <mat-label>Max Ping</mat-label>
       <input name="maxping" [(ngModel)]="maxPing" matInput type="number" min="0">
     </mat-form-field>
+    <mat-form-field>
+      <mat-label>Disconnect Timeout</mat-label>
+      <input name="disconnectTimeout" [(ngModel)]="disconnectTimeout" matInput type="number" min="5">
+    </mat-form-field>
   </div>
   <div>
     <button mat-flat-button color="primary" (click)="save()">Save</button>

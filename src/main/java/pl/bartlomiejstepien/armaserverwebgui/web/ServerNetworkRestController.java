@@ -40,6 +40,7 @@ public class ServerNetworkRestController
                 .upnp(saveNetworkPropertiesRequest.isUpnp())
                 .maxPing(saveNetworkPropertiesRequest.getMaxPing())
                 .loopback(saveNetworkPropertiesRequest.isLoopback())
+                .disconnectTimeout(saveNetworkPropertiesRequest.getDisconnectTimeout())
                 .build();
     }
 
@@ -49,6 +50,7 @@ public class ServerNetworkRestController
                 .upnp(networkProperties.isUpnp())
                 .maxPing(networkProperties.getMaxPing())
                 .loopback(networkProperties.isLoopback())
+                .disconnectTimeout(networkProperties.getDisconnectTimeout())
                 .build();
     }
 
@@ -59,6 +61,7 @@ public class ServerNetworkRestController
         private boolean upnp;
         private int maxPing;
         private boolean loopback;
+        private int disconnectTimeout;
     }
 
     @Builder
@@ -68,5 +71,6 @@ public class ServerNetworkRestController
         private boolean upnp;
         private int maxPing;
         private boolean loopback;
+        private int disconnectTimeout;
     }
 }

@@ -26,10 +26,12 @@ export interface SaveServerNetworkProperties {
   upnp: boolean;
   maxPing: number;
   loopback: boolean;
+  disconnectTimeout: number;
 }
 
 export interface GetServerNetworkProperties {
   upnp: boolean;
   maxPing: number;
   loopback: boolean;
+  disconnectTimeout: number;
 }
