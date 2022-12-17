@@ -35,7 +35,7 @@ public class MissionStorageImpl implements MissionStorage
     public Mono<Void> save(FilePart multipartFile) throws IOException
     {
         Files.createDirectories(missionsDirectory.get());
-        return multipartFile.transferTo(missionsDirectory.get().resolve(multipartFile.filename()));
+        return multipartFile.transferTo(missionsDirectory.get().resolve(multipartFile.filename().toLowerCase()));
     }
 
     @Override
