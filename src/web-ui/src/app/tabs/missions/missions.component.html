@@ -1,24 +1,62 @@
-<div appDragAndDropFile (fileDropped)="onFileDropped($event)">
+<div appDragAndDropFile (fileDropped)="onFileDropped($event)" class="app-missions-tab">
   <h1>Missions</h1>
   <mat-form-field>
     <mat-label>Search mission...</mat-label>
     <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mission...">
   </mat-form-field>
-  <div class="app-list-missions" cdkDropListGroup>
-    <app-missions-list
-               [canSortManually]="true"
-               [missions]="filteredDisabledMissions"
-               [header]="'Disabled'"
-               class="mods-list"
-               (deleteClicked)="showMissionDeleteConfirmationDialog($event)"></app-missions-list>
-    <app-missions-list
-               [canSortManually]="true"
-               #enabledMissionsList
-               [missions]="filteredEnabledMissions"
-               [header]="'Enabled'"
-               class="mods-list"
-               (modifyClicked)="showMissionModifyDialog($event)"
-               (deleteClicked)="showMissionDeleteConfirmationDialog($event)"></app-missions-list>
+  <div class="mission-list-group" cdkDropListGroup>
+    <div class="mission-list">
+      <h1>Disabled</h1>
+      <div
+        id="disabled-missions-list"
+        cdkDropList
+        [cdkDropListData]="this.filteredDisabledMissions"
+        class="list"
+        [cdkDropListSortingDisabled]="false"
+        (cdkDropListDropped)="onMissionItemDropped($event)">
+        <div class="list-item-container" *ngFor="let mission of this.filteredDisabledMissions" cdkDrag>
+          <div style="flex: 72%">
+            {{mission.name}}
+          </div>
+          <div class="text-center" style="flex: 14%">
+            <button mat-icon-button (click)="showMissionModifyDialog(mission)">
+              <mat-icon>settings</mat-icon>
+            </button>
+          </div>
+          <div class="text-center" style="flex: 14%">
+            <button mat-icon-button (click)="showMissionDeleteConfirmationDialog(mission.name)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mission-list">
+      <h1>Enabled</h1>
+      <div
+        id="enabled-missions-list"
+        cdkDropList
+        [cdkDropListData]="this.filteredEnabledMissions"
+        class="list"
+        [cdkDropListSortingDisabled]="false"
+        (cdkDropListDropped)="onMissionItemDropped($event)">
+        <div class="list-item-container" *ngFor="let mission of this.filteredEnabledMissions" cdkDrag>
+          <div style="flex: 72%">
+            {{mission.name}}
+          </div>
+          <div class="text-center" style="flex: 14%">
+            <button mat-icon-button (click)="showMissionModifyDialog(mission)">
+              <mat-icon>settings</mat-icon>
+            </button>
+          </div>
+          <div class="text-center" style="flex: 14%">
+            <button mat-icon-button (click)="showMissionDeleteConfirmationDialog(mission.name)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="app-upload-mission">
     <app-upload-mission #uploadMission (missionUploaded)="onMissionUploaded()"></app-upload-mission>

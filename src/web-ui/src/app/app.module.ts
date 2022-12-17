@@ -43,8 +43,6 @@ import {
 import {MatSelectModule} from "@angular/material/select";
 import { MissionModifyDialogComponent } from './tabs/missions/mission-modify-dialog/mission-modify-dialog.component';
 import { MissionParameterComponent } from './tabs/missions/mission-modify-dialog/mission-parameter/mission-parameter.component';
-import {ModsListComponent} from "./tabs/mods/mods-list/mods-list.component";
-import {MissionsListComponent} from "./tabs/missions/missions-list/missions-list.component";
 
 @NgModule({
   declarations: [
@@ -65,12 +63,10 @@ import {MissionsListComponent} from "./tabs/missions/missions-list/missions-list
     MotdListComponent,
     StatusComponent,
     AswgDragDropListComponent,
-    ModsListComponent,
     UploadModComponent,
     ModDeleteConfirmDialogComponent,
     MissionModifyDialogComponent,
-    MissionParameterComponent,
-    MissionsListComponent
+    MissionParameterComponent
   ],
     imports: [
         BrowserModule,

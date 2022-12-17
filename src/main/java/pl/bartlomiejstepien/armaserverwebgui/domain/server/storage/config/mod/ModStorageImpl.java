@@ -2,6 +2,9 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.mod;
 
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.FileHeader;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.FileUtils;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.FileSystemUtils;
@@ -64,6 +67,7 @@ public class ModStorageImpl implements ModStorage
         try
         {
             new ZipFile(filePath.toAbsolutePath().toString()).extractAll(filePath.getParent().toAbsolutePath().toString());
+            convertEachFileToLowercase(filePath);
         }
         catch (ZipException e)
         {
@@ -110,5 +114,21 @@ public class ModStorageImpl implements ModStorage
         }
 
         return false;
+    }
+
+    private void convertEachFileToLowercase(Path filePath)
+    {
+        try
+        {
+            FileUtils.getFilesInDirectoryRecursive(filePath.toFile(), new ZipParameters())
+                    .forEach(file -> {
+                        Path newFileName = Paths.get(file.getAbsolutePath()).resolveSibling(file.getName().toLowerCase());
+                        file.renameTo(newFileName.toAbsolutePath().toFile());
+                    });
+        }
+        catch (ZipException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }

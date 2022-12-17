@@ -10,8 +10,8 @@ import {
 import {NotificationService} from "../../service/notification.service";
 import {MissionModifyDialogComponent} from "./mission-modify-dialog/mission-modify-dialog.component";
 import {Mission} from "../../model/mission.model";
-import {MissionsListComponent} from "./missions-list/missions-list.component";
 import {FormControl} from "@angular/forms";
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 
 @Component({
   selector: 'app-missions',
@@ -21,7 +21,6 @@ import {FormControl} from "@angular/forms";
 export class MissionsComponent implements OnInit, OnDestroy {
 
   @ViewChild('uploadMission') uploadMissionComponent!: UploadMissionComponent;
-  @ViewChild('enabledMissionsList') enabledMissionsListComponent!: MissionsListComponent;
 
   disabledMissions: Mission[] = [];
   enabledMissions: Mission[] = [];
@@ -97,8 +96,8 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   save() {
     this.maskService.show();
-    console.log(this.enabledMissionsListComponent.missions);
-    this.missionsService.saveEnabledMissions({missions: this.enabledMissionsListComponent.missions}).subscribe(response => {
+    console.log(this.enabledMissions);
+    this.missionsService.saveEnabledMissions({missions: this.enabledMissions}).subscribe(response => {
       this.maskService.hide();
       this.notificationService.successNotification('Active mission list saved!', 'Success');
     });
@@ -121,5 +120,31 @@ export class MissionsComponent implements OnInit, OnDestroy {
   filterMissions(searchPhrase: String) {
     this.filteredEnabledMissions = this.enabledMissions.filter(mission => mission.name.toLowerCase().includes(searchPhrase.toLowerCase()));
     this.filteredDisabledMissions = this.disabledMissions.filter(mission => mission.name.toLowerCase().includes(searchPhrase.toLowerCase()));
+  }
+
+  onMissionItemDropped(event: CdkDragDrop<Mission[]>) {
+    if (event.previousContainer === event.container){
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      let movedMod = event.previousContainer.data[event.previousIndex];
+      if (event.previousContainer.id == 'enabled-missions-list') {
+        this.enabledMissions.forEach((value, index) => {
+          if (value == movedMod) this.enabledMissions.splice(index, 1);
+        });
+        this.disabledMissions.push(movedMod);
+      } else {
+        this.disabledMissions.forEach((value, index) => {
+          if (value == movedMod) this.disabledMissions.splice(index, 1);
+        });
+        this.enabledMissions.push(movedMod);
+      }
+
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
   }
 }

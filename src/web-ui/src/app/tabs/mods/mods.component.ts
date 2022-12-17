@@ -7,8 +7,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {ModDeleteConfirmDialogComponent} from "./mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
 import {NotificationService} from "../../service/notification.service";
 import {Mod} from "../../model/mod.model";
-import {ModsListComponent} from "./mods-list/mods-list.component";
 import {FormControl} from "@angular/forms";
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 
 @Component({
   selector: 'app-mods',
@@ -18,7 +18,6 @@ import {FormControl} from "@angular/forms";
 export class ModsComponent implements OnInit, OnDestroy {
 
   @ViewChild('uploadMod') uploadModComponent!: UploadModComponent;
-  @ViewChild('enabledModsList') enabledModsList!: ModsListComponent;
 
   reloadModsDataSubject: Subject<any>;
   reloadModsDataSubscription!: Subscription;
@@ -95,8 +94,8 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   save() {
     this.maskService.show();
-    console.log(this.enabledModsList.mods);
-    this.modService.saveEnabledMods({mods: this.enabledModsList.mods}).subscribe(response => {
+    console.log(this.enabledMods);
+    this.modService.saveEnabledMods({mods: this.enabledMods}).subscribe(response => {
       this.maskService.hide();
       this.notificationService.successNotification('Active mods list saved!', 'Success');
     });
@@ -105,5 +104,31 @@ export class ModsComponent implements OnInit, OnDestroy {
   private filterMods(searchPhrase: string) {
     this.filteredEnabledMods = this.enabledMods.filter(mod => mod.name.toLowerCase().includes(searchPhrase.toLowerCase()));
     this.filteredDisabledMods = this.disabledMods.filter(mod => mod.name.toLowerCase().includes(searchPhrase.toLowerCase()));
+  }
+
+  onModItemDragDrop(event: CdkDragDrop<Mod[]>) {
+    if (event.previousContainer === event.container){
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      let movedMod = event.previousContainer.data[event.previousIndex];
+      if (event.previousContainer.id == 'enabled-mods-list') {
+        this.enabledMods.forEach((value, index) => {
+          if (value == movedMod) this.enabledMods.splice(index, 1);
+        });
+        this.disabledMods.push(movedMod);
+      } else {
+        this.disabledMods.forEach((value, index) => {
+          if (value == movedMod) this.disabledMods.splice(index, 1);
+        });
+        this.enabledMods.push(movedMod);
+      }
+
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
   }
 }
