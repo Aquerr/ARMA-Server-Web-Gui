@@ -83,7 +83,7 @@ public class ModStorageImpl implements ModStorage
     @Override
     public boolean doesModExists(String filename)
     {
-        return Files.exists(modDirectory.get().resolve(filename.replaceAll(" ", "_")));
+        return Files.exists(modDirectory.get().resolve(filename.toLowerCase().replaceAll(" ", "_")));
     }
 
     @Override

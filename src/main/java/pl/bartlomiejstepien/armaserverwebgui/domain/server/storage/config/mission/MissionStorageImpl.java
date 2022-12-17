@@ -41,7 +41,7 @@ public class MissionStorageImpl implements MissionStorage
     @Override
     public boolean doesMissionExists(String filename)
     {
-        return Files.exists(missionsDirectory.get().resolve(filename));
+        return Files.exists(missionsDirectory.get().resolve(filename.toLowerCase()));
     }
 
     @Override
