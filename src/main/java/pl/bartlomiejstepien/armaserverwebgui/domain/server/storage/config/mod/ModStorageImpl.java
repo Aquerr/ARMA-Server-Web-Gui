@@ -17,6 +17,7 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
 import java.util.List;
@@ -125,25 +126,13 @@ public class ModStorageImpl implements ModStorage
     {
         try
         {
-            Files.walkFileTree(filePath, new FileVisitor<Path>()
+            Files.walkFileTree(filePath, new SimpleFileVisitor<>()
             {
-                @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
-                {
-                    return FileVisitResult.CONTINUE;
-                }
-
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
                 {
                     Path newFilePath = file.resolveSibling(file.getFileName().toString().toLowerCase().replaceAll(" ", "_"));
                     file.toFile().renameTo(newFilePath.toAbsolutePath().toFile());
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException
-                {
                     return FileVisitResult.CONTINUE;
                 }
 
