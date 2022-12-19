@@ -2,7 +2,6 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.mod;
 
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.FileHeader;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.FileUtils;
 import org.springframework.http.codec.multipart.FilePart;
@@ -13,9 +12,12 @@ import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -66,8 +68,11 @@ public class ModStorageImpl implements ModStorage
     {
         try
         {
-            new ZipFile(filePath.toAbsolutePath().toString()).extractAll(filePath.getParent().toAbsolutePath().toString());
-            convertEachFileToLowercase(filePath);
+            ZipFile zipFile = new ZipFile(filePath.toAbsolutePath().toString());
+            zipFile.extractAll(filePath.getParent().toAbsolutePath().toString());
+            String modFolderName = zipFile.getFileHeaders().get(0).getFileName();
+            Path newModFolderPath = renameModFolderToLowerCaseWithUnderscores(filePath.getParent().resolve(modFolderName));
+            convertEachFileToLowercase(newModFolderPath);
         }
         catch (ZipException e)
         {
@@ -120,15 +125,48 @@ public class ModStorageImpl implements ModStorage
     {
         try
         {
-            FileUtils.getFilesInDirectoryRecursive(filePath.toFile(), new ZipParameters())
-                    .forEach(file -> {
-                        Path newFileName = Paths.get(file.getAbsolutePath()).resolveSibling(file.getName().toLowerCase());
-                        file.renameTo(newFileName.toAbsolutePath().toFile());
-                    });
+            Files.walkFileTree(filePath, new FileVisitor<Path>()
+            {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
+                {
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+                {
+                    Path newFilePath = file.resolveSibling(file.getFileName().toString().toLowerCase().replaceAll(" ", "_"));
+                    file.toFile().renameTo(newFilePath.toAbsolutePath().toFile());
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException
+                {
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
+                {
+                    Path newFilePath = dir.resolveSibling(dir.getFileName().toString().toLowerCase().replaceAll(" ", "_"));
+                    dir.toFile().renameTo(newFilePath.toAbsolutePath().toFile());
+                    return FileVisitResult.CONTINUE;
+                }
+            });
         }
-        catch (ZipException e)
+        catch (IOException e)
         {
             throw new RuntimeException(e);
         }
+    }
+
+    private Path renameModFolderToLowerCaseWithUnderscores(Path modFolderPath)
+    {
+        File modFolder = modFolderPath.getParent().resolve(modFolderPath.getFileName()).toFile();
+        Path newModFolderPath = modFolder.toPath().resolveSibling(modFolder.getName().toLowerCase().replaceAll(" ", "_"));
+        modFolder.renameTo(newModFolderPath.toFile());
+        return newModFolderPath;
     }
 }
