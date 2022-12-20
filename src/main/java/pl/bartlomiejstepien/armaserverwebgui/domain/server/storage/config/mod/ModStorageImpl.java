@@ -67,15 +67,14 @@ public class ModStorageImpl implements ModStorage
 
     private void unpackZipFile(Path filePath)
     {
-        try
+        try(ZipFile zipFile = new ZipFile(filePath.toAbsolutePath().toString()))
         {
-            ZipFile zipFile = new ZipFile(filePath.toAbsolutePath().toString());
             zipFile.extractAll(filePath.getParent().toAbsolutePath().toString());
             String modFolderName = zipFile.getFileHeaders().get(0).getFileName();
             Path newModFolderPath = renameModFolderToLowerCaseWithUnderscores(filePath.getParent().resolve(modFolderName));
             convertEachFileToLowercase(newModFolderPath);
         }
-        catch (ZipException e)
+        catch (IOException e)
         {
             e.printStackTrace();
         }
