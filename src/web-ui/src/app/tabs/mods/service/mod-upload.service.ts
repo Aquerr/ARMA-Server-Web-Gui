@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {ServerModsService} from "../../../service/server-mods.service";
 import {HttpEventType} from "@angular/common/http";
 import {NotificationService} from "../../../service/notification.service";
+import {Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -9,12 +10,15 @@ import {NotificationService} from "../../../service/notification.service";
 export class ModUploadService {
 
   uploadingMods: {modName: string, progress: number, totalSize: number}[] = [];
+  public modUploadedSubject!: Subject<any>;
 
   constructor(private serverModsService: ServerModsService,
-              private notificationService: NotificationService) { }
+              private notificationService: NotificationService) {
+    this.modUploadedSubject = new Subject();
+  }
 
   uploadMod(file: File) {
-    console.log(file);
+
     if (!file.name.toLowerCase().endsWith(".zip") || file.type !== "application/x-zip-compressed") {
       this.notificationService.errorNotification("Wrong file type! Only .zip files are supported!");
       return;
@@ -32,25 +36,31 @@ export class ModUploadService {
           }
         }
 
-        if (response.type == HttpEventType.Response)
-        {
+        if (response.type == HttpEventType.Response) {
+          this.removeModWithName(file.name);
           this.notificationService.successNotification(`Mod ${file.name} has been uploaded!`);
+          this.modUploadedSubject.next(null);
         }
       },
       error: (error) => {
         console.log(error);
+        this.removeModWithName(file.name);
         this.notificationService.errorNotification(error.error.message);
       },
       complete: () => {
-        const uploadingModIndex = this.uploadingMods.findIndex(uploadingMod => uploadingMod.modName === file.name);
-        if (uploadingModIndex) {
-          this.uploadingMods.splice(uploadingModIndex, 1);
-        }
+        this.removeModWithName(file.name);
       }
     });
   }
 
   getUploadingMods() {
     return this.uploadingMods;
+  }
+
+  removeModWithName(name: string) {
+    const uploadingModIndex = this.uploadingMods.findIndex(uploadingMod => uploadingMod.modName === name);
+    if (uploadingModIndex != -1) {
+      this.uploadingMods.splice(uploadingModIndex, 1);
+    }
   }
 }

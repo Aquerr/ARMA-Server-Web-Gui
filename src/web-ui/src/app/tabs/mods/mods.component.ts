@@ -24,6 +24,7 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   reloadModsDataSubject: Subject<any>;
   reloadModsDataSubscription!: Subscription;
+  modUploadSubscription!: Subscription;
 
   disabledMods: Mod[] = [];
   enabledMods: Mod[] = [];
@@ -41,6 +42,12 @@ export class ModsComponent implements OnInit, OnDestroy {
               private matSnackBar: MatSnackBar,
               private modUploadService: ModUploadService) {
     this.reloadModsDataSubject = new Subject();
+    this.reloadModsDataSubscription = this.reloadModsDataSubject.subscribe(() => {
+      this.reloadMods();
+    });
+    this.modUploadSubscription = this.modUploadService.modUploadedSubject.subscribe(() => {
+      this.reloadModsDataSubject.next(null);
+    });
   }
 
   ngOnInit(): void {
@@ -49,17 +56,11 @@ export class ModsComponent implements OnInit, OnDestroy {
       this.filterMods(value);
     });
     this.reloadMods();
-    this.reloadModsDataSubscription = this.reloadModsDataSubject.subscribe(() => {
-      this.reloadMods();
-    });
   }
 
   ngOnDestroy(): void {
     this.reloadModsDataSubscription.unsubscribe();
-  }
-
-  onModUploaded() {
-    this.reloadModsDataSubject.next(null);
+    this.modUploadSubscription.unsubscribe();
   }
 
   showModDeleteConfirmationDialog(modName: string) {

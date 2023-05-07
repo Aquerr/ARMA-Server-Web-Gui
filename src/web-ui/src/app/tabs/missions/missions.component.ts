@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MissionUploadButton} from "./upload-mission/mission-upload-button";
+import {MissionUploadButtonComponent} from "./upload-mission/mission-upload-button.component";
 import {Subject, Subscription} from "rxjs";
 import {ServerMissionsService} from "../../service/server-missions.service";
 import {MaskService} from "../../service/mask.service";
@@ -23,7 +23,7 @@ import {MissionUploadSnackBarComponent} from "./mission-upload-snack-bar/mission
 })
 export class MissionsComponent implements OnInit, OnDestroy {
 
-  @ViewChild('uploadMission') uploadMissionComponent!: MissionUploadButton;
+  @ViewChild('uploadMission') uploadMissionComponent!: MissionUploadButtonComponent;
 
   disabledMissions: Mission[] = [];
   enabledMissions: Mission[] = [];
@@ -32,6 +32,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   reloadMissionsDataSubject: Subject<any>;
   reloadMissionDataSubscription!: Subscription;
+  missionUploadSubscription!: Subscription;
   searchBoxControl!: FormControl;
 
   missionUploadSnackBarRef!: MatSnackBarRef<MissionUploadSnackBarComponent> | null;
@@ -43,6 +44,12 @@ export class MissionsComponent implements OnInit, OnDestroy {
               private matSnackBar: MatSnackBar,
               private missionUploadService: MissionUploadService) {
     this.reloadMissionsDataSubject = new Subject();
+    this.reloadMissionDataSubscription = this.reloadMissionsDataSubject.subscribe(() => {
+      this.reloadMissions();
+    });
+    this.missionUploadSubscription = this.missionUploadService.missionUploadedSubject.subscribe(() => {
+      this.reloadMissionsDataSubject.next(null);
+    });
   }
 
   ngOnInit(): void {
@@ -51,22 +58,16 @@ export class MissionsComponent implements OnInit, OnDestroy {
       this.filterMissions(value);
     });
     this.reloadMissions();
-    this.reloadMissionDataSubscription = this.reloadMissionsDataSubject.subscribe(() => {
-      this.reloadMissions();
-    });
   }
 
   ngOnDestroy(): void {
     this.reloadMissionDataSubscription.unsubscribe();
+    this.missionUploadSubscription.unsubscribe();
   }
 
   onFileDropped(file: File) {
     this.missionUploadService.uploadMission(file);
     this.showUploadProgressSnackBar();
-  }
-
-  onMissionUploaded() {
-    this.reloadMissionsDataSubject.next(null);
   }
 
   showUploadProgressSnackBar() {
@@ -134,7 +135,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  filterMissions(searchPhrase: String) {
+  filterMissions(searchPhrase: string) {
     this.filteredEnabledMissions = this.enabledMissions.filter(mission => mission.name.toLowerCase().includes(searchPhrase.toLowerCase()));
     this.filteredDisabledMissions = this.disabledMissions.filter(mission => mission.name.toLowerCase().includes(searchPhrase.toLowerCase()));
   }

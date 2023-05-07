@@ -25,7 +25,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {ToastrModule} from "ngx-toastr";
 import {MatIconModule} from "@angular/material/icon";
-import { MissionUploadButton } from './tabs/missions/upload-mission/mission-upload-button';
+import { MissionUploadButtonComponent } from './tabs/missions/upload-mission/mission-upload-button.component';
 import { DragAndDropFileDirective } from './common-ui/directive/drag-and-drop-file.directive';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -62,7 +62,7 @@ import {
     SideMenuComponent,
     LoginComponent,
     AswgSpinnerComponent,
-    MissionUploadButton,
+    MissionUploadButtonComponent,
     DragAndDropFileDirective,
     SecurityComponent,
     MissionDeleteConfirmDialogComponent,

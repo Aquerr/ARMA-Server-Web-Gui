@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MaskService } from 'src/app/service/mask.service';
 import { ServerModsService } from 'src/app/service/server-mods.service';
 import {ModUploadService} from "../service/mod-upload.service";
@@ -9,8 +9,6 @@ import {ModUploadService} from "../service/mod-upload.service";
   styleUrls: ['./mod-upload-button.component.css']
 })
 export class ModUploadButtonComponent implements OnInit {
-
-  @Output() modUploaded: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private maskService: MaskService,
               private modService: ServerModsService,
