@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UploadMissionComponent } from './upload-mission.component';
+import { MissionUploadButton } from './mission-upload-button';
 
 describe('UploadMissionComponent', () => {
-  let component: UploadMissionComponent;
-  let fixture: ComponentFixture<UploadMissionComponent>;
+  let component: MissionUploadButton;
+  let fixture: ComponentFixture<MissionUploadButton>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UploadMissionComponent ]
+      declarations: [ MissionUploadButton ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UploadMissionComponent);
+    fixture = TestBed.createComponent(MissionUploadButton);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

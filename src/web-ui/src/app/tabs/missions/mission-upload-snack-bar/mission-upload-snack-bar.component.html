@@ -1,0 +1,13 @@
+<div class="snack-bar-header">
+  <button class="float-end" mat-icon-button aria-label="close" matSnackBarAction (click)="snackBarRef.dismissWithAction();">
+    <mat-icon>close</mat-icon>
+  </button>
+  <mat-label class="mission-upload-snackbar-header-label">Uploading:</mat-label>
+</div>
+<div>
+  <div *ngFor="let uploadingMission of getUploadingMissions(); index as i">
+    <mat-label>{{uploadingMission.missionName}}</mat-label>
+    <mat-progress-bar class="mt-2" mode="buffer" [value]="uploadingMission.progress" [bufferValue]="uploadingMission.totalSize"></mat-progress-bar>
+    <hr *ngIf="i < getUploadingMissions().length - 1">
+  </div>
+</div>

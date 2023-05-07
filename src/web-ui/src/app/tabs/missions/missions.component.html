@@ -60,10 +60,10 @@
   </div>
   <div class="missions-save-and-upload">
     <div>
-      <app-upload-mission #uploadMission (missionUploaded)="onMissionUploaded()"></app-upload-mission>
+      <button mat-flat-button color="primary" (click)="save()">Save</button>
     </div>
     <div>
-      <button mat-flat-button color="primary" (click)="save()">Save</button>
+      <app-upload-mission #uploadMission (missionUploaded)="onMissionUploaded()"></app-upload-mission>
     </div>
   </div>
 </div>

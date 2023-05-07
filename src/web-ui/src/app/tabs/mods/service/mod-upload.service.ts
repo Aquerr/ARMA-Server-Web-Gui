@@ -14,6 +14,12 @@ export class ModUploadService {
               private notificationService: NotificationService) { }
 
   uploadMod(file: File) {
+    console.log(file);
+    if (!file.name.toLowerCase().endsWith(".zip") || file.type !== "application/x-zip-compressed") {
+      this.notificationService.errorNotification("Wrong file type! Only .zip files are supported!");
+      return;
+    }
+
     this.uploadingMods.push({modName: file.name, progress: 0, totalSize: file.size});
     const formData = new FormData();
     formData.append("file", file);

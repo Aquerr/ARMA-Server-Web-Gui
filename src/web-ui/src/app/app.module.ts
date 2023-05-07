@@ -25,7 +25,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {ToastrModule} from "ngx-toastr";
 import {MatIconModule} from "@angular/material/icon";
-import { UploadMissionComponent } from './tabs/missions/upload-mission/upload-mission.component';
+import { MissionUploadButton } from './tabs/missions/upload-mission/mission-upload-button';
 import { DragAndDropFileDirective } from './common-ui/directive/drag-and-drop-file.directive';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -46,6 +46,9 @@ import { MissionParameterComponent } from './tabs/missions/mission-modify-dialog
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import { ModUploadSnackBarComponent } from './tabs/mods/mod-upload-snack-bar/mod-upload-snack-bar.component';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {
+  MissionUploadSnackBarComponent
+} from "./tabs/missions/mission-upload-snack-bar/mission-upload-snack-bar.component";
 
 @NgModule({
   declarations: [
@@ -59,7 +62,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     SideMenuComponent,
     LoginComponent,
     AswgSpinnerComponent,
-    UploadMissionComponent,
+    MissionUploadButton,
     DragAndDropFileDirective,
     SecurityComponent,
     MissionDeleteConfirmDialogComponent,
@@ -70,7 +73,8 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     ModDeleteConfirmDialogComponent,
     MissionModifyDialogComponent,
     MissionParameterComponent,
-    ModUploadSnackBarComponent
+    ModUploadSnackBarComponent,
+    MissionUploadSnackBarComponent
   ],
   imports: [
     BrowserModule,

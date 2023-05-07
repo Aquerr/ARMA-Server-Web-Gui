@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {UploadMissionComponent} from "./upload-mission/upload-mission.component";
+import {MissionUploadButton} from "./upload-mission/mission-upload-button";
 import {Subject, Subscription} from "rxjs";
 import {ServerMissionsService} from "../../service/server-missions.service";
 import {MaskService} from "../../service/mask.service";
@@ -12,6 +12,9 @@ import {MissionModifyDialogComponent} from "./mission-modify-dialog/mission-modi
 import {Mission} from "../../model/mission.model";
 import {FormControl} from "@angular/forms";
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {MatSnackBar, MatSnackBarRef} from "@angular/material/snack-bar";
+import {MissionUploadService} from "./service/mission-upload.service";
+import {MissionUploadSnackBarComponent} from "./mission-upload-snack-bar/mission-upload-snack-bar.component";
 
 @Component({
   selector: 'app-missions',
@@ -20,7 +23,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag
 })
 export class MissionsComponent implements OnInit, OnDestroy {
 
-  @ViewChild('uploadMission') uploadMissionComponent!: UploadMissionComponent;
+  @ViewChild('uploadMission') uploadMissionComponent!: MissionUploadButton;
 
   disabledMissions: Mission[] = [];
   enabledMissions: Mission[] = [];
@@ -31,10 +34,14 @@ export class MissionsComponent implements OnInit, OnDestroy {
   reloadMissionDataSubscription!: Subscription;
   searchBoxControl!: FormControl;
 
+  missionUploadSnackBarRef!: MatSnackBarRef<MissionUploadSnackBarComponent> | null;
+
   constructor(private missionsService: ServerMissionsService,
               private maskService: MaskService,
               private notificationService: NotificationService,
-              private matDialog: MatDialog) {
+              private matDialog: MatDialog,
+              private matSnackBar: MatSnackBar,
+              private missionUploadService: MissionUploadService) {
     this.reloadMissionsDataSubject = new Subject();
   }
 
@@ -54,11 +61,21 @@ export class MissionsComponent implements OnInit, OnDestroy {
   }
 
   onFileDropped(file: File) {
-    this.uploadMissionComponent.uploadFile(file);
+    this.missionUploadService.uploadMission(file);
+    this.showUploadProgressSnackBar();
   }
 
   onMissionUploaded() {
     this.reloadMissionsDataSubject.next(null);
+  }
+
+  showUploadProgressSnackBar() {
+    if (!this.missionUploadSnackBarRef) {
+      this.missionUploadSnackBarRef = this.matSnackBar.openFromComponent(MissionUploadSnackBarComponent);
+      this.missionUploadSnackBarRef.afterDismissed().subscribe(() => {
+        this.missionUploadSnackBarRef = null;
+      });
+    }
   }
 
   private reloadMissions(): void {

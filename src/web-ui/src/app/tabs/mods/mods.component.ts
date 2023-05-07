@@ -86,10 +86,10 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   onFileDropped(file: File) {
     this.modUploadService.uploadMod(file);
-    this.openUploadSnackBar();
+    this.showUploadProgressSnackBar();
   }
 
-  openUploadSnackBar() {
+  showUploadProgressSnackBar() {
     if (!this.modUploadSnackBarRef) {
       this.modUploadSnackBarRef = this.matSnackBar.openFromComponent(ModUploadSnackBarComponent);
       this.modUploadSnackBarRef.afterDismissed().subscribe(() => {
