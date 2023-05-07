@@ -2,13 +2,16 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import { MaskService } from 'src/app/service/mask.service';
 import { ServerModsService } from 'src/app/service/server-mods.service';
-import { UploadModComponent } from './upload-mod/upload-mod.component';
+import { ModUploadButtonComponent } from './mod-upload-button/mod-upload-button.component';
 import {MatDialog} from "@angular/material/dialog";
 import {ModDeleteConfirmDialogComponent} from "./mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
 import {NotificationService} from "../../service/notification.service";
 import {Mod} from "../../model/mod.model";
 import {FormControl} from "@angular/forms";
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {MatSnackBar, MatSnackBarRef} from "@angular/material/snack-bar";
+import {ModUploadSnackBarComponent} from "./mod-upload-snack-bar/mod-upload-snack-bar.component";
+import {ModUploadService} from "./service/mod-upload.service";
 
 @Component({
   selector: 'app-mods',
@@ -17,7 +20,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag
 })
 export class ModsComponent implements OnInit, OnDestroy {
 
-  @ViewChild('uploadMod') uploadModComponent!: UploadModComponent;
+  @ViewChild('uploadMod') uploadModComponent!: ModUploadButtonComponent;
 
   reloadModsDataSubject: Subject<any>;
   reloadModsDataSubscription!: Subscription;
@@ -29,10 +32,14 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   searchBoxControl!: FormControl;
 
+  modUploadSnackBarRef!: MatSnackBarRef<ModUploadSnackBarComponent> | null;
+
   constructor(private modService: ServerModsService,
               private maskService: MaskService,
               private matDialog: MatDialog,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private matSnackBar: MatSnackBar,
+              private modUploadService: ModUploadService) {
     this.reloadModsDataSubject = new Subject();
   }
 
@@ -78,7 +85,17 @@ export class ModsComponent implements OnInit, OnDestroy {
   }
 
   onFileDropped(file: File) {
-    this.uploadModComponent.uploadFile(file);
+    this.modUploadService.uploadMod(file);
+    this.openUploadSnackBar();
+  }
+
+  openUploadSnackBar() {
+    if (!this.modUploadSnackBarRef) {
+      this.modUploadSnackBarRef = this.matSnackBar.openFromComponent(ModUploadSnackBarComponent);
+      this.modUploadSnackBarRef.afterDismissed().subscribe(() => {
+        this.modUploadSnackBarRef = null;
+      });
+    }
   }
 
   private reloadMods() {

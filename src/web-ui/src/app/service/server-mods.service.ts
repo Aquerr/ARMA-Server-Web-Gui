@@ -13,11 +13,11 @@ export class ServerModsService {
 
   constructor(private httpClient: HttpClient) { }
 
-  uploadMission(formData: FormData): Observable<any> {
-    const request = new HttpRequest('POST', this.MODS_URL, formData, {
-      reportProgress: true
+  uploadMod(formData: FormData): Observable<any> {
+    return this.httpClient.post(this.MODS_URL, formData, {
+      reportProgress: true,
+      observe: 'events'
     });
-    return this.httpClient.request(request);
   }
 
   getInstalledMods(): Observable<GetModsResponse>{

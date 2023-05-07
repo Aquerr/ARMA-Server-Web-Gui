@@ -36,13 +36,16 @@ import { MotdListComponent } from './tabs/general/motd-list/motd-list.component'
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { StatusComponent } from './tabs/status/status.component';
 import {AswgDragDropListComponent} from "./common-ui/aswg-drag-drop-list/aswg-drag-drop-list.component";
-import { UploadModComponent } from './tabs/mods/upload-mod/upload-mod.component';
+import { ModUploadButtonComponent } from './tabs/mods/mod-upload-button/mod-upload-button.component';
 import {
   ModDeleteConfirmDialogComponent
 } from "./tabs/mods/mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
 import {MatSelectModule} from "@angular/material/select";
 import { MissionModifyDialogComponent } from './tabs/missions/mission-modify-dialog/mission-modify-dialog.component';
 import { MissionParameterComponent } from './tabs/missions/mission-modify-dialog/mission-parameter/mission-parameter.component';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import { ModUploadSnackBarComponent } from './tabs/mods/mod-upload-snack-bar/mod-upload-snack-bar.component';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [
@@ -63,33 +66,36 @@ import { MissionParameterComponent } from './tabs/missions/mission-modify-dialog
     MotdListComponent,
     StatusComponent,
     AswgDragDropListComponent,
-    UploadModComponent,
+    ModUploadButtonComponent,
     ModDeleteConfirmDialogComponent,
     MissionModifyDialogComponent,
-    MissionParameterComponent
+    MissionParameterComponent,
+    ModUploadSnackBarComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        RouterModule,
-        BrowserAnimationsModule,
-        MatListModule,
-        MatRippleModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatTableModule,
-        MatCheckboxModule,
-        MatDialogModule,
-        NgxSpinnerModule,
-        HttpClientModule,
-        ReactiveFormsModule,
-        FormsModule,
-        DragDropModule,
-        ToastrModule.forRoot(),
-        MatSelectModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    RouterModule,
+    BrowserAnimationsModule,
+    MatListModule,
+    MatRippleModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    NgxSpinnerModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule,
+    DragDropModule,
+    ToastrModule.forRoot(),
+    MatSelectModule,
+    MatProgressBarModule,
+    MatSnackBarModule
+  ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}
   ],

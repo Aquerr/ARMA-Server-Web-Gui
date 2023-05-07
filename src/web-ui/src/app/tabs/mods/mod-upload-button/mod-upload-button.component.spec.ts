@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UploadModComponent } from './upload-mod.component';
+import { ModUploadButtonComponent } from './mod-upload-button.component';
 
 describe('UploadModComponent', () => {
-  let component: UploadModComponent;
-  let fixture: ComponentFixture<UploadModComponent>;
+  let component: ModUploadButtonComponent;
+  let fixture: ComponentFixture<ModUploadButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UploadModComponent ]
+      declarations: [ ModUploadButtonComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UploadModComponent);
+    fixture = TestBed.createComponent(ModUploadButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

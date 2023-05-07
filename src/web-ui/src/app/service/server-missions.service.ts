@@ -14,10 +14,10 @@ export class ServerMissionsService {
   constructor(private httpClient: HttpClient) { }
 
   uploadMission(formData: FormData): Observable<any> {
-    const request = new HttpRequest('POST', this.MISSIONS_URL, formData, {
-      reportProgress: true
+    return this.httpClient.post(this.MISSIONS_URL, formData, {
+      reportProgress: true,
+      observe: 'events'
     });
-    return this.httpClient.request(request);
   }
 
   getInstalledMissions(): Observable<GetMissionsResponse> {
