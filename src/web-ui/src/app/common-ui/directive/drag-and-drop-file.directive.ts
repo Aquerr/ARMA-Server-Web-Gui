@@ -26,7 +26,9 @@ export class DragAndDropFileDirective {
     const files = event.dataTransfer?.files;
     if (files) {
       if (files.length > 0) {
-        this.fileDropped.emit(files[0]);
+        for (let i = 0; i < files.length; i++) {
+          this.fileDropped.emit(files[i]);
+        }
       }
     }
   }
