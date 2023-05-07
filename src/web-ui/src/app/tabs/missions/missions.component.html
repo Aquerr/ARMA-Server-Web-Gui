@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-    <div class="mission-list">
+    <div class="mission-list" style="margin-left: 1rem;">
       <h1>Enabled</h1>
       <div
         id="enabled-missions-list"
@@ -58,10 +58,12 @@
       </div>
     </div>
   </div>
-  <div class="app-upload-mission">
-    <app-upload-mission #uploadMission (missionUploaded)="onMissionUploaded()"></app-upload-mission>
-  </div>
-  <div>
-    <button mat-flat-button color="primary" (click)="save()">Save</button>
+  <div class="missions-save-and-upload">
+    <div>
+      <app-upload-mission #uploadMission (missionUploaded)="onMissionUploaded()"></app-upload-mission>
+    </div>
+    <div>
+      <button mat-flat-button color="primary" (click)="save()">Save</button>
+    </div>
   </div>
 </div>

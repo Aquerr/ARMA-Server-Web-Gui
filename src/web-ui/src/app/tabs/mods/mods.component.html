@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <div class="mods-list">
+      <div class="mods-list" style="margin-left: 1rem;">
         <h1>Enabled</h1>
         <div
           id="enabled-mods-list"
@@ -55,10 +55,12 @@
         </div>
      </div>
     </div>
-    <div class="app-upload-mod">
-        <app-upload-mod #uploadMod (modUploaded)="onModUploaded()"></app-upload-mod>
-      </div>
-  <div>
-    <button mat-flat-button color="primary" (click)="save()">Save</button>
+  <div class="mods-save-and-upload">
+    <div>
+      <button mat-flat-button color="primary" (click)="save()">Save</button>
+    </div>
+    <div>
+      <app-upload-mod #uploadMod (modUploaded)="onModUploaded()"></app-upload-mod>
+    </div>
   </div>
 </div>
