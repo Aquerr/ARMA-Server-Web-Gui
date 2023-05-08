@@ -66,6 +66,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "maxpacketloss", type = PropertyType.INTEGER)
     private int maxpacketloss = 150;
 
+    @CfgProperty(name = "enablePlayerDiag", type = PropertyType.INTEGER)
+    private int enablePlayerDiag = 0;
+
     @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
     private Missions missions = new Missions();
 

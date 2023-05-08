@@ -16,6 +16,7 @@ export class NetworkComponent implements OnInit {
   disconnectTimeout: number = 5;
   maxDesync: number = 150;
   maxPacketLoss: number = 150;
+  enablePlayerDiag: boolean = false;
 
   constructor(private maskService: MaskService,
               private notificationService: NotificationService,
@@ -30,6 +31,7 @@ export class NetworkComponent implements OnInit {
       this.disconnectTimeout = response.disconnectTimeout;
       this.maxDesync = response.maxDesync;
       this.maxPacketLoss = response.maxPacketLoss;
+      this.enablePlayerDiag = response.enablePlayerDiag;
       this.maskService.hide();
     });
   }
@@ -43,7 +45,8 @@ export class NetworkComponent implements OnInit {
       loopback: this.loopback,
       disconnectTimeout: this.disconnectTimeout,
       maxDesync: this.maxDesync,
-      maxPacketLoss: this.maxPacketLoss
+      maxPacketLoss: this.maxPacketLoss,
+      enablePlayerDiag: this.enablePlayerDiag
     } as SaveServerNetworkProperties;
 
     this.serverNetworkService.saveServerNetworkProperties(saveNetworkProperties).subscribe(response => {

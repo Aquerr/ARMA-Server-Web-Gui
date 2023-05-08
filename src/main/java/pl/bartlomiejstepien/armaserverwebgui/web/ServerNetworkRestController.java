@@ -43,6 +43,7 @@ public class ServerNetworkRestController
                 .disconnectTimeout(saveNetworkPropertiesRequest.getDisconnectTimeout())
                 .maxDesync(saveNetworkPropertiesRequest.getMaxDesync())
                 .maxPacketLoss(saveNetworkPropertiesRequest.getMaxPacketLoss())
+                .enablePlayerDiag(saveNetworkPropertiesRequest.isEnablePlayerDiag())
                 .build();
     }
 
@@ -55,6 +56,7 @@ public class ServerNetworkRestController
                 .disconnectTimeout(networkProperties.getDisconnectTimeout())
                 .maxDesync(networkProperties.getMaxDesync())
                 .maxPacketLoss(networkProperties.getMaxPacketLoss())
+                .enablePlayerDiag(networkProperties.isEnablePlayerDiag())
                 .build();
     }
 
@@ -68,6 +70,7 @@ public class ServerNetworkRestController
         private int disconnectTimeout;
         private int maxDesync;
         private int maxPacketLoss;
+        private boolean enablePlayerDiag;
     }
 
     @Builder
@@ -80,5 +83,6 @@ public class ServerNetworkRestController
         private int disconnectTimeout;
         private int maxDesync;
         private int maxPacketLoss;
+        private boolean enablePlayerDiag;
     }
 }

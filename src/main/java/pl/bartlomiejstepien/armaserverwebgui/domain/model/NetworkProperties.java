@@ -13,4 +13,5 @@ public class NetworkProperties
     private int disconnectTimeout;
     private int maxDesync;
     private int maxPacketLoss;
+    private boolean enablePlayerDiag;
 }

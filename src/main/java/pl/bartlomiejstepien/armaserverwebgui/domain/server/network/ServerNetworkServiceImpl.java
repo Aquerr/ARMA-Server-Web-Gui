@@ -23,6 +23,7 @@ public class ServerNetworkServiceImpl implements ServerNetworkService
                 .disconnectTimeout(armaServerConfig.getDisconnectTimeout())
                 .maxDesync(armaServerConfig.getMaxdesync())
                 .maxPacketLoss(armaServerConfig.getMaxpacketloss())
+                .enablePlayerDiag(armaServerConfig.getEnablePlayerDiag() == 1)
                 .build();
     }
 
@@ -36,6 +37,7 @@ public class ServerNetworkServiceImpl implements ServerNetworkService
         armaServerConfig.setDisconnectTimeout(networkProperties.getDisconnectTimeout());
         armaServerConfig.setMaxdesync(networkProperties.getMaxDesync());
         armaServerConfig.setMaxpacketloss(networkProperties.getMaxPacketLoss());
+        armaServerConfig.setEnablePlayerDiag(networkProperties.isEnablePlayerDiag() ? 1 : 0);
         serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 }

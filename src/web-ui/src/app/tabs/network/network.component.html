@@ -31,6 +31,13 @@
       <mat-label>Max Packet Loss</mat-label>
       <input name="maxPacketLoss" [(ngModel)]="maxPacketLoss" matInput type="number" min="0">
     </mat-form-field>
+    <mat-form-field>
+      <mat-label>Enable Players' Bandwidth Diagnostics</mat-label>
+      <mat-select [(ngModel)]="enablePlayerDiag" name="enablePlayerDiag">
+        <mat-option [value]="true">Yes</mat-option>
+        <mat-option [value]="false">No</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
   <div>
     <button mat-flat-button color="primary" (click)="save()">Save</button>

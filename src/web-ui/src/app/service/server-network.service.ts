@@ -29,6 +29,7 @@ export interface SaveServerNetworkProperties {
   disconnectTimeout: number;
   maxDesync: number;
   maxPacketLoss: number;
+  enablePlayerDiag: boolean;
 }
 
 export interface GetServerNetworkProperties {
@@ -38,4 +39,5 @@ export interface GetServerNetworkProperties {
   disconnectTimeout: number;
   maxDesync: number;
   maxPacketLoss: number;
+  enablePlayerDiag: boolean;
 }
