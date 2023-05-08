@@ -47,7 +47,7 @@ public class CfgStringArrayParser implements CfgSimpleParser<String[]>
         stringBuilder.append("{");
         for (String text : array)
         {
-            stringBuilder.append("\"")
+            stringBuilder.append("\n\t\"")
                     .append(text)
                     .append("\",");
         }
@@ -55,7 +55,7 @@ public class CfgStringArrayParser implements CfgSimpleParser<String[]>
         {
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         }
-        stringBuilder.append("};");
+        stringBuilder.append("\n};");
         return stringBuilder.toString();
     }
 }
