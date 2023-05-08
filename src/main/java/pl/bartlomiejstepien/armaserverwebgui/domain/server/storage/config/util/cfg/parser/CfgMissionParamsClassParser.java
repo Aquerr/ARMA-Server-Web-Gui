@@ -4,10 +4,12 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.CfgConfigReader;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.CfgReflectionUtil;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.type.PropertyType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Map;
 
 public class CfgMissionParamsClassParser implements CfgClassParser<ArmaServerConfig.Missions.Mission.Params>
 {
@@ -133,20 +135,39 @@ public class CfgMissionParamsClassParser implements CfgClassParser<ArmaServerCon
     @Override
     public String parseToString(Object value)
     {
-        return "class Params {};";
+        if (value == null)
+        {
+            return "class Params {};";
+        }
+
+        ArmaServerConfig.Missions.Mission.Params params = (ArmaServerConfig.Missions.Mission.Params)value;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("class Params\n")
+                .append("\t\t{");
+
+        for (final Map.Entry<String, String> param : params.getParams().entrySet())
+        {
+            stringBuilder.append("\n\t\t\t");
+            writeParamToStringBuilder(param.getKey(), param.getValue(), stringBuilder);
+        }
+
+        stringBuilder.append("\n\t\t};\n");
+        return stringBuilder.toString();
+    }
+
+    private void writeParamToStringBuilder(String paramName, String paramValue, StringBuilder stringBuilder)
+    {
+            stringBuilder.append(paramName)
+                    .append(" = ")
+                    .append(paramValue)
+                    .append(";");
     }
 
     private void parseProperty(ArmaServerConfig.Missions.Mission.Params params, String property) throws IllegalAccessException
     {
         String propertyName = property.substring(0, property.indexOf("=")).trim();
         String propertyValue = property.substring(property.indexOf("=") + 1).trim();
-        Field field = CfgReflectionUtil.findClassFieldForCfgConfigProperty(ArmaServerConfig.Missions.Mission.Params.class, propertyName);
-        if (field == null)
-            return;
-
-        Object value = CfgConfigReader.PARSERS.get(field.getAnnotation(CfgProperty.class).type()).parse(propertyValue);
-        field.setAccessible(true);
-        field.set(params, value);
-        field.setAccessible(false);
+        String parsedValue = (String) CfgConfigReader.PARSERS.get(PropertyType.RAW_STRING).parse(propertyValue);
+        params.getParams().put(propertyName, parsedValue);
     }
 }

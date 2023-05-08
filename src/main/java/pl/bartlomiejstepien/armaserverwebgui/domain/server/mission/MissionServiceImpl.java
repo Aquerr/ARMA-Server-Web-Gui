@@ -14,6 +14,8 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,7 +78,7 @@ public class MissionServiceImpl implements MissionService
         missions.setEnabledMissions(enabledMissions);
         missions.setDisabledMissions(installedMissionsNames.stream()
                 .filter(mission -> enabledMissions.stream().noneMatch(mission1 -> mission1.getName().equals(mission)))
-                .map(missionName -> new Mission(missionName, Collections.emptyMap()))
+                .map(missionName -> new Mission(missionName, Collections.emptySet()))
                 .collect(Collectors.toList()));
 
         return missions;
@@ -86,8 +88,15 @@ public class MissionServiceImpl implements MissionService
     {
         Mission mission = new Mission();
         mission.setName(armaMission.getTemplate());
-        mission.setMissionParams(armaMission.getParams().getParams());
+        mission.setParameters(convertToDomainMissionParameters(armaMission.getParams()));
         return mission;
+    }
+
+    private Set<Mission.Parameter> convertToDomainMissionParameters(ArmaServerConfig.Missions.Mission.Params params)
+    {
+        return params.getParams().entrySet().stream()
+                .map(entry -> new Mission.Parameter(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toSet());
     }
 
     private ArmaServerConfig.Missions.Mission convertToArmaMissionObject(Mission mission)
@@ -95,9 +104,15 @@ public class MissionServiceImpl implements MissionService
         ArmaServerConfig.Missions.Mission armaMission = new ArmaServerConfig.Missions.Mission();
         armaMission.setTemplate(mission.getName());
         armaMission.setDifficulty("regular");
-        ArmaServerConfig.Missions.Mission.Params armaMissionParams = new ArmaServerConfig.Missions.Mission.Params();
-        armaMissionParams.setParams(mission.getMissionParams());
-        armaMission.setParams(armaMissionParams);
+        armaMission.setParams(convertToArmaMissionParams(mission.getParameters()));
         return armaMission;
+    }
+
+    private ArmaServerConfig.Missions.Mission.Params convertToArmaMissionParams(Set<Mission.Parameter> parameters)
+    {
+        ArmaServerConfig.Missions.Mission.Params params = new ArmaServerConfig.Missions.Mission.Params();
+        Map<String, String> paramsMap = parameters.stream().collect(Collectors.toMap(Mission.Parameter::getName, Mission.Parameter::getValue));
+        params.setParams(paramsMap);
+        return params;
     }
 }

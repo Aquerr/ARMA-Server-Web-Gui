@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {MissionParam} from "../../../../model/mission.model";
 
 @Component({
   selector: 'app-mission-parameter',
@@ -7,13 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MissionParameterComponent implements OnInit {
 
-  constructor() { }
+  @Output() parameterDeleted: EventEmitter<MissionParam> = new EventEmitter<MissionParam>();
+
+  @Input()
+  parameter!: MissionParam;
+
+  constructor() {
+  }
 
   ngOnInit(): void {
 
   }
 
-  deleteParameter(event: any) {
-    console.log("delete parameter...");
+  deleteParameter() {
+    this.parameterDeleted.emit(this.parameter);
   }
 }

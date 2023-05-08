@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -13,5 +13,14 @@ import java.util.Map;
 public class Mission
 {
     private String name;
-    private Map<String, String> missionParams = new HashMap<>();
+    private Set<Parameter> parameters = new HashSet<>();
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Parameter
+    {
+        private String name;
+        private String value;
+    }
 }

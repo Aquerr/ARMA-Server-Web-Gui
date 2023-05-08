@@ -1,5 +1,8 @@
-import {Component, ComponentRef, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, ComponentRef, Inject, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {MissionParameterComponent} from "./mission-parameter/mission-parameter.component";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Mission, MissionParam} from "../../../model/mission.model";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-mission-modify-dialog',
@@ -8,24 +11,45 @@ import {MissionParameterComponent} from "./mission-parameter/mission-parameter.c
 })
 export class MissionModifyDialogComponent implements OnInit {
 
-  @ViewChild("viewContainerRef", {read: ViewContainerRef}) viewContainerRef!: ViewContainerRef;
+  @ViewChild("viewContainerRef", {read: ViewContainerRef, static: true}) viewContainerRef!: ViewContainerRef;
 
-  parameters: ComponentRef<MissionParameterComponent>[] = [];
+  parameters: MissionParam[] = [];
 
-  constructor() { }
+  constructor(@Inject(MAT_DIALOG_DATA) public mission: Mission, public dialogRef: MatDialogRef<MissionModifyDialogComponent>) {
+  }
 
   ngOnInit(): void {
+    if (this.mission.parameters) {
+      this.mission.parameters.forEach(parameter => {
+        this.createNewParameter(parameter.name, parameter.value);
+      });
+    }
   }
 
-  createNewParameter() {
+  createNewParameter(name: string | null, value: string | null) {
+    const missionParam: MissionParam = {
+      name: name !== null ? name : "",
+      value: value !== null ? value : ""
+    };
+    this.parameters.push(missionParam);
+
     const component = this.viewContainerRef.createComponent(MissionParameterComponent);
-    this.parameters.push(component);
+    component.instance.parameter = missionParam;
+    const missionParamSubscription = component.instance.parameterDeleted.subscribe((parameter) => {
+      this.removeParameter(parameter, component, missionParamSubscription);
+    });
   }
 
-  removeParameter() {
-    // const index = this.viewContainerRef.indexOf(this.ref.hostView);
-    // if (index != -1) {
-    //   this.viewContainerRef.remove(index);
-    // }
+  removeParameter(parameter: MissionParam, componentRef: ComponentRef<MissionParameterComponent>, subscription: Subscription) {
+    subscription.unsubscribe();
+    componentRef.destroy();
+    const index = this.parameters.indexOf(parameter);
+    if (index != -1) {
+      this.parameters.splice(index, 1);
+    }
+  }
+
+  onMissionParamsSave() {
+    this.dialogRef.close(this.parameters);
   }
 }

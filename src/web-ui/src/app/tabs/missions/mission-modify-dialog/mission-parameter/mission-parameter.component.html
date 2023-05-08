@@ -3,17 +3,17 @@
     <td>
       <mat-form-field>
         <mat-label>Name</mat-label>
-        <input matInput type="text" required>
+        <input matInput type="text" required [(ngModel)]="parameter.name">
       </mat-form-field>
     </td>
     <td>
       <mat-form-field>
         <mat-label>Value</mat-label>
-        <input matInput type="text" required>
+        <input matInput type="text" required [(ngModel)]="parameter.value">
       </mat-form-field>
     </td>
     <td>
-      <button mat-icon-button (click)="deleteParameter($event)">
+      <button mat-icon-button (click)="deleteParameter()">
         <mat-icon>delete</mat-icon>
       </button>
     </td>

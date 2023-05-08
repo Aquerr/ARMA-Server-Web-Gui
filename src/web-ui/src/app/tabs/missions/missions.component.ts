@@ -9,7 +9,7 @@ import {
 } from "./mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
 import {NotificationService} from "../../service/notification.service";
 import {MissionModifyDialogComponent} from "./mission-modify-dialog/mission-modify-dialog.component";
-import {Mission} from "../../model/mission.model";
+import {Mission, MissionParam} from "../../model/mission.model";
 import {FormControl} from "@angular/forms";
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {MatSnackBar, MatSnackBarRef} from "@angular/material/snack-bar";
@@ -132,12 +132,14 @@ export class MissionsComponent implements OnInit, OnDestroy {
       // width: '250px',
       enterAnimationDuration: '200ms',
       exitAnimationDuration: '200ms',
-      data: mission.parameters
+      data: mission
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log("Modified mission");
-      console.log(result);
+    dialogRef.afterClosed().subscribe((savedParameters: MissionParam[]) => {
+      if (savedParameters) {
+        mission.parameters = savedParameters;
+        this.save();
+      }
     });
   }
 
