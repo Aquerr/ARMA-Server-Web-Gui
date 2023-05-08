@@ -10,7 +10,7 @@ import {Subject} from "rxjs";
 export class ModUploadService {
 
   uploadingMods: {modName: string, progress: number, totalSize: number}[] = [];
-  public modUploadedSubject!: Subject<any>;
+  public modUploadedSubject!: Subject<File | null>;
 
   constructor(private serverModsService: ServerModsService,
               private notificationService: NotificationService) {
@@ -39,16 +39,18 @@ export class ModUploadService {
         if (response.type == HttpEventType.Response) {
           this.removeModWithName(file.name);
           this.notificationService.successNotification(`Mod ${file.name} has been uploaded!`);
-          this.modUploadedSubject.next(null);
+          this.modUploadedSubject.next(file);
         }
       },
       error: (error) => {
         console.log(error);
         this.removeModWithName(file.name);
         this.notificationService.errorNotification(error.error.message);
+        this.modUploadedSubject.next(null);
       },
       complete: () => {
         this.removeModWithName(file.name);
+        this.modUploadedSubject.next(null);
       }
     });
   }

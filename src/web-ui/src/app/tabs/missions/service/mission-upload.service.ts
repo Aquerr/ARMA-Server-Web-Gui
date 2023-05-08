@@ -10,7 +10,7 @@ import {Subject} from "rxjs";
 export class MissionUploadService {
 
   uploadingMissions: {missionName: string, progress: number, totalSize: number}[] = [];
-  public missionUploadedSubject!: Subject<any>;
+  public missionUploadedSubject!: Subject<File | null>;
 
   constructor(private missionService: ServerMissionsService,
               private notificationService: NotificationService) {
@@ -39,16 +39,18 @@ export class MissionUploadService {
         if (response.type == HttpEventType.Response) {
           this.removeMissionWithName(file.name);
           this.notificationService.successNotification(`Mission ${file.name} has been uploaded!`);
-          this.missionUploadedSubject.next(null);
+          this.missionUploadedSubject.next(file);
         }
       },
       error: (error) => {
         console.log(error);
         this.removeMissionWithName(file.name);
         this.notificationService.errorNotification(error.error.message);
+        this.missionUploadedSubject.next(null);
       },
       complete: () => {
         this.removeMissionWithName(file.name);
+        this.missionUploadedSubject.next(file);
       }
     });
   }

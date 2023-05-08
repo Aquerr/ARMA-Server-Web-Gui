@@ -47,8 +47,14 @@ export class MissionsComponent implements OnInit, OnDestroy {
     this.reloadMissionDataSubscription = this.reloadMissionsDataSubject.subscribe(() => {
       this.reloadMissions();
     });
-    this.missionUploadSubscription = this.missionUploadService.missionUploadedSubject.subscribe(() => {
-      this.reloadMissionsDataSubject.next(null);
+    this.missionUploadSubscription = this.missionUploadService.missionUploadedSubject.subscribe((file) => {
+      if (file) {
+        this.reloadMissionsDataSubject.next(null);
+      }
+      if (this.missionUploadService.getUploadingMissions().length == 0) {
+        this.missionUploadSnackBarRef?.dismiss();
+        this.missionUploadSnackBarRef = null;
+      }
     });
   }
 
