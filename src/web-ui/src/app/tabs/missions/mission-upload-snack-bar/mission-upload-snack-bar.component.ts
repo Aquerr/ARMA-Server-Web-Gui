@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {MatSnackBarRef} from "@angular/material/snack-bar";
+import {MatLegacySnackBarRef as MatSnackBarRef} from "@angular/material/legacy-snack-bar";
 import {MissionUploadService} from "../service/mission-upload.service";
 
 @Component({

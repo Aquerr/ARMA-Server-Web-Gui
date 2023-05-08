@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {ModUploadService} from "../service/mod-upload.service";
-import {MatSnackBarRef} from "@angular/material/snack-bar";
+import {MatLegacySnackBarRef as MatSnackBarRef} from "@angular/material/legacy-snack-bar";
 
 @Component({
   selector: 'app-mod-upload-snack-bar',

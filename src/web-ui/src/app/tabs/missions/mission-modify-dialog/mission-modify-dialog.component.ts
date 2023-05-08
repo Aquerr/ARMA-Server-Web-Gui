@@ -1,6 +1,6 @@
 import {Component, ComponentRef, Inject, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {MissionParameterComponent} from "./mission-parameter/mission-parameter.component";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef} from "@angular/material/legacy-dialog";
 import {Mission, MissionParam} from "../../../model/mission.model";
 import {Subscription} from "rxjs";
 

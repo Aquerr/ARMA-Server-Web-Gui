@@ -3,7 +3,7 @@ import {MissionUploadButtonComponent} from "./upload-mission/mission-upload-butt
 import {Subject, Subscription} from "rxjs";
 import {ServerMissionsService} from "../../service/server-missions.service";
 import {MaskService} from "../../service/mask.service";
-import {MatDialog} from "@angular/material/dialog";
+import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
 import {
   MissionDeleteConfirmDialogComponent
 } from "./mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
@@ -12,7 +12,7 @@ import {MissionModifyDialogComponent} from "./mission-modify-dialog/mission-modi
 import {Mission, MissionParam} from "../../model/mission.model";
 import {FormControl} from "@angular/forms";
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
-import {MatSnackBar, MatSnackBarRef} from "@angular/material/snack-bar";
+import {MatLegacySnackBar as MatSnackBar, MatLegacySnackBarRef as MatSnackBarRef} from "@angular/material/legacy-snack-bar";
 import {MissionUploadService} from "./service/mission-upload.service";
 import {MissionUploadSnackBarComponent} from "./mission-upload-snack-bar/mission-upload-snack-bar.component";
 
