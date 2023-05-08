@@ -139,10 +139,11 @@ public class CfgMissionsClassParser implements CfgClassParser<ArmaServerConfig.M
         ArmaServerConfig.Missions missions = (ArmaServerConfig.Missions)value;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("class Missions\n")
-                .append("{\n");
+                .append("{");
 
         for (final ArmaServerConfig.Missions.Mission mission : missions.getMissions())
         {
+            stringBuilder.append("\t");
             stringBuilder.append(cfgMissionClassParser.parseToString(mission));
         }
 

@@ -140,10 +140,10 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
 
         ArmaServerConfig.Missions.Mission mission = (ArmaServerConfig.Missions.Mission) value;
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("class ")
+        stringBuilder.append("\n\tclass ")
                 .append(mission.getTemplate().replaceAll("\\.", "_").replaceAll("-", "_"))
-                .append("\n")
-                .append("{");
+                .append("\n\t{")
+                .append("\n");
 
         Field[] declaredFields = ArmaServerConfig.Missions.Mission.class.getDeclaredFields();
 
@@ -151,7 +151,8 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
         {
             try
             {
-                writeFileToStringBuilder(mission, field, stringBuilder);
+                stringBuilder.append("\t\t");
+                writeFieldValueToStringBuilder(mission, field, stringBuilder);
             }
             catch (IllegalAccessException | IOException e)
             {
@@ -159,7 +160,7 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
             }
         }
 
-        stringBuilder.append("};\n");
+        stringBuilder.append("\n\t};\n");
 
         return stringBuilder.toString();
     }
@@ -178,7 +179,7 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
         field.setAccessible(false);
     }
 
-    private void writeFileToStringBuilder(ArmaServerConfig.Missions.Mission mission, Field field, StringBuilder stringBuilder) throws IllegalAccessException, IOException
+    private void writeFieldValueToStringBuilder(ArmaServerConfig.Missions.Mission mission, Field field, StringBuilder stringBuilder) throws IllegalAccessException, IOException
     {
         CfgProperty cfgProperty = field.getAnnotation(CfgProperty.class);
         field.setAccessible(true);
