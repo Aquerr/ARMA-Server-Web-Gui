@@ -3,11 +3,16 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.steam;
 import com.github.koraktor.steamcondenser.exceptions.SteamCondenserException;
 import com.github.koraktor.steamcondenser.steam.SteamPlayer;
 import com.github.koraktor.steamcondenser.steam.servers.GoldSrcServer;
+import io.github.aquerr.steamwebapiclient.SteamWebApiClient;
+import io.github.aquerr.steamwebapiclient.request.WorkShopQueryFilesRequest;
+import io.github.aquerr.steamwebapiclient.response.WorkShopQueryResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaWorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 
@@ -22,10 +27,33 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SteamServiceImpl implements SteamService
 {
+    private static final Integer ARMA_APP_ID = 107410;
+
     private static final String LOCALHOST_ADDRESS = "localhost";
     private static final int DEFAULT_SERVER_STEAM_QUERY_PORT = 2303;
 
     private final ASWGConfig aswgConfig;
+    private final SteamWebApiClient steamWebApiClient;
+    private final ArmaWorkshopModConverter armaWorkshopModConverter;
+
+    @Override
+    public ArmaWorkshopQueryResponse queryWorkshopMods(String cursor) {
+        WorkShopQueryResponse workShopQueryResponse = steamWebApiClient.getWorkshopWebApiClient().queryFiles(WorkShopQueryFilesRequest.builder()
+                .appId(ARMA_APP_ID)
+                .cursor(cursor)
+                .returnPreviews(true)
+                .build());
+
+        String nextPageCursor = workShopQueryResponse.getNextCursor();
+        List<ArmaWorkshopMod> armaWorkshopMods = workShopQueryResponse.getPublishedFileDetails().stream()
+                .map(armaWorkshopModConverter::convert)
+                .collect(Collectors.toList());
+
+        return ArmaWorkshopQueryResponse.builder()
+                .nextCursor(nextPageCursor)
+                .mods(armaWorkshopMods)
+                .build();
+    }
 
     @Override
     public boolean isServerRunning()

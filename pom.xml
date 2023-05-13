@@ -29,6 +29,17 @@
         <node.version>v18.16.0</node.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -89,10 +100,16 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Steam -->
         <dependency>
             <groupId>com.github.koraktor</groupId>
             <artifactId>steam-condenser</artifactId>
             <version>${steam-condenser.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Aquerr</groupId>
+            <artifactId>steam-web-api-client</artifactId>
+            <version>main-SNAPSHOT</version>
         </dependency>
 
         <dependency>
