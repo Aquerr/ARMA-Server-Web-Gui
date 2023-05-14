@@ -41,11 +41,12 @@ public class SteamServiceImpl implements SteamService
     public ArmaWorkshopQueryResponse queryWorkshopMods(WorkshopQueryParams params) {
         WorkShopQueryResponse workShopQueryResponse = steamWebApiClient.getWorkshopWebApiClient().queryFiles(WorkShopQueryFilesRequest.builder()
                 .appId(ARMA_APP_ID)
-                .cursor(params.getCursor() != null ? params.getCursor() : "*")
+                .cursor(StringUtils.hasText(params.getCursor()) ? params.getCursor() : "*")
                 .numPerPage(10)
-                .searchText(params.getSearchText())
+                .searchText(StringUtils.hasText(params.getSearchText()) ? params.getSearchText() : null)
                 .returnPreviews(true)
-                .fileType(WorkShopQueryFilesRequest.PublishedFileInfoMatchingFileType.RANKED_BY_TREND)
+                .queryType(WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TOTAL_UNIQUE_SUBSCRIPTIONS)
+                .fileType(WorkShopQueryFilesRequest.PublishedFileInfoMatchingFileType.RANKED_BY_VOTE)
                 .build());
 
         String nextPageCursor = workShopQueryResponse.getResponse().getNextCursor();

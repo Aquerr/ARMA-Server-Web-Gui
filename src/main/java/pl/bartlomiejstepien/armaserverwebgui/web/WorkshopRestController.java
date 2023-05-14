@@ -3,7 +3,10 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
@@ -17,8 +20,8 @@ public class WorkshopRestController
 {
     private final SteamService steamService;
 
-    @GetMapping("/query")
-    public Mono<ArmaWorkshopQueryResponse> queryWorkshop(WorkshopQueryRequest request)
+    @PostMapping("/query")
+    public Mono<ArmaWorkshopQueryResponse> queryWorkshop(@RequestBody WorkshopQueryRequest request)
     {
         return Mono.just(steamService.queryWorkshopMods(toWorkshopQueryParams(request)));
     }

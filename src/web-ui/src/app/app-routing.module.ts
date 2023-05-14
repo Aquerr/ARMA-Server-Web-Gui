@@ -9,6 +9,7 @@ import {LoginComponent} from "./login/login.component";
 import {AuthService} from "./service/auth.service";
 import {SecurityComponent} from "./tabs/security/security.component";
 import {StatusComponent} from "./tabs/status/status.component";
+import {WorkshopComponent} from './tabs/workshop/workshop.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/status', pathMatch: "full"},
@@ -19,6 +20,7 @@ const routes: Routes = [
   {path: 'missions', component: MissionsComponent, canActivate: [AuthService]},
   {path: 'mods', component: ModsComponent, canActivate: [AuthService]},
   {path: 'logging', component: LoggingComponent, canActivate: [AuthService]},
+  {path: 'workshop', component: WorkshopComponent, canActivate: [AuthService]},
   {path: 'login', component: LoginComponent},
   {path: '**', redirectTo: 'status'}
 ];

@@ -13,7 +13,7 @@ public class ArmaWorkshopModConverter
             return null;
 
         return ArmaWorkshopMod.builder()
-                .fileId(Integer.valueOf(publishedFileDetails.getPublishedFileId()))
+                .fileId(Long.valueOf(publishedFileDetails.getPublishedFileId()))
                 .title(publishedFileDetails.getTitle())
                 .description(publishedFileDetails.getFileDescription())
                 .previewUrl(publishedFileDetails.getPreviewUrl())

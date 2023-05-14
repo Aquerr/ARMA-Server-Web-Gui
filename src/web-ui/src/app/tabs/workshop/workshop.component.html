@@ -1,0 +1,24 @@
+<div>
+  <h1>Workshop</h1>
+  <div>
+    <input placeholder="Search workshop..." [formControl]="searchBoxControl" (keydown)="$event.code === 'Enter' ? searchWorkshop('') : null">
+  </div>
+  <div class="workshop-list">
+    <div *ngFor="let workshopMod of workshopMods">
+      <div class="workshop-list-item">
+        <div>
+          <img [src]="workshopMod.previewUrl" alt="No Image" width="200px" height="100px">
+        </div>
+        <div>
+          {{workshopMod.title}}
+        </div>
+        <div>
+          {{workshopMod.description}}
+        </div>
+      </div>
+    </div>
+    <div>
+      <button (click)="nextPage()">Next Page</button>
+    </div>
+  </div>
+</div>

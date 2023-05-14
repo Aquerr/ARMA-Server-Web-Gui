@@ -49,6 +49,8 @@ import {MatLegacySnackBarModule as MatSnackBarModule} from "@angular/material/le
 import {
   MissionUploadSnackBarComponent
 } from "./tabs/missions/mission-upload-snack-bar/mission-upload-snack-bar.component";
+import {WorkshopComponent} from './tabs/workshop/workshop.component';
+import {NgOptimizedImage} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -74,7 +76,8 @@ import {
     MissionModifyDialogComponent,
     MissionParameterComponent,
     ModUploadSnackBarComponent,
-    MissionUploadSnackBarComponent
+    MissionUploadSnackBarComponent,
+    WorkshopComponent
   ],
   imports: [
     BrowserModule,
@@ -98,7 +101,8 @@ import {
     ToastrModule.forRoot(),
     MatSelectModule,
     MatProgressBarModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    NgOptimizedImage
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}

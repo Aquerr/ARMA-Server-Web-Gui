@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class ArmaWorkshopMod
 {
-    private Integer fileId;
+    private Long fileId;
     private String title;
     private String description;
     private String previewUrl;
