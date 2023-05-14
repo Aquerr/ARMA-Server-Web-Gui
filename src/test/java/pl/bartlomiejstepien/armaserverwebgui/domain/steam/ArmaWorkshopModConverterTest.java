@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaWorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,7 +31,7 @@ class ArmaWorkshopModConverterTest
     @Test
     void shouldConvertPublishedFileDetails()
     {
-        WorkShopQueryResponse.PublishedFileDetails publishedFileDetails = new WorkShopQueryResponse.PublishedFileDetails();
+        WorkShopQueryResponse.QueryFilesResponse.PublishedFileDetails publishedFileDetails = new WorkShopQueryResponse.QueryFilesResponse.PublishedFileDetails();
         publishedFileDetails.setTitle(TITLE);
         publishedFileDetails.setPublishedFileId(String.valueOf(FILE_ID));
         publishedFileDetails.setFileDescription(DESCRIPTION);

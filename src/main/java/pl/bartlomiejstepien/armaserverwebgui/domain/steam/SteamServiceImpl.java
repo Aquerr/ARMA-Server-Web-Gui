@@ -11,10 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaWorkshopMod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaWorkshopQueryResponse;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -37,17 +38,20 @@ public class SteamServiceImpl implements SteamService
     private final ArmaWorkshopModConverter armaWorkshopModConverter;
 
     @Override
-    public ArmaWorkshopQueryResponse queryWorkshopMods(String cursor) {
+    public ArmaWorkshopQueryResponse queryWorkshopMods(WorkshopQueryParams params) {
         WorkShopQueryResponse workShopQueryResponse = steamWebApiClient.getWorkshopWebApiClient().queryFiles(WorkShopQueryFilesRequest.builder()
                 .appId(ARMA_APP_ID)
-                .cursor(cursor)
+                .cursor(params.getCursor() != null ? params.getCursor() : "*")
+                .numPerPage(10)
+                .searchText(params.getSearchText())
                 .returnPreviews(true)
+                .fileType(WorkShopQueryFilesRequest.PublishedFileInfoMatchingFileType.RANKED_BY_TREND)
                 .build());
 
-        String nextPageCursor = workShopQueryResponse.getNextCursor();
-        List<ArmaWorkshopMod> armaWorkshopMods = workShopQueryResponse.getPublishedFileDetails().stream()
+        String nextPageCursor = workShopQueryResponse.getResponse().getNextCursor();
+        List<ArmaWorkshopMod> armaWorkshopMods = workShopQueryResponse.getResponse().getPublishedFileDetails().stream()
                 .map(armaWorkshopModConverter::convert)
-                .collect(Collectors.toList());
+                .toList();
 
         return ArmaWorkshopQueryResponse.builder()
                 .nextCursor(nextPageCursor)

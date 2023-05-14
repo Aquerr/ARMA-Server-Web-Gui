@@ -1,4 +1,4 @@
-package pl.bartlomiejstepien.armaserverwebgui.domain.model;
+package pl.bartlomiejstepien.armaserverwebgui.domain.steam.model;
 
 import lombok.Builder;
 import lombok.Data;
