@@ -46,7 +46,7 @@ public class SteamServiceImpl implements SteamService
                 .searchText(StringUtils.hasText(params.getSearchText()) ? params.getSearchText() : null)
                 .returnPreviews(true)
                 .queryType(WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TOTAL_UNIQUE_SUBSCRIPTIONS)
-                .fileType(WorkShopQueryFilesRequest.PublishedFileInfoMatchingFileType.RANKED_BY_VOTE)
+                .fileType(WorkShopQueryFilesRequest.PublishedFileInfoMatchingFileType.ITEMS)
                 .build());
 
         String nextPageCursor = workShopQueryResponse.getResponse().getNextCursor();
