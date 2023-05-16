@@ -17,6 +17,7 @@ public class ArmaWorkshopModConverter
                 .title(publishedFileDetails.getTitle())
                 .description(publishedFileDetails.getFileDescription())
                 .previewUrl(publishedFileDetails.getPreviewUrl())
+                .modWorkshopUrl("https://steamcommunity.com/sharedfiles/filedetails/?id=" + publishedFileDetails.getPublishedFileId())
                 .build();
     }
 }

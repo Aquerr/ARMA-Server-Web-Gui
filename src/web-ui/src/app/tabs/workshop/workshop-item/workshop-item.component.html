@@ -1,9 +1,11 @@
 <div class="workshop-item-card">
-  <div class="mat-card-image">
+  <div class="card-image">
     <img [src]="workshopMod?.previewUrl" alt="No Image">
   </div>
-  <div>
-    <h2>{{workshopMod?.title}}</h2>
+  <div class="card-content">
+    <a target="_blank" [href]="workshopMod?.modWorkshopUrl" style="text-decoration: none;">
+      <h2>{{workshopMod?.title}}</h2>
+    </a>
     <p>
         {{prepareModDescription(workshopMod?.description)}}
     </p>

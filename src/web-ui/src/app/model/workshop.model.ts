@@ -13,4 +13,5 @@ export interface WorkshopMod {
   title: string;
   description: string;
   previewUrl: string;
+  modWorkshopUrl: string;
 }

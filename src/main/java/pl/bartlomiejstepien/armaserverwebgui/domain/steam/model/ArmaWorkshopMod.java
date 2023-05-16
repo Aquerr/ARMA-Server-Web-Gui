@@ -11,4 +11,5 @@ public class ArmaWorkshopMod
     private String title;
     private String description;
     private String previewUrl;
+    private String modWorkshopUrl;
 }
