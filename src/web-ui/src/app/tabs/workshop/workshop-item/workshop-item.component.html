@@ -1,0 +1,12 @@
+<div class="workshop-item-card">
+  <div class="mat-card-image">
+    <img [src]="workshopMod?.previewUrl" alt="No Image">
+  </div>
+  <div>
+    <h2>{{workshopMod?.title}}</h2>
+    <p>
+        {{prepareModDescription(workshopMod?.description)}}
+    </p>
+      <button mat-flat-button color="primary">Install</button>
+  </div>
+</div>

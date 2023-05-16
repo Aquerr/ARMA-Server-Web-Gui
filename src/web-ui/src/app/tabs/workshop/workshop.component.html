@@ -1,24 +1,26 @@
 <div>
   <h1>Workshop</h1>
   <div>
-    <input placeholder="Search workshop..." [formControl]="searchBoxControl" (keydown)="$event.code === 'Enter' ? searchWorkshop('') : null">
+    <mat-form-field>
+      <mat-label>Search workshop</mat-label>
+      <input matInput [formControl]="searchBoxControl" (keydown)="onSearchBoxKeyDown($event)">
+    </mat-form-field>
   </div>
   <div class="workshop-list">
-    <div *ngFor="let workshopMod of workshopMods">
-      <div class="workshop-list-item">
-        <div>
-          <img [src]="workshopMod.previewUrl" alt="No Image" width="200px" height="100px">
-        </div>
-        <div>
-          {{workshopMod.title}}
-        </div>
-        <div>
-          {{workshopMod.description}}
-        </div>
-      </div>
-    </div>
+    <h1>Workshop mods</h1>
+    <app-workshop-item *ngFor="let workshopMod of workshopMods" [workshopMod]="workshopMod" class="workshop-list-item">
+    </app-workshop-item>
     <div>
-      <button (click)="nextPage()">Next Page</button>
+      <button class="float-end" mat-flat-button color="primary" (click)="nextPage()">Next Page</button>
+    </div>
+  </div>
+  <hr>
+  <div class="subscribed-workshop-list">
+    <h1>Subscribed mods</h1>
+    <app-workshop-item *ngFor="let subscribedWorkshopMod of subscribedWorkshopMods" [workshopMod]="subscribedWorkshopMod" class="workshop-list-item">
+    </app-workshop-item>
+    <div *ngIf="subscribedWorkshopMods.length == 0">
+      <span>No workshop items are subscribed. :(</span>
     </div>
   </div>
 </div>

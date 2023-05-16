@@ -51,6 +51,7 @@ import {
 } from "./tabs/missions/mission-upload-snack-bar/mission-upload-snack-bar.component";
 import {WorkshopComponent} from './tabs/workshop/workshop.component';
 import {NgOptimizedImage} from '@angular/common';
+import {WorkshopItemComponent} from './tabs/workshop/workshop-item/workshop-item.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import {NgOptimizedImage} from '@angular/common';
     MissionParameterComponent,
     ModUploadSnackBarComponent,
     MissionUploadSnackBarComponent,
-    WorkshopComponent
+    WorkshopComponent,
+    WorkshopItemComponent
   ],
   imports: [
     BrowserModule,

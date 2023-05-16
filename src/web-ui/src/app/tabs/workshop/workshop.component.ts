@@ -10,21 +10,31 @@ import {FormControl} from '@angular/forms';
 })
 export class WorkshopComponent {
   workshopMods: WorkshopMod[] = [];
+  subscribedWorkshopMods: WorkshopMod[] = [];
   nextCursor: string = "";
   searchBoxControl!: FormControl;
+
+  private lastSearchText: string = "";
 
   constructor(private workshopService: WorkshopService) {
     this.searchBoxControl = new FormControl<string>('');
   }
 
-  searchWorkshop(cursor: string) {
-    this.workshopService.queryWorkshop({cursor: cursor, searchText: this.searchBoxControl.value}).subscribe(response => {
-      this.nextCursor = response.nextCursor;
-      this.workshopMods = response.mods;
-    });
+  onSearchBoxKeyDown($event: KeyboardEvent) {
+    if ($event.code === 'Enter') {
+      this.searchWorkshop('', this.searchBoxControl.value)
+    }
   }
 
   nextPage() {
-    this.searchWorkshop(this.nextCursor);
+    this.searchWorkshop(this.nextCursor, this.lastSearchText);
+  }
+
+  searchWorkshop(cursor: string, searchText: string) {
+    this.lastSearchText = searchText;
+    this.workshopService.queryWorkshop({cursor: cursor, searchText: this.lastSearchText}).subscribe(response => {
+      this.nextCursor = response.nextCursor;
+      this.workshopMods = response.mods;
+    });
   }
 }

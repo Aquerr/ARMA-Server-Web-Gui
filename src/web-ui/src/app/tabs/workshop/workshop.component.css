@@ -1,4 +1,8 @@
+.workshop-list {
+  display: flex;
+  flex-direction: column;
+}
+
 .workshop-list-item {
-  display: inline-block;
-  max-width: 30rem;
+  margin-bottom: 10px;
 }
