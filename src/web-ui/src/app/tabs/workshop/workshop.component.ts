@@ -44,4 +44,7 @@ export class WorkshopComponent implements OnInit {
   }
 
 
+  canInstall(workshopMod: WorkshopMod) {
+    return this.installedWorkshopMods.find(mod => mod.fileId === workshopMod.fileId) === undefined;
+  }
 }
