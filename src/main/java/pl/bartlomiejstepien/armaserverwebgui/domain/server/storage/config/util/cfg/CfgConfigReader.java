@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.parser.CfgClassParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.parser.CfgIntegerParser;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.parser.CfgLongParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.parser.CfgMissionsClassParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.parser.CfgSimpleParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.parser.CfgRawStringParser;
@@ -27,6 +28,7 @@ public class CfgConfigReader
             PropertyType.QUOTED_STRING, new CfgQuotedStringParser(),
             PropertyType.RAW_STRING, new CfgRawStringParser(),
             PropertyType.INTEGER, new CfgIntegerParser(),
+            PropertyType.LONG, new CfgLongParser(),
             PropertyType.STRING_ARRAY, new CfgStringArrayParser()
     );
 

@@ -1,19 +1,16 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.mod;
 
 import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.ZipParameters;
-import net.lingala.zip4j.util.FileUtils;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.FileSystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.InstalledMod;
 import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -92,7 +89,7 @@ public class ModStorageImpl implements ModStorage
     }
 
     @Override
-    public List<String> getInstalledModNames()
+    public List<String> getInstalledModFolderNames()
     {
         return Optional.ofNullable(modDirectory.get().toFile().listFiles())
                 .map(files -> Stream.of(files)
@@ -101,6 +98,35 @@ public class ModStorageImpl implements ModStorage
                         .filter(name -> name.startsWith("@"))
                         .collect(Collectors.toList()))
                 .orElse(Collections.emptyList());
+    }
+
+    @Override
+    public List<InstalledMod> getInstalledMods()
+    {
+        return Optional.ofNullable(modDirectory.get().toFile().listFiles())
+                .map(files -> Stream.of(files)
+                        .filter(File::isDirectory)
+                        .filter(file -> file.getName().startsWith("@"))
+                        .map(this::getInstalledModFromModDirectory)
+                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
+    }
+
+    private InstalledMod getInstalledModFromModDirectory(File file)
+    {
+        String directoryPath = file.getPath();
+        ModMetaFile modMetaFile = readModMetaFile(Paths.get(directoryPath).resolve("meta.cpp").toFile());
+
+        return InstalledMod.builder()
+                .directoryPath(directoryPath)
+                .publishedFileId(modMetaFile.getPublishedFileId())
+                .name(modMetaFile.getName())
+                .build();
+    }
+
+    private ModMetaFile readModMetaFile(File metaFile)
+    {
+        return ModMetaFile.forFile(metaFile);
     }
 
     @Override

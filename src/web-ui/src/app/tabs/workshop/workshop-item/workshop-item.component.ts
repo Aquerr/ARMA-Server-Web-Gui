@@ -8,6 +8,7 @@ import {WorkshopMod} from '../../../model/workshop.model';
 })
 export class WorkshopItemComponent {
   @Input() workshopMod: WorkshopMod | undefined = undefined;
+  @Input() canInstall: boolean = false;
 
   prepareModDescription(description: string | undefined) {
     let result = description;

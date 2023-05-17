@@ -8,6 +8,10 @@ export interface WorkshopQueryResponse {
   mods: WorkshopMod[];
 }
 
+export interface InstalledWorkshopItemsResponse {
+  mods: WorkshopMod[];
+}
+
 export interface WorkshopMod {
   fileId: number;
   title: string;

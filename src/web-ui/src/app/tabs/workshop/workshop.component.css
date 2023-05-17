@@ -3,6 +3,11 @@
   flex-direction: column;
 }
 
+.subscribed-workshop-list {
+  display: flex;
+  flex-direction: column;
+}
+
 .workshop-list-item {
   margin-bottom: 10px;
 }

@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.InstalledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.InstalledModConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mods;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.mod.ModStorage;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -21,6 +24,7 @@ public class ModServiceImpl implements ModService
 {
     private final ModStorage modStorage;
     private final ASWGConfig aswgConfig;
+    private final InstalledModConverter installedModConverter;
 
     @Override
     public Mono<Void> save(FilePart multipartFile)
@@ -56,7 +60,7 @@ public class ModServiceImpl implements ModService
     @Override
     public List<String> getInstalledModNames()
     {
-        return this.modStorage.getInstalledModNames();
+        return this.modStorage.getInstalledModFolderNames();
     }
 
     @Override
@@ -72,5 +76,17 @@ public class ModServiceImpl implements ModService
     public void saveEnabledModList(Set<Mod> mods)
     {
         aswgConfig.setActiveMods(mods);
+    }
+
+    @Override
+    public List<ArmaWorkshopMod> getInstalledWorkshopMods()
+    {
+        List<InstalledMod> installedMods = this.modStorage.getInstalledMods();
+
+        //TODO: Retrieve mod's preview url and other properties form database.
+
+        return installedMods.stream()
+                .map(installedModConverter::convertToWorkshopMod)
+                .collect(Collectors.toList());
     }
 }

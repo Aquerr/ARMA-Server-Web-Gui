@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 import org.springframework.http.codec.multipart.FilePart;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mods;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface ModService
     boolean deleteMod(String modName);
 
     void saveEnabledModList(Set<Mod> mods);
+
+    List<ArmaWorkshopMod> getInstalledWorkshopMods();
 }

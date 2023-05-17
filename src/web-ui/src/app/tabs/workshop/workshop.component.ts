@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {WorkshopMod} from '../../model/workshop.model';
 import {WorkshopService} from '../../service/workshop.service';
 import {FormControl} from '@angular/forms';
@@ -8,16 +8,22 @@ import {FormControl} from '@angular/forms';
   templateUrl: './workshop.component.html',
   styleUrls: ['./workshop.component.css']
 })
-export class WorkshopComponent {
+export class WorkshopComponent implements OnInit {
   workshopMods: WorkshopMod[] = [];
-  subscribedWorkshopMods: WorkshopMod[] = [];
+  installedWorkshopMods: WorkshopMod[] = [];
+
   nextCursor: string = "";
   searchBoxControl!: FormControl;
-
   private lastSearchText: string = "";
 
   constructor(private workshopService: WorkshopService) {
     this.searchBoxControl = new FormControl<string>('');
+  }
+
+  ngOnInit(): void {
+    this.workshopService.getInstalledWorkshopItems().subscribe(response => {
+      this.installedWorkshopMods = response.mods;
+    });
   }
 
   onSearchBoxKeyDown($event: KeyboardEvent) {
@@ -25,7 +31,6 @@ export class WorkshopComponent {
       this.searchWorkshop('', this.searchBoxControl.value)
     }
   }
-
   nextPage() {
     this.searchWorkshop(this.nextCursor, this.lastSearchText);
   }
@@ -37,4 +42,6 @@ export class WorkshopComponent {
       this.workshopMods = response.mods;
     });
   }
+
+
 }
