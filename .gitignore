@@ -11,3 +11,4 @@ aswg-config.properties
 
 # Compile / Build
 /target
+*.tmp
