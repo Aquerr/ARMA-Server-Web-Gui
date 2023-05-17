@@ -18,6 +18,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -49,10 +50,15 @@ public class SteamServiceImpl implements SteamService
                 .fileType(WorkShopQueryFilesRequest.PublishedFileInfoMatchingFileType.ITEMS)
                 .build());
 
-        String nextPageCursor = workShopQueryResponse.getResponse().getNextCursor();
-        List<ArmaWorkshopMod> armaWorkshopMods = workShopQueryResponse.getResponse().getPublishedFileDetails().stream()
-                .map(armaWorkshopModConverter::convert)
-                .toList();
+        String nextPageCursor = null;
+        List<ArmaWorkshopMod> armaWorkshopMods = Collections.emptyList();
+        if (workShopQueryResponse != null)
+        {
+            nextPageCursor = workShopQueryResponse.getResponse().getNextCursor();
+            armaWorkshopMods = workShopQueryResponse.getResponse().getPublishedFileDetails().stream()
+                    .map(armaWorkshopModConverter::convert)
+                    .toList();
+        }
 
         return ArmaWorkshopQueryResponse.builder()
                 .nextCursor(nextPageCursor)
