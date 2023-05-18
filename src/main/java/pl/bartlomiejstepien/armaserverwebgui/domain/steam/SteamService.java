@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam;
 
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
@@ -15,4 +16,6 @@ public interface SteamService
     List<ArmaServerPlayer> getServerPlayers();
 
     boolean updateArma();
+
+    ArmaWorkshopMod getWorkshopMod(long modId);
 }

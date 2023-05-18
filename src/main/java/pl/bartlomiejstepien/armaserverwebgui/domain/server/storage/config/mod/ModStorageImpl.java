@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.FileSystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.InstalledMod;
+import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,41 +22,50 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Repository
 public class ModStorageImpl implements ModStorage
 {
     private final Supplier<Path> modDirectory;
+    private final InstalledModRepository installedModRepository;
 
-    public ModStorageImpl(ASWGConfig aswgConfig)
+    public ModStorageImpl(ASWGConfig aswgConfig, InstalledModRepository installedModRepository)
     {
         this.modDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath());
+        this.installedModRepository = installedModRepository;
     }
 
     @Override
-    public Mono<Void> save(FilePart multipartFile) throws IOException
+    public Mono<Path> save(FilePart multipartFile) throws IOException
     {
-        Files.createDirectories(modDirectory.get());
-
-        // Zapis .zip
         Path filePath = modDirectory.get().resolve(multipartFile.filename().replaceAll(" ", "_"));
-        return saveFileAtPath(multipartFile, filePath).doOnSuccess(next -> {
-            // Wypakowanie .zip
-            unpackZipFile(filePath);
-        }).doOnSuccess(next -> {
+        Mono<Void> blockingWrapper = Mono.fromRunnable(() -> {
             try
             {
-                // Usunięcie .zip
-                deleteZipFile(filePath);
+                Files.createDirectories(modDirectory.get());
             }
             catch (IOException e)
             {
-                e.printStackTrace();
-                throw new RuntimeException(e.getMessage());
+                throw new RuntimeException(e);
             }
         });
+        return blockingWrapper.subscribeOn(Schedulers.boundedElastic())
+                .then(saveFileAtPath(multipartFile, filePath))
+                .then(Mono.fromCallable(() -> unpackZipFile(filePath)))
+                .doOnSuccess(next ->
+                {
+                    try
+                    {
+                        // Usunięcie .zip
+                        deleteZipFile(filePath);
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                        throw new RuntimeException(e.getMessage());
+                    }
+                });
     }
 
     private Mono<Void> saveFileAtPath(FilePart multipartFile, Path saveLocation)
@@ -62,7 +73,7 @@ public class ModStorageImpl implements ModStorage
         return multipartFile.transferTo(saveLocation);
     }
 
-    private void unpackZipFile(Path filePath)
+    private Path unpackZipFile(Path filePath)
     {
         try(ZipFile zipFile = new ZipFile(filePath.toAbsolutePath().toString()))
         {
@@ -70,10 +81,12 @@ public class ModStorageImpl implements ModStorage
             String modFolderName = zipFile.getFileHeaders().get(0).getFileName();
             Path newModFolderPath = renameModFolderToLowerCaseWithUnderscores(filePath.getParent().resolve(modFolderName));
             convertEachFileToLowercase(newModFolderPath);
+            return newModFolderPath;
         }
         catch (IOException e)
         {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -89,33 +102,21 @@ public class ModStorageImpl implements ModStorage
     }
 
     @Override
-    public List<String> getInstalledModFolderNames()
-    {
-        return Optional.ofNullable(modDirectory.get().toFile().listFiles())
-                .map(files -> Stream.of(files)
-                        .filter(File::isDirectory)
-                        .map(File::getName)
-                        .filter(name -> name.startsWith("@"))
-                        .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
-    }
-
-    @Override
-    public List<InstalledMod> getInstalledMods()
+    public List<InstalledMod> getInstalledModsFromFileSystem()
     {
         return Optional.ofNullable(modDirectory.get().toFile().listFiles())
                 .map(files -> Stream.of(files)
                         .filter(File::isDirectory)
                         .filter(file -> file.getName().startsWith("@"))
                         .map(this::getInstalledModFromModDirectory)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .orElse(Collections.emptyList());
     }
 
     private InstalledMod getInstalledModFromModDirectory(File file)
     {
         String directoryPath = file.getPath();
-        ModMetaFile modMetaFile = readModMetaFile(Paths.get(directoryPath).resolve("meta.cpp").toFile());
+        ModMetaFile modMetaFile = readModMetaFile(file.toPath());
 
         return InstalledMod.builder()
                 .directoryPath(directoryPath)
@@ -124,27 +125,36 @@ public class ModStorageImpl implements ModStorage
                 .build();
     }
 
-    private ModMetaFile readModMetaFile(File metaFile)
+    @Override
+    public ModMetaFile readModMetaFile(Path modDirectory)
     {
-        return ModMetaFile.forFile(metaFile);
+        return ModMetaFile.forFile(modDirectory.resolve("meta.cpp"));
     }
 
     @Override
-    public boolean deleteMod(String modName)
+    public Mono<Boolean> deleteMod(InstalledMod installedMod)
     {
         final File[] files = this.modDirectory.get().toFile().listFiles();
         if (files != null)
         {
             for (final File file : files)
             {
-                if (file.getName().equals(modName))
+                if (file.getName().equals(installedMod.getModDirectoryName()))
                 {
                     FileSystemUtils.deleteRecursively(file);
                 }
             }
         }
 
-        return false;
+        return this.installedModRepository.delete(installedMod)
+                .thenReturn(true)
+                .onErrorReturn(false);
+    }
+
+    @Override
+    public Mono<InstalledMod> getInstalledMod(String modName)
+    {
+        return this.installedModRepository.findByName(modName);
     }
 
     private void convertEachFileToLowercase(Path filePath)

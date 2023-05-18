@@ -34,7 +34,7 @@ public class WorkshopRestController
     @GetMapping("/installed-items")
     public Mono<InstalledItemsResponse> getInstalledItems()
     {
-        return Mono.just(modService.getInstalledWorkshopMods()).map(this::toInstalledItemsResponse);
+        return modService.getInstalledWorkshopMods().collectList().map(this::toInstalledItemsResponse);
     }
 
     private InstalledItemsResponse toInstalledItemsResponse(List<ArmaWorkshopMod> armaWorkshopMods)

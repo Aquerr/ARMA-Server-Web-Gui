@@ -5,17 +5,20 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.InstalledMod;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 public interface ModStorage {
 
-    Mono<Void> save(FilePart multipartFile) throws IOException;
+    Mono<Path> save(FilePart multipartFile) throws IOException;
 
     boolean doesModExists(String filename);
 
-    List<String> getInstalledModFolderNames();
+    List<InstalledMod> getInstalledModsFromFileSystem();
 
-    List<InstalledMod> getInstalledMods();
+    ModMetaFile readModMetaFile(Path modDirectory);
 
-    boolean deleteMod(String modName);
+    Mono<Boolean> deleteMod(InstalledMod installedMod);
+
+    Mono<InstalledMod> getInstalledMod(String modName);
 }

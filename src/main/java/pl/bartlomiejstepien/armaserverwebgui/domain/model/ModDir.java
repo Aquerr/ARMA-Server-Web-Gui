@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Mod
+public class ModDir
 {
-    private String name;
+    private String dirName;
     private boolean serverMod;
 }

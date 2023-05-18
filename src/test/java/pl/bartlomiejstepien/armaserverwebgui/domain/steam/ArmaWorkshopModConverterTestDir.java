@@ -10,7 +10,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class ArmaWorkshopModConverterTest
+class ArmaWorkshopModConverterTestDir
 {
     private static final String TITLE = "Title";
     private static final String DESCRIPTION = "Description";

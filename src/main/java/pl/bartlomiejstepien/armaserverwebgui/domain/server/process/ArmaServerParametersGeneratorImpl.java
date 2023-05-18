@@ -3,10 +3,10 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.process;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerParameters;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModDir;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -34,13 +34,13 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
                 .configPath(aswgConfig.getServerDirectoryPath() + File.separator + "server.cfg")
                 .executablePath(aswgConfig.getServerDirectoryPath() + File.separator + serverExecToUse)
                 .port(aswgConfig.getServerPort())
-                .mods(aswgConfig.getActiveMods().stream()
+                .mods(aswgConfig.getActiveModDirs().stream()
                         .filter(mod -> !mod.isServerMod())
-                        .map(Mod::getName)
+                        .map(ModDir::getDirName)
                         .collect(Collectors.toSet()))
-                .serverMods(aswgConfig.getActiveMods().stream()
-                        .filter(Mod::isServerMod)
-                        .map(Mod::getName)
+                .serverMods(aswgConfig.getActiveModDirs().stream()
+                        .filter(ModDir::isServerMod)
+                        .map(ModDir::getDirName)
                         .collect(Collectors.toSet()))
                 .build();
     }

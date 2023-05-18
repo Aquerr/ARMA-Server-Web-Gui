@@ -6,10 +6,10 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.c
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.CfgReflectionUtil;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.type.PropertyType;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 @Data
@@ -25,12 +25,12 @@ public final class ModMetaFile
 
     }
 
-    public static ModMetaFile forFile(File metaFile)
+    public static ModMetaFile forFile(Path metaFilePath)
     {
         ModMetaFile modMetaFile = new ModMetaFile();
         try
         {
-            List<String> lines = Files.readAllLines(metaFile.toPath());
+            List<String> lines = Files.readAllLines(metaFilePath);
             for (String line : lines)
             {
                 String propertyName = line.substring(0, line.indexOf("=")).trim();

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModDir;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -37,12 +37,10 @@ public class ASWGConfig
     private static final String USERNAME_PROPERTY = "aswg.username";
     private static final String PASSWORD_PROPERTY = "aswg.password";
     private static final String STEAMCMD_PATH = "aswg.steamcmd.path";
-    private static final String ACTIVE_MODS = "aswg.active-mods";
-    private static final String ACTIVE_SERVER_MODS = "aswg.active-server-mods";
+    private static final String ACTIVE_MODS = "aswg.active-mod-dirs";
+    private static final String ACTIVE_SERVER_MODS = "aswg.active-server-mod-dirs";
 
     private static final String SERVER_PORT = "aswg.server-port";
-
-//    private Properties configurationProperties = new Properties();
 
     @Value("${aswg.username}")
     private String username;
@@ -52,11 +50,11 @@ public class ASWGConfig
     private String serverDirectoryPath;
     @Value("${aswg.steamcmd.path}")
     private String steamCmdPath;
-    @Value("${aswg.active-mods:}")
-    private String activeMods;
+    @Value("${aswg.active-mod-dirs}")
+    private String activeModDirs;
 
-    @Value("${aswg.active-server-mods:}")
-    private String activeServerMods;
+    @Value("${aswg.active-server-mod-dirs}")
+    private String activeServerModDirs;
 
     @Value("${aswg.server-port}")
     private int serverPort;
@@ -78,8 +76,8 @@ public class ASWGConfig
             configurationProperties.setProperty(USERNAME_PROPERTY, this.username);
             configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
             configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
-            configurationProperties.setProperty(ACTIVE_MODS, this.activeMods);
-            configurationProperties.setProperty(ACTIVE_SERVER_MODS, this.activeServerMods);
+            configurationProperties.setProperty(ACTIVE_MODS, this.activeModDirs);
+            configurationProperties.setProperty(ACTIVE_SERVER_MODS, this.activeServerModDirs);
             configurationProperties.setProperty(SERVER_PORT, String.valueOf(this.serverPort));
 
             saveProperties();
@@ -122,8 +120,8 @@ public class ASWGConfig
             configurationProperties.setProperty(USERNAME_PROPERTY, this.username);
             configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
             configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
-            configurationProperties.setProperty(ACTIVE_MODS, this.activeMods);
-            configurationProperties.setProperty(ACTIVE_SERVER_MODS, this.activeServerMods);
+            configurationProperties.setProperty(ACTIVE_MODS, this.activeModDirs);
+            configurationProperties.setProperty(ACTIVE_SERVER_MODS, this.activeServerModDirs);
             configurationProperties.setProperty(SERVER_PORT, String.valueOf(this.serverPort));
             configurationProperties.store(bufferedWriter, "ASWG Configuration File");
         }
@@ -133,38 +131,38 @@ public class ASWGConfig
         }
     }
 
-    public void setActiveMods(Set<Mod> mods)
+    public void setActiveModDirs(Set<ModDir> modDirs)
     {
-        this.activeMods = mods.stream()
+        this.activeModDirs = modDirs.stream()
                 .filter(mod -> !mod.isServerMod())
-                .map(Mod::getName)
+                .map(ModDir::getDirName)
                 .filter(StringUtils::isNotBlank)
                 .collect(Collectors.joining(";"));
-        this.activeServerMods = mods.stream()
-                .filter(Mod::isServerMod)
-                .map(Mod::getName)
+        this.activeServerModDirs = modDirs.stream()
+                .filter(ModDir::isServerMod)
+                .map(ModDir::getDirName)
                 .filter(StringUtils::isNotBlank)
                 .collect(Collectors.joining(";"));
         saveProperties();
     }
 
-    public Set<Mod> getActiveMods()
+    public Set<ModDir> getActiveModDirs()
     {
-        Set<Mod> allMods = new HashSet<>();
+        Set<ModDir> allModDirs = new HashSet<>();
 
-        Set<Mod> mods = Arrays.stream(this.activeMods.split(";"))
+        Set<ModDir> modDirs = Arrays.stream(this.activeModDirs.split(";"))
                 .filter(StringUtils::isNotBlank)
-                .map(modName -> new Mod(modName, false))
+                .map(modName -> new ModDir(modName, false))
                 .collect(Collectors.toSet());
 
-        Set<Mod> serverMods = Arrays.stream(this.activeServerMods.split(";"))
+        Set<ModDir> serverModDirs = Arrays.stream(this.activeServerModDirs.split(";"))
                 .filter(StringUtils::isNotBlank)
-                .map(modName -> new Mod(modName, true))
+                .map(modName -> new ModDir(modName, true))
                 .collect(Collectors.toSet());
 
-        allMods.addAll(mods);
-        allMods.addAll(serverMods);
-        return allMods;
+        allModDirs.addAll(modDirs);
+        allModDirs.addAll(serverModDirs);
+        return allModDirs;
     }
 
     public int getServerPort()

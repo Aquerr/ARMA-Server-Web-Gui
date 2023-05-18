@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.ModFileValidator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.web.exception.NotAllowedFileTypeException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mods;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import reactor.core.publisher.Mono;
 
@@ -63,10 +63,11 @@ public class ModsRestController
     }
 
     @DeleteMapping(value = "/{modName}", consumes = MediaType.ALL_VALUE)
-    public Mono<ResponseEntity<?>> deleteMod(@PathVariable("modName") String modName)
+    public Mono<ResponseEntity<Object>> deleteMod(@PathVariable("modName") String modName)
     {
         return Mono.just(this.modService.deleteMod(modName))
-                .thenReturn(ResponseEntity.ok().build());
+                .thenReturn(ResponseEntity.ok().build())
+                .onErrorReturn(ResponseEntity.internalServerError().build());
     }
 
     @ExceptionHandler(value = ModFileAlreadyExistsException.class)
@@ -86,18 +87,18 @@ public class ModsRestController
     @Value(staticConstructor = "of")
     private static class GetModsResponse
     {
-        Set<Mod> disabledMods;
-        Set<Mod> enabledMods;
+        Set<ModView> disabledMods;
+        Set<ModView> enabledMods;
 
-        private static GetModsResponse of(Mods mods)
+        private static GetModsResponse of(ModsView modsView)
         {
-            return new GetModsResponse(mods.getDisabledMods(), mods.getEnabledMods());
+            return new GetModsResponse(modsView.getDisabledMods(), modsView.getEnabledMods());
         }
     }
 
     @Data
     private static class SaveEnabledModsListRequest
     {
-        Set<Mod> mods;
+        Set<ModView> mods;
     }
 }

@@ -19,7 +19,8 @@ export class ModUploadService {
 
   uploadMod(file: File) {
 
-    if (!file.name.toLowerCase().endsWith(".zip") || file.type !== "application/x-zip-compressed") {
+    console.log(file);
+    if (!file.name.toLowerCase().endsWith(".zip") || (file.type !== "application/x-zip-compressed" && file.type !== "application/zip")) {
       this.notificationService.errorNotification("Wrong file type! Only .zip files are supported!");
       return;
     }

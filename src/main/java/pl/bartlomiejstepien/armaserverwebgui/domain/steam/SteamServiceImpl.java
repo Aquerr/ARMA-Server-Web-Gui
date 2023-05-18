@@ -113,6 +113,12 @@ public class SteamServiceImpl implements SteamService
         return false;
     }
 
+    @Override
+    public ArmaWorkshopMod getWorkshopMod(long modId)
+    {
+        return null;
+    }
+
     private void performArmaUpdate(String steamCmdPath, String serverDirectoryPath)
     {
         //TODO: We need to inform GUI about the installation status!
