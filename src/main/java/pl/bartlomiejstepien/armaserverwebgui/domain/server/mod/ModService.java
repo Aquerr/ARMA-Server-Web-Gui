@@ -17,11 +17,17 @@ public interface ModService
 
     ModsView getMods();
 
-    List<InstalledMod> getInstalledMods();
+    Mono<InstalledMod> saveToDB(InstalledMod installedMod);
+
+    Mono<Void> deleteFromDB(long id);
+
+    List<InstalledMod> getInstalledModsFromFileSystem();
 
     Mono<Boolean> deleteMod(String modName);
 
     void saveEnabledModList(Set<ModView> modDirs);
 
-    Flux<ArmaWorkshopMod> getInstalledWorkshopMods();
+    Flux<InstalledMod> getInstalledModsInDB();
+
+    Flux<ArmaWorkshopMod> getInstalledWorkshopModsInDB();
 }

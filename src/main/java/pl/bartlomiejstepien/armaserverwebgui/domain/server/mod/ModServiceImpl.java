@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 import lombok.AllArgsConstructor;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.InstalledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModDir;
@@ -53,8 +54,22 @@ public class ModServiceImpl implements ModService
         }
     }
 
+    @Transactional
     @Override
-    public List<InstalledMod> getInstalledMods()
+    public Mono<InstalledMod> saveToDB(InstalledMod installedMod)
+    {
+        return this.installedModRepository.save(installedMod);
+    }
+
+    @Transactional
+    @Override
+    public Mono<Void> deleteFromDB(long id)
+    {
+        return this.installedModRepository.deleteById(id);
+    }
+
+    @Override
+    public List<InstalledMod> getInstalledModsFromFileSystem()
     {
         return this.modStorage.getInstalledModsFromFileSystem();
     }
@@ -62,7 +77,7 @@ public class ModServiceImpl implements ModService
     @Override
     public ModsView getMods()
     {
-        List<InstalledMod> installedMods = getInstalledMods();
+        List<InstalledMod> installedMods = getInstalledModsFromFileSystem();
         Set<ModDir> enabledModDirs = this.aswgConfig.getActiveModDirs();
 
         ModsView modsView = new ModsView();
@@ -104,7 +119,7 @@ public class ModServiceImpl implements ModService
     @Override
     public void saveEnabledModList(Set<ModView> mods)
     {
-        List<InstalledMod> installedMods = getInstalledMods();
+        List<InstalledMod> installedMods = getInstalledModsFromFileSystem();
         Set<ModDir> activeModDirs = mods.stream()
                 .map(modView -> {
                     InstalledMod installedMod = installedMods.stream()
@@ -124,7 +139,13 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public Flux<ArmaWorkshopMod> getInstalledWorkshopMods()
+    public Flux<InstalledMod> getInstalledModsInDB()
+    {
+        return this.installedModRepository.findAll();
+    }
+
+    @Override
+    public Flux<ArmaWorkshopMod> getInstalledWorkshopModsInDB()
     {
         return this.installedModRepository.findAll()
                 .map(installedModConverter::convertToWorkshopMod);
