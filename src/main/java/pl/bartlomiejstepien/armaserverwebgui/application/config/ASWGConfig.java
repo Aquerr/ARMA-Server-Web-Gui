@@ -37,6 +37,8 @@ public class ASWGConfig
     private static final String USERNAME_PROPERTY = "aswg.username";
     private static final String PASSWORD_PROPERTY = "aswg.password";
     private static final String STEAMCMD_PATH = "aswg.steamcmd.path";
+    private static final String STEAMCMD_USERNAME = "aswg.steamcmd.username";
+    private static final String STEAMCMD_PASSWORD = "aswg.steamcmd.password";
     private static final String ACTIVE_MODS = "aswg.active-mod-dirs";
     private static final String ACTIVE_SERVER_MODS = "aswg.active-server-mod-dirs";
     private static final String STEAM_API_KEY = "aswg.steam.web-api-token";
@@ -47,21 +49,24 @@ public class ASWGConfig
     private String username;
     @Value("${aswg.password}")
     private String password;
-    @Value("${aswg.server-directory-path:}")
-    private String serverDirectoryPath;
-    @Value("${aswg.steamcmd.path}")
-    private String steamCmdPath;
-    @Value("${aswg.active-mod-dirs}")
-    private String activeModDirs;
-
-    @Value("${aswg.active-server-mod-dirs}")
-    private String activeServerModDirs;
-
     @Value("${aswg.server-port}")
     private int serverPort;
+    @Value("${aswg.server-directory-path:}")
+    private String serverDirectoryPath;
 
+    @Value("${aswg.steamcmd.path}")
+    private String steamCmdPath;
+    @Value("${aswg.steamcmd.username}")
+    private String steamCmdUsername;
+    @Value("${aswg.steamcmd.password}")
+    private String steamCmdPassword;
     @Value("${aswg.steam.web-api-token:}")
     private String steamApiKey;
+
+    @Value("${aswg.active-mod-dirs}")
+    private String activeModDirs;
+    @Value("${aswg.active-server-mod-dirs}")
+    private String activeServerModDirs;
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationRead() throws IOException
@@ -84,6 +89,8 @@ public class ASWGConfig
             configurationProperties.setProperty(ACTIVE_SERVER_MODS, this.activeServerModDirs);
             configurationProperties.setProperty(SERVER_PORT, String.valueOf(this.serverPort));
             configurationProperties.setProperty(STEAM_API_KEY, this.steamApiKey);
+            configurationProperties.setProperty(STEAMCMD_USERNAME, this.steamCmdUsername);
+            configurationProperties.setProperty(STEAMCMD_PASSWORD, this.steamCmdPassword);
 
             saveProperties();
         }
@@ -109,6 +116,16 @@ public class ASWGConfig
         return this.steamCmdPath;
     }
 
+    public String getSteamCmdUsername()
+    {
+        return steamCmdUsername;
+    }
+
+    public String getSteamCmdPassword()
+    {
+        return steamCmdPassword;
+    }
+
     public void setServerDirectoryPath(String serverDirectoryPath)
     {
         this.serverDirectoryPath = serverDirectoryPath;
@@ -129,6 +146,8 @@ public class ASWGConfig
             configurationProperties.setProperty(ACTIVE_SERVER_MODS, this.activeServerModDirs);
             configurationProperties.setProperty(SERVER_PORT, String.valueOf(this.serverPort));
             configurationProperties.setProperty(STEAM_API_KEY, this.steamApiKey);
+            configurationProperties.setProperty(STEAMCMD_USERNAME, this.steamCmdUsername);
+            configurationProperties.setProperty(STEAMCMD_PASSWORD, this.steamCmdPassword);
             configurationProperties.store(bufferedWriter, "ASWG Configuration File");
         }
         catch (IOException e)
