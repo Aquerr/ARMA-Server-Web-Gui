@@ -1,6 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam;
 
-import com.github.koraktor.steamcondenser.exceptions.SteamCondenserException;
 import com.github.koraktor.steamcondenser.steam.SteamPlayer;
 import com.github.koraktor.steamcondenser.steam.servers.GoldSrcServer;
 import io.github.aquerr.steamwebapiclient.SteamWebApiClient;
@@ -23,8 +22,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -77,7 +74,7 @@ public class SteamServiceImpl implements SteamService
             goldSrcServer.initialize();
             return true;
         }
-        catch (SteamCondenserException | TimeoutException e)
+        catch (Exception e)
         {
             log.info("Server is offline");
             return false;
@@ -95,7 +92,7 @@ public class SteamServiceImpl implements SteamService
                     .map(this::mapToArmaServerPlayer)
                     .toList();
         }
-        catch (SteamCondenserException | TimeoutException e)
+        catch (Exception e)
         {
             log.info("Could not get server players. Server seems to be offline.");
             e.printStackTrace();
