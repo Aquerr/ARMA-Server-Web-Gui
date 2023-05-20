@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {WorkshopMod} from '../../model/workshop.model';
 import {WorkshopService} from '../../service/workshop.service';
 import {FormControl} from '@angular/forms';
+import {MaskService} from "../../service/mask.service";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-workshop',
@@ -16,7 +18,8 @@ export class WorkshopComponent implements OnInit {
   searchBoxControl!: FormControl;
   private lastSearchText: string = "";
 
-  constructor(private workshopService: WorkshopService) {
+  constructor(private workshopService: WorkshopService,
+              private ngxSpinnerService: NgxSpinnerService) {
     this.searchBoxControl = new FormControl<string>('');
   }
 
@@ -36,10 +39,12 @@ export class WorkshopComponent implements OnInit {
   }
 
   searchWorkshop(cursor: string, searchText: string) {
+    this.ngxSpinnerService.show("workshop-mods");
     this.lastSearchText = searchText;
     this.workshopService.queryWorkshop({cursor: cursor, searchText: this.lastSearchText}).subscribe(response => {
       this.nextCursor = response.nextCursor;
       this.workshopMods = response.mods;
+      this.ngxSpinnerService.hide("workshop-mods");
     });
   }
 

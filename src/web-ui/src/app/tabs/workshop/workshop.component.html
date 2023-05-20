@@ -10,6 +10,9 @@
     <h1>Workshop mods</h1>
     <app-workshop-item *ngFor="let workshopMod of workshopMods" [workshopMod]="workshopMod" [canInstall]="canInstall(workshopMod)" class="workshop-list-item">
     </app-workshop-item>
+    <div style="position: relative">
+      <ngx-spinner name="workshop-mods" [fullScreen]="false" color="#4634b7" size="medium" type="cog"></ngx-spinner>
+    </div>
     <div>
       <button class="float-end" mat-flat-button color="primary" (click)="nextPage()">Next Page</button>
     </div>
