@@ -1,15 +1,15 @@
 <div class="workshop-item-card">
   <div class="card-image">
-    <img [src]="workshopMod?.previewUrl" alt="No Image">
+    <img [src]="workshopMod.previewUrl" alt="No Image">
   </div>
   <div class="card-content">
-    <a target="_blank" [href]="workshopMod?.modWorkshopUrl" style="text-decoration: none;">
-      <h2>{{workshopMod?.title}}</h2>
+    <a target="_blank" [href]="workshopMod.modWorkshopUrl" style="text-decoration: none;">
+      <h2>{{workshopMod.title}}</h2>
     </a>
     <p>
-        {{prepareModDescription(workshopMod?.description)}}
+        {{prepareModDescription(workshopMod.description)}}
     </p>
-      <button *ngIf="canInstall" mat-flat-button color="primary">Install</button>
+      <button *ngIf="canInstall" mat-flat-button color="primary" (click)="installMod(workshopMod)">Install</button>
       <button *ngIf="!canInstall" mat-flat-button color="accent">Delete</button>
   </div>
 </div>

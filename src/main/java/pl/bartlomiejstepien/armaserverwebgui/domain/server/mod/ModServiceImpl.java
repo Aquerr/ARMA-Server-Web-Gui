@@ -21,6 +21,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -39,7 +40,7 @@ public class ModServiceImpl implements ModService
     private final SteamService steamService;
 
     @Override
-    public Mono<InstalledMod> save(FilePart multipartFile)
+    public Mono<InstalledMod> saveModFile(FilePart multipartFile)
     {
         if(modStorage.doesModExists(multipartFile.filename()))
             throw new ModFileAlreadyExistsException();
@@ -52,6 +53,14 @@ public class ModServiceImpl implements ModService
         {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Mono<InstalledMod> installModFromWorkshop(long fileId, String modName)
+    {
+        Path steamCmdModFolderPath = this.steamService.downloadModFromWorkshop(fileId);
+        Path modDirectoryPath = this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()), modName);
+        return saveModInDatabase(modDirectoryPath);
     }
 
     @Transactional

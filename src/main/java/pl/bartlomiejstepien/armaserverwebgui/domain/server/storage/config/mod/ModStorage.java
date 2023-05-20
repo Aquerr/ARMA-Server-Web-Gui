@@ -21,4 +21,6 @@ public interface ModStorage {
     Mono<Boolean> deleteMod(InstalledMod installedMod);
 
     Mono<InstalledMod> getInstalledMod(String modName);
+
+    Path copyModFolderFromSteamCmd(Path steamCmdModFolderPath, Path armaServerDir, String modName);
 }

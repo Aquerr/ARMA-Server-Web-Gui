@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {API_BASE_URL} from '../../environments/environment';
-import {InstalledWorkshopItemsResponse, WorkshopQueryRequest, WorkshopQueryResponse} from '../model/workshop.model';
+import {
+  InstalledWorkshopItemsResponse,
+  WorkShopModInstallRequest, WorkShopModInstallResponse,
+  WorkshopQueryRequest,
+  WorkshopQueryResponse
+} from '../model/workshop.model';
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -11,6 +16,7 @@ export class WorkshopService {
 
   private readonly API_QUERY_WORKSHOP = `${API_BASE_URL}/workshop/query`;
   private readonly API_INSTALLED_ITEMS = `${API_BASE_URL}/workshop/installed-items`;
+  private readonly API_INSTALL_MOD = `${API_BASE_URL}/workshop/install`;
 
   constructor(private httpClient: HttpClient) { }
 
@@ -20,5 +26,10 @@ export class WorkshopService {
 
   getInstalledWorkshopItems(): Observable<InstalledWorkshopItemsResponse> {
     return this.httpClient.get<InstalledWorkshopItemsResponse>(this.API_INSTALLED_ITEMS);
+  }
+
+  installMod(fileId: number, modName: string): Observable<WorkShopModInstallResponse>  {
+    const request = {fileId: fileId, modName: modName} as WorkShopModInstallRequest;
+    return this.httpClient.post<WorkShopModInstallResponse>(this.API_INSTALL_MOD, request);
   }
 }

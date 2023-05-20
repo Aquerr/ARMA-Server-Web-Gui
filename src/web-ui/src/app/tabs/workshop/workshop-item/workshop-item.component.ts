@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {WorkshopMod} from '../../../model/workshop.model';
+import {WorkshopService} from "../../../service/workshop.service";
 
 @Component({
   selector: 'app-workshop-item',
@@ -7,8 +8,11 @@ import {WorkshopMod} from '../../../model/workshop.model';
   styleUrls: ['./workshop-item.component.css']
 })
 export class WorkshopItemComponent {
-  @Input() workshopMod: WorkshopMod | undefined = undefined;
+  @Input() workshopMod!: WorkshopMod;
   @Input() canInstall: boolean = false;
+
+  constructor(private workshopService: WorkshopService) {
+  }
 
   prepareModDescription(description: string | undefined) {
     let result = description;
@@ -35,4 +39,10 @@ export class WorkshopItemComponent {
   }
 
   protected readonly undefined = undefined;
+
+  installMod(mod: WorkshopMod) {
+    this.workshopService.installMod(mod.fileId, mod.title).subscribe(response => {
+      console.log("install complete");
+    });
+  }
 }

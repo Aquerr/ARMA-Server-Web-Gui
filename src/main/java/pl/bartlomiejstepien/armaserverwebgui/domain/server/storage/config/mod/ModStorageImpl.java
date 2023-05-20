@@ -68,33 +68,6 @@ public class ModStorageImpl implements ModStorage
                 });
     }
 
-    private Mono<Void> saveFileAtPath(FilePart multipartFile, Path saveLocation)
-    {
-        return multipartFile.transferTo(saveLocation);
-    }
-
-    private Path unpackZipFile(Path filePath)
-    {
-        try(ZipFile zipFile = new ZipFile(filePath.toAbsolutePath().toString()))
-        {
-            zipFile.extractAll(filePath.getParent().toAbsolutePath().toString());
-            String modFolderName = zipFile.getFileHeaders().get(0).getFileName();
-            Path newModFolderPath = renameModFolderToLowerCaseWithUnderscores(filePath.getParent().resolve(modFolderName));
-            convertEachFileToLowercase(newModFolderPath);
-            return newModFolderPath;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private void deleteZipFile(Path filePath) throws IOException
-    {
-        Files.deleteIfExists(filePath);
-    }
-
     @Override
     public boolean doesModExists(String filename)
     {
@@ -111,18 +84,6 @@ public class ModStorageImpl implements ModStorage
                         .map(this::getInstalledModFromModDirectory)
                         .toList())
                 .orElse(Collections.emptyList());
-    }
-
-    private InstalledMod getInstalledModFromModDirectory(File file)
-    {
-        String directoryPath = file.getPath();
-        ModMetaFile modMetaFile = readModMetaFile(file.toPath());
-
-        return InstalledMod.builder()
-                .directoryPath(directoryPath)
-                .publishedFileId(modMetaFile.getPublishedFileId())
-                .name(modMetaFile.getName())
-                .build();
     }
 
     @Override
@@ -157,7 +118,26 @@ public class ModStorageImpl implements ModStorage
         return this.installedModRepository.findByName(modName);
     }
 
-    private void convertEachFileToLowercase(Path filePath)
+    @Override
+    public Path copyModFolderFromSteamCmd(Path steamCmdModFolderPath, Path armaServerDir, String modName)
+    {
+        String normalizedModDirectoryName = "@" + normalizeFileName(modName);
+        Path modDirectoryPath = armaServerDir.resolve(normalizedModDirectoryName);
+        try
+        {
+            Files.createDirectories(modDirectoryPath);
+            FileSystemUtils.copyRecursively(steamCmdModFolderPath, modDirectoryPath);
+            normalizeEachFileNameInFolderRecursively(modDirectoryPath);
+            FileSystemUtils.deleteRecursively(steamCmdModFolderPath);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+        return modDirectoryPath;
+    }
+
+    private void normalizeEachFileNameInFolderRecursively(Path filePath)
     {
         try
         {
@@ -166,7 +146,7 @@ public class ModStorageImpl implements ModStorage
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
                 {
-                    Path newFilePath = file.resolveSibling(file.getFileName().toString().toLowerCase().replaceAll(" ", "_"));
+                    Path newFilePath = file.resolveSibling(normalizeFileName(file.getFileName().toString()));
                     file.toFile().renameTo(newFilePath.toAbsolutePath().toFile());
                     return FileVisitResult.CONTINUE;
                 }
@@ -174,7 +154,7 @@ public class ModStorageImpl implements ModStorage
                 @Override
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
                 {
-                    Path newFilePath = dir.resolveSibling(dir.getFileName().toString().toLowerCase().replaceAll(" ", "_"));
+                    Path newFilePath = dir.resolveSibling(normalizeFileName(dir.getFileName().toString()));
                     dir.toFile().renameTo(newFilePath.toAbsolutePath().toFile());
                     return FileVisitResult.CONTINUE;
                 }
@@ -189,8 +169,52 @@ public class ModStorageImpl implements ModStorage
     private Path renameModFolderToLowerCaseWithUnderscores(Path modFolderPath)
     {
         File modFolder = modFolderPath.getParent().resolve(modFolderPath.getFileName()).toFile();
-        Path newModFolderPath = modFolder.toPath().resolveSibling(modFolder.getName().toLowerCase().replaceAll(" ", "_"));
+        Path newModFolderPath = modFolder.toPath().resolveSibling(normalizeFileName(modFolder.getName()));
         modFolder.renameTo(newModFolderPath.toFile());
         return newModFolderPath;
+    }
+
+    private InstalledMod getInstalledModFromModDirectory(File file)
+    {
+        String directoryPath = file.getPath();
+        ModMetaFile modMetaFile = readModMetaFile(file.toPath());
+
+        return InstalledMod.builder()
+                .directoryPath(directoryPath)
+                .publishedFileId(modMetaFile.getPublishedFileId())
+                .name(modMetaFile.getName())
+                .build();
+    }
+
+    private Mono<Void> saveFileAtPath(FilePart multipartFile, Path saveLocation)
+    {
+        return multipartFile.transferTo(saveLocation);
+    }
+
+    private Path unpackZipFile(Path filePath)
+    {
+        try(ZipFile zipFile = new ZipFile(filePath.toAbsolutePath().toString()))
+        {
+            zipFile.extractAll(filePath.getParent().toAbsolutePath().toString());
+            String modFolderName = zipFile.getFileHeaders().get(0).getFileName();
+            Path newModFolderPath = renameModFolderToLowerCaseWithUnderscores(filePath.getParent().resolve(modFolderName));
+            normalizeEachFileNameInFolderRecursively(newModFolderPath);
+            return newModFolderPath;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void deleteZipFile(Path filePath) throws IOException
+    {
+        Files.deleteIfExists(filePath);
+    }
+
+    private String normalizeFileName(String fileName)
+    {
+        return fileName.toLowerCase().replace(" ", "_");
     }
 }

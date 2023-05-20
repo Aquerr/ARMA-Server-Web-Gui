@@ -5,6 +5,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
+import java.nio.file.Path;
 import java.util.List;
 
 public interface SteamService
@@ -18,4 +19,6 @@ public interface SteamService
     boolean updateArma();
 
     ArmaWorkshopMod getWorkshopMod(long modId);
+
+    Path downloadModFromWorkshop(long fileId);
 }

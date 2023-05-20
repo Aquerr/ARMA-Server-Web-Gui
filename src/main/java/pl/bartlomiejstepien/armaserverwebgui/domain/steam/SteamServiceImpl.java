@@ -19,9 +19,12 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @AllArgsConstructor
@@ -122,6 +125,58 @@ public class SteamServiceImpl implements SteamService
                 .map(list -> list.get(0))
                 .map(this.armaWorkshopModConverter::convert)
                 .orElse(null);
+    }
+
+    @Override
+    public Path downloadModFromWorkshop(long fileId)
+    {
+        String steamCmdPath = this.aswgConfig.getSteamCmdPath();
+        if (!StringUtils.hasText(steamCmdPath))
+            throw new SteamCmdPathNotSetException();
+
+        return downloadModThroughSteamCmd(steamCmdPath, fileId).join();
+    }
+
+    private CompletableFuture<Path> downloadModThroughSteamCmd(String steamCmdPath, long fileId)
+    {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command(steamCmdPath,
+                "+login", aswgConfig.getSteamCmdUsername(),
+                "+workshop_download_item", String.valueOf(ARMA_APP_ID), String.valueOf(fileId),
+                "+quit");
+
+        processBuilder.inheritIO();
+        Process process = null;
+        try
+        {
+            process = processBuilder.start();
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+        return process.onExit().thenApplyAsync(p ->
+            {
+                int exitValue = p.exitValue();
+                log.info("Exit value: " + exitValue);
+                if (exitValue == 0)
+                {
+                    log.info("Mod download complete!");
+                    return CompletableFuture.completedFuture("Ok!");
+                }
+                else
+                {
+                    return CompletableFuture.failedFuture(new RuntimeException("Could not download the mod file!"));
+                }
+            })
+            .thenApplyAsync(t -> Paths.get(aswgConfig.getSteamCmdPath())
+                    .getParent()
+                    .resolve("steamapps")
+                    .resolve("workshop")
+                    .resolve("content")
+                    .resolve(String.valueOf(ARMA_APP_ID))
+                    .resolve(String.valueOf(fileId))
+            );
     }
 
     private void performArmaUpdate(String steamCmdPath, String serverDirectoryPath)

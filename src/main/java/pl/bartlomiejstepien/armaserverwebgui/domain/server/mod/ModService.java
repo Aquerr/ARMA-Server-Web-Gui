@@ -13,9 +13,11 @@ import java.util.Set;
 
 public interface ModService
 {
-    Mono<InstalledMod> save(FilePart multipartFile);
+    Mono<InstalledMod> saveModFile(FilePart multipartFile);
 
     ModsView getMods();
+
+    Mono<InstalledMod> installModFromWorkshop(long fileId, String modName);
 
     Mono<InstalledMod> saveToDB(InstalledMod installedMod);
 

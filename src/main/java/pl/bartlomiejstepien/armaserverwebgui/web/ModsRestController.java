@@ -58,7 +58,7 @@ public class ModsRestController
         return multipartFile
                 .doOnNext(modFileValidator::validate)
                 .doOnNext(filePart -> log.info("Uploading mod '{}' ", filePart.filename()))
-                .flatMap(modService::save)
+                .flatMap(modService::saveModFile)
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 

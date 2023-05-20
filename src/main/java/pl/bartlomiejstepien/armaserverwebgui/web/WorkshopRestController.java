@@ -34,7 +34,14 @@ public class WorkshopRestController
     @GetMapping("/installed-items")
     public Mono<InstalledItemsResponse> getInstalledItems()
     {
-        return modService.getInstalledWorkshopModsInDB().collectList().map(this::toInstalledItemsResponse);
+        return this.modService.getInstalledWorkshopModsInDB().collectList().map(this::toInstalledItemsResponse);
+    }
+
+    @PostMapping("/install")
+    public Mono<WorkShopModInstallResponse> installMod(@RequestBody WorkShopModInstallRequest request)
+    {
+        return this.modService.installModFromWorkshop(request.getFileId(), request.getModName())
+                .thenReturn(new WorkShopModInstallResponse(request.getFileId()));
     }
 
     private InstalledItemsResponse toInstalledItemsResponse(List<ArmaWorkshopMod> armaWorkshopMods)
@@ -50,8 +57,22 @@ public class WorkshopRestController
                 .build();
     }
 
+    @Data
+    public static class WorkShopModInstallRequest
+    {
+        private long fileId;
+        private String modName;
+    }
+
     @Value
-    public static class InstalledItemsResponse {
+    public static class WorkShopModInstallResponse
+    {
+        long fileId;
+    }
+
+    @Value
+    public static class InstalledItemsResponse
+    {
         List<ArmaWorkshopMod> mods;
     }
 

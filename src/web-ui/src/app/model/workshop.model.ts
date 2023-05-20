@@ -3,6 +3,15 @@ export interface WorkshopQueryRequest {
   searchText: string;
 }
 
+export interface WorkShopModInstallRequest {
+  fileId: number;
+  modName: string;
+}
+
+export interface WorkShopModInstallResponse {
+  fileId: number;
+}
+
 export interface WorkshopQueryResponse {
   nextCursor: string;
   mods: WorkshopMod[];
