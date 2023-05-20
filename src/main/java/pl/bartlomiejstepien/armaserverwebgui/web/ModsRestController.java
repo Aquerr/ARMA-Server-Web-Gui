@@ -65,7 +65,7 @@ public class ModsRestController
     @DeleteMapping(value = "/{modName}", consumes = MediaType.ALL_VALUE)
     public Mono<ResponseEntity<Object>> deleteMod(@PathVariable("modName") String modName)
     {
-        return Mono.just(this.modService.deleteMod(modName))
+        return this.modService.deleteMod(modName)
                 .thenReturn(ResponseEntity.ok().build())
                 .onErrorReturn(ResponseEntity.internalServerError().build());
     }

@@ -39,6 +39,7 @@ public class ASWGConfig
     private static final String STEAMCMD_PATH = "aswg.steamcmd.path";
     private static final String ACTIVE_MODS = "aswg.active-mod-dirs";
     private static final String ACTIVE_SERVER_MODS = "aswg.active-server-mod-dirs";
+    private static final String STEAM_API_KEY = "aswg.steam.web-api-token";
 
     private static final String SERVER_PORT = "aswg.server-port";
 
@@ -58,6 +59,9 @@ public class ASWGConfig
 
     @Value("${aswg.server-port}")
     private int serverPort;
+
+    @Value("${aswg.steam.web-api-token:}")
+    private String steamApiKey;
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationRead() throws IOException
@@ -79,6 +83,7 @@ public class ASWGConfig
             configurationProperties.setProperty(ACTIVE_MODS, this.activeModDirs);
             configurationProperties.setProperty(ACTIVE_SERVER_MODS, this.activeServerModDirs);
             configurationProperties.setProperty(SERVER_PORT, String.valueOf(this.serverPort));
+            configurationProperties.setProperty(STEAM_API_KEY, this.steamApiKey);
 
             saveProperties();
         }
@@ -123,6 +128,7 @@ public class ASWGConfig
             configurationProperties.setProperty(ACTIVE_MODS, this.activeModDirs);
             configurationProperties.setProperty(ACTIVE_SERVER_MODS, this.activeServerModDirs);
             configurationProperties.setProperty(SERVER_PORT, String.valueOf(this.serverPort));
+            configurationProperties.setProperty(STEAM_API_KEY, this.steamApiKey);
             configurationProperties.store(bufferedWriter, "ASWG Configuration File");
         }
         catch (IOException e)

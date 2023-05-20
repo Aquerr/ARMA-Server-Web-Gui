@@ -4,7 +4,9 @@ import com.github.koraktor.steamcondenser.exceptions.SteamCondenserException;
 import com.github.koraktor.steamcondenser.steam.SteamPlayer;
 import com.github.koraktor.steamcondenser.steam.servers.GoldSrcServer;
 import io.github.aquerr.steamwebapiclient.SteamWebApiClient;
+import io.github.aquerr.steamwebapiclient.request.PublishedFileDetailsRequest;
 import io.github.aquerr.steamwebapiclient.request.WorkShopQueryFilesRequest;
+import io.github.aquerr.steamwebapiclient.response.PublishedFileDetailsResponse;
 import io.github.aquerr.steamwebapiclient.response.WorkShopQueryResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +20,9 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
@@ -91,7 +93,7 @@ public class SteamServiceImpl implements SteamService
             goldSrcServer.initialize();
             return goldSrcServer.getPlayers().values().stream()
                     .map(this::mapToArmaServerPlayer)
-                    .collect(Collectors.toList());
+                    .toList();
         }
         catch (SteamCondenserException | TimeoutException e)
         {
@@ -116,7 +118,13 @@ public class SteamServiceImpl implements SteamService
     @Override
     public ArmaWorkshopMod getWorkshopMod(long modId)
     {
-        return null;
+        return Optional.ofNullable(this.steamWebApiClient.getSteamRemoteStorageClient().getPublishedFileDetails(new PublishedFileDetailsRequest(List.of(modId))))
+                .map(PublishedFileDetailsResponse::getResponse)
+                .map(PublishedFileDetailsResponse.QueryFilesResponse::getPublishedFileDetails)
+                .filter(list -> !list.isEmpty())
+                .map(list -> list.get(0))
+                .map(this.armaWorkshopModConverter::convert)
+                .orElse(null);
     }
 
     private void performArmaUpdate(String steamCmdPath, String serverDirectoryPath)

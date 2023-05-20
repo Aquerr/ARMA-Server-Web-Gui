@@ -15,6 +15,7 @@ public class InstalledModConverter
         return ArmaWorkshopMod.builder()
                 .fileId(installedMod.getPublishedFileId())
                 .title(installedMod.getName())
+                .previewUrl(installedMod.getPreviewUrl())
                 .modWorkshopUrl("https://steamcommunity.com/sharedfiles/filedetails/?id=" + installedMod.getPublishedFileId())
             .build();
     }

@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam;
 
+import io.github.aquerr.steamwebapiclient.response.PublishedFileDetailsResponse;
 import io.github.aquerr.steamwebapiclient.response.WorkShopQueryResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,9 +22,17 @@ class ArmaWorkshopModConverterTestDir
     private ArmaWorkshopModConverter converter;
 
     @Test
-    void shouldConvertReturnNullWhenPassedNull()
+    void shouldConvertReturnNullWhenPassedNullPublishedFileDetailsWorkshop()
     {
-        ArmaWorkshopMod workshopMod = converter.convert(null);
+        ArmaWorkshopMod workshopMod = converter.convert((WorkShopQueryResponse.QueryFilesResponse.PublishedFileDetails) null);
+
+        assertThat(workshopMod).isNull();
+    }
+
+    @Test
+    void shouldConvertReturnNullWhenPassedNullPublishedFileDetails()
+    {
+        ArmaWorkshopMod workshopMod = converter.convert((PublishedFileDetailsResponse.QueryFilesResponse.PublishedFileDetails) null);
 
         assertThat(workshopMod).isNull();
     }
