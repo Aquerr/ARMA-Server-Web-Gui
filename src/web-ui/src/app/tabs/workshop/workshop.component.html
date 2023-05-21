@@ -8,7 +8,11 @@
   </div>
   <div class="workshop-list">
     <h1>Workshop mods</h1>
-    <app-workshop-item *ngFor="let workshopMod of workshopMods" [workshopMod]="workshopMod" [canInstall]="canInstall(workshopMod)" class="workshop-list-item">
+    <app-workshop-item *ngFor="let workshopMod of workshopMods"
+                       [workshopMod]="workshopMod"
+                       [canInstall]="canInstall(workshopMod)"
+                       (onModInstallDelete)="onModInstallDelete($event)"
+                       class="workshop-list-item">
     </app-workshop-item>
     <div style="position: relative">
       <ngx-spinner name="workshop-mods" [fullScreen]="false" color="#4634b7" size="medium" type="cog"></ngx-spinner>
@@ -20,7 +24,11 @@
   <hr>
   <div class="subscribed-workshop-list">
     <h1>Installed mods</h1>
-    <app-workshop-item *ngFor="let installedWorkshopMod of installedWorkshopMods" [workshopMod]="installedWorkshopMod" class="workshop-list-item">
+    <app-workshop-item *ngFor="let installedWorkshopMod of installedWorkshopMods"
+                       [workshopMod]="installedWorkshopMod"
+                       [canInstall]="false"
+                       (onModInstallDelete)="onModInstallDelete($event)"
+                       class="workshop-list-item">
     </app-workshop-item>
     <div *ngIf="installedWorkshopMods.length == 0">
       <span>No workshop items are installed. :(</span>

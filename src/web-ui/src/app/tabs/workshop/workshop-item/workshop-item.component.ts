@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {WorkshopMod} from '../../../model/workshop.model';
 import {WorkshopService} from "../../../service/workshop.service";
 import {ServerModsService} from "../../../service/server-mods.service";
@@ -12,6 +12,7 @@ import {MaskService} from "../../../service/mask.service";
 export class WorkshopItemComponent {
   @Input() workshopMod!: WorkshopMod;
   @Input() canInstall: boolean = false;
+  @Output() onModInstallDelete = new EventEmitter<any>();
 
   constructor(private workshopService: WorkshopService,
               private serverModsService: ServerModsService,
@@ -45,8 +46,11 @@ export class WorkshopItemComponent {
   protected readonly undefined = undefined;
 
   installMod(mod: WorkshopMod) {
+    this.maskService.show();
     this.workshopService.installMod(mod.fileId, mod.title).subscribe(response => {
       console.log("install complete");
+      this.maskService.hide();
+      this.onModInstallDelete.emit();
     });
   }
 
@@ -54,7 +58,7 @@ export class WorkshopItemComponent {
     this.maskService.show();
     this.serverModsService.deleteMod(workshopMod.title).subscribe(response => {
       this.maskService.hide();
-      window.location.reload();
+      this.onModInstallDelete.emit();
     });
   }
 }

@@ -24,9 +24,7 @@ export class WorkshopComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.workshopService.getInstalledWorkshopItems().subscribe(response => {
-      this.installedWorkshopMods = response.mods;
-    });
+    this.reloadInstalledModList();
   }
 
   onSearchBoxKeyDown($event: KeyboardEvent) {
@@ -51,5 +49,15 @@ export class WorkshopComponent implements OnInit {
 
   canInstall(workshopMod: WorkshopMod) {
     return this.installedWorkshopMods.find(mod => mod.fileId === workshopMod.fileId) === undefined;
+  }
+
+  onModInstallDelete($event: any) {
+    this.reloadInstalledModList();
+  }
+
+  private reloadInstalledModList() {
+    this.workshopService.getInstalledWorkshopItems().subscribe(response => {
+      this.installedWorkshopMods = response.mods;
+    });
   }
 }
