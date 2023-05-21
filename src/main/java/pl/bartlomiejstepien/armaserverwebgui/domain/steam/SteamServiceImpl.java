@@ -168,7 +168,7 @@ public class SteamServiceImpl implements SteamService
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(Paths.get(steamCmdPath).getParent().toFile());
         processBuilder.command(steamCmdPath,
-                "+login", aswgConfig.getSteamCmdUsername(), aswgConfig.getPassword(),
+                "+login", aswgConfig.getSteamCmdUsername(), aswgConfig.getSteamCmdPassword(),
                 "+workshop_download_item", String.valueOf(ARMA_APP_ID), String.valueOf(fileId),
                 "+quit");
         Process process = null;
