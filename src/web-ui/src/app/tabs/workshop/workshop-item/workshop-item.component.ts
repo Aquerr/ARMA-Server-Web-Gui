@@ -1,6 +1,8 @@
 import {Component, Input} from '@angular/core';
 import {WorkshopMod} from '../../../model/workshop.model';
 import {WorkshopService} from "../../../service/workshop.service";
+import {ServerModsService} from "../../../service/server-mods.service";
+import {MaskService} from "../../../service/mask.service";
 
 @Component({
   selector: 'app-workshop-item',
@@ -11,7 +13,9 @@ export class WorkshopItemComponent {
   @Input() workshopMod!: WorkshopMod;
   @Input() canInstall: boolean = false;
 
-  constructor(private workshopService: WorkshopService) {
+  constructor(private workshopService: WorkshopService,
+              private serverModsService: ServerModsService,
+              private maskService: MaskService) {
   }
 
   prepareModDescription(description: string | undefined) {
@@ -43,6 +47,14 @@ export class WorkshopItemComponent {
   installMod(mod: WorkshopMod) {
     this.workshopService.installMod(mod.fileId, mod.title).subscribe(response => {
       console.log("install complete");
+    });
+  }
+
+  deleteMod(workshopMod: WorkshopMod) {
+    this.maskService.show();
+    this.serverModsService.deleteMod(workshopMod.title).subscribe(response => {
+      this.maskService.hide();
+      window.location.reload();
     });
   }
 }

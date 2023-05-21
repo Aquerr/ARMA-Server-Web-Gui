@@ -10,6 +10,6 @@
         {{prepareModDescription(workshopMod.description)}}
     </p>
       <button *ngIf="canInstall" mat-flat-button color="primary" (click)="installMod(workshopMod)">Install</button>
-      <button *ngIf="!canInstall" mat-flat-button color="accent">Delete</button>
+      <button *ngIf="!canInstall" mat-flat-button color="accent" (click)="deleteMod(workshopMod)">Delete</button>
   </div>
 </div>
