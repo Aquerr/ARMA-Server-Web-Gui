@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
@@ -21,6 +22,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -144,7 +146,12 @@ public class SteamServiceImpl implements SteamService
             throw new SteamCmdPathNotSetException();
         try
         {
-            return downloadModThroughSteamCmd(steamCmdPath, fileId).join();
+            Path path = downloadModThroughSteamCmd(steamCmdPath, fileId).join();
+            if (Files.notExists(path))
+            {
+                throw new CouldNotDownloadWorkshopModException("Could not download mod file.");
+            }
+            return path;
         }
         catch (CompletionException e)
         {
@@ -184,14 +191,29 @@ public class SteamServiceImpl implements SteamService
                     return CompletableFuture.failedFuture(new RuntimeException("Could not download the mod file! Exit value: " + exitValue));
                 }
             })
-            .thenApplyAsync(t -> Paths.get(aswgConfig.getSteamCmdPath())
-                    .getParent()
-                    .resolve("steamapps")
-                    .resolve("workshop")
-                    .resolve("content")
-                    .resolve(String.valueOf(ARMA_APP_ID))
-                    .resolve(String.valueOf(fileId))
-            );
+            .thenApplyAsync(t -> buildWorkshopModDownloadPath(fileId));
+    }
+
+    private Path buildWorkshopModDownloadPath(long fileId)
+    {
+        Path path;
+        if (SystemUtils.isWindows())
+        {
+            path = Paths.get(aswgConfig.getSteamCmdPath())
+                    .getParent();
+        }
+        else
+        {
+            path = Paths.get(System.getProperty("user.home"))
+                    .resolve(".local")
+                    .resolve("share")
+                    .resolve("Steam");
+        }
+        return path.resolve("steamapps")
+                .resolve("workshop")
+                .resolve("content")
+                .resolve(String.valueOf(ARMA_APP_ID))
+                .resolve(String.valueOf(fileId));
     }
 
     private void performArmaUpdate(String steamCmdPath, String serverDirectoryPath)
