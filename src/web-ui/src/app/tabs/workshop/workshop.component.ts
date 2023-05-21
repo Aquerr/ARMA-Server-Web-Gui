@@ -28,7 +28,8 @@ export class WorkshopComponent implements OnInit {
   }
 
   onSearchBoxKeyDown($event: KeyboardEvent) {
-    if ($event.code === 'Enter') {
+    console.log($event);
+    if ($event.code === 'Enter' || $event.code === 'NumpadEnter') {
       this.searchWorkshop('', this.searchBoxControl.value)
     }
   }
