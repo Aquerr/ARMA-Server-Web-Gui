@@ -162,6 +162,7 @@ public class SteamServiceImpl implements SteamService
     private CompletableFuture<Path> downloadModThroughSteamCmd(String steamCmdPath, long fileId)
     {
         ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.directory(Paths.get(steamCmdPath).getParent().toFile());
         processBuilder.command(steamCmdPath,
                 "+login", aswgConfig.getSteamCmdUsername(),
                 "+workshop_download_item", String.valueOf(ARMA_APP_ID), String.valueOf(fileId),
@@ -171,6 +172,7 @@ public class SteamServiceImpl implements SteamService
         Process process = null;
         try
         {
+            log.info("Starting workshop mod download process with params: {}", processBuilder.command());
             process = processBuilder.start();
         }
         catch (Exception e)
