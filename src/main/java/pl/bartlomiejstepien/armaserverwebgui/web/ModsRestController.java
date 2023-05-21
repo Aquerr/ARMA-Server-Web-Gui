@@ -42,7 +42,7 @@ public class ModsRestController
     @GetMapping
     public Mono<GetModsResponse> getMods()
     {
-        return Mono.just(this.modService.getMods()).map(GetModsResponse::of);
+        return Mono.just(this.modService.getModsView()).map(GetModsResponse::of);
     }
 
     @PostMapping("/enabled")

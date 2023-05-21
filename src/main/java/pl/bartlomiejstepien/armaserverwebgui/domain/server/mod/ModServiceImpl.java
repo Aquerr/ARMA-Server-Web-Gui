@@ -22,7 +22,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
@@ -97,7 +96,7 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public ModsView getMods()
+    public ModsView getModsView()
     {
         List<InstalledMod> installedMods = getInstalledModsFromFileSystem();
         Set<ModDir> enabledModDirs = this.aswgConfig.getActiveModDirs();
@@ -161,15 +160,15 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public Flux<InstalledMod> getInstalledModsInDB()
+    public Flux<InstalledMod> getInstalledMods()
     {
         return this.installedModRepository.findAll();
     }
 
     @Override
-    public Flux<ArmaWorkshopMod> getInstalledWorkshopModsInDB()
+    public Flux<ArmaWorkshopMod> getInstalledWorkshopMods()
     {
-        return this.installedModRepository.findAll()
+        return this.installedModRepository.findAllByOrderByNameAsc()
                 .map(installedModConverter::convertToWorkshopMod);
     }
 

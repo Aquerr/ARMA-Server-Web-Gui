@@ -15,7 +15,7 @@ public interface ModService
 {
     Mono<InstalledMod> saveModFile(FilePart multipartFile);
 
-    ModsView getMods();
+    ModsView getModsView();
 
     Mono<InstalledMod> installModFromWorkshop(long fileId, String modName);
 
@@ -29,7 +29,7 @@ public interface ModService
 
     void saveEnabledModList(Set<ModView> modDirs);
 
-    Flux<InstalledMod> getInstalledModsInDB();
+    Flux<InstalledMod> getInstalledMods();
 
-    Flux<ArmaWorkshopMod> getInstalledWorkshopModsInDB();
+    Flux<ArmaWorkshopMod> getInstalledWorkshopMods();
 }

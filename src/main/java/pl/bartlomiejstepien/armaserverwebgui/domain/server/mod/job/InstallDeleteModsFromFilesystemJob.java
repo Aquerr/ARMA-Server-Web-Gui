@@ -30,7 +30,7 @@ public class InstallDeleteModsFromFilesystemJob
 
     private Disposable saveOrDeleteModsFromDB(List<InstalledMod> installedModsInFileSystem)
     {
-        return modService.getInstalledModsInDB()
+        return modService.getInstalledMods()
                 .collectList()
                 .subscribeOn(Schedulers.single())
                 .doOnSuccess(installedModsInDB -> {
