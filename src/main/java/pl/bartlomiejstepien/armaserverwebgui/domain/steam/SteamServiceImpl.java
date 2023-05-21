@@ -12,17 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,10 +43,6 @@ public class SteamServiceImpl implements SteamService
     private final ASWGConfig aswgConfig;
     private final SteamWebApiClient steamWebApiClient;
     private final ArmaWorkshopModConverter armaWorkshopModConverter;
-
-    private Thread serverThread;
-    private Thread ioDownloadThread;
-    private Thread ioDownloadErrorThread;
 
     @Override
     public ArmaWorkshopQueryResponse queryWorkshopMods(WorkshopQueryParams params) {
@@ -169,16 +163,15 @@ public class SteamServiceImpl implements SteamService
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(Paths.get(steamCmdPath).getParent().toFile());
         processBuilder.command(steamCmdPath,
-                "+login", aswgConfig.getSteamCmdUsername(),
+                "+login", aswgConfig.getSteamCmdUsername(), aswgConfig.getPassword(),
                 "+workshop_download_item", String.valueOf(ARMA_APP_ID), String.valueOf(fileId),
                 "+quit");
+        processBuilder.inheritIO();
         Process process = null;
         try
         {
             log.info("Starting workshop mod download process with params: {}", processBuilder.command());
             process = processBuilder.start();
-            handleProcessInputOutput(process);
-            log.info("Download process started!");
         }
         catch (Exception e)
         {
@@ -188,16 +181,6 @@ public class SteamServiceImpl implements SteamService
             {
                 int exitValue = p.exitValue();
                 log.info("Exit value: " + exitValue);
-                if (ioDownloadThread != null)
-                {
-                    ioDownloadThread.interrupt();
-                    ioDownloadThread = null;
-                }
-                if (ioDownloadErrorThread != null)
-                {
-                    ioDownloadErrorThread.interrupt();
-                    ioDownloadErrorThread = null;
-                }
                 if (exitValue == 0)
                 {
                     log.info("Mod download complete!");
@@ -262,44 +245,5 @@ public class SteamServiceImpl implements SteamService
         return ArmaServerPlayer.builder()
                 .name(steamPlayer.getName())
                 .build();
-    }
-
-    private void handleProcessInputOutput(Process process)
-    {
-        this.ioDownloadThread = new Thread(() ->
-        {
-            try {
-                final BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    log.info(line);
-                }
-                reader.close();
-            } catch (final Exception e) {
-                e.printStackTrace();
-                log.error("Error", e);
-            }
-        });
-
-        this.ioDownloadErrorThread = new Thread(() ->
-        {
-            try {
-                final BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getErrorStream()));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    log.info(line);
-                }
-                reader.close();
-            } catch (final Exception e) {
-                e.printStackTrace();
-                log.error("Error", e);
-            }
-        });
-        this.ioDownloadErrorThread.setDaemon(true);
-        this.ioDownloadErrorThread.start();
-        this.ioDownloadThread.setDaemon(true);
-        this.ioDownloadThread.start();
     }
 }
