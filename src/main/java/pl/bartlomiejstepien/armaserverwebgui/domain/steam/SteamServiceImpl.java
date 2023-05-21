@@ -199,17 +199,29 @@ public class SteamServiceImpl implements SteamService
         Path path;
         if (SystemUtils.isWindows())
         {
-            path = Paths.get(aswgConfig.getSteamCmdPath())
-                    .getParent();
+            path = buildSteamAppsPath(Paths.get(aswgConfig.getSteamCmdPath())
+                    .getParent(), fileId);
         }
         else
         {
-            path = Paths.get(System.getProperty("user.home"))
-                    .resolve(".local")
-                    .resolve("share")
-                    .resolve("Steam");
+            path = buildSteamAppsPath(Paths.get(System.getProperty("user.home"))
+                    .resolve("Steam"), fileId);
+
+            if (!Files.exists(path))
+            {
+                path = buildSteamAppsPath(Paths.get(System.getProperty("user.home"))
+                        .resolve(".local")
+                        .resolve("share")
+                        .resolve("Steam"), fileId);
+            }
         }
-        return path.resolve("steamapps")
+        return path;
+    }
+
+    private Path buildSteamAppsPath(Path basePath, long fileId)
+    {
+        return basePath
+                .resolve("steamapps")
                 .resolve("workshop")
                 .resolve("content")
                 .resolve(String.valueOf(ARMA_APP_ID))
