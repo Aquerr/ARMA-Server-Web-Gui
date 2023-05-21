@@ -173,9 +173,9 @@ public class SteamServiceImpl implements SteamService
         {
             process = processBuilder.start();
         }
-        catch (IOException e)
+        catch (Exception e)
         {
-            throw new RuntimeException(e);
+            return CompletableFuture.failedFuture(e);
         }
         return process.onExit().thenApplyAsync(p ->
             {
