@@ -18,6 +18,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDown
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamCmdWorkshopDownloadParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
 import java.io.BufferedReader;
@@ -150,7 +151,13 @@ public class SteamServiceImpl implements SteamService
             throw new SteamCmdPathNotSetException();
         try
         {
-            Path path = downloadModThroughSteamCmd(steamCmdPath, fileId).join();
+            Path path = downloadModThroughSteamCmd(SteamCmdWorkshopDownloadParameters.builder()
+                    .fileId(fileId)
+                    .appId(ARMA_APP_ID)
+                    .steamCmdPath(aswgConfig.getSteamCmdPath())
+                    .steamUsername(aswgConfig.getSteamCmdUsername())
+                    .steamPassword(aswgConfig.getSteamCmdPassword())
+                    .build()).join();
             if (Files.notExists(path))
             {
                 throw new CouldNotDownloadWorkshopModException("Could not download mod file.");
@@ -163,18 +170,15 @@ public class SteamServiceImpl implements SteamService
         }
     }
 
-    private CompletableFuture<Path> downloadModThroughSteamCmd(String steamCmdPath, long fileId)
+    private CompletableFuture<Path> downloadModThroughSteamCmd(SteamCmdWorkshopDownloadParameters parameters)
     {
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.directory(Paths.get(steamCmdPath).getParent().toFile());
-        processBuilder.command(steamCmdPath,
-                "+login", aswgConfig.getSteamCmdUsername(), aswgConfig.getSteamCmdPassword(),
-                "+workshop_download_item", String.valueOf(ARMA_APP_ID), String.valueOf(fileId),
-                "+quit");
+        processBuilder.directory(Paths.get(parameters.getSteamCmdPath()).getParent().toFile());
+        processBuilder.command(parameters.asList());
         Process process = null;
         try
         {
-            log.info("Starting workshop mod download process with params: {}", processBuilder.command());
+            log.info("Starting workshop mod download process with params: {}", parameters);
             process = processBuilder.start();
             handleDownloadProcessInputOutput(process);
             log.info("Download process started!");
@@ -199,7 +203,7 @@ public class SteamServiceImpl implements SteamService
                     return CompletableFuture.failedFuture(new RuntimeException("Could not download the mod file! Exit value: " + exitValue));
                 }
             })
-            .thenApplyAsync(t -> buildWorkshopModDownloadPath(fileId));
+            .thenApplyAsync(t -> buildWorkshopModDownloadPath(parameters.getFileId()));
     }
 
     private Path buildWorkshopModDownloadPath(long fileId)
