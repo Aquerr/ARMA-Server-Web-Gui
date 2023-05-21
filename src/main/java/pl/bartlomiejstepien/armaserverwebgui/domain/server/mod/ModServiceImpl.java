@@ -14,6 +14,8 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.mod.ModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 import reactor.core.publisher.Flux;
@@ -28,6 +30,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 @Service
 @AllArgsConstructor
@@ -58,9 +62,17 @@ public class ModServiceImpl implements ModService
     @Override
     public Mono<InstalledMod> installModFromWorkshop(long fileId, String modName)
     {
-        Path steamCmdModFolderPath = this.steamService.downloadModFromWorkshop(fileId);
-        Path modDirectoryPath = this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()), modName);
-        return saveModInDatabase(modDirectoryPath);
+        try
+        {
+            Path steamCmdModFolderPath = this.steamService.downloadModFromWorkshop(fileId);
+            Path modDirectoryPath = this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()), modName);
+            return saveModInDatabase(modDirectoryPath);
+        }
+        catch (CouldNotDownloadWorkshopModException e)
+        {
+            return Mono.error(new CouldNotInstallWorkshopModException(format("Could not install workshop mod with id = %s, name = %s", fileId, modName), e));
+        }
+
     }
 
     @Transactional

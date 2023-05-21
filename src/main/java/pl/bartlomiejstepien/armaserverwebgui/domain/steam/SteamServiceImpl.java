@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
@@ -25,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 @Service
 @AllArgsConstructor
@@ -127,14 +130,26 @@ public class SteamServiceImpl implements SteamService
                 .orElse(null);
     }
 
+    /**
+     * Downloads the file and returns its path in the filesystem.
+     *
+     * @param fileId the id of the file to download.
+     * @return the path to the downloaded file.
+     */
     @Override
-    public Path downloadModFromWorkshop(long fileId)
+    public Path downloadModFromWorkshop(long fileId) throws CouldNotDownloadWorkshopModException
     {
         String steamCmdPath = this.aswgConfig.getSteamCmdPath();
         if (!StringUtils.hasText(steamCmdPath))
             throw new SteamCmdPathNotSetException();
-
-        return downloadModThroughSteamCmd(steamCmdPath, fileId).join();
+        try
+        {
+            return downloadModThroughSteamCmd(steamCmdPath, fileId).join();
+        }
+        catch (CompletionException e)
+        {
+            throw new CouldNotDownloadWorkshopModException(e.getMessage(), e);
+        }
     }
 
     private CompletableFuture<Path> downloadModThroughSteamCmd(String steamCmdPath, long fileId)
@@ -166,7 +181,7 @@ public class SteamServiceImpl implements SteamService
                 }
                 else
                 {
-                    return CompletableFuture.failedFuture(new RuntimeException("Could not download the mod file!"));
+                    return CompletableFuture.failedFuture(new RuntimeException("Could not download the mod file! Exit value: " + exitValue));
                 }
             })
             .thenApplyAsync(t -> Paths.get(aswgConfig.getSteamCmdPath())
