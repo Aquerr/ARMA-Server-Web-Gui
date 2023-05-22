@@ -1,7 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
 import org.springframework.http.codec.multipart.FilePart;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.InstalledMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;

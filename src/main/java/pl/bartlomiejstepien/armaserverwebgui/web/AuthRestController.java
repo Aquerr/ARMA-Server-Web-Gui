@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.UserProfile;
+import pl.bartlomiejstepien.armaserverwebgui.application.model.UserProfile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import reactor.core.publisher.Mono;
 

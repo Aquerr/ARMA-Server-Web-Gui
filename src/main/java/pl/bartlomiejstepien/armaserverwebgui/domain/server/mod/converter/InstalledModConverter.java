@@ -1,7 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter;
 
 import org.springframework.stereotype.Component;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.InstalledMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 
 @Component

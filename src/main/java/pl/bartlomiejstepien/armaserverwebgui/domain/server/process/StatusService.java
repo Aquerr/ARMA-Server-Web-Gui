@@ -1,7 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.process;
 
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ServerStatus;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
 
 import java.util.List;
 

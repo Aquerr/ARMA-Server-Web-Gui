@@ -35,14 +35,14 @@ public class LoggingRestController
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
-    private pl.bartlomiejstepien.armaserverwebgui.domain.model.LoggingProperties toDomainModel(LoggingProperties loggingProperties)
+    private pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.model.LoggingProperties toDomainModel(LoggingProperties loggingProperties)
     {
-        return pl.bartlomiejstepien.armaserverwebgui.domain.model.LoggingProperties.builder()
+        return pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.model.LoggingProperties.builder()
                 .logFile(loggingProperties.getLogFile())
                 .build();
     }
 
-    private LoggingProperties toViewResponse(pl.bartlomiejstepien.armaserverwebgui.domain.model.LoggingProperties loggingProperties)
+    private LoggingProperties toViewResponse(pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.model.LoggingProperties loggingProperties)
     {
         return LoggingProperties.builder()
                 .logFile(loggingProperties.getLogFile())

@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.bartlomiejstepien.armaserverwebgui.IntegrationTest;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.LoggingProperties;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.model.LoggingProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.LoggingService;
 
 import static org.mockito.BDDMockito.given;

@@ -8,12 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.codec.multipart.FilePart;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.mission.MissionStorage;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionStorage;
 
 import java.io.IOException;
 import java.util.Collections;

@@ -1,6 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.user;
 
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.UserProfile;
+import pl.bartlomiejstepien.armaserverwebgui.application.model.UserProfile;
 
 public interface UserService
 {

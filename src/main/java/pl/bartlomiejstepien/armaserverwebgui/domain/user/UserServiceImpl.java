@@ -5,8 +5,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.security.JwtService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.AppUser;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.UserProfile;
+import pl.bartlomiejstepien.armaserverwebgui.application.model.AppUser;
+import pl.bartlomiejstepien.armaserverwebgui.application.model.UserProfile;
 
 import java.time.OffsetDateTime;
 import java.util.List;

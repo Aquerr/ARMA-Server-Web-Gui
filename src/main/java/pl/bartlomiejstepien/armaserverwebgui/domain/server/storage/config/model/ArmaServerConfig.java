@@ -1,8 +1,8 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model;
 
 import lombok.Data;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.CfgProperty;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.util.cfg.type.PropertyType;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgProperty;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
 
 import java.util.ArrayList;
 import java.util.HashMap;

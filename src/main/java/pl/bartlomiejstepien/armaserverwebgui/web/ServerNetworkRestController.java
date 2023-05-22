@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.NetworkProperties;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.NetworkProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.ServerNetworkService;
 import reactor.core.publisher.Mono;
 

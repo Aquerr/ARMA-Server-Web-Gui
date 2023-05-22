@@ -1,7 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.InstalledMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

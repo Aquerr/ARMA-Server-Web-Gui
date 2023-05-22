@@ -1,6 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.logging;
 
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.LoggingProperties;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.model.LoggingProperties;
 
 public interface LoggingService
 {

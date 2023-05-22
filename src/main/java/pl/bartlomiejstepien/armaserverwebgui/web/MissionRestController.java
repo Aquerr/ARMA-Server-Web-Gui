@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mission;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.MissionFileValidator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.web.exception.NotAllowedFileTypeException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.Missions;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.MissionService;
 import reactor.core.publisher.Mono;
 

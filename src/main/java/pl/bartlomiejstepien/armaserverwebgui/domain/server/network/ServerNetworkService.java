@@ -1,6 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.network;
 
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.NetworkProperties;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.NetworkProperties;
 
 public interface ServerNetworkService
 {
