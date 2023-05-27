@@ -51,7 +51,8 @@ public class SecurityConfig
                     })
                     .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                     .formLogin().disable()
-                    .httpBasic().authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED)).disable()
+                    .httpBasic().authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED))
+                    .and()
                     .cors().and()
                     .csrf().disable();
             return http.build();
