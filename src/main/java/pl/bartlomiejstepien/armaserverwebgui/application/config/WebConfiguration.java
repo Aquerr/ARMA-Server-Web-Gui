@@ -27,6 +27,7 @@ public class WebConfiguration implements WebFluxConfigurer
     {
         Logbook logbook = Logbook.builder()
                 .bodyFilter(jsonPath("$.password").replace("XXX"))
+                .bodyFilter(jsonPath("$.publishedFileDetails").delete())
                 .correlationId(new DefaultCorrelationId())
                 .sink(new DefaultSink(
                         new FastJsonHttpLogFormatter(),
