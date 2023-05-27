@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WorkshopMod} from '../../../model/workshop.model';
 import {WorkshopService} from "../../../service/workshop.service";
 import {ServerModsService} from "../../../service/server-mods.service";
@@ -9,14 +9,22 @@ import {MaskService} from "../../../service/mask.service";
   templateUrl: './workshop-item.component.html',
   styleUrls: ['./workshop-item.component.css']
 })
-export class WorkshopItemComponent {
+export class WorkshopItemComponent implements OnInit {
   @Input() workshopMod!: WorkshopMod;
   @Input() canInstall: boolean = false;
   @Output() onModInstallDelete = new EventEmitter<any>();
 
+  spinnerVisible: boolean = false;
+
   constructor(private workshopService: WorkshopService,
               private serverModsService: ServerModsService,
               private maskService: MaskService) {
+  }
+
+  ngOnInit(): void {
+    if (this.workshopMod.isBeingInstalled) {
+      this.showSpinner(true);
+    }
   }
 
   prepareModDescription(description: string | undefined) {
@@ -43,13 +51,11 @@ export class WorkshopItemComponent {
     return text.substring(0, text.lastIndexOf(separator, maxLen));
   }
 
-  protected readonly undefined = undefined;
-
   installMod(mod: WorkshopMod) {
-    this.maskService.show();
+    mod.isBeingInstalled = true;
+    this.showSpinner(true);
     this.workshopService.installMod(mod.fileId, mod.title).subscribe(response => {
       console.log("install complete");
-      this.maskService.hide();
       this.onModInstallDelete.emit();
     });
   }
@@ -60,5 +66,12 @@ export class WorkshopItemComponent {
       this.maskService.hide();
       this.onModInstallDelete.emit();
     });
+  }
+
+  showSpinner(value: boolean) {
+    setTimeout(() => {
+      console.log("Setting spinnerVisible to = " + value);
+      this.spinnerVisible = value;
+    }, 2000);
   }
 }

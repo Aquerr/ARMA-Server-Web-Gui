@@ -6,32 +6,33 @@
       <input matInput [formControl]="searchBoxControl" (keydown)="onSearchBoxKeyDown($event)">
     </mat-form-field>
   </div>
-  <div class="workshop-list">
+  <div class="workshop">
     <h1>Workshop mods</h1>
-    <app-workshop-item *ngFor="let workshopMod of workshopMods"
-                       [workshopMod]="workshopMod"
-                       [canInstall]="canInstall(workshopMod)"
-                       (onModInstallDelete)="onModInstallDelete($event)"
-                       class="workshop-list-item">
-    </app-workshop-item>
-    <div style="position: relative">
-      <ngx-spinner name="workshop-mods" [fullScreen]="false" color="#4634b7" size="medium" type="cog"></ngx-spinner>
-    </div>
-    <div>
-      <button class="float-end" mat-flat-button color="primary" (click)="nextPage()">Next Page</button>
+    <div class="workshop-list">
+      <app-workshop-item *ngFor="let workshopMod of workshopMods"
+                         [workshopMod]="workshopMod"
+                         [canInstall]="canInstall(workshopMod)"
+                         (onModInstallDelete)="onModInstallDelete($event)"
+                         class="workshop-list-item">
+      </app-workshop-item>
+      <div>
+        <button class="float-end" mat-flat-button color="primary" (click)="nextPage()">Next Page</button>
+      </div>
     </div>
   </div>
   <hr>
-  <div class="subscribed-workshop-list">
+  <div class="installed-mods">
     <h1>Installed mods</h1>
-    <app-workshop-item *ngFor="let installedWorkshopMod of installedWorkshopMods"
-                       [workshopMod]="installedWorkshopMod"
-                       [canInstall]="false"
-                       (onModInstallDelete)="onModInstallDelete($event)"
-                       class="workshop-list-item">
-    </app-workshop-item>
-    <div *ngIf="installedWorkshopMods.length == 0">
-      <span>No workshop items are installed. :(</span>
+    <div class="installed-mods-list">
+      <app-workshop-item *ngFor="let installedWorkshopMod of installedWorkshopMods"
+                         [workshopMod]="installedWorkshopMod"
+                         [canInstall]="false"
+                         (onModInstallDelete)="onModInstallDelete($event)"
+                         class="workshop-list-item">
+      </app-workshop-item>
+      <div *ngIf="installedWorkshopMods.length == 0">
+        <span>No workshop items are installed. :(</span>
+      </div>
     </div>
   </div>
 </div>

@@ -9,7 +9,14 @@
     <p>
         {{prepareModDescription(workshopMod.description)}}
     </p>
+    <div *ngIf="!workshopMod.isBeingInstalled">
       <button *ngIf="canInstall" mat-flat-button color="primary" (click)="installMod(workshopMod)">Install</button>
       <button *ngIf="!canInstall" mat-flat-button color="accent" (click)="deleteMod(workshopMod)">Delete</button>
+    </div>
+    <div *ngIf="workshopMod.isBeingInstalled" style="position: relative; width: 30px; height: 30px; margin-left: 10px;">
+      <ngx-spinner [name]="workshopMod.title" [fullScreen]="false" color="#4634b7" type="cog" bdColor="#fff" size="default" [showSpinner]="spinnerVisible">
+        <p style="padding-top: 80px;">Installing...</p>
+      </ngx-spinner>
+    </div>
   </div>
 </div>

@@ -3,7 +3,7 @@
   flex-direction: column;
 }
 
-.subscribed-workshop-list {
+.installed-mods-list {
   display: flex;
   flex-direction: column;
 }

@@ -19,12 +19,19 @@ export interface WorkshopQueryResponse {
 
 export interface InstalledWorkshopItemsResponse {
   mods: WorkshopMod[];
+  modsUnderInstallation: WorkShopModInstallRequest[];
 }
 
-export interface WorkshopMod {
+export class WorkshopMod {
+  description: string = '';
+  fileId: number = 0;
+  isBeingInstalled: boolean = false;
+  modWorkshopUrl: string = '';
+  previewUrl: string = '';
+  title: string = '';
+}
+
+export interface WorkShopModInstallStatus {
   fileId: number;
-  title: string;
-  description: string;
-  previewUrl: string;
-  modWorkshopUrl: string;
+  status: number;
 }

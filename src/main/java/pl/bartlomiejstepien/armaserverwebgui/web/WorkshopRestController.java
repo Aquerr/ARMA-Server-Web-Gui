@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.util.List;
 
@@ -34,7 +36,26 @@ public class WorkshopRestController
     @GetMapping("/installed-items")
     public Mono<InstalledItemsResponse> getInstalledItems()
     {
-        return this.modService.getInstalledWorkshopMods().collectList().map(this::toInstalledItemsResponse);
+        return Mono.zip(
+                this.modService.getInstalledWorkshopMods().collectList(),
+                Mono.just(this.modService.getWorkShopModInstallRequests())
+        ).map(this::toInstalledItemsResponse);
+    }
+
+    private InstalledItemsResponse toInstalledItemsResponse(Tuple2<List<ArmaWorkshopMod>, List<WorkshopModInstallationRequest>> objects)
+    {
+        return new InstalledItemsResponse(objects.getT1(), toResponse(objects.getT2()));
+    }
+
+    private List<WorkShopModInstallRequest> toResponse(List<WorkshopModInstallationRequest> requests)
+    {
+        return requests.stream().map(request ->
+        {
+            WorkShopModInstallRequest apiResponse = new WorkShopModInstallRequest();
+            apiResponse.setFileId(request.getFileId());
+            apiResponse.setModName(request.getTitle());
+            return apiResponse;
+        }).toList();
     }
 
     @PostMapping("/install")
@@ -42,11 +63,6 @@ public class WorkshopRestController
     {
         return this.modService.installModFromWorkshop(request.getFileId(), request.getModName())
                 .thenReturn(new WorkShopModInstallResponse(request.getFileId()));
-    }
-
-    private InstalledItemsResponse toInstalledItemsResponse(List<ArmaWorkshopMod> armaWorkshopMods)
-    {
-        return new InstalledItemsResponse(armaWorkshopMods);
     }
 
     private WorkshopQueryParams toWorkshopQueryParams(WorkshopQueryRequest request)
@@ -74,6 +90,7 @@ public class WorkshopRestController
     public static class InstalledItemsResponse
     {
         List<ArmaWorkshopMod> mods;
+        List<WorkShopModInstallRequest> modsUnderInstallation;
     }
 
     @Data

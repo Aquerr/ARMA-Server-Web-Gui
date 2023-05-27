@@ -7,6 +7,10 @@
   width: 200px;
   height: 200px;
   object-fit: contain;
+  text-align: center;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .workshop-item-card {

@@ -71,7 +71,7 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "arma-web-gui:build",
-            "proxyConfig": "proxy.config.js"
+            "proxyConfig": "proxy.config.json"
           },
           "configurations": {
             "production": {

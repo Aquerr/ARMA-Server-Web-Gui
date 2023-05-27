@@ -4,6 +4,7 @@ import org.springframework.http.codec.multipart.FilePart;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -18,6 +19,8 @@ public interface ModService
     ModsView getModsView();
 
     Mono<InstalledMod> installModFromWorkshop(long fileId, String modName);
+
+    List<WorkshopModInstallationRequest> getWorkShopModInstallRequests();
 
     Mono<InstalledMod> saveToDB(InstalledMod installedMod);
 

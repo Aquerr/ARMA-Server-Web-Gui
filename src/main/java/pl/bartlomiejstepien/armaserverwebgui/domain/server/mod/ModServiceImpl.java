@@ -11,11 +11,10 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.InstalledModConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 import reactor.core.publisher.Flux;
@@ -23,7 +22,6 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +40,7 @@ public class ModServiceImpl implements ModService
     private final ASWGConfig aswgConfig;
     private final InstalledModConverter installedModConverter;
     private final SteamService steamService;
+    private final WorkShopModInstallerService workShopModInstallerService;
 
     @Override
     public Mono<InstalledMod> saveModFile(FilePart multipartFile)
@@ -62,17 +61,14 @@ public class ModServiceImpl implements ModService
     @Override
     public Mono<InstalledMod> installModFromWorkshop(long fileId, String modName)
     {
-        try
-        {
-            Path steamCmdModFolderPath = this.steamService.downloadModFromWorkshop(fileId);
-            Path modDirectoryPath = this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()), modName);
-            return saveModInDatabase(modDirectoryPath);
-        }
-        catch (CouldNotDownloadWorkshopModException e)
-        {
-            return Mono.error(new CouldNotInstallWorkshopModException(format("Could not install workshop mod with id = %s, name = %s", fileId, modName), e));
-        }
+        workShopModInstallerService.queueWorkshopModInstallation(new WorkshopModInstallationRequest(fileId, modName));
+        return Mono.empty();
+    }
 
+    @Override
+    public List<WorkshopModInstallationRequest> getWorkShopModInstallRequests()
+    {
+        return workShopModInstallerService.getWorkShopModInstallRequests();
     }
 
     @Transactional
