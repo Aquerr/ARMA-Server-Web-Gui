@@ -52,7 +52,7 @@ public class SteamServiceImpl implements SteamService
 
     @Override
     public ArmaWorkshopQueryResponse queryWorkshopMods(WorkshopQueryParams params) {
-        WorkShopQueryResponse workShopQueryResponse = steamWebApiClient.getWorkshopWebApiClient().queryFiles(WorkShopQueryFilesRequest.builder()
+        WorkShopQueryResponse workShopQueryResponse = steamWebApiClient.getSteamPublishedFileWebApiClient().queryFiles(WorkShopQueryFilesRequest.builder()
                 .appId(ARMA_APP_ID)
                 .cursor(StringUtils.hasText(params.getCursor()) ? params.getCursor() : "*")
                 .numPerPage(10)
