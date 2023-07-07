@@ -135,24 +135,35 @@ export class ModsComponent implements OnInit, OnDestroy {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       let movedMod = event.previousContainer.data[event.previousIndex];
+      let currentIndex: number;
       if (event.previousContainer.id == 'enabled-mods-list') {
-        this.enabledMods.forEach((value, index) => {
-          if (value == movedMod) this.enabledMods.splice(index, 1);
-        });
-        this.disabledMods.push(movedMod);
+        this.removeModFromList(this.enabledMods, movedMod);
+        this.disabledMods = this.addModToListAndSort(this.disabledMods, movedMod);
+        currentIndex = this.disabledMods.findIndex(mod => mod.name === movedMod.name);
       } else {
-        this.disabledMods.forEach((value, index) => {
-          if (value == movedMod) this.disabledMods.splice(index, 1);
-        });
-        this.enabledMods.push(movedMod);
+        this.removeModFromList(this.disabledMods, movedMod);
+        this.enabledMods = this.addModToListAndSort(this.enabledMods, movedMod);
+        currentIndex = this.enabledMods.findIndex(mod => mod.name === movedMod.name);
       }
 
+      // Update view drag drop list
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex,
+        currentIndex,
       );
     }
+  }
+
+  private removeModFromList(list: Mod[], mod: Mod) {
+    list.forEach((value, index) => {
+      if (value == mod) list.splice(index, 1);
+    });
+  }
+
+  private addModToListAndSort(list: Mod[], mod: Mod): Mod[] {
+    list.push(mod);
+    return list.sort((a, b) => a.name.localeCompare(b.name));
   }
 }

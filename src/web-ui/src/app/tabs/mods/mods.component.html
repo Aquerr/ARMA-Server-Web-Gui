@@ -12,7 +12,7 @@
           cdkDropList
           [cdkDropListData]="filteredDisabledMods"
           class="list"
-          [cdkDropListSortingDisabled]="false"
+          [cdkDropListSortingDisabled]="true"
           (cdkDropListDropped)="onModItemDragDrop($event)">
           <div class="list-item-container" *ngFor="let mod of filteredDisabledMods" cdkDrag>
             <div style="flex: 72%">
@@ -37,7 +37,7 @@
           cdkDropList
           [cdkDropListData]="filteredEnabledMods"
           class="list"
-          [cdkDropListSortingDisabled]="false"
+          [cdkDropListSortingDisabled]="true"
           (cdkDropListDropped)="onModItemDragDrop($event)">
           <div class="list-item-container" *ngFor="let mod of filteredEnabledMods" cdkDrag>
             <div style="flex: 72%">
