@@ -110,8 +110,8 @@ export class ModsComponent implements OnInit, OnDestroy {
     this.modService.getInstalledMods().subscribe(modsResponse => {
       this.disabledMods = modsResponse.disabledMods;
       this.enabledMods = modsResponse.enabledMods;
-      this.filteredDisabledMods = [...this.disabledMods];
-      this.filteredEnabledMods = [...this.enabledMods];
+      this.filteredDisabledMods = [...this.disabledMods].sort((a, b) => a.name.localeCompare(b.name));
+      this.filteredEnabledMods = [...this.enabledMods].sort((a, b) => a.name.localeCompare(b.name));
       this.maskService.hide();
     });
   }
@@ -135,15 +135,13 @@ export class ModsComponent implements OnInit, OnDestroy {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       let movedMod = event.previousContainer.data[event.previousIndex];
-      let currentIndex: number;
+      // let currentIndex: number;
       if (event.previousContainer.id == 'enabled-mods-list') {
         this.removeModFromList(this.enabledMods, movedMod);
-        this.disabledMods = this.addModToListAndSort(this.disabledMods, movedMod);
-        currentIndex = this.disabledMods.findIndex(mod => mod.name === movedMod.name);
+        this.disabledMods.push(movedMod);
       } else {
         this.removeModFromList(this.disabledMods, movedMod);
-        this.enabledMods = this.addModToListAndSort(this.enabledMods, movedMod);
-        currentIndex = this.enabledMods.findIndex(mod => mod.name === movedMod.name);
+        this.enabledMods.push(movedMod);
       }
 
       // Update view drag drop list
@@ -151,8 +149,11 @@ export class ModsComponent implements OnInit, OnDestroy {
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        currentIndex,
+        event.currentIndex,
       );
+
+      this.sortModList(this.filteredDisabledMods);
+      this.sortModList(this.filteredEnabledMods);
     }
   }
 
@@ -162,8 +163,7 @@ export class ModsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private addModToListAndSort(list: Mod[], mod: Mod): Mod[] {
-    list.push(mod);
-    return list.sort((a, b) => a.name.localeCompare(b.name));
+  private sortModList(list: Mod[]) {
+    list.sort((a, b) => a.name.localeCompare(b.name));
   }
 }
