@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.11</version>
+        <version>3.1.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pl.bartlomiejstepien</groupId>
@@ -17,13 +17,10 @@
     
     <properties>
         <java.version>17</java.version>
-        <logbook.version>2.14.0</logbook.version>
+        <logbook.version>3.1.0</logbook.version>
         <steam-condenser.version>1.3.9</steam-condenser.version>
         <jjwt.version>0.11.5</jjwt.version>
-        <zip4j.version>2.11.1</zip4j.version>
-
-        <!-- Tests -->
-        <assertj.version>3.23.1</assertj.version>
+        <zip4j.version>2.11.5</zip4j.version>
 
         <!-- Front -->
         <node.version>v18.16.0</node.version>
@@ -48,6 +45,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -109,6 +112,16 @@
             <groupId>com.github.koraktor</groupId>
             <artifactId>steam-condenser</artifactId>
             <version>${steam-condenser.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-compress</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.Aquerr</groupId>

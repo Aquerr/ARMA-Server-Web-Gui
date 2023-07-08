@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
@@ -7,7 +8,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgConfigReader;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgConfigWriter;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.function.Supplier;
 

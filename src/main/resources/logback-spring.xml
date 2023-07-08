@@ -23,7 +23,7 @@
         <file>arma-server.log</file>
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
-            <charset>${FILE_LOG_PATTERN}</charset>
+            <charset>${FILE_LOG_CHARSET}</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>arma-server-%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
