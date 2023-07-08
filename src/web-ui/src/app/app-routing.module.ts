@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {inject, NgModule} from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {GeneralComponent} from "./tabs/general/general.component";
 import {NetworkComponent} from "./tabs/network/network.component";
@@ -10,6 +10,7 @@ import {AuthService} from "./service/auth.service";
 import {SecurityComponent} from "./tabs/security/security.component";
 import {StatusComponent} from "./tabs/status/status.component";
 import {WorkshopComponent} from './tabs/workshop/workshop.component';
+import {WorkshopService} from "./service/workshop.service";
 
 const routes: Routes = [
   {path: '', redirectTo: '/status', pathMatch: "full"},
@@ -20,7 +21,10 @@ const routes: Routes = [
   {path: 'missions', component: MissionsComponent, canActivate: [AuthService]},
   {path: 'mods', component: ModsComponent, canActivate: [AuthService]},
   {path: 'logging', component: LoggingComponent, canActivate: [AuthService]},
-  {path: 'workshop', component: WorkshopComponent, canActivate: [AuthService]},
+  {path: 'workshop', component: WorkshopComponent,
+    canActivate: [() => inject(AuthService).isAuthenticated() && inject(WorkshopService).canUseWorkshop()],
+    canMatch: [() => inject(AuthService).isAuthenticated() && inject(WorkshopService).canUseWorkshop()]
+  },
   {path: 'login', component: LoginComponent},
   {path: '**', redirectTo: 'status'}
 ];

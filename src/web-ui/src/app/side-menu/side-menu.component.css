@@ -1,3 +1,7 @@
 .aswg-list-item {
   color: var(--aswg-primary-color);
 }
+
+.aswg-list-item-inactive {
+  color: #9999a9 !important;
+}

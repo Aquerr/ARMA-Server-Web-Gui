@@ -27,6 +27,12 @@ public class WorkshopRestController
     private final SteamService steamService;
     private final ModService modService;
 
+    @GetMapping("/active")
+    public Mono<Boolean> canUseWorkshop()
+    {
+        return Mono.just(steamService.canUseWorkshop());
+    }
+
     @PostMapping("/query")
     public Mono<ArmaWorkshopQueryResponse> queryWorkshop(@RequestBody WorkshopQueryRequest request)
     {

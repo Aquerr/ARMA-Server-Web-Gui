@@ -31,7 +31,7 @@ export class AuthService implements CanActivate {
   isAuthenticated(): boolean {
     let user = sessionStorage.getItem("username");
     let token = sessionStorage.getItem("auth-token");
-    return !(user === null) && !(token === null);
+    return !(user == null) && !(token == null);
   }
 
   logout(): void {

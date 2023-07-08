@@ -170,6 +170,17 @@ public class SteamServiceImpl implements SteamService
         }
     }
 
+    @Override
+    public boolean canUseWorkshop()
+    {
+        return isSteamCmdInstalled();
+    }
+
+    private boolean isSteamCmdInstalled()
+    {
+        return !this.aswgConfig.getSteamCmdPath().isBlank() && Files.exists(Paths.get(this.aswgConfig.getSteamCmdPath()));
+    }
+
     private CompletableFuture<Path> downloadModThroughSteamCmd(SteamCmdWorkshopDownloadParameters parameters)
     {
         ProcessBuilder processBuilder = new ProcessBuilder();

@@ -17,6 +17,7 @@ export class WorkshopService {
   private readonly API_QUERY_WORKSHOP = `${API_BASE_URL}/workshop/query`;
   private readonly API_INSTALLED_ITEMS = `${API_BASE_URL}/workshop/installed-items`;
   private readonly API_INSTALL_MOD = `${API_BASE_URL}/workshop/install`;
+  private readonly API_WORKSHOP_ACTIVE = `${API_BASE_URL}/workshop/active`;
 
   constructor(private httpClient: HttpClient) { }
 
@@ -31,5 +32,9 @@ export class WorkshopService {
   installMod(fileId: number, modName: string): Observable<WorkShopModInstallResponse>  {
     const request = {fileId: fileId, modName: modName} as WorkShopModInstallRequest;
     return this.httpClient.post<WorkShopModInstallResponse>(this.API_INSTALL_MOD, request);
+  }
+
+  canUseWorkshop(): Observable<boolean> {
+    return this.httpClient.get<boolean>(this.API_WORKSHOP_ACTIVE);
   }
 }

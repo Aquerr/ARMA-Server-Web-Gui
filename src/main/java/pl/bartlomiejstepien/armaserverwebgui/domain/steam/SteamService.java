@@ -22,4 +22,6 @@ public interface SteamService
     ArmaWorkshopMod getWorkshopMod(long modId);
 
     Path downloadModFromWorkshop(long fileId) throws CouldNotDownloadWorkshopModException;
+
+    boolean canUseWorkshop();
 }
