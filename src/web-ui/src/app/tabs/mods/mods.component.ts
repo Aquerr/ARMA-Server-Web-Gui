@@ -128,6 +128,8 @@ export class ModsComponent implements OnInit, OnDestroy {
   private filterMods(searchPhrase: string) {
     this.filteredEnabledMods = this.enabledMods.filter(mod => mod.name.toLowerCase().includes(searchPhrase.toLowerCase()));
     this.filteredDisabledMods = this.disabledMods.filter(mod => mod.name.toLowerCase().includes(searchPhrase.toLowerCase()));
+    this.sortModList(this.filteredEnabledMods);
+    this.sortModList(this.filteredDisabledMods);
   }
 
   onModItemDragDrop(event: CdkDragDrop<Mod[]>) {
