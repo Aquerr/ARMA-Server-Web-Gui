@@ -16,7 +16,7 @@ public interface ModService
 {
     Mono<InstalledMod> saveModFile(FilePart multipartFile);
 
-    ModsView getModsView();
+    Mono<ModsView> getModsView();
 
     Mono<InstalledMod> installModFromWorkshop(long fileId, String modName);
 

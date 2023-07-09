@@ -29,8 +29,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
-
 @Service
 @AllArgsConstructor
 public class ModServiceImpl implements ModService
@@ -92,33 +90,9 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public ModsView getModsView()
+    public Mono<ModsView> getModsView()
     {
-        List<InstalledMod> installedMods = getInstalledModsFromFileSystem();
-        Set<ModDir> enabledModDirs = this.aswgConfig.getActiveModDirs();
-
-        ModsView modsView = new ModsView();
-        Set<ModView> disabledModViews = installedMods.stream()
-                .filter(installedMod -> enabledModDirs.stream().noneMatch(modDir -> installedMod.getModDirectoryName().equals(modDir.getDirName())))
-                .map(installedMod -> new ModView(installedMod.getName(), false))
-                .collect(Collectors.toSet());
-
-        Set<ModView> enabledModViews = new HashSet<>();
-        for (final ModDir modDir : enabledModDirs)
-        {
-            final InstalledMod installedActiveMod = installedMods.stream()
-                    .filter(mod -> modDir.getDirName().equals(mod.getModDirectoryName()))
-                    .findFirst()
-                    .orElse(null);
-
-            if (installedActiveMod == null)
-                continue;
-            enabledModViews.add(new ModView(installedActiveMod.getName(), modDir.isServerMod()));
-        }
-
-        modsView.setDisabledMods(disabledModViews);
-        modsView.setEnabledMods(enabledModViews);
-        return modsView;
+        return getInstalledMods().collectList().map(this::toModsView);
     }
 
     @Override
@@ -186,5 +160,33 @@ public class ModServiceImpl implements ModService
         InstalledMod installedMod = installedModBuilder.build();
 
         return installedModRepository.save(installedMod);
+    }
+
+    private ModsView toModsView(List<InstalledMod> installedMods)
+    {
+        Set<ModDir> enabledModDirs = this.aswgConfig.getActiveModDirs();
+
+        ModsView modsView = new ModsView();
+        Set<ModView> disabledModViews = installedMods.stream()
+                .filter(installedMod -> enabledModDirs.stream().noneMatch(modDir -> installedMod.getModDirectoryName().equals(modDir.getDirName())))
+                .map(installedMod -> new ModView(installedMod.getName(), false, installedMod.getPreviewUrl()))
+                .collect(Collectors.toSet());
+
+        Set<ModView> enabledModViews = new HashSet<>();
+        for (final ModDir modDir : enabledModDirs)
+        {
+            final InstalledMod installedActiveMod = installedMods.stream()
+                    .filter(mod -> modDir.getDirName().equals(mod.getModDirectoryName()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (installedActiveMod == null)
+                continue;
+            enabledModViews.add(new ModView(installedActiveMod.getName(), modDir.isServerMod(), installedActiveMod.getPreviewUrl()));
+        }
+
+        modsView.setDisabledMods(disabledModViews);
+        modsView.setEnabledMods(enabledModViews);
+        return modsView;
     }
 }

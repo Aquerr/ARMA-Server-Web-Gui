@@ -4,13 +4,20 @@
       {{mod.name}}
     </mat-expansion-panel-header>
     <div style="width: 100%; display: flex; flex-direction: row;">
-      <div class="text-center" style="flex: 14%">
-        <mat-checkbox [checked]="mod.serverMod" (change)="mod.serverMod = !mod.serverMod">Server Mod</mat-checkbox>
+      <div class="image-wrapper">
+        <img [src]="mod.previewUrl" alt="No Image">
       </div>
-      <div class="text-center" style="flex: 14%">
-        <button mat-icon-button (click)="showModDeleteConfirmationDialog(mod.name)">
-          <mat-icon>delete</mat-icon>
-        </button>
+      <div style="display: flex; flex: 28%; flex-flow: column;">
+        <div style="display: flex">
+          <div class="text-center" style="flex: 14%">
+            <mat-checkbox [checked]="mod.serverMod" (change)="mod.serverMod = !mod.serverMod">Server Mod</mat-checkbox>
+          </div>
+          <div class="text-center" style="flex: 14%">
+            <button mat-icon-button (click)="showModDeleteConfirmationDialog(mod.name)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </mat-expansion-panel>
