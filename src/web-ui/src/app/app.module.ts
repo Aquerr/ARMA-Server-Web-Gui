@@ -52,6 +52,7 @@ import {
 import {WorkshopComponent} from './tabs/workshop/workshop.component';
 import {NgOptimizedImage} from '@angular/common';
 import {WorkshopItemComponent} from './tabs/workshop/workshop-item/workshop-item.component';
+import {ModListItemComponent} from "./tabs/mods/mod-list-item/mod-list-item.component";
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import {WorkshopItemComponent} from './tabs/workshop/workshop-item/workshop-item
     ModUploadSnackBarComponent,
     MissionUploadSnackBarComponent,
     WorkshopComponent,
-    WorkshopItemComponent
+    WorkshopItemComponent,
+    ModListItemComponent
   ],
   imports: [
     BrowserModule,

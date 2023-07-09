@@ -1,0 +1,11 @@
+<div style="flex: 72%">
+  {{mod.name}}
+</div>
+<div class="text-center" style="flex: 14%">
+  <mat-checkbox [checked]="mod.serverMod" (change)="mod.serverMod = !mod.serverMod">Server Mod</mat-checkbox>
+</div>
+<div class="text-center" style="flex: 14%">
+  <button mat-icon-button (click)="showModDeleteConfirmationDialog(mod.name)">
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>

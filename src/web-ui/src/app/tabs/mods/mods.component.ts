@@ -1,10 +1,8 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import { MaskService } from 'src/app/service/mask.service';
 import { ServerModsService } from 'src/app/service/server-mods.service';
-import { ModUploadButtonComponent } from './mod-upload-button/mod-upload-button.component';
 import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
-import {ModDeleteConfirmDialogComponent} from "./mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
 import {NotificationService} from "../../service/notification.service";
 import {Mod} from "../../model/mod.model";
 import {FormControl} from "@angular/forms";
@@ -19,8 +17,6 @@ import {ModUploadService} from "./service/mod-upload.service";
   styleUrls: ['./mods.component.css']
 })
 export class ModsComponent implements OnInit, OnDestroy {
-
-  @ViewChild('uploadMod') uploadModComponent!: ModUploadButtonComponent;
 
   reloadModsDataSubject: Subject<any>;
   reloadModsDataSubscription!: Subscription;
@@ -67,28 +63,6 @@ export class ModsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.reloadModsDataSubscription.unsubscribe();
     this.modUploadSubscription.unsubscribe();
-  }
-
-  showModDeleteConfirmationDialog(modName: string) {
-    const dialogRef = this.matDialog.open(ModDeleteConfirmDialogComponent, {
-      width: '250px',
-      enterAnimationDuration: '200ms',
-      exitAnimationDuration: '200ms'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.deleteMod(modName);
-      }
-    });
-  }
-
-  deleteMod(modName: string) {
-    this.maskService.show();
-    this.modService.deleteMod(modName).subscribe(response => {
-      this.maskService.hide();
-      this.reloadModsDataSubject.next(null);
-    });
   }
 
   onFileDropped(file: File) {
@@ -167,5 +141,9 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   private sortModList(list: Mod[]) {
     list.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  onModDelete(mod: Mod) {
+    this.reloadModsDataSubject.next(null);
   }
 }
