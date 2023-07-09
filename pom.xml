@@ -23,7 +23,7 @@
         <zip4j.version>2.11.5</zip4j.version>
 
         <!-- Front -->
-        <node.version>v18.16.0</node.version>
+        <node.version>v18.16.1</node.version>
     </properties>
 
     <repositories>
