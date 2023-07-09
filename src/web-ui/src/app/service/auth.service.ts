@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {CanActivate, Router} from "@angular/router";
+import { Router } from "@angular/router";
 import {map, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {API_BASE_URL} from "../../environments/environment";
@@ -8,7 +8,7 @@ import {JwtTokenResponse} from "../model/jwt.model";
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService implements CanActivate {
+export class AuthService  {
 
   constructor(private router: Router,
               private httpClient: HttpClient) {
