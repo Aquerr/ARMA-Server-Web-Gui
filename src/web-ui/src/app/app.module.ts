@@ -53,6 +53,7 @@ import {WorkshopComponent} from './tabs/workshop/workshop.component';
 import {NgOptimizedImage} from '@angular/common';
 import {WorkshopItemComponent} from './tabs/workshop/workshop-item/workshop-item.component';
 import {ModListItemComponent} from "./tabs/mods/mod-list-item/mod-list-item.component";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @NgModule({
   declarations: [
@@ -106,7 +107,8 @@ import {ModListItemComponent} from "./tabs/mods/mod-list-item/mod-list-item.comp
     MatSelectModule,
     MatProgressBarModule,
     MatSnackBarModule,
-    NgOptimizedImage
+    NgOptimizedImage,
+    MatExpansionModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}
