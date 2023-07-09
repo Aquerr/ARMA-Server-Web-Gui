@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -15,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.HttpStatusServerEntryPoint;
+import org.springframework.security.web.server.authentication.ServerAuthenticationEntryPointFailureHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
@@ -36,6 +38,7 @@ public class SecurityConfig
         {
             AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(jwtAuthenticationManager);
             authenticationWebFilter.setServerAuthenticationConverter(jwtServerAuthenticationConverter);
+            authenticationWebFilter.setAuthenticationFailureHandler(new ServerAuthenticationEntryPointFailureHandler(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED)));
 
             http.authorizeExchange(auths -> {
                         auths.pathMatchers("/api/v1/auth").permitAll();
@@ -50,11 +53,13 @@ public class SecurityConfig
                         auths.pathMatchers("/*").permitAll();
                     })
                     .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-                    .formLogin().disable()
-                    .httpBasic().authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED))
-                    .and()
-                    .cors().and()
-                    .csrf().disable();
+                    .formLogin((ServerHttpSecurity.FormLoginSpec::disable))
+                    .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+                    .exceptionHandling(exceptionHandlingSpec -> {
+                        exceptionHandlingSpec.authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED));
+                    })
+                    .cors(Customizer.withDefaults())
+                    .csrf(ServerHttpSecurity.CsrfSpec::disable);
             return http.build();
         }
 
@@ -94,14 +99,14 @@ public class SecurityConfig
         @Bean
         public SecurityWebFilterChain filterChain(ServerHttpSecurity http)
         {
-            http.cors()
-                .and()
-                .headers().frameOptions().disable()
-                .and()
+            http.cors(Customizer.withDefaults())
+                .headers(headerSpec -> {
+                    headerSpec.frameOptions(ServerHttpSecurity.HeaderSpec.FrameOptionsSpec::disable);
+                })
                 .authorizeExchange(authorizeExchangeSpec -> {
                     authorizeExchangeSpec.pathMatchers("/**").permitAll();
                 })
-                .csrf().disable();
+                .csrf(ServerHttpSecurity.CsrfSpec::disable);
             return http.build();
         }
 
