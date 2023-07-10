@@ -39,6 +39,7 @@ public class ModServiceImpl implements ModService
     private final InstalledModConverter installedModConverter;
     private final SteamService steamService;
     private final WorkShopModInstallerService workShopModInstallerService;
+    private final ModKeyService modKeyService;
 
     @Override
     public Mono<InstalledMod> saveModFile(FilePart multipartFile)
@@ -111,22 +112,26 @@ public class ModServiceImpl implements ModService
     public void saveEnabledModList(Set<ModView> mods)
     {
         List<InstalledMod> installedMods = getInstalledModsFromFileSystem();
-        Set<ModDir> activeModDirs = mods.stream()
-                .map(modView -> {
-                    InstalledMod installedMod = installedMods.stream()
-                            .filter(mod -> mod.getName().equals(modView.getName()))
-                            .findFirst()
-                            .orElse(null);
-                    if (installedMod != null)
-                    {
-                        return new ModDir(installedMod.getModDirectoryName(), modView.isServerMod());
-                    }
-                    return null;
-                })
+        Set<InstalledMod> installedActiveMods = mods.stream()
+                .map(modView -> installedMods.stream()
+                    .filter(mod -> mod.getName().equals(modView.getName()))
+                    .findFirst()
+                    .orElse(null))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
+        Set<ModDir> activeModDirs = installedActiveMods.stream()
+                .map(installedMod -> new ModDir(installedMod.getModDirectoryName(), mods.stream()
+                        .filter(modView -> modView.getName().equals(installedMod.getName()))
+                        .findFirst()
+                        .map(ModView::isServerMod)
+                        .orElse(false))
+                )
+                .collect(Collectors.toSet());
+
         this.aswgConfig.setActiveModDirs(activeModDirs);
+        modKeyService.clearServerKeys();
+        installedActiveMods.forEach(modKeyService::copyKeysForMod);
     }
 
     @Override

@@ -1,11 +1,13 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
-import java.nio.file.Path;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
 
 public interface ModKeyService
 {
 
-    void copyKeysForMod(Path modFolder);
+    void copyKeysForMod(InstalledMod installedMod);
 
-    void deleteKeysForMod(Path modFolder);
+    void deleteKeysForMod(InstalledMod installedMod);
+
+    void clearServerKeys();
 }
