@@ -1,18 +1,18 @@
 <mat-accordion>
-  <mat-expansion-panel hideToggle style="border-radius: 0px;">
+  <mat-expansion-panel hideToggle class="mod-list-item-expansion-panel">
     <mat-expansion-panel-header>
       {{mod.name}}
     </mat-expansion-panel-header>
-    <div style="width: 100%; display: flex; flex-direction: row;">
+    <div class="mod-list-item-inner-panel">
       <div class="image-wrapper">
         <img [src]="mod.previewUrl" alt="No Image">
       </div>
-      <div style="display: flex; flex: 28%; flex-flow: column;">
-        <div style="display: flex">
-          <div class="text-center" style="flex: 14%">
+      <div class="mod-list-item-inner-panel-actions">
+        <div style="display: flex;">
+          <div class="text-center" class="mod-list-item-inner-panel-actions-action">
             <mat-checkbox [checked]="mod.serverMod" (change)="mod.serverMod = !mod.serverMod">Server Mod</mat-checkbox>
           </div>
-          <div class="text-center" style="flex: 14%">
+          <div class="text-center" class="mod-list-item-inner-panel-actions-action">
             <button mat-icon-button (click)="showModDeleteConfirmationDialog(mod.name)">
               <mat-icon>delete</mat-icon>
             </button>

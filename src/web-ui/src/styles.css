@@ -148,3 +148,7 @@ hr {
   text-decoration: none;
   white-space: nowrap;
 }
+
+.text-center {
+  text-align: center;
+}

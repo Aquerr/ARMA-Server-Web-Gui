@@ -12,3 +12,26 @@
   justify-content: space-evenly;
   align-items: center;
 }
+
+.mod-list-item-expansion-panel {
+  border-radius: 0;
+}
+
+.mod-list-item-inner-panel {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.mod-list-item-inner-panel-actions {
+  display: flex;
+  flex: 28%;
+  flex-flow: column;
+}
+
+.mod-list-item-inner-panel-actions-action {
+  flex: 14%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
