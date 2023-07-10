@@ -15,6 +15,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotUpdateArmaServerException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
@@ -114,15 +115,20 @@ public class SteamServiceImpl implements SteamService
     }
 
     @Override
-    public boolean updateArma()
+    public boolean updateArma() throws CouldNotUpdateArmaServerException
     {
         String steamCmdPath = this.aswgConfig.getSteamCmdPath();
         if (!StringUtils.hasText(steamCmdPath))
             throw new SteamCmdPathNotSetException();
-
-        performArmaUpdate(steamCmdPath, this.aswgConfig.getServerDirectoryPath());
-
-        return false;
+        try
+        {
+            performArmaUpdate(steamCmdPath, this.aswgConfig.getServerDirectoryPath()).join();
+            return true;
+        }
+        catch (CompletionException e)
+        {
+            throw new CouldNotUpdateArmaServerException(e.getMessage(), e);
+        }
     }
 
     @Override
@@ -176,7 +182,8 @@ public class SteamServiceImpl implements SteamService
         return isSteamCmdInstalled();
     }
 
-    private boolean isSteamCmdInstalled()
+    @Override
+    public boolean isSteamCmdInstalled()
     {
         return !this.aswgConfig.getSteamCmdPath().isBlank() && Files.exists(Paths.get(this.aswgConfig.getSteamCmdPath()));
     }
@@ -251,28 +258,42 @@ public class SteamServiceImpl implements SteamService
                 .resolve(String.valueOf(fileId));
     }
 
-    private void performArmaUpdate(String steamCmdPath, String serverDirectoryPath)
+    private CompletableFuture<?> performArmaUpdate(String steamCmdPath, String serverDirectoryPath)
     {
         //TODO: We need to inform GUI about the installation status!
         //TODO: Currently, not working... anonymous user cannot download arma server files.
         ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.directory(Paths.get(steamCmdPath).getParent().toFile());
         processBuilder.command(steamCmdPath,
                 "+force_install_dir", serverDirectoryPath,
                 "+login", "anonymous",
                 "+app_update", "233780", "validate",
                 "+quit");
 
+        Process process = null;
         try
         {
-            Process process = processBuilder.start();
-            process.onExit().thenAccept(p -> {
-                log.info("Arma server update completed!");
-            });
+            log.info("Updating arma...");
+            process = processBuilder.start();
+            log.info("Update started...");
         }
-        catch (IOException e)
+        catch (Exception e)
         {
-            e.printStackTrace();
+            return CompletableFuture.failedFuture(e);
         }
+        return process.onExit().thenApplyAsync(p -> {
+            int exitValue = p.exitValue();
+            log.info("Exit value: " + exitValue);
+            if (exitValue == 0)
+            {
+                log.info("Arma update complete!");
+                return CompletableFuture.completedFuture("Ok!");
+            }
+            else
+            {
+                return CompletableFuture.failedFuture(new RuntimeException("Could not update ARMA server! Exit value: " + exitValue));
+            }
+        });
     }
 
     private ArmaServerPlayer mapToArmaServerPlayer(SteamPlayer steamPlayer)

@@ -11,6 +11,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaSer
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotUpdateArmaServerException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -69,6 +70,7 @@ public class StatusServiceImpl implements StatusService
             throw new ServerIsAlreadyRunningException("Server is already running!");
 
         serverStartScheduled = true;
+        tryUpdateArmaServer();
 
         ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
 
@@ -99,6 +101,19 @@ public class StatusServiceImpl implements StatusService
         });
         this.serverThread.setDaemon(true);
         this.serverThread.start();
+    }
+
+    private void tryUpdateArmaServer()
+    {
+        try
+        {
+            if (steamService.isSteamCmdInstalled())
+                steamService.updateArma();
+        }
+        catch (CouldNotUpdateArmaServerException e)
+        {
+            log.warn("Could not update ArmA server!", e);
+        }
     }
 
     @Override
