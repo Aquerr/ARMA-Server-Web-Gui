@@ -14,7 +14,7 @@
 }
 
 .mod-list-item-expansion-panel {
-  border-radius: 0;
+  border-radius: 0 !important;
 }
 
 .mod-list-item-inner-panel {
