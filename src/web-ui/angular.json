@@ -27,11 +27,9 @@
               "node_modules/ngx-spinner/animations/ball-clip-rotate-multiple.css",
               "node_modules/ngx-spinner/animations/cog.css",
               "src/custom-theme.scss",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
           },
           "configurations": {
