@@ -74,7 +74,8 @@ public class StatusServiceImpl implements StatusService
 
         serverStartScheduled = true;
 
-        tryUpdateArmaServer();
+        //TODO: Temporary commented out... as automatic update gives errors :(
+//        tryUpdateArmaServer();
 
         ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
 

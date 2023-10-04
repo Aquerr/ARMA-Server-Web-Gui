@@ -30,4 +30,15 @@ public class SteamCmdAppUpdateParameters
                 "+quit"
         );
     }
+
+    @Override
+    public String toString()
+    {
+        return "SteamCmdAppUpdateParameters{" +
+                "appId=" + appId +
+                ", serverDirectoryPath='" + serverDirectoryPath + '\'' +
+                ", steamCmdPath='" + steamCmdPath + '\'' +
+                ", steamUsername='" + steamUsername + '\'' +
+                ", steamPassword='XXX'}";
+    }
 }
