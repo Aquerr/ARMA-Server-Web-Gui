@@ -13,6 +13,7 @@ public class ServerStatus
         OFFLINE,
         ONLINE,
         RUNNING_BUT_NOT_DETECTED_BY_STEAM,
-        STARTING
+        STARTING,
+        UPDATING
     }
 }

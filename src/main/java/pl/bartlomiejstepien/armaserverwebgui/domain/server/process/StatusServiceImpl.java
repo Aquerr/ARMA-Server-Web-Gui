@@ -38,6 +38,7 @@ public class StatusServiceImpl implements StatusService
     private final ASWGConfig aswgConfig;
 
     private boolean serverStartScheduled;
+    private boolean isUpdating;
 
     private Thread serverThread;
     private Thread ioServerThread;
@@ -46,9 +47,11 @@ public class StatusServiceImpl implements StatusService
     @Override
     public ServerStatus getServerStatus()
     {
-        if (serverStartScheduled)
+        if (isUpdating)
+            return ServerStatus.of(ServerStatus.Status.UPDATING, "Updating");
+        else if (serverStartScheduled)
             return ServerStatus.of(ServerStatus.Status.STARTING, "Starting");
-        if (this.steamService.isServerRunning())
+        else if (this.steamService.isServerRunning())
             return ServerStatus.of(ServerStatus.Status.ONLINE, "Online");
         long pid;
         try
@@ -70,6 +73,7 @@ public class StatusServiceImpl implements StatusService
             throw new ServerIsAlreadyRunningException("Server is already running!");
 
         serverStartScheduled = true;
+
         tryUpdateArmaServer();
 
         ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
@@ -105,15 +109,19 @@ public class StatusServiceImpl implements StatusService
 
     private void tryUpdateArmaServer()
     {
+        this.isUpdating = true;
         try
         {
             if (steamService.isSteamCmdInstalled())
+            {
                 steamService.updateArma();
+            }
         }
         catch (CouldNotUpdateArmaServerException e)
         {
             log.warn("Could not update ArmA server!", e);
         }
+        this.isUpdating = false;
     }
 
     @Override

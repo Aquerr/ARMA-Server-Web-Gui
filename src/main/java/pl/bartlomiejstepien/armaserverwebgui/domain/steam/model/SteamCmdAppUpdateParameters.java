@@ -7,10 +7,10 @@ import java.util.List;
 
 @Getter
 @Builder
-public class SteamCmdWorkshopDownloadParameters
+public class SteamCmdAppUpdateParameters
 {
-    private long fileId;
     private int appId;
+    private String serverDirectoryPath;
     private String steamCmdPath;
     private String steamUsername;
     private String steamPassword;
@@ -19,24 +19,15 @@ public class SteamCmdWorkshopDownloadParameters
     {
         return List.of(
                 steamCmdPath,
+                "+force_install_dir",
+                serverDirectoryPath,
                 "+login",
                 steamUsername,
                 steamPassword,
-                "+workshop_download_item",
+                "+app_update",
                 String.valueOf(appId),
-                String.valueOf(fileId),
+                "validate",
                 "+quit"
         );
-    }
-
-    @Override
-    public String toString()
-    {
-        return "SteamCmdWorkshopDownloadParameters{" +
-                "fileId=" + fileId +
-                ", appId=" + appId +
-                ", steamCmdPath='" + steamCmdPath + '\'' +
-                ", steamUsername='" + steamUsername + '\'' +
-                ", steamPassword='XXX'}";
     }
 }

@@ -19,11 +19,11 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotUpda
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamCmdAppUpdateParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamCmdWorkshopDownloadParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -122,7 +122,13 @@ public class SteamServiceImpl implements SteamService
             throw new SteamCmdPathNotSetException();
         try
         {
-            performArmaUpdate(steamCmdPath, this.aswgConfig.getServerDirectoryPath()).join();
+            performArmaUpdate(SteamCmdAppUpdateParameters.builder()
+                    .appId(ARMA_APP_ID)
+                    .serverDirectoryPath(this.aswgConfig.getServerDirectoryPath())
+                    .steamCmdPath(steamCmdPath)
+                    .steamUsername(this.aswgConfig.getSteamCmdUsername())
+                    .steamPassword(this.aswgConfig.getSteamCmdPassword())
+                    .build()).join();
             return true;
         }
         catch (CompletionException e)
@@ -192,7 +198,7 @@ public class SteamServiceImpl implements SteamService
     {
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(Paths.get(parameters.getSteamCmdPath()).getParent().toFile());
-        processBuilder.command(parameters.asList());
+        processBuilder.command(parameters.asExecutionParameters());
         Process process = null;
         try
         {
@@ -258,22 +264,15 @@ public class SteamServiceImpl implements SteamService
                 .resolve(String.valueOf(fileId));
     }
 
-    private CompletableFuture<?> performArmaUpdate(String steamCmdPath, String serverDirectoryPath)
+    private CompletableFuture<?> performArmaUpdate(SteamCmdAppUpdateParameters parameters)
     {
-        //TODO: We need to inform GUI about the installation status!
-        //TODO: Currently, not working... anonymous user cannot download arma server files.
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.directory(Paths.get(steamCmdPath).getParent().toFile());
-        processBuilder.command(steamCmdPath,
-                "+force_install_dir", serverDirectoryPath,
-                "+login", "anonymous",
-                "+app_update", "233780", "validate",
-                "+quit");
-
-        Process process = null;
+        processBuilder.directory(Paths.get(parameters.getSteamCmdPath()).getParent().toFile());
+        processBuilder.command(parameters.asExecutionParameters());
+        Process process;
         try
         {
-            log.info("Updating arma...");
+            log.info("Starting ARMA update process with params: {}", parameters);
             process = processBuilder.start();
             log.info("Update started...");
         }
