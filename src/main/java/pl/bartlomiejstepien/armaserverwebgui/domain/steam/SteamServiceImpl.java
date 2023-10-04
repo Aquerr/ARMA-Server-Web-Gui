@@ -199,7 +199,7 @@ public class SteamServiceImpl implements SteamService
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(Paths.get(parameters.getSteamCmdPath()).getParent().toFile());
         processBuilder.command(parameters.asExecutionParameters());
-        Process process = null;
+        Process process;
         try
         {
             log.info("Starting workshop mod download process with params: {}", parameters);
@@ -274,15 +274,18 @@ public class SteamServiceImpl implements SteamService
         {
             log.info("Starting ARMA update process with params: {}", parameters);
             process = processBuilder.start();
+            handleDownloadProcessInputOutput(process);
             log.info("Update started...");
         }
         catch (Exception e)
         {
+            closeDownloadProcessInputOutput();
             return CompletableFuture.failedFuture(e);
         }
         return process.onExit().thenApplyAsync(p -> {
             int exitValue = p.exitValue();
             log.info("Exit value: " + exitValue);
+            closeDownloadProcessInputOutput();
             if (exitValue == 0)
             {
                 log.info("Arma update complete!");
