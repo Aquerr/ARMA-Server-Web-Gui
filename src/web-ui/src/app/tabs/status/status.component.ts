@@ -16,6 +16,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   playerList: ArmaServerPlayer[] = [];
 
   refreshHandleId: number = 0;
+  performUpdate: boolean = false;
 
   constructor(private maskService: MaskService,
               private notificationService: NotificationService,
@@ -51,16 +52,17 @@ export class StatusComponent implements OnInit, OnDestroy {
 
   toggleServer() {
     if (this.isServerOffline()) {
-      this.startServer();
+      this.startServer(this.performUpdate);
     } else {
       this.stopServer();
     }
     this.refreshServerStatus();
   }
 
-  private startServer() {
+  private startServer(performUpdate: boolean) {
     this.serverStatusService.toggleServer({
-      requestedStatus: Status.ONLINE
+      requestedStatus: Status.ONLINE,
+      performUpdate: performUpdate
     }).subscribe(response => {
       this.notificationService.infoNotification("Server is starting...", "Information");
     });
@@ -68,7 +70,8 @@ export class StatusComponent implements OnInit, OnDestroy {
 
   private stopServer() {
     this.serverStatusService.toggleServer({
-      requestedStatus: Status.OFFLINE
+      requestedStatus: Status.OFFLINE,
+      performUpdate: false
     }).subscribe(response => {
       this.notificationService.infoNotification("Server is stopping...", "Information");
     });

@@ -9,7 +9,7 @@ public interface StatusService
 {
     ServerStatus getServerStatus();
 
-    void startServer();
+    void startServer(boolean performUpdate);
 
     void stopServer();
 

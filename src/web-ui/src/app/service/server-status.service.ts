@@ -25,7 +25,8 @@ export class ServerStatusService {
 }
 
 export interface ToggleServerRequest {
-  requestedStatus: Status
+  requestedStatus: Status;
+  performUpdate: boolean;
 }
 
 export interface ServerStatusResponse {

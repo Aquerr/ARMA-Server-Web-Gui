@@ -67,15 +67,17 @@ public class StatusServiceImpl implements StatusService
     }
 
     @Override
-    public void startServer()
+    public void startServer(boolean performUpdate)
     {
         if (getServerStatus().getStatus() != ServerStatus.Status.OFFLINE || serverStartScheduled)
             throw new ServerIsAlreadyRunningException("Server is already running!");
 
         serverStartScheduled = true;
 
-        //TODO: Temporary commented out... as automatic update gives errors :(
-//        tryUpdateArmaServer();
+        if (performUpdate)
+        {
+            tryUpdateArmaServer();
+        }
 
         ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
 

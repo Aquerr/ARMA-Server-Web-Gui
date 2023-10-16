@@ -20,6 +20,18 @@
                    size="large"
                    color="#fff"></ngx-spinner>
     </button>
-    <button *ngIf="canToggleServer()" mat-flat-button color="primary" (click)="toggleServer()">{{isServerOffline() ? 'START' : 'STOP'}}</button>
+    <div style="display: flex; flex-direction: column; width: 10%">
+      <div *ngIf="canToggleServer()">
+        <div *ngIf="isServerOffline(); else serverOfflineBlock">
+          <button mat-flat-button color="primary" (click)="toggleServer()">{{'START'}}</button>
+          <mat-checkbox [checked]="performUpdate">Perform Arma update during start?</mat-checkbox>
+        </div>
+        <ng-template #serverOfflineBlock>
+          <div>
+            <button mat-flat-button color="primary" (click)="toggleServer()">{{'STOP'}}</button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
   </div>
 </div>

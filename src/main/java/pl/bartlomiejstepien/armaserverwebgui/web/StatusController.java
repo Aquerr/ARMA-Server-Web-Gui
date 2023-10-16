@@ -42,7 +42,7 @@ public class StatusController
                     if (request.getRequestedStatus() == ServerStatus.Status.OFFLINE)
                         this.statusService.stopServer();
                     else
-                        this.statusService.startServer();
+                        this.statusService.startServer(toggleStatusRequest.isPerformUpdate());
                 })
                 .then();
     }
@@ -58,6 +58,7 @@ public class StatusController
     private static class ToggleStatusRequest
     {
         ServerStatus.Status requestedStatus;
+        boolean performUpdate;
     }
 
     @Value
