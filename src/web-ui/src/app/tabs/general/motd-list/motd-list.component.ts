@@ -8,8 +8,7 @@ import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 })
 export class MotdListComponent implements OnInit {
 
-  motd: string[] = [];
-  motdLine: string = "";
+  motd: MotdItem[] = [];
   motdInterval: number = 5;
 
   constructor() { }
@@ -24,11 +23,36 @@ export class MotdListComponent implements OnInit {
   }
 
   addNewMotdLine() {
-    this.motd.push(this.motdLine);
-    this.motdLine = "";
+    this.motd.push(new MotdItem(""));
+  }
+
+  pupulateModtList(motdList: string[]) {
+    this.motd = motdList.map(message => new MotdItem(message));
   }
 
   onReorderList(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.motd, event.previousIndex, event.currentIndex);
+  }
+
+  onMotdItemDoubleClick(motdItem: MotdItem) {
+    motdItem.editing = !motdItem.editing;
+  }
+
+  getMotdMessages() {
+    return this.motd.map(item => item.message);
+  }
+
+  onItemUpdate(motdItem: MotdItem) {
+    console.log("Item updated!");
+    motdItem.editing = false;
+  }
+}
+
+class MotdItem {
+  message: string = "";
+  editing: boolean = false;
+
+  constructor(message: string) {
+    this.message = message;
   }
 }

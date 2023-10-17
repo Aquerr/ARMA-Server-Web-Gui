@@ -6,6 +6,7 @@
 
 .motd-list {
   width: 100%;
+  margin-bottom: 1rem;
 }
 
 .motd-list-item {
@@ -13,7 +14,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   color: whitesmoke;
-  background-color: darkslateblue;
+  background-color: #3f51b5;
   justify-content: space-between;
   padding: 0 12px 0px;
   cursor: grab;

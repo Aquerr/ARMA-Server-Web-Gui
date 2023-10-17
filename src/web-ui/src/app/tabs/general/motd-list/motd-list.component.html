@@ -1,17 +1,22 @@
 <h4>Messages of the day</h4>
 <section class="motd-section">
   <div class="motd-list" cdkDropList (cdkDropListDropped)="onReorderList($event)">
-    <div cdkDrag class="motd-list-item" role="listitem" *ngFor="let motdLine of motd; let i = index">
+    <div cdkDrag class="motd-list-item" role="listitem" *ngFor="let motdItem of motd; let i = index" (dblclick)="onMotdItemDoubleClick(motdItem)">
       <div class="motd-list-item-number">{{(i + 1)}}</div>
-      <div class="motd-list-item-message">{{motdLine}}</div>
+      <div class="motd-list-item-message" *ngIf="motdItem.editing; else notEditing">
+        <form (ngSubmit)="onItemUpdate(motdItem)">
+          <input style="width: 100%;" [(ngModel)]="motdItem.message" [ngModelOptions]="{standalone: true}">
+        </form>
+      </div>
+      <ng-template #notEditing>
+        <div class="motd-list-item-message">
+          {{motdItem.message}}
+        </div>
+      </ng-template>
       <span class="motd-list-item-delete" (click)="deleteMotdLite(i)">&#10006;</span>
     </div>
     <div>
-      <mat-form-field class="motd-line-input">
-        <mat-label>New message</mat-label>
-        <input name="motd-line" [(ngModel)]="motdLine" matInput type="text">
-      </mat-form-field>
-      <button mat-flat-button class="float-end" color="primary" (click)="addNewMotdLine()">+</button>
+      <button mat-stroked-button color="primary" style="width: 100%;" (click)="addNewMotdLine()">+</button>
     </div>
   </div>
   <mat-form-field>
