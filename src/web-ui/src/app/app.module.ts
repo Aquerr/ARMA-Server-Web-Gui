@@ -13,24 +13,24 @@ import { SideMenuComponent } from './side-menu/side-menu.component';
 import { LoginComponent } from './login/login.component';
 import {RouterModule} from "@angular/router";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatLegacyListModule as MatListModule} from "@angular/material/legacy-list";
+import {MatListModule} from "@angular/material/list";
 import {MatRippleModule} from "@angular/material/core";
 import { AswgSpinnerComponent } from './aswg-spinner/aswg-spinner.component';
 import {NgxSpinnerModule} from "ngx-spinner";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AswgHttpInterceptor} from "./interceptors/aswg-http.interceptor";
-import {MatLegacyFormFieldModule as MatFormFieldModule} from "@angular/material/legacy-form-field";
+import {MatFormFieldModule} from "@angular/material/form-field";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatLegacyInputModule as MatInputModule} from "@angular/material/legacy-input";
-import {MatLegacyButtonModule as MatButtonModule} from "@angular/material/legacy-button";
+import {MatInputModule} from "@angular/material/input";
+import {MatButtonModule} from "@angular/material/button";
 import {ToastrModule} from "ngx-toastr";
 import {MatIconModule} from "@angular/material/icon";
 import { MissionUploadButtonComponent } from './tabs/missions/upload-mission/mission-upload-button.component';
 import { DragAndDropFileDirective } from './common-ui/directive/drag-and-drop-file.directive';
-import {MatLegacyTableModule as MatTableModule} from "@angular/material/legacy-table";
-import {MatLegacyCheckboxModule as MatCheckboxModule} from "@angular/material/legacy-checkbox";
+import {MatTableModule} from "@angular/material/table";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 import { SecurityComponent } from './tabs/security/security.component';
-import { MatLegacyDialogModule as MatDialogModule} from "@angular/material/legacy-dialog";
+import {MatDialogModule} from "@angular/material/dialog";
 import { MissionDeleteConfirmDialogComponent } from './tabs/missions/mission-delete-confirm-dialog/mission-delete-confirm-dialog.component';
 import { MotdListComponent } from './tabs/general/motd-list/motd-list.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -40,12 +40,12 @@ import { ModUploadButtonComponent } from './tabs/mods/mod-upload-button/mod-uplo
 import {
   ModDeleteConfirmDialogComponent
 } from "./tabs/mods/mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
-import {MatLegacySelectModule as MatSelectModule} from "@angular/material/legacy-select";
+import {MatSelectModule} from "@angular/material/select";
 import { MissionModifyDialogComponent } from './tabs/missions/mission-modify-dialog/mission-modify-dialog.component';
 import { MissionParameterComponent } from './tabs/missions/mission-modify-dialog/mission-parameter/mission-parameter.component';
-import {MatLegacyProgressBarModule as MatProgressBarModule} from "@angular/material/legacy-progress-bar";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 import { ModUploadSnackBarComponent } from './tabs/mods/mod-upload-snack-bar/mod-upload-snack-bar.component';
-import {MatLegacySnackBarModule as MatSnackBarModule} from "@angular/material/legacy-snack-bar";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {
   MissionUploadSnackBarComponent
 } from "./tabs/missions/mission-upload-snack-bar/mission-upload-snack-bar.component";

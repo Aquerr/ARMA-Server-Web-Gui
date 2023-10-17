@@ -2,12 +2,12 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import { MaskService } from 'src/app/service/mask.service';
 import { ServerModsService } from 'src/app/service/server-mods.service';
-import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {NotificationService} from "../../service/notification.service";
 import {Mod} from "../../model/mod.model";
 import {FormControl} from "@angular/forms";
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
-import {MatLegacySnackBar as MatSnackBar, MatLegacySnackBarRef as MatSnackBarRef} from "@angular/material/legacy-snack-bar";
+import {MatSnackBar, MatSnackBarRef} from "@angular/material/snack-bar";
 import {ModUploadSnackBarComponent} from "./mod-upload-snack-bar/mod-upload-snack-bar.component";
 import {ModUploadService} from "./service/mod-upload.service";
 

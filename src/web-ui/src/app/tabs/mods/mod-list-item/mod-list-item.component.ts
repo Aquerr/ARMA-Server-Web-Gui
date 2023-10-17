@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {Mod} from "../../../model/mod.model";
 import {ModDeleteConfirmDialogComponent} from "../mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
-import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {MaskService} from "../../../service/mask.service";
 import {ServerModsService} from "../../../service/server-mods.service";
 
