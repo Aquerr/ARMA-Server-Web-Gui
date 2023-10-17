@@ -14,22 +14,19 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
   eventSource;
 
   constructor(private serverLoggingService: ServerLoggingService) {
-    this.eventSource = new EventSource(`${API_BASE_URL}/logging/logs-sse`);
+    this.eventSource = new EventSource(`${API_BASE_URL}/logging/logs-sse`, {
+      withCredentials: true
+    });
   }
 
 
   ngOnInit(): void {
     this.pollServerLogs();
-    // this.setupServerLogPolling();
   }
 
   ngOnDestroy(): void {
     this.eventSource.close();
   }
-
-  // private setupServerLogPolling() {
-  //   setInterval(this.pollServerLogs, 5000);
-  // }
 
   private pollServerLogs() {
     this.serverLoggingService.pollServerLogsSse(this.eventSource).subscribe(message => {

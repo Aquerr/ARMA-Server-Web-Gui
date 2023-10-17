@@ -15,7 +15,7 @@ import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerIsAlreadyRunningException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.StatusService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ProcessService;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -25,12 +25,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatusController
 {
-    private final StatusService statusService;
+    private final ProcessService processService;
 
     @GetMapping
     public Mono<StatusResponse> getServerStatus()
     {
-        return Mono.just(new StatusResponse(statusService.getServerStatus(), statusService.getServerPlayers()));
+        return Mono.just(new StatusResponse(processService.getServerStatus(), processService.getServerPlayers()));
     }
 
     @PostMapping("/toggle")
@@ -40,9 +40,9 @@ public class StatusController
                 .doOnSuccess(request ->
                 {
                     if (request.getRequestedStatus() == ServerStatus.Status.OFFLINE)
-                        this.statusService.stopServer();
+                        this.processService.stopServer();
                     else
-                        this.statusService.startServer(toggleStatusRequest.isPerformUpdate());
+                        this.processService.startServer(toggleStatusRequest.isPerformUpdate());
                 })
                 .then();
     }

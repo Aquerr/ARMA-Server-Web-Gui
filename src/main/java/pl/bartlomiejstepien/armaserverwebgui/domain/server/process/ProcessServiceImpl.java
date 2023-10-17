@@ -29,7 +29,7 @@ import java.util.Scanner;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class StatusServiceImpl implements StatusService
+public class ProcessServiceImpl implements ProcessService
 {
     private static final Logger SERVER_LOGGER = LoggerFactory.getLogger("arma-server");
     private static final String PID_FILE_NAME = "arma_server.pid";

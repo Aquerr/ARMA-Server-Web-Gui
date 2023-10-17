@@ -6,7 +6,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerS
 
 import java.util.List;
 
-public interface StatusService
+public interface ProcessService
 {
     Publisher<String> getServerLogPublisher();
 

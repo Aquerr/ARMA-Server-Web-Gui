@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.LoggingService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.StatusService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ProcessService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
 public class LoggingRestController
 {
     private final LoggingService loggingService;
-    private final StatusService statusService;
+    private final ProcessService processService;
 
     @GetMapping("/properties")
     public Mono<LoggingProperties> getLoggingProperties()
@@ -42,7 +42,7 @@ public class LoggingRestController
     @GetMapping(value = "/logs-sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> getLogs()
     {
-        return Flux.from(this.statusService.getServerLogPublisher());
+        return Flux.from(this.processService.getServerLogPublisher());
     }
 
     private pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.model.LoggingProperties toDomainModel(LoggingProperties loggingProperties)
