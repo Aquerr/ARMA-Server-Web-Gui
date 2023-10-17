@@ -46,4 +46,8 @@ export class AuthService  {
     }
     return true;
   }
+
+  getAuthToken() {
+    return sessionStorage.getItem("auth-token");
+  }
 }

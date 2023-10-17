@@ -1,6 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ServerLoggingService} from "../../../service/server-logging.service";
 import {API_BASE_URL} from "../../../../environments/environment";
+import FetchEventSource from "fetch-event-source";
+import {AuthService} from "../../../service/auth.service";
 
 @Component({
   selector: 'app-server-console',
@@ -13,9 +15,13 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
 
   eventSource;
 
-  constructor(private serverLoggingService: ServerLoggingService) {
-    this.eventSource = new EventSource(`${API_BASE_URL}/logging/logs-sse`, {
-      withCredentials: true
+  constructor(private serverLoggingService: ServerLoggingService,
+              private authService: AuthService) {
+    const headers = new Headers();
+    headers.append("Authorization", authService.getAuthToken() || "");
+    this.eventSource = new FetchEventSource(`${API_BASE_URL}/logging/logs-sse`, {
+      withCredentials: true,
+      headers: headers
     });
   }
 
