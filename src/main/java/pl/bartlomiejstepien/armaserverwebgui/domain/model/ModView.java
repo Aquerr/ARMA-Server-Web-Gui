@@ -12,4 +12,5 @@ public class ModView
     private String name;
     private boolean serverMod;
     private String previewUrl;
+    private String workshopUrl;
 }

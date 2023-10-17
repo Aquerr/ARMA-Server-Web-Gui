@@ -5,6 +5,7 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModWorkshopUrlBuilder;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModDir;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
@@ -40,6 +41,7 @@ public class ModServiceImpl implements ModService
     private final SteamService steamService;
     private final WorkShopModInstallerService workShopModInstallerService;
     private final ModKeyService modKeyService;
+    private final ModWorkshopUrlBuilder modWorkshopUrlBuilder;
 
     @Override
     public Mono<InstalledMod> saveModFile(FilePart multipartFile)
@@ -174,7 +176,7 @@ public class ModServiceImpl implements ModService
         ModsView modsView = new ModsView();
         Set<ModView> disabledModViews = installedMods.stream()
                 .filter(installedMod -> enabledModDirs.stream().noneMatch(modDir -> installedMod.getModDirectoryName().equals(modDir.getDirName())))
-                .map(installedMod -> new ModView(installedMod.getName(), false, installedMod.getPreviewUrl()))
+                .map(installedMod -> new ModView(installedMod.getName(), false, installedMod.getPreviewUrl(), modWorkshopUrlBuilder.buildUrlForFileId(installedMod.getPublishedFileId())))
                 .collect(Collectors.toSet());
 
         Set<ModView> enabledModViews = new HashSet<>();
@@ -187,7 +189,7 @@ public class ModServiceImpl implements ModService
 
             if (installedActiveMod == null)
                 continue;
-            enabledModViews.add(new ModView(installedActiveMod.getName(), modDir.isServerMod(), installedActiveMod.getPreviewUrl()));
+            enabledModViews.add(new ModView(installedActiveMod.getName(), modDir.isServerMod(), installedActiveMod.getPreviewUrl(), modWorkshopUrlBuilder.buildUrlForFileId(installedActiveMod.getPublishedFileId())));
         }
 
         modsView.setDisabledMods(disabledModViews);

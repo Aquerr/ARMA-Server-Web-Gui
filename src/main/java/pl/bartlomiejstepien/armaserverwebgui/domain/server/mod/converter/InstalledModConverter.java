@@ -1,12 +1,16 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 
 @Component
+@AllArgsConstructor
 public class InstalledModConverter
 {
+    private final ModWorkshopUrlBuilder workshopUrlBuilder;
+
     public ArmaWorkshopMod convertToWorkshopMod(InstalledMod installedMod)
     {
         if (installedMod == null)
@@ -16,7 +20,7 @@ public class InstalledModConverter
                 .fileId(installedMod.getPublishedFileId())
                 .title(installedMod.getName())
                 .previewUrl(installedMod.getPreviewUrl())
-                .modWorkshopUrl("https://steamcommunity.com/sharedfiles/filedetails/?id=" + installedMod.getPublishedFileId())
+                .modWorkshopUrl(workshopUrlBuilder.buildUrlForFileId(installedMod.getPublishedFileId()))
             .build();
     }
 }
