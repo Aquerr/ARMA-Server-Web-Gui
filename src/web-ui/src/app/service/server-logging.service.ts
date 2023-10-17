@@ -19,6 +19,14 @@ export class ServerLoggingService {
   saveLoggingSectionData(loggingSectionDataRequest: SaveLoggingPropertiesRequest): Observable<any> {
     return this.httpClient.post(this.LOGGING_URL, loggingSectionDataRequest);
   }
+
+  pollServerLogsSse(eventSource: EventSource): Observable<string> {
+    return new Observable(observer => {
+      eventSource.onmessage = event => {
+        observer.next(event.data);
+      }
+    });
+  }
 }
 
 export interface LoggingProperties {

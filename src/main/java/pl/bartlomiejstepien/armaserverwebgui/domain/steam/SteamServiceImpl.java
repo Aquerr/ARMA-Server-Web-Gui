@@ -106,10 +106,9 @@ public class SteamServiceImpl implements SteamService
                     .map(this::mapToArmaServerPlayer)
                     .toList();
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            log.info("Could not get server players. Server seems to be offline.");
-            e.printStackTrace();
+            log.info("Could not get server players. Server seems to be offline. Reason: " + exception.getMessage());
             return Collections.emptyList();
         }
     }

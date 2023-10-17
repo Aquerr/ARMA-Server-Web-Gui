@@ -55,6 +55,7 @@ import {WorkshopItemComponent} from './tabs/workshop/workshop-item/workshop-item
 import {ModListItemComponent} from "./tabs/mods/mod-list-item/mod-list-item.component";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {PlayerListComponent} from "./tabs/status/player-list/player-list.component";
+import { ServerConsoleComponent } from './tabs/status/server-console/server-console.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import {PlayerListComponent} from "./tabs/status/player-list/player-list.compone
     WorkshopItemComponent,
     ModListItemComponent,
     PlayerListComponent,
-    PlayerListComponent
+    PlayerListComponent,
+    ServerConsoleComponent
   ],
   imports: [
     BrowserModule,

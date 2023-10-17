@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {ArmaServerPlayer} from "../../../model/arma-server-player.model";
 
 @Component({
@@ -9,5 +9,4 @@ import {ArmaServerPlayer} from "../../../model/arma-server-player.model";
 export class PlayerListComponent {
 
   playerList: ArmaServerPlayer[] = [];
-
 }

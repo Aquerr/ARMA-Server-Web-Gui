@@ -1,0 +1,8 @@
+.server-console {
+  background-color: #24292e;
+  min-height: 300px;
+  width: 100%;
+  color: darkgrey;
+  white-space: pre-line;
+  padding: 2px;
+}

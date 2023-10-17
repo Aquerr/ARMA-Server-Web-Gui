@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.process;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotUpdateArmaServerException;
+import reactor.core.publisher.Sinks;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -43,6 +45,14 @@ public class StatusServiceImpl implements StatusService
     private Thread serverThread;
     private Thread ioServerThread;
     private Thread ioServerErrorThread;
+
+    private final Sinks.Many<String> serverLogSink = Sinks.many().multicast().onBackpressureBuffer();
+
+    @Override
+    public Publisher<String> getServerLogPublisher()
+    {
+        return serverLogSink.asFlux();
+    }
 
     @Override
     public ServerStatus getServerStatus()
@@ -192,6 +202,7 @@ public class StatusServiceImpl implements StatusService
                 while ((line = reader.readLine()) != null) {
                     log.info(line);
                     SERVER_LOGGER.info(line);
+                    serverLogSink.tryEmitNext(line);
                 }
                 reader.close();
             } catch (final Exception e) {
@@ -209,6 +220,7 @@ public class StatusServiceImpl implements StatusService
                 while ((line = reader.readLine()) != null) {
                     log.info(line);
                     SERVER_LOGGER.info(line);
+                    serverLogSink.tryEmitNext(line);
                 }
                 reader.close();
             } catch (final Exception e) {
