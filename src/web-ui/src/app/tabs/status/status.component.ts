@@ -1,9 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MaskService} from "../../service/mask.service";
 import {ServerStatusService} from "../../service/server-status.service";
 import {ServerStatus, Status} from "./model/status.model";
 import {NotificationService} from "../../service/notification.service";
-import {ArmaServerPlayer} from '../../model/arma-server-player.model';
+import {PlayerListComponent} from "./player-list/player-list.component";
 
 @Component({
   selector: 'app-status',
@@ -12,8 +12,9 @@ import {ArmaServerPlayer} from '../../model/arma-server-player.model';
 })
 export class StatusComponent implements OnInit, OnDestroy {
 
+  @ViewChild('playerListComponent') playerListComponent!: PlayerListComponent;
+
   serverStatus: ServerStatus = {status: Status.OFFLINE, statusText: "Offline"};
-  playerList: ArmaServerPlayer[] = [];
 
   refreshHandleId: number = 0;
   performUpdate: boolean = false;
@@ -26,7 +27,7 @@ export class StatusComponent implements OnInit, OnDestroy {
     this.maskService.show();
     this.serverStatusService.getStatus().subscribe(response => {
       this.serverStatus = response.status;
-      this.playerList = response.playerList;
+      this.playerListComponent.playerList = response.playerList;
       this.maskService.hide();
     });
 
@@ -42,7 +43,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   refreshServerStatus() {
     this.serverStatusService.getStatus().subscribe(response => {
       this.serverStatus = response.status;
-      this.playerList = response.playerList;
+      this.playerListComponent.playerList = response.playerList;
     });
   }
 

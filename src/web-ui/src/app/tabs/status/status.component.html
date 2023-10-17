@@ -3,15 +3,6 @@
   <div>
     Status: <span [ngStyle]="isServerOffline() ? {'color': 'red'} : {'color': 'green'}">{{getServerStatus().statusText}}</span>
   </div>
-  <div>
-    <label for="player-list">Player list</label>
-    <mat-list id="player-list" role="list">
-      <mat-list-item *ngFor="let player of playerList">
-        <mat-icon matListItemIcon>person</mat-icon>
-        <div matListItemTitle>{{player.name}}</div>
-      </mat-list-item>
-    </mat-list>
-  </div>
   <div style="margin-top: 5px;">
     <button *ngIf="isServerStarting()" mat-flat-button color="primary">
       <ngx-spinner name="primary"
@@ -34,4 +25,5 @@
       </div>
     </div>
   </div>
+  <app-player-list #playerListComponent></app-player-list>
 </div>

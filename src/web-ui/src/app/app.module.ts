@@ -54,6 +54,7 @@ import {NgOptimizedImage} from '@angular/common';
 import {WorkshopItemComponent} from './tabs/workshop/workshop-item/workshop-item.component';
 import {ModListItemComponent} from "./tabs/mods/mod-list-item/mod-list-item.component";
 import {MatExpansionModule} from "@angular/material/expansion";
+import {PlayerListComponent} from "./tabs/status/player-list/player-list.component";
 
 @NgModule({
   declarations: [
@@ -82,7 +83,9 @@ import {MatExpansionModule} from "@angular/material/expansion";
     MissionUploadSnackBarComponent,
     WorkshopComponent,
     WorkshopItemComponent,
-    ModListItemComponent
+    ModListItemComponent,
+    PlayerListComponent,
+    PlayerListComponent
   ],
   imports: [
     BrowserModule,
