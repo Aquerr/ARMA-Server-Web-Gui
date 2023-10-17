@@ -18,7 +18,7 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
   constructor(private serverLoggingService: ServerLoggingService,
               private authService: AuthService) {
     const headers = new Headers();
-    headers.append("Authorization", authService.getAuthToken() || "");
+    headers.set("Authorization", "Bearer " + authService.getAuthToken() || "");
     this.eventSource = new FetchEventSource(`${API_BASE_URL}/logging/logs-sse`, {
       withCredentials: true,
       headers: headers
