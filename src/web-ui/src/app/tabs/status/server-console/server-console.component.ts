@@ -37,7 +37,7 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
   private pollServerLogs() {
     this.serverLoggingService.pollServerLogsSse(this.eventSource).subscribe(message => {
       console.log(message);
-      this.logs += message + "</br>";
+      this.logs += message + "\n";
     });
   }
 }

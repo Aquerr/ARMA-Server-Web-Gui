@@ -46,7 +46,7 @@ public class ModServiceImpl implements ModService
     @Override
     public Mono<InstalledMod> saveModFile(FilePart multipartFile)
     {
-        if(modStorage.doesModExists(multipartFile.filename()))
+        if(modStorage.doesModExists(multipartFile))
             throw new ModFileAlreadyExistsException();
 
         try

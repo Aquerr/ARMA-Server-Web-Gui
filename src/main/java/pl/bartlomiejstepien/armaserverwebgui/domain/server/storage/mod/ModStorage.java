@@ -12,7 +12,7 @@ public interface ModStorage {
 
     Mono<Path> save(FilePart multipartFile) throws IOException;
 
-    boolean doesModExists(String filename);
+    boolean doesModExists(FilePart filename);
 
     List<InstalledMod> getInstalledModsFromFileSystem();
 
