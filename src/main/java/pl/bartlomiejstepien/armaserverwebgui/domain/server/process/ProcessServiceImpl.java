@@ -46,7 +46,7 @@ public class ProcessServiceImpl implements ProcessService
     private Thread ioServerThread;
     private Thread ioServerErrorThread;
 
-    private final Sinks.Many<String> serverLogSink = Sinks.many().multicast().onBackpressureBuffer();
+    private final Sinks.Many<String> serverLogSink = Sinks.many().multicast().directAllOrNothing();
 
     @Override
     public Publisher<String> getServerLogPublisher()
