@@ -15,11 +15,6 @@ public class ModFolderNameFactory
         }
 
         modName = toLowerCaseWithUncerscores(modName);
-
-        if (modName.endsWith(".zip"))
-        {
-            modName = modName.substring(0, modName.lastIndexOf(".zip"));
-        }
         return modName;
     }
 
