@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ServerLoggingService} from "../../../service/server-logging.service";
 import {API_BASE_URL} from "../../../../environments/environment";
 import FetchEventSource from "fetch-event-source";
@@ -10,6 +10,8 @@ import {AuthService} from "../../../service/auth.service";
   styleUrls: ['./server-console.component.css']
 })
 export class ServerConsoleComponent implements OnInit, OnDestroy {
+
+  @ViewChild('console') private console!: ElementRef;
 
   logs = "";
 
@@ -38,6 +40,11 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
     this.serverLoggingService.pollServerLogsSse(this.eventSource).subscribe(message => {
       console.log(message);
       this.logs += message + "\n";
+      this.scrollConsoleToBottom();
     });
+  }
+
+  private scrollConsoleToBottom() {
+    this.console.nativeElement.scrollTop = this.console.nativeElement.scrollHeight;
   }
 }
