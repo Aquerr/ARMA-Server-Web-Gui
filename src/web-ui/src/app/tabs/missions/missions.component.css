@@ -68,11 +68,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
   }
   .mission-list-group {
     flex-direction: column;
-    width: 100%;
   }
   .missions-save-and-upload {
     display: flex;

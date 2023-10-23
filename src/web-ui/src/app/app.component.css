@@ -2,11 +2,29 @@
   padding: 10px;
 }
 
+.container-padding {
+  margin-top: 1.5rem
+}
+
+.router-section {
+  display: block;
+  width: 85%;
+}
+
 @media (max-width: 800px) {
+
   footer {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+  }
+
+  .container-padding {
+    margin-top: 0;
+  }
+
+  .router-section {
     width: 100%;
   }
 }

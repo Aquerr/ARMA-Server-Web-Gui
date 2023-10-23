@@ -37,7 +37,8 @@ mat-icon:hover {
 .theme-icon {
   display: grid;
   justify-items: right;
-  margin-right: 20px;
+  align-items: center;
+  margin-right: 10px;
 }
 
 .mobile-side-menu {
