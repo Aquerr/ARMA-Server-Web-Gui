@@ -183,6 +183,14 @@ input::placeholder {
   background-color: var(--aswg-input-bg-color) !important;
 }
 
+.mat-mdc-button .mdc-button__ripple {
+  background-color: var(--aswg-primary-color) !important;
+}
+
+.mat-mdc-button .mdc-button__label {
+  color: white !important;
+}
+
 body {
   height: 100%;
 }
