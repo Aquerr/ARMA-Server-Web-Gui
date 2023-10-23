@@ -1,10 +1,10 @@
-<div class="container mt-4">
+<div class="container container-padding">
   <app-header class="row mb-4" (changeThemeEmit)="changeTheme()" [darkMode]="isDarkMode()" [isMobile]="isMobile"></app-header>
   <div style="display: flex; flex-direction: row;">
     <div style="display: block; width: 15%; padding-right: 20px" *ngIf="!isMobile">
       <app-side-menu></app-side-menu>
     </div>
-    <div style="display: block; width: 85%">
+    <div class="router-section">
       <router-outlet></router-outlet>
     </div>
   </div>

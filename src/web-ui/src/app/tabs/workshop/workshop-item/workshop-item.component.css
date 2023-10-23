@@ -23,3 +23,18 @@
   box-shadow: 0 2px 1px -1px #444c56, 0 1px 1px 0 #444c56, 0 1px 3px 0 #444c56;
   overflow-y: hidden;
 }
+
+@media (max-width: 800px) {
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .workshop-item-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
