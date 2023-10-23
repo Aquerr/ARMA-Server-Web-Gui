@@ -27,4 +27,10 @@
   .router-section {
     width: 100%;
   }
+
+  .row {
+    width: 100%;
+    position: fixed;
+    z-index: 100;
+  }
 }
