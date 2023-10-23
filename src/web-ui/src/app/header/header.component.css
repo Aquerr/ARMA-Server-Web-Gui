@@ -26,7 +26,8 @@ mat-icon:hover {
 
 .container-mobile-fluid .navbar-brand {
   display: flex;
-  justify-items: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .hamburger-icon {

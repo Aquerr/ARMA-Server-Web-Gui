@@ -6,7 +6,7 @@
   footer {
     display: flex;
     align-items: center;
-    justify-content: right;
-    margin: 20px;
+    justify-content: center;
+    width: 100%;
   }
 }
