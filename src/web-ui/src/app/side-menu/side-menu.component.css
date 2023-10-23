@@ -3,5 +3,11 @@
 }
 
 .aswg-list-item-inactive {
-  color: #9999a9 !important;
+  color: #9999a9;
+}
+
+@media (max-width: 800px) {
+    ::ng-deep .mdc-list-item__primary-text {
+      color: white !important;
+    }
 }

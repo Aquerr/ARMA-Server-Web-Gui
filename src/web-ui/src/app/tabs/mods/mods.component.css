@@ -49,3 +49,17 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
+@media (max-width: 800px) {
+  .mod-list-group {
+    flex-direction: column;
+    width: 100%;
+    margin: auto;
+    justify-items: left;
+    align-items: center;
+  }
+  .mods-list {
+    display: flex;
+    flex-direction: column;
+  }
+}

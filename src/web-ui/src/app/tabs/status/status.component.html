@@ -1,4 +1,4 @@
-<div>
+<div class="container">
   <h1>Server Status</h1>
   <div>
     Status: <span [ngStyle]="isServerOffline() ? {'color': 'red'} : {'color': 'green'}">{{getServerStatus().statusText}}</span>

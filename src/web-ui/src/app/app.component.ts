@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {ThemeService} from './service/util/theme.service';
 
 @Component({
@@ -8,12 +8,14 @@ import {ThemeService} from './service/util/theme.service';
 })
 export class AppComponent implements OnInit {
   title = 'arma-web-gui';
+  isMobile: boolean = false;
 
   constructor(private themeService: ThemeService) {
   }
 
   ngOnInit() {
     this.themeService.setThemeOnAppInit();
+    this.isMobileView();
   }
 
   changeTheme() {
@@ -23,4 +25,9 @@ export class AppComponent implements OnInit {
   isDarkMode() {
     return this.themeService.isDarkMode();
   }
+
+  @HostListener('window:resize', ['$event'])
+    isMobileView() {
+      this.isMobile = window.innerWidth < 800;
+    }
 }
