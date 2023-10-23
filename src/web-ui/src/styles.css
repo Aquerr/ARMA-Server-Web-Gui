@@ -191,6 +191,10 @@ input::placeholder {
   color: white !important;
 }
 
+.mat-mdc-dialog-actions {
+  justify-content: center !important;
+}
+
 body {
   height: 100%;
 }

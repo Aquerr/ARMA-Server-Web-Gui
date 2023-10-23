@@ -9,7 +9,7 @@
   .list-item-container {
     padding: 20px 10px;
     border-bottom: solid 1px #444c56;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--aswg-bg-primary-font-color);
     display: flex;
     flex-direction: row;
     align-items: center;
