@@ -2,7 +2,8 @@
   .container {
     display: flex;
     flex-direction: column;
-    justify-items: left;
+    justify-content: center;
+    align-items: center;
     width: 100%;
   }
 }

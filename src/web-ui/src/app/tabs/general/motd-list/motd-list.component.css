@@ -65,3 +65,9 @@
 .example-list.cdk-drop-list-dragging .motd-list-item:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+@media (max-width: 800px) {
+  .motd-interval {
+    width: 100%;
+  }
+}

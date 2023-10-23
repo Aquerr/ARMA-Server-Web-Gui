@@ -51,6 +51,13 @@
 }
 
 @media (max-width: 800px) {
+  .app-mods-tab {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
   .mod-list-group {
     flex-direction: column;
     width: 100%;
@@ -61,5 +68,15 @@
   .mods-list {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    margin-left: 0!important;
+    min-height: 10rem;
+    min-width: 10rem;
+  }
+  .mods-save-and-upload {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    align-items: center;
   }
 }

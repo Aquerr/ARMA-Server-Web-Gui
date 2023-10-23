@@ -3,7 +3,7 @@
 }
 
 .container-fluid {
-  display:flex;
+  display: flex;
 }
 
 mat-icon {
@@ -17,7 +17,7 @@ mat-icon:hover {
 /* MOBILE */
 
 .container-mobile-fluid {
-  display:grid;
+  display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
   width: 100%;
@@ -29,10 +29,14 @@ mat-icon:hover {
   justify-items: center;
 }
 
+.hamburger-icon {
+  margin-left: 10px;
+}
+
 .theme-icon {
   display: grid;
   justify-items: right;
-  margin-right: 30px;
+  margin-right: 20px;
 }
 
 .mobile-side-menu {
