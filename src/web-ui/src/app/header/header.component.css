@@ -1,3 +1,15 @@
 .aswg-bg-blue {
   background-color: var(--aswg-primary-color);
 }
+
+.container-fluid {
+  display:flex;
+}
+
+mat-icon {
+  color: white;
+}
+
+mat-icon:hover {
+  cursor: pointer;
+}

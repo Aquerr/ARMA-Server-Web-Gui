@@ -56,6 +56,7 @@ import {ModListItemComponent} from "./tabs/mods/mod-list-item/mod-list-item.comp
 import {MatExpansionModule} from "@angular/material/expansion";
 import {PlayerListComponent} from "./tabs/status/player-list/player-list.component";
 import { ServerConsoleComponent } from './tabs/status/server-console/server-console.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -89,32 +90,33 @@ import { ServerConsoleComponent } from './tabs/status/server-console/server-cons
     PlayerListComponent,
     ServerConsoleComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    RouterModule,
-    BrowserAnimationsModule,
-    MatListModule,
-    MatRippleModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatDialogModule,
-    NgxSpinnerModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    DragDropModule,
-    ToastrModule.forRoot(),
-    MatSelectModule,
-    MatProgressBarModule,
-    MatSnackBarModule,
-    NgOptimizedImage,
-    MatExpansionModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        RouterModule,
+        BrowserAnimationsModule,
+        MatListModule,
+        MatRippleModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        NgxSpinnerModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        FormsModule,
+        DragDropModule,
+        ToastrModule.forRoot(),
+        MatSelectModule,
+        MatProgressBarModule,
+        MatSnackBarModule,
+        NgOptimizedImage,
+        MatExpansionModule,
+        MatTooltipModule
+    ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}
   ],

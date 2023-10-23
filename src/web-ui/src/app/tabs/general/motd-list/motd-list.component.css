@@ -14,14 +14,14 @@
   flex-direction: row;
   flex-wrap: wrap;
   color: whitesmoke;
-  background-color: #3f51b5;
+  background-color: var(--aswg-primary-color);
   justify-content: space-between;
   padding: 0 12px 0px;
   cursor: grab;
 }
 
 .motd-list-item:hover {
-  background-color: #5c4eac;
+  background-color: var(--aswg-primary-color-hover);
 }
 
 .motd-list-item-number {
