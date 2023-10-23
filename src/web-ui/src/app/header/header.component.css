@@ -13,3 +13,28 @@ mat-icon {
 mat-icon:hover {
   cursor: pointer;
 }
+
+/* MOBILE */
+
+.container-mobile-fluid {
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  width: 100%;
+  padding: 5px;
+}
+
+.container-mobile-fluid .navbar-brand {
+  display: flex;
+  justify-items: center;
+}
+
+.theme-icon {
+  display: grid;
+  justify-items: right;
+  margin-right: 30px;
+}
+
+.mobile-side-menu {
+  width: 100%;
+}

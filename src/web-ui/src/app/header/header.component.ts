@@ -10,13 +10,26 @@ export class HeaderComponent {
   @Input()
   darkMode: boolean = true;
 
+  @Input()
+  isMobile: boolean = false;
+
   @Output()
   changeThemeEmit: EventEmitter<void> = new EventEmitter();
+
+  sideMenuExpanded = false;
 
   constructor() { }
 
   changeTheme() {
     this.changeThemeEmit.emit();
+  }
+
+  toggleSideMenu() {
+    this.sideMenuExpanded = !this.sideMenuExpanded;
+  }
+
+  closeSideMenu() {
+    this.sideMenuExpanded = false;
   }
 
 }

@@ -2,3 +2,17 @@ mat-form-field {
   margin-left: 8px;
   font-size: 16px;
 }
+
+@media (max-width: 800px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+}

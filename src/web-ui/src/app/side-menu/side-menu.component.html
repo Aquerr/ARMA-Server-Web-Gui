@@ -1,10 +1,10 @@
-<mat-nav-list>
-  <mat-list-item class="aswg-list-item" routerLink="/status">Status</mat-list-item>
-  <mat-list-item class="aswg-list-item" routerLink="/general">General</mat-list-item>
-  <mat-list-item class="aswg-list-item" routerLink="/security">Security</mat-list-item>
-  <mat-list-item class="aswg-list-item" routerLink="/network">Network</mat-list-item>
-  <mat-list-item class="aswg-list-item" routerLink="/missions">Missions</mat-list-item>
-  <mat-list-item class="aswg-list-item" routerLink="/mods">Mods</mat-list-item>
-  <mat-list-item class="aswg-list-item" routerLink="/workshop" [ngClass]="isWorkshopActive ? '' : 'aswg-list-item-inactive'">Workshop</mat-list-item>
-  <mat-list-item class="aswg-list-item" routerLink="/logging">Logging</mat-list-item>
+<mat-nav-list class="nav-list">
+  <mat-list-item class="aswg-list-item" routerLink="/status" (click)="routerLinkClicked()">Status</mat-list-item>
+  <mat-list-item class="aswg-list-item" routerLink="/general" (click)="routerLinkClicked()">General</mat-list-item>
+  <mat-list-item class="aswg-list-item" routerLink="/security" (click)="routerLinkClicked()">Security</mat-list-item>
+  <mat-list-item class="aswg-list-item" routerLink="/network" (click)="routerLinkClicked()">Network</mat-list-item>
+  <mat-list-item class="aswg-list-item" routerLink="/missions" (click)="routerLinkClicked()">Missions</mat-list-item>
+  <mat-list-item class="aswg-list-item" routerLink="/mods" (click)="routerLinkClicked()">Mods</mat-list-item>
+  <mat-list-item class="aswg-list-item" routerLink="/workshop" [ngClass]="isWorkshopActive ? '' : 'aswg-list-item-inactive'" (click)="routerLinkClicked()">Workshop</mat-list-item>
+  <mat-list-item class="aswg-list-item" routerLink="/logging" (click)="routerLinkClicked()">Logging</mat-list-item>
 </mat-nav-list>

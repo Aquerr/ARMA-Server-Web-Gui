@@ -11,3 +11,10 @@
 .workshop-list-item {
   margin-bottom: 10px;
 }
+
+@media (max-width: 800px) {
+  .container, .workshop-list {
+    display: flex;
+    flex-direction: column;
+  }
+}

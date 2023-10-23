@@ -1,7 +1,6 @@
-<div>
+<div class="container">
   <h1 style="margin-left: 5px;">Login in</h1>
-  <div>
-    <div class="login-form" [formGroup]="form">
+    <form class="login-form" [formGroup]="form">
       <mat-form-field>
         <mat-label>Username</mat-label>
         <input name="username" formControlName="username" matInput type="text" (keydown)="$event.code === 'Enter' ? login() : null">
@@ -10,9 +9,8 @@
         <mat-label>Password</mat-label>
         <input name="password" formControlName="password" matInput [type]="'password'" (keydown)="$event.code === 'Enter' ? login() : null">
       </mat-form-field>
-    </div>
+    </form>
     <p style="color:red;" *ngIf="errorMessage">{{errorMessage}}</p>
-  </div>
   <div>
     <button mat-flat-button color="primary" (click)="login()" [disabled]="form.invalid">Log in</button>
   </div>

@@ -62,3 +62,15 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
+@media (max-width: 800px) {
+  .app-missions-tab {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .mission-list-group {
+    flex-direction: column;
+    width: 100%;
+  }
+}

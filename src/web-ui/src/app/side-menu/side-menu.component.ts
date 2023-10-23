@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WorkshopService} from "../service/workshop.service";
 import {AuthService} from "../service/auth.service";
 
@@ -8,6 +8,10 @@ import {AuthService} from "../service/auth.service";
   styleUrls: ['./side-menu.component.css']
 })
 export class SideMenuComponent implements OnInit {
+  @Input()
+  isMobile = false;
+  @Output()
+  routerLinkClickEmitter: EventEmitter<void> = new EventEmitter();
 
   isWorkshopActive: boolean = false;
 
@@ -26,5 +30,11 @@ export class SideMenuComponent implements OnInit {
 
   canUseWorkshop(): boolean {
     return this.isWorkshopActive;
+  }
+
+  routerLinkClicked() {
+    if (this.isMobile) {
+      this.routerLinkClickEmitter.emit();
+    }
   }
 }
