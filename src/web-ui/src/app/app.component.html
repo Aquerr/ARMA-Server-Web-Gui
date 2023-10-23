@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <app-header class="row mb-4"></app-header>
+  <app-header class="row mb-4" (changeThemeEmit)="changeTheme()" [darkMode]="isDarkMode()"></app-header>
   <div style="display: flex; flex-direction: row;">
     <div style="display: block; width: 15%; padding-right: 20px">
       <app-side-menu></app-side-menu>

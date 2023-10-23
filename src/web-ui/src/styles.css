@@ -2,14 +2,175 @@
 
 :root {
   --aswg-primary-color: #4634b7;
+  --aswg-primary-color-hover: #37288f;
+  --aswg-primary-text-color: #ffffff;
+  --aswg-bg-primary-bg-color: #ffffff;
+  --aswg-bg-primary-font-color: #000000;
+  --aswg-input-bg-color: whitesmoke;
+  --mat-icon-color: var(--aswg-primary-color) !important;
+  --mat-stepper-header-edit-state-icon-background-color: var(--aswg-primary-color) !important;
+  --mat-stepper-header-done-state-icon-background-color: var(--aswg-primary-color) !important;
+  --mat-stepper-header-selected-state-icon-background-color: var(--aswg-primary-color) !important;
+  --mat-toolbar-container-background-color: var(--aswg-primary-color) !important;
+  --mat-datepicker-toggle-active-state-icon-color: var(--aswg-primary-color) !important;
+  --mat-datepicker-calendar-date-selected-state-background-color: var(--aswg-primary-color) !important;
+  --mat-badge-background-color: var(--aswg-primary-color) !important;
+  --mdc-circular-progress-active-indicator-color: var(--aswg-primary-color) !important;
+  --mdc-icon-button-icon-color: var(--aswg-primary-color) !important;
+  --mat-mdc-button-persistent-ripple-color: var(--aswg-primary-color) !important;
+  --mdc-outlined-button-label-text-color: var(--aswg-primary-color) !important;
+  --mdc-protected-button-container-color: var(--aswg-primary-color) !important;
+  --mdc-filled-button-container-color: var(--aswg-primary-color) !important;
+  --mdc-text-button-label-text-color: var(--aswg-primary-color) !important;
+  --mdc-checkbox-selected-focus-state-layer-color: var(--aswg-primary-color) !important;
+  --mdc-checkbox-selected-hover-state-layer-color: var(--aswg-primary-color) !important;
+  --mdc-checkbox-selected-pressed-state-layer-color: var(--aswg-primary-color) !important;
+  --mdc-checkbox-selected-focus-icon-color: var(--aswg-primary-color) !important;
+  --mdc-checkbox-selected-hover-icon-color: var(--aswg-primary-color) !important;
+  --mdc-checkbox-selected-icon-color: var(--aswg-primary-color) !important;
+  --mdc-checkbox-selected-pressed-icon-color: var(--aswg-primary-color) !important;
+  --mat-tab-header-with-background-background-color: var(--aswg-primary-color) !important;
+  --mat-tab-header-active-focus-label-text-color: var(--aswg-primary-color) !important;
+  --mat-tab-header-active-hover-label-text-color: var(--aswg-primary-color) !important;
+  --mat-tab-header-active-focus-indicator-color: var(--aswg-primary-color) !important;
+  --mat-tab-header-active-hover-indicator-color: var(--aswg-primary-color) !important;
+  --mat-tab-header-active-label-text-color: var(--aswg-primary-color) !important;
+  --mat-tab-header-active-ripple-color: var(--aswg-primary-color) !important;
+  --mat-tab-header-inactive-ripple-color: var(--aswg-primary-color) !important;
+  --mdc-tab-indicator-active-indicator-color: var(--aswg-primary-color) !important;
+  --mdc-radio-selected-focus-icon-color: var(--aswg-primary-color) !important;
+  --mdc-radio-selected-hover-icon-color: var(--aswg-primary-color) !important;
+  --mdc-radio-selected-icon-color: var(--aswg-primary-color) !important;
+  --mdc-radio-selected-pressed-icon-color: var(--aswg-primary-color) !important;
+  --mdc-slider-with-tick-marks-inactive-container-color: var(--aswg-primary-color) !important;
+  --mat-mdc-slider-ripple-color: var(--aswg-primary-color) !important;
+  --mdc-slider-handle-color: var(--aswg-primary-color) !important;
+  --mdc-slider-focus-handle-color: var(--aswg-primary-color) !important;
+  --mdc-slider-hover-handle-color: var(--aswg-primary-color) !important;
+  --mdc-slider-active-track-color: var(--aswg-primary-color) !important;
+  --mdc-slider-inactive-track-color: var(--aswg-primary-color) !important;
+  --mat-radio-checked-ripple-color: var(--aswg-primary-color) !important;
+  --mdc-chip-elevated-container-color: var(--aswg-primary-color) !important;
+  --mdc-chip-elevated-disabled-container-color: var(--aswg-primary-color) !important;
+  --mdc-outlined-text-field-caret-color: var(--aswg-primary-color) !important;
+  --mdc-outlined-text-field-focus-outline-color: var(--aswg-primary-color) !important;
+  --mdc-filled-text-field-caret-color: var(--aswg-primary-color) !important;
+  --mdc-filled-text-field-focus-active-indicator-color: var(--aswg-primary-color) !important;
+  --mdc-linear-progress-active-indicator-color: var(--aswg-primary-color) !important;
+  --mat-option-selected-state-label-text-color: var(--aswg-primary-color) !important;
 }
 
 a {
   color: var(--aswg-primary-color);
 }
 
-body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.mat-mdc-raised-button.mat-unthemed {
+  --mdc-protected-button-container-color: var(--aswg-primary-color) !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  caret-color: var(--aswg-bg-primary-font-color) !important;
+}
+
+.mat-primary .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
+  color: var(--aswg-primary-color) !important;
+}
+
+.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+  color: var(--aswg-bg-primary-font-color) !important;
+}
+
+.mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+  border-color: var(--aswg-primary-color) !important;
+  background-color: var(--aswg-primary-color) !important;
+}
+
+::ng-deep .mdc-text-field .mdc-text-field__input {
+  border-color: var(--aswg-primary-color) !important;
+}
+
+.mdc-text-field--filled .mdc-line-ripple:after {
+  border-color: var(--aswg-primary-color) !important;
+}
+
+.mat-primary .mat-pseudo-checkbox-checked, .mat-primary .mat-pseudo-checkbox-indeterminate {
+  background: var(--aswg-primary-color) !important;
+}
+
+.mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--aswg-primary-color);
+}
+
+.mat-mdc-unelevated-button.mat-primary {
+  --mdc-filled-button-container-color: var(--aswg-primary-color) !important;
+}
+
+.mat-mdc-outlined-button:not(:disabled) {
+  color: var(--aswg-primary-color, inherit) !important;
+}
+
+.mat-primary .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-minimal::after, .mat-primary .mat-pseudo-checkbox-indeterminate.mat-pseudo-checkbox-minimal::after {
+  color: #444c56 !important;
+}
+
+.mat-mdc-fab.mat-primary, .mat-mdc-mini-fab.mat-primary {
+  --mdc-fab-container-color: var(--aswg-primary-color) !important;
+}
+
+.mdc-list-item__primary-text {
+  color: var(--aswg-bg-primary-font-color) !important;
+}
+
+.mat-mdc-checkbox .mdc-form-field {
+  color: var(--aswg-bg-primary-font-color) !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: var(--aswg-input-bg-color) !important;
+}
+
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label {
+  color: var(--aswg-bg-primary-font-color) !important;
+}
+
+.mat-mdc-form-field .mdc-text-field__input {
+  color: var(--aswg-bg-primary-font-color) !important;
+}
+
+.mat-focused .mat-form-field-placeholder {
+  color: var(--aswg-bg-primary-font-color) !important;
+}
+
+input::placeholder {
+  color: var(--aswg-bg-primary-font-color) !important;
+}
+
+.mat-mdc-select {
+  color: var(--aswg-bg-primary-font-color) !important;
+}
+
+.cdk-overlay-pane:not(.mat-mdc-select-panel-above) div.mat-mdc-select-panel {
+  background-color: var(--aswg-bg-primary-bg-color) !important;
+}
+
+.mat-mdc-select-arrow {
+  color: var(--aswg-primary-color) !important;
+}
+
+.mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background {
+  border-color: #444c56 !important;
+}
+
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--aswg-bg-primary-bg-color);
+  color: var(--aswg-bg-primary-font-color);
+}
 
 
 .mat-snack-bar-container {
