@@ -157,8 +157,30 @@ input::placeholder {
   color: var(--aswg-primary-color) !important;
 }
 
-.mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background {
+.mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true]) ~ .mdc-checkbox__background {
   border-color: #444c56 !important;
+}
+
+.mat-accordion .mat-expansion-panel:last-of-type {
+  background-color: var(--aswg-input-bg-color) !important;
+  color: var(--aswg-bg-primary-font-color) !important;
+}
+
+.mat-accordion .mat-expansion-panel:first-of-type {
+  background-color: var(--aswg-input-bg-color) !important;
+  color: var(--aswg-bg-primary-font-color) !important;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__title {
+  color: var(--aswg-bg-primary-font-color) !important;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__content {
+  color: var(--aswg-bg-primary-font-color) !important;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: var(--aswg-input-bg-color) !important;
 }
 
 body {
