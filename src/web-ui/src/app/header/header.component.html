@@ -2,17 +2,17 @@
   <div class="container-fluid" *ngIf="!isMobile">
     <a class="navbar-brand" routerLink="/general">ASWG</a>
     <div class="theme-icon">
-      <mat-icon  (click)="changeTheme()" matTooltip="Zmień motyw" *ngIf="darkMode">nightlight</mat-icon>
-      <mat-icon class="theme-icon" (click)="changeTheme()" matTooltip="Zmień motyw" *ngIf="!darkMode">light_mode</mat-icon>
+      <mat-icon class="theme-icon" (click)="changeTheme()" matTooltip="Zmień motyw" *ngIf="!darkMode">nightlight</mat-icon>
+      <mat-icon class="theme-icon" (click)="changeTheme()" matTooltip="Zmień motyw" *ngIf="darkMode">light_mode</mat-icon>
     </div>
   </div>
   <div class="container-mobile-fluid" *ngIf="isMobile">
-    <mat-icon (click)="toggleSideMenu()" *ngIf="!sideMenuExpanded">menu</mat-icon>
-    <mat-icon (click)="toggleSideMenu()" *ngIf="sideMenuExpanded">close</mat-icon>
+    <mat-icon class="hamburger-icon" (click)="toggleSideMenu()" *ngIf="!sideMenuExpanded">menu</mat-icon>
+    <mat-icon class="hamburger-icon" (click)="toggleSideMenu()" *ngIf="sideMenuExpanded">close</mat-icon>
     <a class="navbar-brand" routerLink="/general">ASWG</a>
     <div class="theme-icon">
-      <mat-icon  (click)="changeTheme()" matTooltip="Zmień motyw" *ngIf="darkMode">nightlight</mat-icon>
-      <mat-icon class="theme-icon" (click)="changeTheme()" matTooltip="Zmień motyw" *ngIf="!darkMode">light_mode</mat-icon>
+      <mat-icon class="theme-icon" (click)="changeTheme()" matTooltip="Zmień motyw" *ngIf="!darkMode">nightlight</mat-icon>
+      <mat-icon class="theme-icon" (click)="changeTheme()" matTooltip="Zmień motyw" *ngIf="darkMode">light_mode</mat-icon>
     </div>
   </div>
 

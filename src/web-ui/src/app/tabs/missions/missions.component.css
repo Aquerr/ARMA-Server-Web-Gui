@@ -67,10 +67,17 @@
   .app-missions-tab {
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 100%;
   }
   .mission-list-group {
     flex-direction: column;
     width: 100%;
+  }
+  .missions-save-and-upload {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 10px;
   }
 }

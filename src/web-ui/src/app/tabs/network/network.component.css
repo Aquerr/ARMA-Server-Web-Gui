@@ -4,3 +4,12 @@
   align-items: flex-start;
   margin-bottom: 1rem;
 }
+
+@media (max-width: 800px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
