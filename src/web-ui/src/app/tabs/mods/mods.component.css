@@ -62,6 +62,7 @@
     margin: auto;
     justify-items: left;
     align-items: center;
+    width: 100%;
   }
   .mods-list {
     display: flex;

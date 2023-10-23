@@ -69,6 +69,10 @@
     flex-direction: column;
     align-items: center;
   }
+  .mission-list {
+    width: auto;
+    margin-left: 0!important;
+  }
   .mission-list-group {
     flex-direction: column;
   }
