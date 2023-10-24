@@ -342,3 +342,9 @@ hr {
 .text-center {
   text-align: center;
 }
+
+@media (max-width: 800px) {
+  .navbar-brand {
+    width: 100%;
+  }
+}
