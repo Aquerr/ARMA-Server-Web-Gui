@@ -13,7 +13,7 @@
         </encoder>
         <file>aswg.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN:-${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz}</fileNamePattern>
+            <fileNamePattern>aswg.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <cleanHistoryOnStart>false</cleanHistoryOnStart>
             <maxFileSize>10MB</maxFileSize>
             <maxHistory>3</maxHistory>
