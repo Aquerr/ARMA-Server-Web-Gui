@@ -14,4 +14,5 @@ public class NetworkProperties
     private int maxDesync;
     private int maxPacketLoss;
     private boolean enablePlayerDiag;
+    private int steamProtocolMaxDataSize;
 }

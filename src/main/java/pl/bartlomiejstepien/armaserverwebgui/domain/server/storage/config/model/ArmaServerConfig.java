@@ -69,6 +69,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "enablePlayerDiag", type = PropertyType.INTEGER)
     private int enablePlayerDiag = 0;
 
+    @CfgProperty(name = "steamProtocolMaxDataSize", type = PropertyType.INTEGER)
+    private int steamProtocolMaxDataSize;
+
     @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
     private Missions missions = new Missions();
 

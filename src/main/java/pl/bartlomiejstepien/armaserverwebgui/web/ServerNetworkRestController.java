@@ -44,6 +44,7 @@ public class ServerNetworkRestController
                 .maxDesync(saveNetworkPropertiesRequest.getMaxDesync())
                 .maxPacketLoss(saveNetworkPropertiesRequest.getMaxPacketLoss())
                 .enablePlayerDiag(saveNetworkPropertiesRequest.isEnablePlayerDiag())
+                .steamProtocolMaxDataSize(saveNetworkPropertiesRequest.getSteamProtocolMaxDataSize())
                 .build();
     }
 
@@ -57,6 +58,7 @@ public class ServerNetworkRestController
                 .maxDesync(networkProperties.getMaxDesync())
                 .maxPacketLoss(networkProperties.getMaxPacketLoss())
                 .enablePlayerDiag(networkProperties.isEnablePlayerDiag())
+                .steamProtocolMaxDataSize(networkProperties.getSteamProtocolMaxDataSize())
                 .build();
     }
 
@@ -71,6 +73,7 @@ public class ServerNetworkRestController
         private int maxDesync;
         private int maxPacketLoss;
         private boolean enablePlayerDiag;
+        private int steamProtocolMaxDataSize;
     }
 
     @Builder
@@ -84,5 +87,6 @@ public class ServerNetworkRestController
         private int maxDesync;
         private int maxPacketLoss;
         private boolean enablePlayerDiag;
+        private int steamProtocolMaxDataSize;
     }
 }

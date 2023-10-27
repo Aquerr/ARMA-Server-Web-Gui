@@ -24,6 +24,7 @@ public class ServerNetworkServiceImpl implements ServerNetworkService
                 .maxDesync(armaServerConfig.getMaxdesync())
                 .maxPacketLoss(armaServerConfig.getMaxpacketloss())
                 .enablePlayerDiag(armaServerConfig.getEnablePlayerDiag() == 1)
+                .steamProtocolMaxDataSize(armaServerConfig.getSteamProtocolMaxDataSize())
                 .build();
     }
 
@@ -38,6 +39,7 @@ public class ServerNetworkServiceImpl implements ServerNetworkService
         armaServerConfig.setMaxdesync(networkProperties.getMaxDesync());
         armaServerConfig.setMaxpacketloss(networkProperties.getMaxPacketLoss());
         armaServerConfig.setEnablePlayerDiag(networkProperties.isEnablePlayerDiag() ? 1 : 0);
+        armaServerConfig.setSteamProtocolMaxDataSize(networkProperties.getSteamProtocolMaxDataSize());
         serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 }

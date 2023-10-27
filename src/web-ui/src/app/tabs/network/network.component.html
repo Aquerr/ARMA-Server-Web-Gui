@@ -38,6 +38,10 @@
         <mat-option [value]="false">No</mat-option>
       </mat-select>
     </mat-form-field>
+    <mat-form-field>
+      <mat-label>Steam Protocol Max Data Size</mat-label>
+      <input name="steamProtocolMaxDataSize" [(ngModel)]="steamProtocolMaxDataSize" matInput type="number" min="0">
+    </mat-form-field>
   </div>
   <div>
     <button mat-flat-button color="primary" (click)="save()">Save</button>

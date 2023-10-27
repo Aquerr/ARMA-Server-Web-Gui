@@ -30,6 +30,7 @@ export interface SaveServerNetworkProperties {
   maxDesync: number;
   maxPacketLoss: number;
   enablePlayerDiag: boolean;
+  steamProtocolMaxDataSize: number;
 }
 
 export interface GetServerNetworkProperties {
@@ -40,4 +41,5 @@ export interface GetServerNetworkProperties {
   maxDesync: number;
   maxPacketLoss: number;
   enablePlayerDiag: boolean;
+  steamProtocolMaxDataSize: number;
 }

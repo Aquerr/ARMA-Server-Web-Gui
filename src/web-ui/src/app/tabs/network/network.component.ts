@@ -17,7 +17,8 @@ export class NetworkComponent implements OnInit {
   maxDesync: number = 150;
   maxPacketLoss: number = 150;
   enablePlayerDiag: boolean = false;
-
+  steamProtocolMaxDataSize: number = 1024;
+  
   constructor(private maskService: MaskService,
               private notificationService: NotificationService,
               private serverNetworkService: ServerNetworkService) { }
@@ -32,6 +33,7 @@ export class NetworkComponent implements OnInit {
       this.maxDesync = response.maxDesync;
       this.maxPacketLoss = response.maxPacketLoss;
       this.enablePlayerDiag = response.enablePlayerDiag;
+      this.steamProtocolMaxDataSize = response.steamProtocolMaxDataSize;
       this.maskService.hide();
     });
   }
@@ -46,7 +48,8 @@ export class NetworkComponent implements OnInit {
       disconnectTimeout: this.disconnectTimeout,
       maxDesync: this.maxDesync,
       maxPacketLoss: this.maxPacketLoss,
-      enablePlayerDiag: this.enablePlayerDiag
+      enablePlayerDiag: this.enablePlayerDiag,
+      steamProtocolMaxDataSize: this.steamProtocolMaxDataSize
     } as SaveServerNetworkProperties;
 
     this.serverNetworkService.saveServerNetworkProperties(saveNetworkProperties).subscribe(response => {
