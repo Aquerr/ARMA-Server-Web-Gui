@@ -43,6 +43,6 @@ export class SideMenuComponent implements OnInit {
   logout() {
     this.routerLinkClicked();
     this.authService.logout();
-    this.router.navigate(['login']);
+    this.router.navigateByUrl("/login");
   }
 }
