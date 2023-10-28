@@ -220,7 +220,8 @@ public class ProcessServiceImpl implements ProcessService
         }
         catch (IOException e)
         {
-            throw new RuntimeException(e);
+            log.warn("Could not fetch server logs.", e);
+            return Collections.emptyList();
         }
     }
 
