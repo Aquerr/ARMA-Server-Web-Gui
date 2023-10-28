@@ -45,7 +45,7 @@ export class ModsComponent implements OnInit, OnDestroy {
       if (file) {
         this.reloadModsDataSubject.next(null);
       }
-      if (this.modUploadService.getUploadingMods().length) {
+      if (!this.modUploadService.getUploadingMods().length) {
         this.modUploadSnackBarRef?.dismiss();
         this.modUploadSnackBarRef = null;
       }
