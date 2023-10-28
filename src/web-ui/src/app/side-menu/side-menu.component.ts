@@ -37,4 +37,9 @@ export class SideMenuComponent implements OnInit {
       this.routerLinkClickEmitter.emit();
     }
   }
+
+  logout() {
+    this.routerLinkClicked();
+    this.authService.logout();
+  }
 }

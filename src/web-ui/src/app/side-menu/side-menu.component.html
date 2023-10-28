@@ -7,4 +7,5 @@
   <mat-list-item class="aswg-list-item" routerLink="/mods" (click)="routerLinkClicked()">Mods</mat-list-item>
   <mat-list-item class="aswg-list-item" routerLink="/workshop" [ngClass]="isWorkshopActive ? '' : 'aswg-list-item-inactive'" (click)="routerLinkClicked()">Workshop</mat-list-item>
   <mat-list-item class="aswg-list-item" routerLink="/logging" (click)="routerLinkClicked()">Logging</mat-list-item>
+  <mat-list-item class="aswg-list-item" (click)="logout()">Logout</mat-list-item>
 </mat-nav-list>
