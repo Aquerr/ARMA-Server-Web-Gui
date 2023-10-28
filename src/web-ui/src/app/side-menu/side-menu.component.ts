@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WorkshopService} from "../service/workshop.service";
 import {AuthService} from "../service/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-side-menu',
@@ -15,7 +16,8 @@ export class SideMenuComponent implements OnInit {
 
   isWorkshopActive: boolean = false;
 
-  constructor(private authService: AuthService,
+  constructor(private router: Router,
+              private authService: AuthService,
               private workshopService: WorkshopService) {
 
     if (this.authService.isAuthenticated()) {
@@ -41,5 +43,6 @@ export class SideMenuComponent implements OnInit {
   logout() {
     this.routerLinkClicked();
     this.authService.logout();
+    this.router.navigate(['login']);
   }
 }
