@@ -6,6 +6,8 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
+    <springProperty name="SERVER_LOG_FILE_NAME" scope="context" source="server.log.file.name"></springProperty>
+
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
@@ -20,7 +22,7 @@
         </rollingPolicy>
     </appender>
     <appender name="SERVER_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>arma-server.log</file>
+        <file>${SERVER_LOG_FILE_NAME}</file>
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
             <charset>${FILE_LOG_CHARSET}</charset>

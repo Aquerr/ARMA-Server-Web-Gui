@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {API_BASE_URL} from "../../environments/environment";
-import FetchEventSource from "fetch-event-source";
 
 @Injectable({
   providedIn: 'root'
@@ -21,12 +20,8 @@ export class ServerLoggingService {
     return this.httpClient.post(this.LOGGING_URL, loggingSectionDataRequest);
   }
 
-  pollServerLogsSse(eventSource: FetchEventSource): Observable<string> {
-    return new Observable(observer => {
-      eventSource.onmessage = event => {
-        observer.next(event?.data);
-      }
-    });
+  getLatestServerLogs(): Observable<LatestServerLogs> {
+    return this.httpClient.get<LatestServerLogs>(`${API_BASE_URL}/logging/latest-logs`);
   }
 }
 
@@ -36,4 +31,8 @@ export interface LoggingProperties {
 
 export interface SaveLoggingPropertiesRequest {
   logFile: string
+}
+
+export interface LatestServerLogs {
+  logs: string[]
 }

@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,8 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.LoggingServic
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ProcessService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/logging")
@@ -39,8 +42,14 @@ public class LoggingRestController
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
+    @GetMapping("/latest-logs")
+    public Mono<LatestServerLogsResponse> getLatestLogs()
+    {
+        return Mono.just(LatestServerLogsResponse.of(this.processService.getLatestServerLogs()));
+    }
+
     @GetMapping(value = "/logs-sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<String> getLogs()
+    public Flux<String> subscribeToLogPublisher()
     {
         return Flux.from(this.processService.getServerLogPublisher());
     }
@@ -65,5 +74,11 @@ public class LoggingRestController
     public static class LoggingProperties
     {
         private String logFile;
+    }
+
+    @Value(staticConstructor = "of")
+    private static class LatestServerLogsResponse
+    {
+        List<String> logs;
     }
 }

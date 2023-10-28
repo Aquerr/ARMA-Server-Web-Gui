@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerIsAlreadyRunningException;
@@ -23,6 +24,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -38,6 +41,9 @@ public class ProcessServiceImpl implements ProcessService
     private final ArmaServerParametersGenerator serverParametersGenerator;
 
     private final ASWGConfig aswgConfig;
+
+    @Value("${server.log.file.name}")
+    private String serverLogFileName;
 
     private boolean serverStartScheduled;
     private boolean isUpdating;
@@ -97,6 +103,15 @@ public class ProcessServiceImpl implements ProcessService
 
         log.info("Starting server process with params: {}", serverParams.asList());
 
+        try
+        {
+            clearLogsFile();
+        }
+        catch (IOException exception)
+        {
+            log.warn("Could not clear " + serverLogFileName);
+        }
+
         this.serverThread = new Thread(() -> {
             try
             {
@@ -118,6 +133,11 @@ public class ProcessServiceImpl implements ProcessService
         });
         this.serverThread.setDaemon(true);
         this.serverThread.start();
+    }
+
+    private void clearLogsFile() throws IOException
+    {
+        new PrintWriter(getServerLogsFile()).close();
     }
 
     private void tryUpdateArmaServer()
@@ -191,6 +211,19 @@ public class ProcessServiceImpl implements ProcessService
         return this.steamService.getServerPlayers();
     }
 
+    @Override
+    public List<String> getLatestServerLogs()
+    {
+        try
+        {
+            return Files.readAllLines(getServerLogsFile().toPath());
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void handleProcessInputOutput(Process process)
     {
         this.ioServerThread = new Thread(() ->
@@ -262,5 +295,10 @@ public class ProcessServiceImpl implements ProcessService
     private File getPidFile()
     {
         return new File(aswgConfig.getServerDirectoryPath() + File.separator + PID_FILE_NAME);
+    }
+
+    private File getServerLogsFile()
+    {
+        return new File(aswgConfig.getServerDirectoryPath() + File.separator + serverLogFileName);
     }
 }

@@ -17,4 +17,6 @@ public interface ProcessService
     void stopServer();
 
     List<ArmaServerPlayer> getServerPlayers();
+
+    List<String> getLatestServerLogs();
 }
