@@ -14,20 +14,26 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModPresetService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModPreset;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.PresetImportParams;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.PresetDoesNotExistException;
+import pl.bartlomiejstepien.armaserverwebgui.web.exception.NotAllowedFileTypeException;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.ModFileValidator;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
-import pl.bartlomiejstepien.armaserverwebgui.web.exception.NotAllowedFileTypeException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -37,6 +43,7 @@ import java.util.Set;
 public class ModsRestController
 {
     private final ModService modService;
+    private final ModPresetService modPresetService;
     private final ModFileValidator modFileValidator;
 
     @GetMapping
@@ -70,6 +77,39 @@ public class ModsRestController
                 .onErrorReturn(ResponseEntity.internalServerError().build());
     }
 
+    @GetMapping("/presets-names")
+    public Mono<ModPresetNamesResponse> getModPresetsNames()
+    {
+        return this.modPresetService.getModPresetsNames().collectList().map(ModPresetNamesResponse::of);
+    }
+
+    @GetMapping("/presets/{id}")
+    public Mono<ModPreset> getModPreset(@PathVariable("id") Long id)
+    {
+        return this.modPresetService.getModPreset(id);
+    }
+
+    @PutMapping("/presets/{id}")
+    public Mono<Void> updatePreset(@PathVariable("id") Long id, @RequestBody ModPreset modPreset)
+    {
+        return this.modPresetService.getModPreset(id)
+                .flatMap(preset -> this.modPresetService.saveModPreset(modPreset))
+                .switchIfEmpty(Mono.error(PresetDoesNotExistException::new));
+    }
+
+    @PostMapping("/presets/import")
+    public Mono<Void> importPreset(@RequestBody PresetImportRequest request)
+    {
+        return this.modPresetService.importPreset(PresetImportParams.of(request.getName(), request.getModParams().stream()
+                .map(param -> PresetImportParams.ModParam.of(param.getTitle(), param.getId())).toList()));
+    }
+
+    @PostMapping("/presets/select")
+    public Mono<Void> selectPreset(@RequestBody PresetSelectRequest request)
+    {
+        return this.modPresetService.selectPreset(request.getName());
+    }
+
     @ExceptionHandler(value = ModFileAlreadyExistsException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public RestErrorResponse onModsFileAlreadyExistsException(ModFileAlreadyExistsException exception)
@@ -100,5 +140,31 @@ public class ModsRestController
     private static class SaveEnabledModsListRequest
     {
         Set<ModView> mods;
+    }
+
+    @Value(staticConstructor = "of")
+    private static class ModPresetNamesResponse
+    {
+        List<String> presets;
+    }
+
+    @Data
+    private static class PresetImportRequest
+    {
+        private String name;
+        private List<ModParam> modParams;
+
+        @Data
+        static class ModParam
+        {
+            private Long id;
+            private String title;
+        }
+    }
+
+    @Data
+    private static class PresetSelectRequest
+    {
+        private String name;
     }
 }

@@ -1,4 +1,4 @@
-import { HttpClient, HttpRequest } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from 'src/environments/environment';
@@ -31,6 +31,18 @@ export class ServerModsService {
   saveEnabledMods(saveEnabledModsRequest: SaveEnabledModsRequest) {
     return this.httpClient.post(`${this.MODS_URL}/enabled`, saveEnabledModsRequest);
   }
+
+  getModPresetsNames(): Observable<ModPresetNamesResponse> {
+    return this.httpClient.get<ModPresetNamesResponse>(`${this.MODS_URL}/presets-names`);
+  }
+
+  importPreset(request: ModPresetImportRequest) {
+    return this.httpClient.post(`${this.MODS_URL}/presets/import`, request);
+  }
+
+  selectPreset(request: ModPresetSelectRequest) {
+    return this.httpClient.post(`${this.MODS_URL}/presets/select`, request);
+  }
 }
 
 export interface GetModsResponse{
@@ -40,4 +52,22 @@ export interface GetModsResponse{
 
 export interface SaveEnabledModsRequest {
   mods: Mod[];
+}
+
+export interface ModPresetNamesResponse {
+  presets: string[];
+}
+
+export interface ModPresetImportRequest {
+  name: string;
+  modParams: ModPresetModParam[];
+}
+
+export interface ModPresetModParam {
+  title: string;
+  id: number;
+}
+
+export interface ModPresetSelectRequest {
+  name: string;
 }

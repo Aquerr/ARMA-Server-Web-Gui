@@ -1,9 +1,14 @@
 <div appDragAndDropFile (fileDropped)="onFileDropped($event)" class="app-mods-tab">
     <h1>Mods</h1>
-    <mat-form-field>
-      <mat-label>Search mission...</mat-label>
-      <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mission...">
-    </mat-form-field>
+  <div class="fields">
+    <div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%">
+      <mat-form-field>
+        <mat-label>Search mission...</mat-label>
+        <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mission...">
+      </mat-form-field>
+      <app-mod-presets [modPresets]="modPresets"></app-mod-presets>
+    </div>
+  </div>
     <div class="mod-list-group" cdkDropListGroup>
       <div class="mods-list">
         <h1>Disabled</h1>

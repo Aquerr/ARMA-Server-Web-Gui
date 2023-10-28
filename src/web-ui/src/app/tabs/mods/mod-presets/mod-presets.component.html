@@ -1,0 +1,11 @@
+<div class="mod-preset-menu">
+  <button mat-button [matMenuTriggerFor]="presetMenu">Mod presets</button>
+  <mat-menu #presetMenu>
+    <button mat-menu-item *ngFor="let preset of modPresets" (click)="presetClicked(preset)">{{preset}}</button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="newPresetClick()">New preset...</button>
+    <mat-divider></mat-divider>
+    <input style="display: none;" type="file" #presetFileInput (change)="modPresetImport($event)" accept="text/html">
+    <button mat-menu-item (click)="presetImportClick()">Import preset...</button>
+  </mat-menu>
+</div>

@@ -28,7 +28,7 @@ import static java.lang.String.format;
 
 @RequiredArgsConstructor
 @Service
-public class WorkShopModInstallerService
+public class WorkShopModInstallService
 {
     private final Queue<WorkshopModInstallationRequest> workshopModInstallationRequestQueue = new LinkedBlockingQueue<>();
     private final SteamService steamService;

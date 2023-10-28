@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import { MaskService } from 'src/app/service/mask.service';
 import { ServerModsService } from 'src/app/service/server-mods.service';
@@ -27,6 +27,8 @@ export class ModsComponent implements OnInit, OnDestroy {
   filteredDisabledMods: Mod[] = [];
   filteredEnabledMods: Mod[] = [];
 
+  modPresets: string[] = [];
+
   searchBoxControl!: FormControl;
 
   modUploadSnackBarRef!: MatSnackBarRef<ModUploadSnackBarComponent> | null;
@@ -37,6 +39,11 @@ export class ModsComponent implements OnInit, OnDestroy {
               private notificationService: NotificationService,
               private matSnackBar: MatSnackBar,
               private modUploadService: ModUploadService) {
+
+    this.modService.getModPresetsNames().subscribe(response => {
+      this.modPresets = response.presets;
+    });
+
     this.reloadModsDataSubject = new Subject();
     this.reloadModsDataSubscription = this.reloadModsDataSubject.subscribe(() => {
       this.reloadMods();
@@ -57,6 +64,7 @@ export class ModsComponent implements OnInit, OnDestroy {
     this.searchBoxControl.valueChanges.subscribe(value => {
       this.filterMods(value);
     });
+
     this.reloadMods();
   }
 

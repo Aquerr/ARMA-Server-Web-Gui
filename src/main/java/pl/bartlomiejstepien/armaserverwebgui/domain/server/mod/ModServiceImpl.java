@@ -5,13 +5,13 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModWorkshopUrlBuilder;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModDir;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.InstalledModConverter;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.InstalledModConverter;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModWorkshopUrlBuilder;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
@@ -39,7 +39,7 @@ public class ModServiceImpl implements ModService
     private final ASWGConfig aswgConfig;
     private final InstalledModConverter installedModConverter;
     private final SteamService steamService;
-    private final WorkShopModInstallerService workShopModInstallerService;
+    private final WorkShopModInstallService workShopModInstallService;
     private final ModKeyService modKeyService;
     private final ModWorkshopUrlBuilder modWorkshopUrlBuilder;
 
@@ -62,14 +62,14 @@ public class ModServiceImpl implements ModService
     @Override
     public Mono<InstalledMod> installModFromWorkshop(long fileId, String modName)
     {
-        workShopModInstallerService.queueWorkshopModInstallation(new WorkshopModInstallationRequest(fileId, modName));
+        workShopModInstallService.queueWorkshopModInstallation(new WorkshopModInstallationRequest(fileId, modName));
         return Mono.empty();
     }
 
     @Override
     public List<WorkshopModInstallationRequest> getWorkShopModInstallRequests()
     {
-        return workShopModInstallerService.getWorkShopModInstallRequests();
+        return workShopModInstallService.getWorkShopModInstallRequests();
     }
 
     @Transactional

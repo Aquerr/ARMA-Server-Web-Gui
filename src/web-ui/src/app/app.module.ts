@@ -57,6 +57,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {PlayerListComponent} from "./tabs/status/player-list/player-list.component";
 import { ServerConsoleComponent } from './tabs/status/server-console/server-console.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatMenuModule} from "@angular/material/menu";
+import { ModPresetsComponent } from './tabs/mods/mod-presets/mod-presets.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +90,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     ModListItemComponent,
     PlayerListComponent,
     PlayerListComponent,
-    ServerConsoleComponent
+    ServerConsoleComponent,
+    ModPresetsComponent
   ],
     imports: [
         BrowserModule,
@@ -115,7 +118,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
         MatSnackBarModule,
         NgOptimizedImage,
         MatExpansionModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatMenuModule
     ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}
