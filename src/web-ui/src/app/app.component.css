@@ -2,13 +2,14 @@
   padding: 10px;
 }
 
-.container-padding {
-  margin-top: 1.5rem
-}
-
 .router-section {
   display: block;
   width: 85%;
+  padding: 50px;
+}
+
+footer {
+  padding: 10px;
 }
 
 @media (max-width: 800px) {
@@ -18,15 +19,13 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-  }
-
-  .container-padding {
-    margin-top: 0;
+    padding: 0;
   }
 
   .router-section {
     margin-top: 80px;
     width: 100%;
+    padding: 0;
   }
 
   .row {

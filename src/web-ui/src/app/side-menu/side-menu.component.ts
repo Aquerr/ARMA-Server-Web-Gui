@@ -11,8 +11,12 @@ import {Router} from "@angular/router";
 export class SideMenuComponent implements OnInit {
   @Input()
   isMobile = false;
+  @Input()
+  darkMode: boolean = true;
   @Output()
   routerLinkClickEmitter: EventEmitter<void> = new EventEmitter();
+  @Output()
+  changeThemeEmit: EventEmitter<void> = new EventEmitter();
 
   isWorkshopActive: boolean = false;
 
@@ -38,6 +42,10 @@ export class SideMenuComponent implements OnInit {
     if (this.isMobile) {
       this.routerLinkClickEmitter.emit();
     }
+  }
+
+  changeTheme() {
+    this.changeThemeEmit.emit();
   }
 
   logout() {

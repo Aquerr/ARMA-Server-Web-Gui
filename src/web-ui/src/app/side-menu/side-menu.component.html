@@ -1,3 +1,11 @@
+<div class="side-menu-container">
+<ng-container *ngIf="!isMobile">
+  <div class="nav-container">
+    <a class="navbar-brand" routerLink="/general">ASWG</a>
+    <mat-icon class="theme-icon" (click)="changeTheme()" matTooltip="Zmień motyw" *ngIf="!darkMode">nightlight</mat-icon>
+    <mat-icon class="theme-icon" (click)="changeTheme()" matTooltip="Zmień motyw" *ngIf="darkMode">light_mode</mat-icon>
+  </div>
+</ng-container>
 <mat-nav-list class="nav-list">
   <mat-list-item class="aswg-list-item" routerLink="/status" (click)="routerLinkClicked()">Status</mat-list-item>
   <mat-list-item class="aswg-list-item" routerLink="/general" (click)="routerLinkClicked()">General</mat-list-item>
@@ -9,3 +17,4 @@
   <mat-list-item class="aswg-list-item" routerLink="/logging" (click)="routerLinkClicked()">Logging</mat-list-item>
   <mat-list-item class="aswg-list-item" (click)="logout()">Logout</mat-list-item>
 </mat-nav-list>
+</div>

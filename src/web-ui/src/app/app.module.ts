@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './header/header.component';
+import { MobileHeaderComponent } from './mobile-header/mobile-header.component';
 import { GeneralComponent } from './tabs/general/general.component';
 import { NetworkComponent } from './tabs/network/network.component';
 import { ModsComponent } from './tabs/mods/mods.component';
@@ -61,7 +61,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
+    MobileHeaderComponent,
     GeneralComponent,
     NetworkComponent,
     ModsComponent,
