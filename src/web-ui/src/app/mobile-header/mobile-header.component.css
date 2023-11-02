@@ -14,8 +14,6 @@ mat-icon:hover {
   cursor: pointer;
 }
 
-/* MOBILE */
-
 .container-mobile-fluid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -31,6 +29,9 @@ mat-icon:hover {
 }
 
 .hamburger-icon {
+  display: grid;
+  justify-items: left;
+  align-items: center;
   margin-left: 10px;
 }
 

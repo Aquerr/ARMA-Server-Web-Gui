@@ -195,7 +195,8 @@ input::placeholder {
   justify-content: center !important;
 }
 
-body {
+body, html {
+  width: 100%;
   height: 100%;
 }
 
@@ -261,11 +262,6 @@ hr {
 .container {
   --bs-gutter-x: 1.5rem;
   --bs-gutter-y: 0;
-  padding-right: calc(var(--bs-gutter-x) * .5);
-  padding-left: calc(var(--bs-gutter-x) * .5);
-  margin-right: auto;
-  margin-left: auto;
-  max-width: 1320px;
 }
 
 .container-fluid {
@@ -308,7 +304,6 @@ hr {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: var(--bs-navbar-padding-y) var(--bs-navbar-padding-x);
 }
 
 .navbar-dark {

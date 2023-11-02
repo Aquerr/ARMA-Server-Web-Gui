@@ -1,17 +1,14 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  selector: 'app-mobile-header',
+  templateUrl: './mobile-header.component.html',
+  styleUrls: ['./mobile-header.component.css']
 })
-export class HeaderComponent {
+export class MobileHeaderComponent {
 
   @Input()
   darkMode: boolean = true;
-
-  @Input()
-  isMobile: boolean = false;
 
   @Output()
   changeThemeEmit: EventEmitter<void> = new EventEmitter();
