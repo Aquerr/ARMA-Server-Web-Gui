@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import { MaskService } from 'src/app/service/mask.service';
 import { ServerModsService } from 'src/app/service/server-mods.service';
@@ -152,6 +152,11 @@ export class ModsComponent implements OnInit, OnDestroy {
   }
 
   onModDelete(mod: Mod) {
+    this.reloadModsDataSubject.next(null);
+  }
+
+  onModPresetSelected(presetName: string) {
+    console.log("Reload mod list...");
     this.reloadModsDataSubject.next(null);
   }
 }

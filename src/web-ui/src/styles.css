@@ -59,6 +59,7 @@
   --mdc-linear-progress-active-indicator-color: var(--aswg-primary-color) !important;
   --mat-option-selected-state-label-text-color: var(--aswg-primary-color) !important;
   --mat-divider-color: #444c56 !important;
+  --mat-divider-vertical-color: #444c56 !important;
   --mat-menu-item-label-text-color: var(--aswg-primary-color) !important;
   --mat-menu-container-color: var(--aswg-bg-primary-bg-color) !important;
 }
@@ -192,6 +193,10 @@ input::placeholder {
 
 .mat-divider {
   border-top-color: var(--mat-divider-color) !important;
+}
+
+.mat-divider-vertical {
+  border-right-color: var(--mat-divider-vertical-color) !important;
 }
 
 .mat-mdc-button .mdc-button__label {

@@ -97,6 +97,13 @@ public class ModsRestController
                 .switchIfEmpty(Mono.error(PresetDoesNotExistException::new));
     }
 
+    @DeleteMapping("/presets/{name}")
+    public Mono<PresetDeleteResponse> deletePreset(@PathVariable("name") String presetName)
+    {
+        return this.modPresetService.deletePreset(presetName)
+                .thenReturn(new PresetDeleteResponse(true));
+    }
+
     @PostMapping("/presets/import")
     public Mono<Void> importPreset(@RequestBody PresetImportRequest request)
     {
@@ -166,5 +173,11 @@ public class ModsRestController
     private static class PresetSelectRequest
     {
         private String name;
+    }
+
+    @Value
+    private static class PresetDeleteResponse
+    {
+        boolean deleted;
     }
 }

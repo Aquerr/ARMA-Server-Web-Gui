@@ -28,9 +28,9 @@ public class WorkshopRestController
     private final ModService modService;
 
     @GetMapping("/active")
-    public Mono<Boolean> canUseWorkshop()
+    public Mono<WorkshopActiveResponse> canUseWorkshop()
     {
-        return Mono.just(steamService.canUseWorkshop());
+        return Mono.just(new WorkshopActiveResponse(steamService.canUseWorkshop()));
     }
 
     @PostMapping("/query")
@@ -104,5 +104,11 @@ public class WorkshopRestController
     {
         private String cursor;
         private String searchText;
+    }
+
+    @Value
+    private static class WorkshopActiveResponse
+    {
+        boolean active;
     }
 }

@@ -2,6 +2,9 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WorkshopService} from "../service/workshop.service";
 import {AuthService} from "../service/auth.service";
 import {Router} from "@angular/router";
+import {NotificationService} from "../service/notification.service";
+import {map, Observable, of, tap} from "rxjs";
+import {MaskService} from "../service/mask.service";
 
 @Component({
   selector: 'app-side-menu',
@@ -14,34 +17,51 @@ export class SideMenuComponent implements OnInit {
   @Input()
   darkMode: boolean = true;
   @Output()
-  routerLinkClickEmitter: EventEmitter<void> = new EventEmitter();
+  routerLinkClickEmitter: EventEmitter<string> = new EventEmitter();
   @Output()
   changeThemeEmit: EventEmitter<void> = new EventEmitter();
 
   isWorkshopActive: boolean = false;
 
+  routePreCheck = new Map<string, (routerLink: string) => Observable<boolean>>();
+
   constructor(private router: Router,
               private authService: AuthService,
-              private workshopService: WorkshopService) {
+              private workshopService: WorkshopService,
+              private notificationService: NotificationService,
+              private maskService: MaskService) {
 
     if (this.authService.isAuthenticated()) {
-      this.workshopService.canUseWorkshop().subscribe(isWorkshopActive => {
-        this.isWorkshopActive = isWorkshopActive;
+      this.workshopService.canUseWorkshop().subscribe(response => {
+        this.isWorkshopActive = response.active;
       })
     }
+
+    this.routePreCheck.set("/workshop", () => this.canUseWorkshopRoute());
   }
 
   ngOnInit(): void {
   }
 
-  canUseWorkshop(): boolean {
-    return this.isWorkshopActive;
-  }
+  routerLinkClicked(routerLink: string) {
+    this.maskService.show();
+    let preCheck = this.routePreCheck.get(routerLink);
 
-  routerLinkClicked() {
-    if (this.isMobile) {
-      this.routerLinkClickEmitter.emit();
+    if (preCheck === undefined) {
+      preCheck = this.canUseRouteDefault;
     }
+
+    preCheck(routerLink).subscribe({
+      next: canAccessLink => {
+        if (!canAccessLink) {
+          return
+        }
+
+        this.maskService.hide();
+        this.router.navigate([routerLink]);
+        this.routerLinkClickEmitter.emit(routerLink);
+      }
+    });
   }
 
   changeTheme() {
@@ -49,8 +69,24 @@ export class SideMenuComponent implements OnInit {
   }
 
   logout() {
-    this.routerLinkClicked();
+    this.routerLinkClicked("/logout");
     this.authService.logout();
     this.router.navigateByUrl("/login");
+  }
+
+  private canUseRouteDefault(): Observable<boolean> {
+    return of(true);
+  }
+
+  private canUseWorkshopRoute(): Observable<boolean> {
+    return this.workshopService.canUseWorkshop().pipe(
+      map(response => response.active),
+      tap({
+        next: value => {
+          if (!value) {
+            this.notificationService.warningNotification("Steam not installed on the server.", "Warning");
+          }
+        }
+      }));
   }
 }

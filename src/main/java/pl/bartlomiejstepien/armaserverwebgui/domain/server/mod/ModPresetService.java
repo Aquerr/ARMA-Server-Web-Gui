@@ -20,4 +20,6 @@ public interface ModPresetService
     Mono<Void> importPreset(PresetImportParams params);
 
     Mono<Void> selectPreset(String name);
+
+    Mono<Void> deletePreset(String presetName);
 }

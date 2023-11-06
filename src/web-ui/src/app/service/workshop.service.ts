@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {API_BASE_URL} from '../../environments/environment';
 import {
   InstalledWorkshopItemsResponse,
-  WorkShopModInstallRequest, WorkShopModInstallResponse,
+  WorkShopModInstallRequest,
+  WorkShopModInstallResponse,
   WorkshopQueryRequest,
   WorkshopQueryResponse
 } from '../model/workshop.model';
@@ -34,7 +35,12 @@ export class WorkshopService {
     return this.httpClient.post<WorkShopModInstallResponse>(this.API_INSTALL_MOD, request);
   }
 
-  canUseWorkshop(): Observable<boolean> {
-    return this.httpClient.get<boolean>(this.API_WORKSHOP_ACTIVE);
+  canUseWorkshop(): Observable<WorkshopActiveResponse> {
+    return this.httpClient.get<WorkshopActiveResponse>(this.API_WORKSHOP_ACTIVE);
   }
+}
+
+
+interface WorkshopActiveResponse {
+  active: boolean;
 }

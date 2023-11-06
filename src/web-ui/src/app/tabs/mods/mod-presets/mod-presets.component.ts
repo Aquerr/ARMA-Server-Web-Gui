@@ -19,15 +19,6 @@ export class ModPresetsComponent {
               private maskService: MaskService,
               private notificationService: NotificationService) {}
 
-  presetClicked(preset: string) {
-    console.log("Selected preset: " + preset);
-    // TODO: Show dialog "do you want to load selected preset? Any changes to mods list will be lost."
-
-    this.modsService.selectPreset({name: preset}).subscribe(response => {
-      this.modPresetSelected.emit(preset);
-    });
-  }
-
   modPresetImport(event: Event) {
     this.maskService.show();
     console.log(event);
@@ -110,5 +101,27 @@ export class ModPresetsComponent {
   presetImportClick() {
     console.log(this.fileInputComponent);
     this.fileInputComponent.nativeElement.click();
+  }
+
+  onPresetSelect(presetName: string) {
+    this.maskService.show();
+    this.modsService.selectPreset({name: presetName}).subscribe(response => {
+      this.modPresetSelected.emit(presetName);
+      this.maskService.hide();
+    });
+  }
+
+  onPresetDelete(presetName: string) {
+    this.maskService.show();
+    this.modsService.deletePreset(presetName).subscribe(response => {
+      this.removePresetFromList(this.modPresets, presetName);
+      this.maskService.hide();
+    });
+  }
+
+  private removePresetFromList(list: string[], presetName: string) {
+    list.forEach((value, index) => {
+      if (value == presetName) list.splice(index, 1);
+    });
   }
 }

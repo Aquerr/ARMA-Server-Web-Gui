@@ -6,7 +6,7 @@
         <mat-label>Search mission...</mat-label>
         <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mission...">
       </mat-form-field>
-      <app-mod-presets [modPresets]="modPresets"></app-mod-presets>
+      <app-mod-presets [modPresets]="modPresets" (modPresetSelected)="onModPresetSelected($event)"></app-mod-presets>
     </div>
   </div>
     <div class="mod-list-group" cdkDropListGroup>

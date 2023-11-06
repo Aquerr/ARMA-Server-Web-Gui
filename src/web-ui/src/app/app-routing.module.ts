@@ -11,6 +11,7 @@ import {SecurityComponent} from "./tabs/security/security.component";
 import {StatusComponent} from "./tabs/status/status.component";
 import {WorkshopComponent} from './tabs/workshop/workshop.component';
 import {WorkshopService} from "./service/workshop.service";
+import {map} from "rxjs";
 
 const routes: Routes = [
   {path: '', redirectTo: '/status', pathMatch: "full"},
@@ -22,8 +23,7 @@ const routes: Routes = [
   {path: 'mods', component: ModsComponent, canActivate: [AuthService]},
   {path: 'logging', component: LoggingComponent, canActivate: [AuthService]},
   {path: 'workshop', component: WorkshopComponent,
-    canActivate: [() => inject(AuthService).isAuthenticated() && inject(WorkshopService).canUseWorkshop()],
-    canMatch: [() => inject(AuthService).isAuthenticated() && inject(WorkshopService).canUseWorkshop()]
+    canMatch: [() => inject(AuthService).isAuthenticated() && inject(WorkshopService).canUseWorkshop().pipe(map(response => response.active))]
   },
   {path: 'login', component: LoginComponent},
   {path: '**', redirectTo: 'status'}

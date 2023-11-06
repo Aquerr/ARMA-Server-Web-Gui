@@ -59,6 +59,7 @@ import { ServerConsoleComponent } from './tabs/status/server-console/server-cons
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatMenuModule} from "@angular/material/menu";
 import { ModPresetsComponent } from './tabs/mods/mod-presets/mod-presets.component';
+import { ModPresetItemComponent } from './tabs/mods/mod-presets/mod-preset-item/mod-preset-item.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ import { ModPresetsComponent } from './tabs/mods/mod-presets/mod-presets.compone
     PlayerListComponent,
     PlayerListComponent,
     ServerConsoleComponent,
-    ModPresetsComponent
+    ModPresetsComponent,
+    ModPresetItemComponent
   ],
     imports: [
         BrowserModule,

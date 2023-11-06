@@ -43,6 +43,10 @@ export class ServerModsService {
   selectPreset(request: ModPresetSelectRequest) {
     return this.httpClient.post(`${this.MODS_URL}/presets/select`, request);
   }
+
+  deletePreset(presetName: string): Observable<ModPresetDeleteResponse> {
+    return this.httpClient.delete<ModPresetDeleteResponse>(`${this.MODS_URL}/presets/${presetName}`);
+  }
 }
 
 export interface GetModsResponse{
@@ -70,4 +74,8 @@ export interface ModPresetModParam {
 
 export interface ModPresetSelectRequest {
   name: string;
+}
+
+export interface ModPresetDeleteResponse {
+  deleted: boolean;
 }
