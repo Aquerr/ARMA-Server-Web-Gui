@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModPresetConverter;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ModPresetServiceImpl implements ModPresetService
 {
     private final ModService modService;
@@ -89,26 +91,21 @@ public class ModPresetServiceImpl implements ModPresetService
         // We should just trigger download of mods that are not yet downloaded.
         return this.modPresetRepository.findByName(params.getName())
                 .defaultIfEmpty(new ModPresetEntity(null, params.getName()))
-                .flatMap(modPresetEntity -> Mono.just(this.modPresetRepository.save(modPresetEntity)
-                        .map(presetEntity -> this.modPresetConverter.convertToEntities(params.getModParams().stream()
-                                .map(modParam -> ModPreset.Entry.builder()
-                                        .id(null)
-                                        .name(modParam.getTitle())
-                                        .modId(modParam.getId())
-                                        .modPresetId(presetEntity.getId())
-                                        .build()
-                                ).collect(Collectors.toList()))
-                        )
-                        .map(entries -> {
-                            entries.forEach(System.out::println);
-                            return entries;
-                        })
-                        .map(this.modPresetEntryRepository::saveAll)
-                        .then(Mono.fromRunnable(() -> {
-                            params.getModParams().forEach(modParam -> this.workShopModInstallService.queueWorkshopModInstallation(
-                                    new WorkshopModInstallationRequest(modParam.getId(), modParam.getTitle()))
-                            );
-                        }))).then());
+                .flatMap(this.modPresetRepository::save)
+                .flatMap(modPresetEntity -> this.modPresetEntryRepository.findAllByModPresetId(modPresetEntity.getId())
+                        .flatMap(this.modPresetEntryRepository::delete)
+                        .then(Mono.just(this.modPresetConverter.convertToEntities(params.getModParams().stream()
+                                        .map(modParam -> ModPreset.Entry.builder()
+                                                .id(null)
+                                                .name(modParam.getTitle())
+                                                .modId(modParam.getId())
+                                                .modPresetId(modPresetEntity.getId())
+                                                .build()).toList()))))
+                .log(log.getName())
+                .map(this.modPresetEntryRepository::saveAll)
+                .then(Mono.fromRunnable(() -> params.getModParams().forEach(modParam -> this.workShopModInstallService.queueWorkshopModInstallation(
+                        new WorkshopModInstallationRequest(modParam.getId(), modParam.getTitle()))
+                )));
     }
 
     @Override
@@ -122,11 +119,10 @@ public class ModPresetServiceImpl implements ModPresetService
     @Override
     public Mono<Void> deletePreset(String presetName)
     {
-        return getModPreset(presetName)
-                .mapNotNull(modPreset -> Flux.concat(this.modPresetEntryRepository.findAllByModPresetId(modPreset.getId())
-                        .map(ModPresetEntity.EntryEntity::getId).collectList()
-                        .map(this.modPresetRepository::deleteAllById), Mono.just(this.modPresetRepository.deleteById(modPreset.getId()))))
-                .then();
+        return this.modPresetRepository.findByName(presetName)
+                .flatMap(modPresetEntity -> this.modPresetEntryRepository.findAllByModPresetId(modPresetEntity.getId())
+                        .map(this.modPresetEntryRepository::delete)
+                        .then(this.modPresetRepository.delete(modPresetEntity)));
     }
 
     private Set<ModView> convertToModViews(List<ModPreset.Entry> entries)

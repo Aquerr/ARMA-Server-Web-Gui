@@ -25,7 +25,8 @@ public class AuthRestController
     @PostMapping
     public Mono<ResponseEntity<JwtTokenResponse>> authenticate(@RequestBody UserCredentials userCredentials)
     {
-        return Mono.justOrEmpty(userService.authenticate(userCredentials.getUsername(), userCredentials.getPassword()))
+        return Mono.fromCallable(() -> userService.authenticate(userCredentials.getUsername(), userCredentials.getPassword()))
+                .onErrorResume(throwable -> Mono.empty())
                 .map(jwt -> {
                     return ResponseEntity.ok()
                             .body(JwtTokenResponse.of(jwt));
