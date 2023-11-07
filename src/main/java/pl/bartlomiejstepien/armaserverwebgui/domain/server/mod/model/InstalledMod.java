@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Table("installed_mod")
@@ -23,7 +23,7 @@ public class InstalledMod
     private Long id;
 
     @Column("workshop_file_id")
-    private long publishedFileId;
+    private long workshopFileId;
 
     @Column("name")
     private String name;

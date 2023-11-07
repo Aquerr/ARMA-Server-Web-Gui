@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ModFolderNameFactory
 {
+    private static final String[] CHARACTERS_TO_REPLACE = {" ", "\\", "/", ":", "*", "?", "\"", "<", ">", "|"};
+    private static final String REPLACEMENT = "_";
+
     public String buildFor(FilePart multipartFile)
     {
         String modName = multipartFile.filename();
@@ -25,6 +28,11 @@ public class ModFolderNameFactory
 
     private String toLowerCaseWithUncerscores(String modName)
     {
-        return modName.toLowerCase().replace(" ", "_");
+        modName = modName.toLowerCase();
+        for (final String characterToReplace : CHARACTERS_TO_REPLACE)
+        {
+            modName = modName.replace(characterToReplace, REPLACEMENT);
+        }
+        return modName;
     }
 }

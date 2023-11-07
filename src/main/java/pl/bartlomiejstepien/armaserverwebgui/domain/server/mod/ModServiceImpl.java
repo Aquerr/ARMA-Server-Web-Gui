@@ -154,7 +154,7 @@ public class ModServiceImpl implements ModService
         ModMetaFile modMetaFile = modStorage.readModMetaFile(modDirectory);
 
         InstalledMod.InstalledModBuilder installedModBuilder = InstalledMod.builder();
-        installedModBuilder.publishedFileId(modMetaFile.getPublishedFileId());
+        installedModBuilder.workshopFileId(modMetaFile.getPublishedFileId());
         installedModBuilder.name(modMetaFile.getName());
         installedModBuilder.directoryPath(modDirectory.toAbsolutePath().toString());
         installedModBuilder.createdDate(OffsetDateTime.now());
@@ -176,7 +176,7 @@ public class ModServiceImpl implements ModService
         ModsView modsView = new ModsView();
         Set<ModView> disabledModViews = installedMods.stream()
                 .filter(installedMod -> enabledModDirs.stream().noneMatch(modDir -> installedMod.getModDirectoryName().equals(modDir.getDirName())))
-                .map(installedMod -> new ModView(installedMod.getName(), false, installedMod.getPreviewUrl(), modWorkshopUrlBuilder.buildUrlForFileId(installedMod.getPublishedFileId())))
+                .map(installedMod -> new ModView(installedMod.getName(), false, installedMod.getPreviewUrl(), modWorkshopUrlBuilder.buildUrlForFileId(installedMod.getWorkshopFileId())))
                 .collect(Collectors.toSet());
 
         Set<ModView> enabledModViews = new HashSet<>();
@@ -189,7 +189,7 @@ public class ModServiceImpl implements ModService
 
             if (installedActiveMod == null)
                 continue;
-            enabledModViews.add(new ModView(installedActiveMod.getName(), modDir.isServerMod(), installedActiveMod.getPreviewUrl(), modWorkshopUrlBuilder.buildUrlForFileId(installedActiveMod.getPublishedFileId())));
+            enabledModViews.add(new ModView(installedActiveMod.getName(), modDir.isServerMod(), installedActiveMod.getPreviewUrl(), modWorkshopUrlBuilder.buildUrlForFileId(installedActiveMod.getWorkshopFileId())));
         }
 
         modsView.setDisabledMods(disabledModViews);

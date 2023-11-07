@@ -17,10 +17,10 @@ public class InstalledModConverter
             return null;
 
         return ArmaWorkshopMod.builder()
-                .fileId(installedMod.getPublishedFileId())
+                .fileId(installedMod.getWorkshopFileId())
                 .title(installedMod.getName())
                 .previewUrl(installedMod.getPreviewUrl())
-                .modWorkshopUrl(workshopUrlBuilder.buildUrlForFileId(installedMod.getPublishedFileId()))
+                .modWorkshopUrl(workshopUrlBuilder.buildUrlForFileId(installedMod.getWorkshopFileId()))
             .build();
     }
 }

@@ -11,7 +11,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopMod
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
@@ -33,6 +32,7 @@ import static java.lang.String.format;
 public class WorkShopModInstallService
 {
     private final Queue<WorkshopModInstallationRequest> workshopModInstallationRequestQueue = new LinkedBlockingQueue<>();
+    private final WorkShopInstallRetryPolicy workShopInstallRetryPolicy;
     private final SteamService steamService;
     private final ModStorage modStorage;
     private final ASWGConfig aswgConfig;
@@ -47,6 +47,10 @@ public class WorkShopModInstallService
             log.info("Queue mod installation: {}", request);
             this.workshopModInstallationRequestQueue.add(request);
             publishMessage(new WorkshopModInstallationStatus(request.getFileId(), 0));
+        }
+        else
+        {
+            log.info("Mod installation {} already queued. Skipping.", request);
         }
     }
 
@@ -81,6 +85,11 @@ public class WorkShopModInstallService
             catch (Exception exception)
             {
                 exception.printStackTrace();
+                if (workShopInstallRetryPolicy.canRetry(request))
+                {
+                    log.info("Requeue mod installation request: {}", request);
+                    queueWorkshopModInstallation(new WorkshopModInstallationRequest(request.getFileId(), request.getTitle(), request.getInstallAttemptCount() + 1));
+                }
             }
         }
     }
@@ -89,41 +98,50 @@ public class WorkShopModInstallService
     {
         try
         {
-            boolean updateOnly = this.installedModRepository.findById(request.getFileId()).block() != null;
-
             Path steamCmdModFolderPath = this.steamService.downloadModFromWorkshop(request.getFileId());
             Path modDirectoryPath = this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()), request.getTitle());
 
-            if (!updateOnly) {
-                saveModInDatabase(modDirectoryPath);
-            }
+            saveModInDatabase(request.getFileId(), request.getTitle(), modDirectoryPath);
 
             publishMessage(new WorkshopModInstallationStatus(request.getFileId(), 100));
-            this.currentInstallationRequest = null;
         }
-        catch (CouldNotDownloadWorkshopModException e)
+        catch (Exception exception)
         {
-            throw new CouldNotInstallWorkshopModException(format("Could not install workshop mod with id = %s, name = %s", request.getFileId(), request.getTitle()), e);
+            throw new CouldNotInstallWorkshopModException(format("Could not install workshop mod with id = %s, name = %s", request.getFileId(), request.getTitle()), exception);
+        }
+        finally
+        {
+            this.currentInstallationRequest = null;
         }
     }
 
-    private void saveModInDatabase(Path modDirectory)
+    private void saveModInDatabase(long workshopFileId, String modName, Path modDirectory)
     {
+        InstalledMod installedMod = this.installedModRepository.findByWorkshopFileId(workshopFileId).block();
         ModMetaFile modMetaFile = modStorage.readModMetaFile(modDirectory);
 
-        InstalledMod.InstalledModBuilder installedModBuilder = InstalledMod.builder();
-        installedModBuilder.publishedFileId(modMetaFile.getPublishedFileId());
+        InstalledMod.InstalledModBuilder installedModBuilder;
+        if (installedMod != null) // Update
+        {
+            log.info("Mod: {} already exists. Performing update only.", modName);
+            installedModBuilder = installedMod.toBuilder();
+        }
+        else // New mod
+        {
+            installedModBuilder = InstalledMod.builder();
+            installedModBuilder.createdDate(OffsetDateTime.now());
+            installedModBuilder.workshopFileId(modMetaFile.getPublishedFileId());
+        }
+
         installedModBuilder.name(modMetaFile.getName());
         installedModBuilder.directoryPath(modDirectory.toAbsolutePath().toString());
-        installedModBuilder.createdDate(OffsetDateTime.now());
 
         ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(modMetaFile.getPublishedFileId());
         if (armaWorkshopMod != null)
         {
             installedModBuilder.previewUrl(armaWorkshopMod.getPreviewUrl());
         }
-        InstalledMod installedMod = installedModBuilder.build();
 
-        installedModRepository.save(installedMod).subscribe();
+        installedModRepository.save(installedModBuilder.build()).subscribe();
     }
 }

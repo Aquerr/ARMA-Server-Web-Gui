@@ -21,6 +21,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -85,9 +86,9 @@ public class ModStorageImpl implements ModStorage
     {
         return Optional.ofNullable(modDirectory.get().toFile().listFiles())
                 .map(files -> Stream.of(files)
-                        .filter(File::isDirectory)
-                        .filter(file -> file.getName().startsWith("@"))
+                        .filter(this::isModDirectory)
                         .map(this::getInstalledModFromModDirectory)
+                        .filter(Objects::nonNull)
                         .toList())
                 .orElse(Collections.emptyList());
     }
@@ -182,12 +183,17 @@ public class ModStorageImpl implements ModStorage
 
     private InstalledMod getInstalledModFromModDirectory(File file)
     {
+        if (Files.notExists(file.toPath()))
+        {
+            return null;
+        }
+
         String directoryPath = file.getPath();
         ModMetaFile modMetaFile = readModMetaFile(file.toPath());
 
         return InstalledMod.builder()
                 .directoryPath(directoryPath)
-                .publishedFileId(modMetaFile.getPublishedFileId())
+                .workshopFileId(modMetaFile.getPublishedFileId())
                 .name(modMetaFile.getName())
                 .build();
     }
@@ -217,5 +223,10 @@ public class ModStorageImpl implements ModStorage
     private void deleteZipFile(Path filePath) throws IOException
     {
         Files.deleteIfExists(filePath);
+    }
+
+    private boolean isModDirectory(File file)
+    {
+        return file.isDirectory() && file.getName().startsWith("@");
     }
 }

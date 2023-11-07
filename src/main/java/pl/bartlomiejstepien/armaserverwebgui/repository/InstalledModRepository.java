@@ -11,5 +11,7 @@ public interface InstalledModRepository extends ReactiveCrudRepository<Installed
 {
     Mono<InstalledMod> findByName(String name);
 
+    Mono<InstalledMod> findByWorkshopFileId(Long id);
+
     Flux<InstalledMod> findAllByOrderByNameAsc();
 }

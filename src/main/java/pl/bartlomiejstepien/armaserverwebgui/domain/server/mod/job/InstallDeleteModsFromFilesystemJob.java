@@ -8,6 +8,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import reactor.core.Disposable;
+import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.OffsetDateTime;
@@ -22,37 +23,37 @@ public class InstallDeleteModsFromFilesystemJob
     private final SteamService steamService;
 
     @Scheduled(fixedDelay = 1L, timeUnit = TimeUnit.HOURS)
-    public Disposable scanModDirectories()
+    public void scanModDirectories()
     {
         List<InstalledMod> installedModsInFileSystem = modService.getInstalledModsFromFileSystem();
-        return saveOrDeleteModsFromDB(installedModsInFileSystem);
+        saveOrDeleteModsFromDB(installedModsInFileSystem);
     }
 
-    private Disposable saveOrDeleteModsFromDB(List<InstalledMod> installedModsInFileSystem)
+    private void saveOrDeleteModsFromDB(List<InstalledMod> installedModsInFileSystem)
     {
-        return modService.getInstalledMods()
+        modService.getInstalledMods()
                 .collectList()
-                .subscribeOn(Schedulers.single())
-                .doOnSuccess(installedModsInDB -> {
+                .map(installedModsInDB -> {
                     List<InstalledMod> modsToAddToDB = findModsToAddToDB(installedModsInDB, installedModsInFileSystem);
                     List<InstalledMod> modsToDeleteInDB = findModsToDeleteFromDB(installedModsInDB, installedModsInFileSystem);
 
-                    modsToAddToDB.forEach(mod -> modService.saveToDB(mod).subscribe());
-                    modsToDeleteInDB.forEach(mod -> modService.deleteFromDB(mod.getId()).subscribe());
+                    modsToAddToDB.forEach(mod -> modService.saveToDB(mod).subscribeOn(Schedulers.boundedElastic()).subscribe());
+                    modsToDeleteInDB.forEach(mod -> modService.deleteFromDB(mod.getId()).subscribeOn(Schedulers.boundedElastic()).subscribe());
+                    return installedModsInDB;
                 }).subscribe();
     }
 
     private List<InstalledMod> findModsToAddToDB(List<InstalledMod> databaseMods, List<InstalledMod> installedFileSystemMods)
     {
         return installedFileSystemMods.stream()
-                .filter(installedMod -> databaseMods.stream().noneMatch(databaseMod -> databaseMod.getPublishedFileId() == installedMod.getPublishedFileId()))
+                .filter(installedMod -> databaseMods.stream().noneMatch(databaseMod -> databaseMod.getWorkshopFileId() == installedMod.getWorkshopFileId()))
                 .map(this::populateMod)
                 .toList();
     }
 
     private InstalledMod populateMod(InstalledMod installedMod)
     {
-        ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(installedMod.getPublishedFileId());
+        ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(installedMod.getWorkshopFileId());
         if (armaWorkshopMod != null)
         {
             installedMod.setPreviewUrl(armaWorkshopMod.getPreviewUrl());
@@ -65,7 +66,7 @@ public class InstallDeleteModsFromFilesystemJob
     private List<InstalledMod> findModsToDeleteFromDB(List<InstalledMod> databaseMods, List<InstalledMod> installedFileSystemMods)
     {
         return databaseMods.stream()
-                .filter(installedDatabaseMod -> installedFileSystemMods.stream().noneMatch(fileSystemMod -> fileSystemMod.getPublishedFileId() == installedDatabaseMod.getPublishedFileId()))
+                .filter(installedDatabaseMod -> installedFileSystemMods.stream().noneMatch(fileSystemMod -> fileSystemMod.getWorkshopFileId() == installedDatabaseMod.getWorkshopFileId()))
                 .toList();
     }
 }
