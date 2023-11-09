@@ -3,8 +3,7 @@
                xsi:schemaLocation="http://jgitver.github.io/maven/configuration/1.1.0 https://jgitver.github.io/maven/configuration/jgitver-configuration-v1_1_0.xsd">
     <strategy>MAVEN</strategy>
     <policy>LATEST</policy>    <!-- LookupPolicy to select the base tag/commit for the version computation -->
-    <autoIncrementPatch>true</autoIncrementPatch>
-    <useCommitDistance>true</useCommitDistance>
+    <autoIncrementPatch>false</autoIncrementPatch>
     <useDirty>true</useDirty>
     <useGitCommitId>true</useGitCommitId>
     <useSnapshot>false</useSnapshot> <!-- use -SNAPSHOT in CONFIGURABLE strategy -->

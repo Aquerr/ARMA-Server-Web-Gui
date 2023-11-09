@@ -283,14 +283,14 @@
                             <target>
                                 <echo>Project version information</echo>
                                 <echo>============================================</echo>
-                                <echo>calculated version: ${jgitver.calculated_version}</echo>
-                                <echo>used version: ${jgitver.used_version}</echo>
-                                <echo>version calculated: ${jgitver.calculated_version}</echo>
-                                <echo>commit distance: ${jgitver.commit_distance}</echo>
+                                <echo>calculated_version: ${jgitver.calculated_version}</echo>
+                                <echo>used_version: ${jgitver.used_version}</echo>
+                                <echo>version_calculated: ${jgitver.calculated_version}</echo>
+                                <echo>commit_distance: ${jgitver.commit_distance}</echo>
                                 <echo>dirty: ${jgitver.dirty}</echo>
-                                <echo>next major version: ${jgitver.next_major_version}</echo>
-                                <echo>next minor version: ${jgitver.next_minor_version}</echo>
-                                <echo>next patch version: ${jgitver.next_patch_version}</echo>
+                                <echo>next_major_version: ${jgitver.next_major_version}</echo>
+                                <echo>next_minor_version: ${jgitver.next_minor_version}</echo>
+                                <echo>next_patch_version: ${jgitver.next_patch_version}</echo>
                                 <echo>head_committer_name: ${jgitver.head_committer_name}</echo>
                                 <echo>head_commiter_email: ${jgitver.head_commiter_email}</echo>
                                 <echo>head_commit_datetime: ${jgitver.head_commit_datetime}</echo>
