@@ -4,8 +4,8 @@
       {{mod.name}}
     </mat-expansion-panel-header>
     <div class="mod-list-item-inner-panel">
-      <a class="image-wrapper" [href]="mod.workshopUrl">
-        <img [src]="mod.previewUrl" alt="No Image">
+      <a class="image-wrapper" [href]="mod.workshopUrl" target="_blank">
+        <img [ngSrc]="mod.previewUrl" [width]="200" [height]="200" alt="No Image">
       </a>
       <div class="mod-list-item-inner-panel-actions">
         <div style="display: flex;">
