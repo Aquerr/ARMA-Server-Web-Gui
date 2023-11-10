@@ -8,7 +8,7 @@
     <useGitCommitId>true</useGitCommitId>
     <useSnapshot>false</useSnapshot> <!-- use -SNAPSHOT in CONFIGURABLE strategy -->
     <gitCommitIdLength>8</gitCommitIdLength>  <!-- between [8,40] -->
-    <regexVersionTag>^v([0-9]+\.[0-9]+\.[0-9]+)$</regexVersionTag>  <!-- a java regular expression with a capture group matching only tags of the form r0, r1, ..., r34-->
+    <regexVersionTag>^([0-9]+\.[0-9]+\.[0-9]+)$</regexVersionTag>  <!-- a java regular expression with a capture group matching only tags of the form r0, r1, ..., r34-->
     <useDefaultBranchingPolicy>true</useDefaultBranchingPolicy>   <!-- uses jgitver#BranchingPolicy#DEFAULT_FALLBACK as fallback branch policy-->
     <nonQualifierBranches>main</nonQualifierBranches>
 </configuration>
