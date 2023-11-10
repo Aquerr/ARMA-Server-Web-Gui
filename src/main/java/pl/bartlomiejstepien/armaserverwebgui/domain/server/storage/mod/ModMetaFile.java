@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod;
 
 import lombok.Data;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgConfigReader;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReflectionUtil;
@@ -25,7 +26,7 @@ public final class ModMetaFile
 
     }
 
-    public static ModMetaFile forFile(Path metaFilePath)
+    public static ModMetaFile forFile(Path metaFilePath) throws CouldNotReadModMetaFile
     {
         ModMetaFile modMetaFile = new ModMetaFile();
         try
@@ -47,7 +48,7 @@ public final class ModMetaFile
         }
         catch (IOException | IllegalAccessException e)
         {
-            throw new RuntimeException(e);
+            throw new CouldNotReadModMetaFile(e);
         }
         return modMetaFile;
     }

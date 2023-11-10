@@ -5,9 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationStatus;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
@@ -117,18 +118,26 @@ public class WorkShopModInstallService
 
     private void saveModInDatabase(long workshopFileId, String modName, Path modDirectory)
     {
-        InstalledMod installedMod = this.installedModRepository.findByWorkshopFileId(workshopFileId).block();
-        ModMetaFile modMetaFile = modStorage.readModMetaFile(modDirectory);
+        InstalledModEntity installedModEntity = this.installedModRepository.findByWorkshopFileId(workshopFileId).block();
+        ModMetaFile modMetaFile = null;
+        try
+        {
+            modMetaFile = modStorage.readModMetaFile(modDirectory);
+        }
+        catch (CouldNotReadModMetaFile e)
+        {
+            throw new RuntimeException(e);
+        }
 
-        InstalledMod.InstalledModBuilder installedModBuilder;
-        if (installedMod != null) // Update
+        InstalledModEntity.InstalledModEntityBuilder installedModBuilder;
+        if (installedModEntity != null) // Update
         {
             log.info("Mod: {} already exists. Performing update only.", modName);
-            installedModBuilder = installedMod.toBuilder();
+            installedModBuilder = installedModEntity.toBuilder();
         }
         else // New mod
         {
-            installedModBuilder = InstalledMod.builder();
+            installedModBuilder = InstalledModEntity.builder();
             installedModBuilder.createdDate(OffsetDateTime.now());
             installedModBuilder.workshopFileId(modMetaFile.getPublishedFileId());
         }

@@ -3,12 +3,11 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.job;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
-import reactor.core.Disposable;
-import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.OffsetDateTime;
@@ -25,17 +24,17 @@ public class InstallDeleteModsFromFilesystemJob
     @Scheduled(fixedDelay = 1L, timeUnit = TimeUnit.HOURS)
     public void scanModDirectories()
     {
-        List<InstalledMod> installedModsInFileSystem = modService.getInstalledModsFromFileSystem();
-        saveOrDeleteModsFromDB(installedModsInFileSystem);
+        List<InstalledFileSystemMod> installedFileSystemMods = modService.getInstalledModsFromFileSystem();
+        saveOrDeleteModsFromDB(installedFileSystemMods);
     }
 
-    private void saveOrDeleteModsFromDB(List<InstalledMod> installedModsInFileSystem)
+    private void saveOrDeleteModsFromDB(List<InstalledFileSystemMod> installedFileSystemMods)
     {
         modService.getInstalledMods()
                 .collectList()
                 .map(installedModsInDB -> {
-                    List<InstalledMod> modsToAddToDB = findModsToAddToDB(installedModsInDB, installedModsInFileSystem);
-                    List<InstalledMod> modsToDeleteInDB = findModsToDeleteFromDB(installedModsInDB, installedModsInFileSystem);
+                    List<InstalledModEntity> modsToAddToDB = findModsToAddToDB(installedModsInDB, installedFileSystemMods);
+                    List<InstalledModEntity> modsToDeleteInDB = findModsToDeleteFromDB(installedModsInDB, installedFileSystemMods);
 
                     modsToAddToDB.forEach(mod -> modService.saveToDB(mod).subscribeOn(Schedulers.boundedElastic()).subscribe());
                     modsToDeleteInDB.forEach(mod -> modService.deleteFromDB(mod.getId()).subscribeOn(Schedulers.boundedElastic()).subscribe());
@@ -43,27 +42,32 @@ public class InstallDeleteModsFromFilesystemJob
                 }).subscribe();
     }
 
-    private List<InstalledMod> findModsToAddToDB(List<InstalledMod> databaseMods, List<InstalledMod> installedFileSystemMods)
+    private List<InstalledModEntity> findModsToAddToDB(List<InstalledModEntity> databaseMods, List<InstalledFileSystemMod> installedFileSystemMods)
     {
         return installedFileSystemMods.stream()
+                .filter(InstalledFileSystemMod::isValid)
                 .filter(installedMod -> databaseMods.stream().noneMatch(databaseMod -> databaseMod.getWorkshopFileId() == installedMod.getWorkshopFileId()))
-                .map(this::populateMod)
+                .map(this::toEntity)
                 .toList();
     }
 
-    private InstalledMod populateMod(InstalledMod installedMod)
+    private InstalledModEntity toEntity(InstalledFileSystemMod installedFileSystemMod)
     {
-        ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(installedMod.getWorkshopFileId());
+        InstalledModEntity entity = new InstalledModEntity();
+        entity.setWorkshopFileId(installedFileSystemMod.getWorkshopFileId());
+        entity.setName(installedFileSystemMod.getName());
+        entity.setDirectoryPath(installedFileSystemMod.getModDirectory().getPath().toString());
+        entity.setCreatedDate(OffsetDateTime.now());
+
+        ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(installedFileSystemMod.getWorkshopFileId());
         if (armaWorkshopMod != null)
         {
-            installedMod.setPreviewUrl(armaWorkshopMod.getPreviewUrl());
+            entity.setPreviewUrl(armaWorkshopMod.getPreviewUrl());
         }
-
-        installedMod.setCreatedDate(OffsetDateTime.now());
-        return installedMod;
+        return entity;
     }
 
-    private List<InstalledMod> findModsToDeleteFromDB(List<InstalledMod> databaseMods, List<InstalledMod> installedFileSystemMods)
+    private List<InstalledModEntity> findModsToDeleteFromDB(List<InstalledModEntity> databaseMods, List<InstalledFileSystemMod> installedFileSystemMods)
     {
         return databaseMods.stream()
                 .filter(installedDatabaseMod -> installedFileSystemMods.stream().noneMatch(fileSystemMod -> fileSystemMod.getWorkshopFileId() == installedDatabaseMod.getWorkshopFileId()))

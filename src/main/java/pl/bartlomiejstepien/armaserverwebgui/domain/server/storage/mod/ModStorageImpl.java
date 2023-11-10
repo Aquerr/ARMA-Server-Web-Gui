@@ -6,7 +6,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.FileSystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModFolderNameFactory;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -82,45 +83,45 @@ public class ModStorageImpl implements ModStorage
     }
 
     @Override
-    public List<InstalledMod> getInstalledModsFromFileSystem()
+    public List<InstalledFileSystemMod> getInstalledModsFromFileSystem()
     {
         return Optional.ofNullable(modDirectory.get().toFile().listFiles())
                 .map(files -> Stream.of(files)
                         .filter(this::isModDirectory)
-                        .map(this::getInstalledModFromModDirectory)
+                        .map(this::getInstalledFileSystemModFromDirectory)
                         .filter(Objects::nonNull)
                         .toList())
                 .orElse(Collections.emptyList());
     }
 
     @Override
-    public ModMetaFile readModMetaFile(Path modDirectory)
+    public ModMetaFile readModMetaFile(Path modDirectory) throws CouldNotReadModMetaFile
     {
         return ModMetaFile.forFile(modDirectory.resolve("meta.cpp"));
     }
 
     @Override
-    public Mono<Boolean> deleteMod(InstalledMod installedMod)
+    public Mono<Boolean> deleteMod(InstalledModEntity installedModEntity)
     {
         final File[] files = this.modDirectory.get().toFile().listFiles();
         if (files != null)
         {
             for (final File file : files)
             {
-                if (file.getName().equals(installedMod.getModDirectoryName()))
+                if (file.getName().equals(installedModEntity.getModDirectoryName()))
                 {
                     FileSystemUtils.deleteRecursively(file);
                 }
             }
         }
 
-        return this.installedModRepository.delete(installedMod)
+        return this.installedModRepository.delete(installedModEntity)
                 .thenReturn(true)
                 .onErrorReturn(false);
     }
 
     @Override
-    public Mono<InstalledMod> getInstalledMod(String modName)
+    public Mono<InstalledModEntity> getInstalledMod(String modName)
     {
         return this.installedModRepository.findByName(modName);
     }
@@ -181,7 +182,7 @@ public class ModStorageImpl implements ModStorage
         return newModFolderPath;
     }
 
-    private InstalledMod getInstalledModFromModDirectory(File file)
+    private InstalledFileSystemMod getInstalledFileSystemModFromDirectory(File file)
     {
         if (Files.notExists(file.toPath()))
         {
@@ -189,13 +190,7 @@ public class ModStorageImpl implements ModStorage
         }
 
         String directoryPath = file.getPath();
-        ModMetaFile modMetaFile = readModMetaFile(file.toPath());
-
-        return InstalledMod.builder()
-                .directoryPath(directoryPath)
-                .workshopFileId(modMetaFile.getPublishedFileId())
-                .name(modMetaFile.getName())
-                .build();
+        return InstalledFileSystemMod.from(Paths.get(directoryPath));
     }
 
     private Mono<Void> saveFileAtPath(FilePart multipartFile, Path saveLocation)

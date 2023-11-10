@@ -2,16 +2,16 @@ package pl.bartlomiejstepien.armaserverwebgui.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public interface InstalledModRepository extends ReactiveCrudRepository<InstalledMod, Long>
+public interface InstalledModRepository extends ReactiveCrudRepository<InstalledModEntity, Long>
 {
-    Mono<InstalledMod> findByName(String name);
+    Mono<InstalledModEntity> findByName(String name);
 
-    Mono<InstalledMod> findByWorkshopFileId(Long id);
+    Mono<InstalledModEntity> findByWorkshopFileId(Long id);
 
-    Flux<InstalledMod> findAllByOrderByNameAsc();
+    Flux<InstalledModEntity> findAllByOrderByNameAsc();
 }

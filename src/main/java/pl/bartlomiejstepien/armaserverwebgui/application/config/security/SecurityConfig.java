@@ -43,12 +43,14 @@ public class SecurityConfig
             http.authorizeExchange(auths -> {
                         auths.pathMatchers("/api/v1/auth").permitAll();
                         auths.pathMatchers("/api/v1/ws/**").permitAll();
+                        auths.pathMatchers("/api/v1/actuator/info").permitAll();
+                        auths.pathMatchers("/api/v1/actuator/health").permitAll();
+                        auths.pathMatchers("/api/v1/actuator/**").authenticated();
                         auths.pathMatchers("/api/**").authenticated();
                         auths.pathMatchers("/ws/**").permitAll();
                         auths.pathMatchers("/static/**").permitAll();
                         auths.pathMatchers("/public/**").permitAll();
-                        auths.pathMatchers("/api/v1/actuator/metrics").authenticated();
-                        auths.pathMatchers("/api/v1/actuator/**").permitAll();
+
                         auths.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                         auths.pathMatchers("/*").permitAll();
                     })

@@ -12,7 +12,7 @@
     <artifactId>arma-server-web-gui</artifactId>
     <version>0.0.0</version>
     <name>arma-server-web-gui</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Mangamenet Web GUI for Arma Servers</description>
     <packaging>jar</packaging>
     
     <properties>

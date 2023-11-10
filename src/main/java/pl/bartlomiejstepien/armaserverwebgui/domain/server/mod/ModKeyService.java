@@ -1,13 +1,13 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
 
 public interface ModKeyService
 {
 
-    void copyKeysForMod(InstalledMod installedMod);
+    void copyKeysForMod(InstalledFileSystemMod installedFileSystemMod);
 
-    void deleteKeysForMod(InstalledMod installedMod);
+    void deleteKeysForMod(InstalledFileSystemMod installedFileSystemMod);
 
     void clearServerKeys();
 }

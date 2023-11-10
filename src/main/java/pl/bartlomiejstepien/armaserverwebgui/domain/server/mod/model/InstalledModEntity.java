@@ -16,7 +16,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table("installed_mod")
-public class InstalledMod
+public class InstalledModEntity
 {
     @Id
     @Column("id")

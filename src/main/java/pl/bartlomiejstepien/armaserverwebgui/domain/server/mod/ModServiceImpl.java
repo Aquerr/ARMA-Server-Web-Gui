@@ -11,8 +11,10 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.InstalledModConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModWorkshopUrlBuilder;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
@@ -44,7 +46,7 @@ public class ModServiceImpl implements ModService
     private final ModWorkshopUrlBuilder modWorkshopUrlBuilder;
 
     @Override
-    public Mono<InstalledMod> saveModFile(FilePart multipartFile)
+    public Mono<InstalledModEntity> saveModFile(FilePart multipartFile)
     {
         if(modStorage.doesModExists(multipartFile))
             throw new ModFileAlreadyExistsException();
@@ -60,7 +62,7 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public Mono<InstalledMod> installModFromWorkshop(long fileId, String modName)
+    public Mono<InstalledModEntity> installModFromWorkshop(long fileId, String modName)
     {
         workShopModInstallService.queueWorkshopModInstallation(new WorkshopModInstallationRequest(fileId, modName));
         return Mono.empty();
@@ -74,9 +76,9 @@ public class ModServiceImpl implements ModService
 
     @Transactional
     @Override
-    public Mono<InstalledMod> saveToDB(InstalledMod installedMod)
+    public Mono<InstalledModEntity> saveToDB(InstalledModEntity installedModEntity)
     {
-        return this.installedModRepository.save(installedMod);
+        return this.installedModRepository.save(installedModEntity);
     }
 
     @Transactional
@@ -87,7 +89,7 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public List<InstalledMod> getInstalledModsFromFileSystem()
+    public List<InstalledFileSystemMod> getInstalledModsFromFileSystem()
     {
         return this.modStorage.getInstalledModsFromFileSystem();
     }
@@ -113,9 +115,9 @@ public class ModServiceImpl implements ModService
     @Override
     public void saveEnabledModList(Set<ModView> mods)
     {
-        List<InstalledMod> installedMods = getInstalledModsFromFileSystem();
-        Set<InstalledMod> installedActiveMods = mods.stream()
-                .map(modView -> installedMods.stream()
+        List<InstalledFileSystemMod> installedModEntities = getInstalledModsFromFileSystem();
+        Set<InstalledFileSystemMod> installedActiveMods = mods.stream()
+                .map(modView -> installedModEntities.stream()
                     .filter(mod -> mod.getName().equals(modView.getName()))
                     .findFirst()
                     .orElse(null))
@@ -123,7 +125,7 @@ public class ModServiceImpl implements ModService
                 .collect(Collectors.toSet());
 
         Set<ModDir> activeModDirs = installedActiveMods.stream()
-                .map(installedMod -> new ModDir(installedMod.getModDirectoryName(), mods.stream()
+                .map(installedMod -> new ModDir(installedMod.getModDirectory().getName(), mods.stream()
                         .filter(modView -> modView.getName().equals(installedMod.getName()))
                         .findFirst()
                         .map(ModView::isServerMod)
@@ -137,7 +139,7 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public Flux<InstalledMod> getInstalledMods()
+    public Flux<InstalledModEntity> getInstalledMods()
     {
         return this.installedModRepository.findAll();
     }
@@ -149,11 +151,19 @@ public class ModServiceImpl implements ModService
                 .map(installedModConverter::convertToWorkshopMod);
     }
 
-    private Mono<InstalledMod> saveModInDatabase(Path modDirectory)
+    private Mono<InstalledModEntity> saveModInDatabase(Path modDirectory)
     {
-        ModMetaFile modMetaFile = modStorage.readModMetaFile(modDirectory);
+        ModMetaFile modMetaFile = null;
+        try
+        {
+            modMetaFile = modStorage.readModMetaFile(modDirectory);
+        }
+        catch (CouldNotReadModMetaFile e)
+        {
+            throw new RuntimeException(e);
+        }
 
-        InstalledMod.InstalledModBuilder installedModBuilder = InstalledMod.builder();
+        InstalledModEntity.InstalledModEntityBuilder installedModBuilder = InstalledModEntity.builder();
         installedModBuilder.workshopFileId(modMetaFile.getPublishedFileId());
         installedModBuilder.name(modMetaFile.getName());
         installedModBuilder.directoryPath(modDirectory.toAbsolutePath().toString());
@@ -164,17 +174,17 @@ public class ModServiceImpl implements ModService
         {
             installedModBuilder.previewUrl(armaWorkshopMod.getPreviewUrl());
         }
-        InstalledMod installedMod = installedModBuilder.build();
+        InstalledModEntity installedModEntity = installedModBuilder.build();
 
-        return installedModRepository.save(installedMod);
+        return installedModRepository.save(installedModEntity);
     }
 
-    private ModsView toModsView(List<InstalledMod> installedMods)
+    private ModsView toModsView(List<InstalledModEntity> installedModEntities)
     {
         Set<ModDir> enabledModDirs = this.aswgConfig.getActiveModDirs();
 
         ModsView modsView = new ModsView();
-        Set<ModView> disabledModViews = installedMods.stream()
+        Set<ModView> disabledModViews = installedModEntities.stream()
                 .filter(installedMod -> enabledModDirs.stream().noneMatch(modDir -> installedMod.getModDirectoryName().equals(modDir.getDirName())))
                 .map(installedMod -> new ModView(installedMod.getName(), false, installedMod.getPreviewUrl(), modWorkshopUrlBuilder.buildUrlForFileId(installedMod.getWorkshopFileId())))
                 .collect(Collectors.toSet());
@@ -182,7 +192,7 @@ public class ModServiceImpl implements ModService
         Set<ModView> enabledModViews = new HashSet<>();
         for (final ModDir modDir : enabledModDirs)
         {
-            final InstalledMod installedActiveMod = installedMods.stream()
+            final InstalledModEntity installedActiveMod = installedModEntities.stream()
                     .filter(mod -> modDir.getDirName().equals(mod.getModDirectoryName()))
                     .findFirst()
                     .orElse(null);

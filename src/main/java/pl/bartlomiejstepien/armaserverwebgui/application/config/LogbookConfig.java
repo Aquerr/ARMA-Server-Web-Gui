@@ -19,6 +19,8 @@ import static org.zalando.logbook.json.JsonPathBodyFilters.jsonPath;
 @Configuration
 public class LogbookConfig implements WebFluxConfigurer
 {
+    private static final String[] IGNORED_FILE_CONTENT = new String[]{"text/html", "text/css", "text/javascript", "application/javascript", "image/*"};
+
     @Bean
     public WebFilter logbookFilter(Logbook logbook)
     {
@@ -29,7 +31,7 @@ public class LogbookConfig implements WebFluxConfigurer
     public Logbook logbook()
     {
         Logbook logbook = Logbook.builder()
-                .responseFilter(ResponseFilters.replaceBody(response -> contentType("text/html", "text/javascript", "application/javascript").test(response) ? "<skipped>" : null))
+                .responseFilter(ResponseFilters.replaceBody(response -> contentType("text/html", IGNORED_FILE_CONTENT).test(response) ? "<skipped>" : null))
                 .bodyFilter(jsonPath("$.password").replace("XXX"))
                 .bodyFilter(jsonPath("$.publishedFileDetails").delete())
                 .correlationId(new DefaultCorrelationId())
