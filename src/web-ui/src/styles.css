@@ -7,6 +7,7 @@
   --aswg-bg-primary-bg-color: #ffffff;
   --aswg-bg-primary-font-color: #000000;
   --aswg-input-bg-color: whitesmoke;
+  --aswg-border-color: #444c56 !important;
   --mat-icon-color: var(--aswg-primary-color) !important;
   --mat-stepper-header-edit-state-icon-background-color: var(--aswg-primary-color) !important;
   --mat-stepper-header-done-state-icon-background-color: var(--aswg-primary-color) !important;

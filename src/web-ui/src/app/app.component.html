@@ -3,18 +3,20 @@
   <div style="display: flex; flex-direction: row; height: 100%;">
     <div class="side-menu-wrapper" *ngIf="!isMobile">
       <app-side-menu (changeThemeEmit)="changeTheme()" [darkMode]="isDarkMode()"></app-side-menu>
-      <footer class="footer">
-        <div style="display: flex; flex-direction: row; justify-content: space-between;">
-          <div class="version">Version: {{version}}</div>
-          <div class="copyright">&copy; ASWG 2023</div>
-        </div>
-      </footer>
+      <ng-container [ngTemplateOutlet]="footer" *ngIf="!isMobile"></ng-container>
     </div>
     <div class="router-section">
       <div class="content">
         <router-outlet></router-outlet>
       </div>
+      <ng-container [ngTemplateOutlet]="footer" *ngIf="isMobile"></ng-container>
     </div>
   </div>
 </div>
 <app-aswg-spinner></app-aswg-spinner>
+<ng-template #footer>
+  <footer class="footer">
+    <span class="version">Version: {{version}}</span>
+    <span class="copyright">&copy; ASWG 2023</span>
+  </footer>
+</ng-template>
