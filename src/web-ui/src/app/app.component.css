@@ -5,11 +5,25 @@
 .router-section {
   display: block;
   width: 85%;
+  min-height: 200px;
+}
+
+.content {
   padding: 50px;
 }
 
-footer {
-  padding: 10px;
+.side-menu-wrapper {
+  border-right: #373e45 solid 1px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 15%;
+}
+
+.footer {
+  border-top: #373e45 solid 1px;
+  /*margin-top: 100px;*/
+  padding: 10px 10px 10px 10px;
 }
 
 @media (max-width: 800px) {

@@ -1,18 +1,20 @@
-<div class="container">
+<div class="container" style="height: 100%">
   <app-mobile-header class="row mb-4" (changeThemeEmit)="changeTheme()" [darkMode]="isDarkMode()" *ngIf="isMobile"></app-mobile-header>
-  <div style="display: flex; flex-direction: row;">
-    <div style="display: block; width: 15%;" *ngIf="!isMobile">
+  <div style="display: flex; flex-direction: row; height: 100%;">
+    <div class="side-menu-wrapper" *ngIf="!isMobile">
       <app-side-menu (changeThemeEmit)="changeTheme()" [darkMode]="isDarkMode()"></app-side-menu>
+      <footer class="footer">
+        <div style="display: flex; flex-direction: row; justify-content: space-between;">
+          <div class="version">Version: {{version}}</div>
+          <div class="copyright">&copy; ASWG 2023</div>
+        </div>
+      </footer>
     </div>
     <div class="router-section">
-      <router-outlet></router-outlet>
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
-  <hr>
-  <footer>
-    <div class="float-end">
-      &copy; ASWG 2023
-    </div>
-  </footer>
 </div>
 <app-aswg-spinner></app-aswg-spinner>
