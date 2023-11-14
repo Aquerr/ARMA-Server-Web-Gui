@@ -4,20 +4,23 @@
 
 .router-section {
   display: block;
-  width: 85%;
+  margin-left: 280px;
   min-height: 300px;
+  width: 100%;
 }
 
 .content {
-  padding: 50px;
+  padding: 25px 50px 50px 50px;
 }
 
 .side-menu-wrapper {
+  position: fixed;
   border-right: #373e45 solid 1px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 15%;
+  width: 280px;
+  height: 100%;
 }
 
 .footer {
