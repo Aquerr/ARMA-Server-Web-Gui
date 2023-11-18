@@ -20,12 +20,14 @@ import java.util.stream.Stream;
 @Repository
 public class MissionStorageImpl implements MissionStorage
 {
+    private final MissionFileNameHelper missionFileNameHelper;
     private final Supplier<Path> missionsDirectory;
 
     @Autowired
-    public MissionStorageImpl(final ASWGConfig aswgConfig)
+    public MissionStorageImpl(final ASWGConfig aswgConfig, final MissionFileNameHelper missionFileNameHelper)
     {
         this.missionsDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath() + File.separator + "mpmissions");
+        this.missionFileNameHelper = missionFileNameHelper;
     }
 
     @Override
@@ -46,9 +48,8 @@ public class MissionStorageImpl implements MissionStorage
     {
         return Optional.ofNullable(missionsDirectory.get().toFile().listFiles())
                 .map(files -> Stream.of(files)
-                        .map(File::getName)
-                        .filter(name -> name.endsWith(".pbo"))
-                        .map(name -> name.substring(0, name.length() - 4))
+                        .filter(this.missionFileNameHelper::isMissionFile)
+                        .map(this.missionFileNameHelper::resolveMissionNameFromFile)
                         .toList())
                 .orElse(Collections.emptyList());
     }
@@ -61,7 +62,7 @@ public class MissionStorageImpl implements MissionStorage
         {
             for (final File file : files)
             {
-                if (file.getName().equals(missionName))
+                if (file.getName().equals(missionFileNameHelper.resolveFileName(missionName)))
                 {
                     return file.delete();
                 }

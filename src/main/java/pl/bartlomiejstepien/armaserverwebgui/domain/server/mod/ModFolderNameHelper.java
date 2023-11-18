@@ -4,7 +4,7 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ModFolderNameFactory
+public class ModFolderNameHelper
 {
     private static final String[] CHARACTERS_TO_REPLACE = {" ", "\\", "/", ":", "*", "?", "\"", "<", ">", "|"};
     private static final String REPLACEMENT = "_";

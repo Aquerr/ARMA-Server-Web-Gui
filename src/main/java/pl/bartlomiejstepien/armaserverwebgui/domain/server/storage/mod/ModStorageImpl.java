@@ -5,7 +5,7 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.FileSystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModFolderNameFactory;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModFolderNameHelper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
@@ -33,21 +33,21 @@ public class ModStorageImpl implements ModStorage
     private final Supplier<Path> modDirectory;
     private final InstalledModRepository installedModRepository;
 
-    private final ModFolderNameFactory modFolderNameFactory;
+    private final ModFolderNameHelper modFolderNameHelper;
 
     public ModStorageImpl(ASWGConfig aswgConfig,
                           InstalledModRepository installedModRepository,
-                          ModFolderNameFactory modFolderNameFactory)
+                          ModFolderNameHelper modFolderNameHelper)
     {
         this.modDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath());
         this.installedModRepository = installedModRepository;
-        this.modFolderNameFactory = modFolderNameFactory;
+        this.modFolderNameHelper = modFolderNameHelper;
     }
 
     @Override
     public Mono<Path> save(FilePart multipartFile) throws IOException
     {
-        Path filePath = modDirectory.get().resolve(modFolderNameFactory.buildFor(multipartFile));
+        Path filePath = modDirectory.get().resolve(modFolderNameHelper.buildFor(multipartFile));
         Mono<Void> blockingWrapper = Mono.fromRunnable(() -> {
             try
             {
@@ -79,7 +79,7 @@ public class ModStorageImpl implements ModStorage
     @Override
     public boolean doesModExists(FilePart filename)
     {
-        return Files.exists(modDirectory.get().resolve(modFolderNameFactory.buildFor(filename)));
+        return Files.exists(modDirectory.get().resolve(modFolderNameHelper.buildFor(filename)));
     }
 
     @Override
@@ -129,7 +129,7 @@ public class ModStorageImpl implements ModStorage
     @Override
     public Path copyModFolderFromSteamCmd(Path steamCmdModFolderPath, Path armaServerDir, String modName)
     {
-        String normalizedModDirectoryName = "@" + modFolderNameFactory.normalize(modName);
+        String normalizedModDirectoryName = "@" + modFolderNameHelper.normalize(modName);
         Path modDirectoryPath = armaServerDir.resolve(normalizedModDirectoryName);
         try
         {
@@ -154,7 +154,7 @@ public class ModStorageImpl implements ModStorage
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
                 {
-                    Path newFilePath = file.resolveSibling(modFolderNameFactory.normalize(file.getFileName().toString()));
+                    Path newFilePath = file.resolveSibling(modFolderNameHelper.normalize(file.getFileName().toString()));
                     file.toFile().renameTo(newFilePath.toAbsolutePath().toFile());
                     return FileVisitResult.CONTINUE;
                 }
@@ -162,7 +162,7 @@ public class ModStorageImpl implements ModStorage
                 @Override
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
                 {
-                    Path newFilePath = dir.resolveSibling(modFolderNameFactory.normalize(dir.getFileName().toString()));
+                    Path newFilePath = dir.resolveSibling(modFolderNameHelper.normalize(dir.getFileName().toString()));
                     dir.toFile().renameTo(newFilePath.toAbsolutePath().toFile());
                     return FileVisitResult.CONTINUE;
                 }
@@ -177,7 +177,7 @@ public class ModStorageImpl implements ModStorage
     private Path renameModFolderToLowerCaseWithUnderscores(Path modFolderPath)
     {
         File modFolder = modFolderPath.getParent().resolve(modFolderPath.getFileName()).toFile();
-        Path newModFolderPath = modFolder.toPath().resolveSibling(modFolderNameFactory.normalize(modFolder.getName()));
+        Path newModFolderPath = modFolder.toPath().resolveSibling(modFolderNameHelper.normalize(modFolder.getName()));
         modFolder.renameTo(newModFolderPath.toFile());
         return newModFolderPath;
     }
