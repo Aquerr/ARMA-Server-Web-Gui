@@ -4,10 +4,6 @@
   align-items: flex-start;
 }
 
-/*.security-save-container {*/
-/*  float: right;*/
-/*}*/
-
 @media (max-width: 800px) {
   .container {
     display: flex;
