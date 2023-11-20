@@ -27,7 +27,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModPreset;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.PresetImportParams;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.PresetDoesNotExistException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSaveParams;
 import pl.bartlomiejstepien.armaserverwebgui.web.exception.NotAllowedFileTypeException;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.ModFileValidator;
@@ -89,12 +89,11 @@ public class ModsRestController
         return this.modPresetService.getModPreset(id);
     }
 
-    @PutMapping("/presets/{id}")
-    public Mono<Void> updatePreset(@PathVariable("id") Long id, @RequestBody ModPreset modPreset)
+    @PutMapping("/presets/{name}")
+    public Mono<PresetSaveResponse> savePreset(@PathVariable("name") String name, @RequestBody PresetSaveRequest request)
     {
-        return this.modPresetService.getModPreset(id)
-                .flatMap(preset -> this.modPresetService.saveModPreset(modPreset))
-                .switchIfEmpty(Mono.error(PresetDoesNotExistException::new));
+        return this.modPresetService.saveModPreset(ModPresetSaveParams.of(name, request.modNames))
+                .then(Mono.just(new PresetSaveResponse(true)));
     }
 
     @DeleteMapping("/presets/{name}")
@@ -179,5 +178,18 @@ public class ModsRestController
     private static class PresetDeleteResponse
     {
         boolean deleted;
+    }
+
+    @Data
+    private static class PresetSaveRequest
+    {
+        private String name;
+        private List<String> modNames;
+    }
+
+    @Value
+    private static class PresetSaveResponse
+    {
+        boolean saved;
     }
 }

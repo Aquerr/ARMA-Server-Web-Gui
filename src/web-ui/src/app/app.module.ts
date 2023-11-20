@@ -60,6 +60,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatMenuModule} from "@angular/material/menu";
 import { ModPresetsComponent } from './tabs/mods/mod-presets/mod-presets.component';
 import { ModPresetItemComponent } from './tabs/mods/mod-presets/mod-preset-item/mod-preset-item.component';
+import { ModPresetAddDialogComponent } from './tabs/mods/mod-presets/mod-preset-add-dialog/mod-preset-add-dialog.component';
+import { ModPresetSaveDialogComponent } from './tabs/mods/mod-presets/mod-preset-save-dialog/mod-preset-save-dialog.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +95,9 @@ import { ModPresetItemComponent } from './tabs/mods/mod-presets/mod-preset-item/
     PlayerListComponent,
     ServerConsoleComponent,
     ModPresetsComponent,
-    ModPresetItemComponent
+    ModPresetItemComponent,
+    ModPresetAddDialogComponent,
+    ModPresetSaveDialogComponent
   ],
     imports: [
         BrowserModule,

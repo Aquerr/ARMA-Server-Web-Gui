@@ -11,21 +11,22 @@ export class ModPresetItemComponent {
 
   @Output("presetSelected") presetSelectedEmitter = new EventEmitter<string>();
   @Output("presetDeleted") presetDeletedEmitter = new EventEmitter<string>();
+  @Output("presetSaved") presetSavedEmitter = new EventEmitter<string>();
 
   deletePreset($event: MouseEvent) {
     console.log("Deleting preset: " + this.presetName);
+    $event.stopPropagation();
     this.presetDeletedEmitter.emit(this.presetName);
   }
 
   savePreset($event: MouseEvent) {
     console.log("Saving preset: " + this.presetName);
     $event.stopPropagation();
+    this.presetSavedEmitter.emit(this.presetName);
   }
 
   presetSelected() {
     console.log("Selected preset: " + this.presetName);
-    // TODO: Show dialog "do you want to load selected preset? Any changes to mods list will be lost."
-
     this.presetSelectedEmitter.emit(this.presetName);
   }
 }

@@ -1,7 +1,16 @@
 import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {ModPresetImportRequest, ModPresetModParam, ServerModsService} from "../../../service/server-mods.service";
+import {
+  ModPresetImportRequest,
+  ModPresetModParam,
+  ModPresetSaveRequest,
+  ServerModsService
+} from "../../../service/server-mods.service";
 import {MaskService} from "../../../service/mask.service";
 import {NotificationService} from "../../../service/notification.service";
+import {MatDialog} from "@angular/material/dialog";
+import {ModPresetAddDialogComponent} from "./mod-preset-add-dialog/mod-preset-add-dialog.component";
+import {ModPresetSaveDialogComponent} from "./mod-preset-save-dialog/mod-preset-save-dialog.component";
+import {Mod} from "../../../model/mod.model";
 
 @Component({
   selector: 'app-mod-presets',
@@ -12,12 +21,17 @@ export class ModPresetsComponent {
 
   @ViewChild("presetFileInput") fileInputComponent!: ElementRef;
 
-  @Input() modPresets: string[] = [];
+  @Input("mods") enabledMods: Mod[] = [];
+  modPresets: string[] = [];
+
   @Output("modPresetSelected") modPresetSelected: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(private modsService: ServerModsService,
               private maskService: MaskService,
-              private notificationService: NotificationService) {}
+              private notificationService: NotificationService,
+              private matDialog: MatDialog) {
+    this.reloadModPresets()
+  }
 
   modPresetImport(event: Event) {
     this.maskService.show();
@@ -41,8 +55,16 @@ export class ModPresetsComponent {
     }
   }
 
+  private reloadModPresets() {
+    this.maskService.show();
+    this.modsService.getModPresetsNames().subscribe(response => {
+      this.modPresets = response.presets;
+      this.maskService.hide();
+    });
+  }
+
   private processModPresetFile(result: string | ArrayBuffer | null) {
-    if (!(typeof result === "string")) {
+    if (typeof result !== "string") {
       console.error("Could not process file due to bad type...");
       return;
     }
@@ -62,8 +84,9 @@ export class ModPresetsComponent {
     }
     console.log(mods);
 
-    // TODO: Get name from modal...
-    this.modsService.importPreset({name:"custom", modParams: mods} as ModPresetImportRequest).subscribe(response => {
+    const presetName = html.querySelector('meta[name="arma:PresetName"]')?.getAttribute('content') ?? "custom";
+
+    this.modsService.importPreset({name:presetName, modParams: mods} as ModPresetImportRequest).subscribe(response => {
       console.log("Done!");
     });
   }
@@ -95,7 +118,7 @@ export class ModPresetsComponent {
   }
 
   newPresetClick() {
-    console.log("New Preset click!");
+    this.showModalNewPreset();
   }
 
   presetImportClick() {
@@ -122,6 +145,45 @@ export class ModPresetsComponent {
   private removePresetFromList(list: string[], presetName: string) {
     list.forEach((value, index) => {
       if (value == presetName) list.splice(index, 1);
+    });
+  }
+
+  private showModalNewPreset() {
+    const dialogRef = this.matDialog.open(ModPresetAddDialogComponent, {
+      width: '250px',
+      enterAnimationDuration: '200ms',
+      exitAnimationDuration: '200ms'
+    });
+
+    dialogRef.afterClosed().subscribe((result: {create: boolean, modPresetName: string}) => {
+      console.log(result);
+      if (result.create) {
+        this.modsService.savePreset({name: result.modPresetName, modNames: []}).subscribe(response => {
+          this.reloadModPresets();
+        });
+      }
+    });
+  }
+
+  onPresetSaved(presetName: string) {
+    console.log(`Saving preset ${presetName} with mods [${this.enabledMods}]`);
+    this.showModalSavePreset(presetName);
+  }
+
+  private showModalSavePreset(presetName: string) {
+    const dialogRef = this.matDialog.open(ModPresetSaveDialogComponent, {
+      width: '250px',
+      enterAnimationDuration: '200ms',
+      exitAnimationDuration: '200ms'
+    });
+
+    dialogRef.afterClosed().subscribe((result: {create: boolean, modPresetName: string}) => {
+      console.log(result);
+      if (result) {
+        this.modsService.savePreset({name: presetName, modNames: this.enabledMods.map(mod => mod.name)} as ModPresetSaveRequest).subscribe(response => {
+          this.reloadModPresets();
+        });
+      }
     });
   }
 }

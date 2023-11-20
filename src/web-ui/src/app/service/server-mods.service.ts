@@ -47,6 +47,10 @@ export class ServerModsService {
   deletePreset(presetName: string): Observable<ModPresetDeleteResponse> {
     return this.httpClient.delete<ModPresetDeleteResponse>(`${this.MODS_URL}/presets/${presetName}`);
   }
+
+  savePreset(request: ModPresetSaveRequest): Observable<ModPresetSaveResponse> {
+    return this.httpClient.put<ModPresetSaveResponse>(`${this.MODS_URL}/presets/${request.name}`, request);
+  }
 }
 
 export interface GetModsResponse{
@@ -78,4 +82,13 @@ export interface ModPresetSelectRequest {
 
 export interface ModPresetDeleteResponse {
   deleted: boolean;
+}
+
+export interface ModPresetSaveRequest {
+  name: string;
+  modNames: string[];
+}
+
+export interface ModPresetSaveResponse {
+  saved: boolean;
 }

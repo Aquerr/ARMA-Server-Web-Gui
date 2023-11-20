@@ -7,7 +7,9 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModPresetConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModPreset;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.PresetImportParams;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.PresetDoesNotExistException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetEntity;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSaveParams;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetEntryRepository;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetRepository;
@@ -58,11 +60,42 @@ public class ModPresetServiceImpl implements ModPresetService
     @Override
     public Mono<Void> saveModPreset(ModPreset modPreset)
     {
-        List<ModPresetEntity.EntryEntity> entries = this.modPresetConverter.convertToEntities(modPreset.getEntries());
-        ModPresetEntity modPresetEntity = this.modPresetConverter.convert(modPreset);
+        return Mono.fromCallable(() -> this.modPresetConverter.convert(modPreset))
+                .flatMap(this.modPresetRepository::save)
+                .thenMany(Flux.fromIterable(this.modPresetConverter.convertToEntities(modPreset.getEntries())))
+                .flatMap(this.modPresetEntryRepository::save)
+                .then();
+    }
 
-        return modPresetRepository.save(modPresetEntity)
-                .then(Mono.just(this.modPresetEntryRepository.saveAll(entries))).then();
+    @Override
+    public Mono<Void> saveModPreset(ModPresetSaveParams modPresetSaveParams)
+    {
+        return this.getModPreset(modPresetSaveParams.getName())
+                .defaultIfEmpty(ModPreset.builder().name(modPresetSaveParams.getName()).build())
+                .flatMap(this::clearModPresetEntries)
+                .flatMap(modPreset -> this.modService.getInstalledMods()
+                        .filter(installedMod -> modPresetSaveParams.getModNames().contains(installedMod.getName()))
+                        .map(installedMod -> ModPreset.Entry.builder()
+                                .modId(installedMod.getWorkshopFileId())
+                                .name(installedMod.getName())
+                                .modPresetId(modPreset.getId())
+                                .build())
+                        .collectList()
+                        .map(entries -> ModPreset.builder()
+                                .id(modPreset.getId())
+                                .name(modPreset.getName())
+                                .entries(entries)
+                                .build()))
+                .log(log.getName())
+                .flatMap(this::saveModPreset)
+                .then();
+    }
+
+    private Mono<ModPreset> clearModPresetEntries(ModPreset modPreset)
+    {
+        return this.modPresetEntryRepository.findAllByModPresetId(modPreset.getId())
+                .map(this.modPresetEntryRepository::delete)
+                .then(Mono.just(modPreset));
     }
 
     @Override
@@ -93,19 +126,22 @@ public class ModPresetServiceImpl implements ModPresetService
                 .defaultIfEmpty(new ModPresetEntity(null, params.getName()))
                 .flatMap(this.modPresetRepository::save)
                 .flatMap(modPresetEntity -> this.modPresetEntryRepository.findAllByModPresetId(modPresetEntity.getId())
-                        .flatMap(this.modPresetEntryRepository::delete)
+                        .map(this.modPresetEntryRepository::delete)
                         .then(Mono.just(this.modPresetConverter.convertToEntities(params.getModParams().stream()
                                         .map(modParam -> ModPreset.Entry.builder()
                                                 .id(null)
                                                 .name(modParam.getTitle())
                                                 .modId(modParam.getId())
                                                 .modPresetId(modPresetEntity.getId())
-                                                .build()).toList()))))
-                .log(log.getName())
-                .map(this.modPresetEntryRepository::saveAll)
-                .then(Mono.fromRunnable(() -> params.getModParams().forEach(modParam -> this.workShopModInstallService.queueWorkshopModInstallation(
-                        new WorkshopModInstallationRequest(modParam.getId(), modParam.getTitle()))
-                )));
+                                                .build()).toList())))
+                        .log(log.getName())
+                        .map(this.modPresetEntryRepository::saveAll))
+                .flatMap(Flux::collectList)
+                .flatMapMany(entries -> Flux.fromIterable(entries.stream().map(entry -> new WorkshopModInstallationRequest(entry.getId(), entry.getName())).toList()))
+                .map(request -> {
+                    this.workShopModInstallService.queueWorkshopModInstallation(request);
+                    return request;
+                }).then();
     }
 
     @Override
@@ -120,9 +156,12 @@ public class ModPresetServiceImpl implements ModPresetService
     public Mono<Void> deletePreset(String presetName)
     {
         return this.modPresetRepository.findByName(presetName)
-                .flatMap(modPresetEntity -> this.modPresetEntryRepository.findAllByModPresetId(modPresetEntity.getId())
-                        .map(this.modPresetEntryRepository::delete)
-                        .then(this.modPresetRepository.delete(modPresetEntity)));
+                .switchIfEmpty(Mono.error(new PresetDoesNotExistException()))
+                .flatMapMany(modPresetEntity -> this.modPresetEntryRepository.findAllByModPresetId(modPresetEntity.getId()))
+                .flatMap(this.modPresetEntryRepository::delete)
+                .then(this.modPresetRepository.findByName(presetName))
+                .switchIfEmpty(Mono.error(new PresetDoesNotExistException()))
+                .flatMap(this.modPresetRepository::delete);
     }
 
     private Set<ModView> convertToModViews(List<ModPreset.Entry> entries)

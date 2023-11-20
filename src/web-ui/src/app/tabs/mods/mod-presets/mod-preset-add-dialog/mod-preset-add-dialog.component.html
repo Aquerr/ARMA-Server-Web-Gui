@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Enter preset name</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Preset Name</mat-label>
+    <input [(ngModel)]="modPresetName" matInput type="text" (keydown)="onEnterClick($event)">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="prepareDialogResult()">Create</button>
+  <button mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
+</div>
