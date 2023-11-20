@@ -14,7 +14,7 @@
     <div style="display: flex;">
       <div *ngIf="canToggleServer()">
         <div *ngIf="isServerOffline(); else serverOfflineBlock" style="display: flex; flex-direction: column;">
-          <mat-checkbox id="perform-update" [checked]="performUpdate" labelPosition="after">Perform Arma update during start?</mat-checkbox>
+          <mat-checkbox id="perform-update" [(ngModel)]="performUpdate" labelPosition="after">Perform Arma update during start?</mat-checkbox>
           <button mat-flat-button color="primary" (click)="toggleServer()">{{'START'}}</button>
         </div>
         <ng-template #serverOfflineBlock>
