@@ -1,49 +1,63 @@
-<div class="container">
+<form [formGroup]="form" class="container">
   <h1>Network</h1>
   <div class="network-properties">
     <mat-form-field>
       <mat-label>Loopback</mat-label>
-      <mat-select [(ngModel)]="loopback" name="upnp">
+      <mat-select formControlName="loopback">
         <mat-option [value]="true">Yes</mat-option>
         <mat-option [value]="false">No</mat-option>
       </mat-select>
+      <mat-error *ngIf="hasFormError('loopback', 'required')">This field is required</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Upnp</mat-label>
-      <mat-select [(ngModel)]="upnp" name="upnp">
+      <mat-select formControlName="upnp">
         <mat-option [value]="true">Yes</mat-option>
         <mat-option [value]="false">No</mat-option>
       </mat-select>
+      <mat-error *ngIf="hasFormError('upnp', 'required')">This field is required</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Max Ping</mat-label>
-      <input name="maxping" [(ngModel)]="maxPing" matInput type="number" min="0">
+      <input name="maxping" formControlName="maxPing" matInput type="number" min="0"
+             onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+      <mat-error *ngIf="hasFormError('maxPing', 'required')">This field is required</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Disconnect Timeout</mat-label>
-      <input name="disconnectTimeout" [(ngModel)]="disconnectTimeout" matInput type="number" min="5">
+      <input name="disconnectTimeout" formControlName="disconnectTimeout" matInput type="number" min="5"
+             onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+      <mat-error *ngIf="hasFormError('disconnectTimeout', 'min')">Minimum value is 5</mat-error>
+      <mat-error *ngIf="hasFormError('disconnectTimeout', 'required')">This field is required</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Max Desync</mat-label>
-      <input name="maxDesync" [(ngModel)]="maxDesync" matInput type="number" min="0">
+      <input name="maxDesync" formControlName="maxDesync" matInput type="number" min="0"
+             onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+      <mat-error *ngIf="hasFormError('maxDesync', 'required')">This field is required</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Max Packet Loss</mat-label>
-      <input name="maxPacketLoss" [(ngModel)]="maxPacketLoss" matInput type="number" min="0">
+      <input name="maxPacketLoss" formControlName="maxPacketLoss" matInput type="number" min="0"
+             onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+      <mat-error *ngIf="hasFormError('maxPacketLoss', 'required')">This field is required</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Enable Players' Bandwidth Diagnostics</mat-label>
-      <mat-select [(ngModel)]="enablePlayerDiag" name="enablePlayerDiag">
+      <mat-select formControlName="enablePlayerDiag">
         <mat-option [value]="true">Yes</mat-option>
         <mat-option [value]="false">No</mat-option>
       </mat-select>
+      <mat-error *ngIf="hasFormError('enablePlayerDiag', 'required')">This field is required</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Steam Protocol Max Data Size</mat-label>
-      <input name="steamProtocolMaxDataSize" [(ngModel)]="steamProtocolMaxDataSize" matInput type="number" min="0">
+      <input name="steamProtocolMaxDataSize" formControlName="steamProtocolMaxDataSize" matInput type="number" min="0"
+             onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+      <mat-error *ngIf="hasFormError('steamProtocolMaxDataSize', 'required')">This field is required</mat-error>
     </mat-form-field>
   </div>
   <div>
     <button mat-flat-button color="primary" (click)="save()">Save</button>
   </div>
-</div>
+</form>
