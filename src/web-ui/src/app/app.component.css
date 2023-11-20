@@ -6,7 +6,7 @@
   display: block;
   margin-left: 280px;
   min-height: 300px;
-  width: 100%;
+  width: calc(100vw - 280px);
 }
 
 .content {
@@ -21,6 +21,7 @@
   justify-content: space-between;
   width: 280px;
   height: 100%;
+  background-color: var(--aswg-bg-primary-bg-color);
 }
 
 .footer {
