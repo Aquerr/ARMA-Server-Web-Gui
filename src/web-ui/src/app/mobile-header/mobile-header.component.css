@@ -40,6 +40,7 @@ mat-icon:hover {
   justify-items: right;
   align-items: center;
   margin-right: 10px;
+  cursor: pointer;
 }
 
 .mobile-side-menu {
