@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SaveServerSecurityRequest, ServerSecurityService} from "../../service/server-security.service";
 import {MaskService} from "../../service/mask.service";
 import {NotificationService} from "../../service/notification.service";
+import {SecurityFormService} from './security-form.service';
+import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-security',
@@ -9,6 +11,7 @@ import {NotificationService} from "../../service/notification.service";
   styleUrls: ['./security.component.css']
 })
 export class SecurityComponent implements OnInit {
+  form: FormGroup;
   serverPassword: string = "";
   serverAdminPassword: string = "";
   serverCommandPassword: string = "";
@@ -18,36 +21,38 @@ export class SecurityComponent implements OnInit {
 
   constructor(private serverSecurityService: ServerSecurityService,
               private maskService: MaskService,
-              private notificationService: NotificationService) { }
+              private notificationService: NotificationService,
+              private formService: SecurityFormService) {
+    this.form = this.formService.getForm();
+  }
 
   ngOnInit(): void {
     this.maskService.show();
     this.serverSecurityService.getServerSecurity().subscribe(response => {
-      this.serverPassword = response.serverPassword;
-      this.serverAdminPassword = response.serverAdminPassword;
-      this.serverCommandPassword = response.serverCommandPassword;
-      this.battleEye = response.battleEye;
-      this.verifySignatures = response.verifySignatures;
-      this.allowedFilePatching = response.allowedFilePatching;
+      this.formService.setForm(this.form, response);
       this.maskService.hide();
     });
   }
 
   save() {
-    this.maskService.show();
+    this.form.markAllAsTouched();
+    if (this.form.valid) {
+      this.maskService.show();
+      const request = this.formService.get(this.form);
+      this.serverSecurityService.saveServerSecurity(request).subscribe({
+        next: () => {
+          this.maskService.hide();
+          this.notificationService.successNotification("Server security updated!");
+        },
+        error: () => {
+          this.maskService.hide();
+          this.notificationService.errorNotification("Server security not updated!");
+        }
+      });
+    }
+  }
 
-    const serverSecurityRequest = {
-      serverPassword: this.serverPassword,
-      serverAdminPassword: this.serverAdminPassword,
-      serverCommandPassword: this.serverCommandPassword,
-      battleEye: this.battleEye,
-      verifySignatures: this.verifySignatures,
-      allowedFilePatching: this.allowedFilePatching
-    } as SaveServerSecurityRequest;
-
-    this.serverSecurityService.saveServerSecurity(serverSecurityRequest).subscribe(response => {
-      this.maskService.hide();
-      this.notificationService.successNotification("Server security updated!");
-    });
+  hasFormError(controlName: string, errorName: string): boolean {
+    return this.form.get(controlName)?.hasError(errorName)!;
   }
 }
