@@ -11,6 +11,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ModPresetAddDialogComponent} from "./mod-preset-add-dialog/mod-preset-add-dialog.component";
 import {ModPresetSaveDialogComponent} from "./mod-preset-save-dialog/mod-preset-save-dialog.component";
 import {Mod} from "../../../model/mod.model";
+import {ModPresetDeleteDialogComponent} from "./mod-preset-delete-dialog/mod-preset-delete-dialog.component";
 
 @Component({
   selector: 'app-mod-presets',
@@ -135,11 +136,7 @@ export class ModPresetsComponent {
   }
 
   onPresetDelete(presetName: string) {
-    this.maskService.show();
-    this.modsService.deletePreset(presetName).subscribe(response => {
-      this.removePresetFromList(this.modPresets, presetName);
-      this.maskService.hide();
-    });
+    this.showModalDeletePreset(presetName);
   }
 
   private removePresetFromList(list: string[], presetName: string) {
@@ -182,6 +179,25 @@ export class ModPresetsComponent {
       if (result) {
         this.modsService.savePreset({name: presetName, modNames: this.enabledMods.map(mod => mod.name)} as ModPresetSaveRequest).subscribe(response => {
           this.reloadModPresets();
+        });
+      }
+    });
+  }
+
+  private showModalDeletePreset(presetName: string) {
+    const dialogRef = this.matDialog.open(ModPresetDeleteDialogComponent, {
+      width: '350px',
+      enterAnimationDuration: '200ms',
+      exitAnimationDuration: '200ms'
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      console.log(result);
+      if (result) {
+        this.maskService.show();
+        this.modsService.deletePreset(presetName).subscribe(response => {
+          this.removePresetFromList(this.modPresets, presetName);
+          this.maskService.hide();
         });
       }
     });
