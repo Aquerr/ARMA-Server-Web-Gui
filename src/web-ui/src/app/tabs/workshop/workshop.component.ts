@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WorkshopMod} from '../../model/workshop.model';
 import {WorkshopService} from '../../service/workshop.service';
 import {FormControl} from '@angular/forms';
-import {NgxSpinnerService} from "ngx-spinner";
 import {ModInstallWebsocketService} from "./mod-install-websocket/mod-install-websocket.service";
 import {MaskService} from "../../service/mask.service";
 
@@ -21,7 +20,6 @@ export class WorkshopComponent implements OnInit, OnDestroy {
   private lastSearchText: string = "";
 
   constructor(private workshopService: WorkshopService,
-              private ngxSpinnerService: NgxSpinnerService,
               private maskService: MaskService,
               private modInstallWebsocketService: ModInstallWebsocketService) {
     this.searchBoxControl = new FormControl<string>('');

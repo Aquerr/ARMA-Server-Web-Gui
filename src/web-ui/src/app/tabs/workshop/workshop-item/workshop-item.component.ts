@@ -3,6 +3,7 @@ import {WorkshopMod} from '../../../model/workshop.model';
 import {WorkshopService} from "../../../service/workshop.service";
 import {ServerModsService} from "../../../service/server-mods.service";
 import {MaskService} from "../../../service/mask.service";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-workshop-item',
@@ -15,16 +16,19 @@ export class WorkshopItemComponent implements OnInit {
   @Output() onModInstallDelete = new EventEmitter<any>();
 
   spinnerVisible: boolean = false;
+  spinnerColor: string = "";
 
   constructor(private workshopService: WorkshopService,
               private serverModsService: ServerModsService,
-              private maskService: MaskService) {
+              private maskService: MaskService,
+              private ngxSpinner: NgxSpinnerService) {
   }
 
   ngOnInit(): void {
     if (this.workshopMod.isBeingInstalled) {
       this.showSpinner(true);
     }
+    this.spinnerColor = document.documentElement.style.getPropertyValue('--aswg-primary-color');
   }
 
   prepareModDescription(description: string | undefined) {
@@ -55,7 +59,6 @@ export class WorkshopItemComponent implements OnInit {
     mod.isBeingInstalled = true;
     this.showSpinner(true);
     this.workshopService.installMod(mod.fileId, mod.title).subscribe(response => {
-      console.log("install complete");
       this.onModInstallDelete.emit();
     });
   }
@@ -71,6 +74,11 @@ export class WorkshopItemComponent implements OnInit {
   showSpinner(value: boolean) {
     setTimeout(() => {
       console.log("Setting spinnerVisible to = " + value);
+      if (value) {
+        this.ngxSpinner.show(this.workshopMod.title);
+      } else {
+        this.ngxSpinner.hide(this.workshopMod.title);
+      }
       this.spinnerVisible = value;
     }, 2000);
   }

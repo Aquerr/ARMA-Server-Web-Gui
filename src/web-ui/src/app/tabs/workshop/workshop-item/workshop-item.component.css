@@ -1,3 +1,7 @@
+.spinner {
+  color: var(--aswg-primary-color);
+}
+
 .card-image {
   width: 200px;
   height: 200px;

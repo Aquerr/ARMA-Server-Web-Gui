@@ -13,10 +13,16 @@
       <button *ngIf="canInstall" mat-flat-button color="primary" (click)="installMod(workshopMod)">Install</button>
       <button *ngIf="!canInstall" mat-flat-button color="accent" (click)="deleteMod(workshopMod)">Delete</button>
     </div>
-    <div *ngIf="workshopMod.isBeingInstalled" style="position: relative; width: 30px; height: 30px; margin-left: 10px;">
-      <ngx-spinner [name]="workshopMod.title" [fullScreen]="false" color="#4634b7" type="cog" size="default" [showSpinner]="spinnerVisible">
-        <p style="padding-top: 80px;">Installing...</p>
+    <div class="spinner" *ngIf="workshopMod.isBeingInstalled" style="position: relative; max-width: 30px; max-height: 30px; margin-top: 10px">
+      <ngx-spinner
+                   [name]="workshopMod.title"
+                   [fullScreen]="false"
+                   [size]="'default'"
+                   [color]="spinnerColor"
+                   [type]="'ball-clip-rotate-multiple'"
+                   [bdColor]="'transparent'">
       </ngx-spinner>
+      <span style="margin-left: 40px;">Installing...</span>
     </div>
   </div>
 </div>
