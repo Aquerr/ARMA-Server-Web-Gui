@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-mod-preset-add-dialog',
@@ -8,18 +9,34 @@ import {MatDialogRef} from "@angular/material/dialog";
 })
 export class ModPresetAddDialogComponent {
 
-  modPresetName: string = '';
+  form: FormGroup;
 
-  constructor(private dialogRef: MatDialogRef<ModPresetAddDialogComponent>) {}
+  constructor(private dialogRef: MatDialogRef<ModPresetAddDialogComponent>,
+              formBuilder: FormBuilder) {
+    this.form = formBuilder.group({
+      modPresetName: ['', [Validators.required]]
+    });
+  }
 
 
   onEnterClick($event: KeyboardEvent) {
     if ($event.code === 'Enter') {
-      this.dialogRef.close(this.prepareDialogResult());
+      this.closeDialog();
     }
   }
 
   prepareDialogResult() {
-    return {'create':true, 'modPresetName': this.modPresetName};
+    return {'create':true, 'modPresetName': this.form.get('modPresetName')?.value};
+  }
+
+  closeDialog() {
+    this.form.markAllAsTouched();
+    if (this.form.valid) {
+      this.dialogRef.close(this.prepareDialogResult());
+    }
+  }
+
+  hasFormError(formControlName: string, errorType: string) {
+    return this.form.get(formControlName)?.hasError(errorType);
   }
 }

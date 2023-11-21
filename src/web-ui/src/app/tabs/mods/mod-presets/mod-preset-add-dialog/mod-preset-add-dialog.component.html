@@ -1,11 +1,14 @@
 <h1 mat-dialog-title>Enter preset name</h1>
 <div mat-dialog-content>
-  <mat-form-field>
-    <mat-label>Preset Name</mat-label>
-    <input [(ngModel)]="modPresetName" matInput type="text" (keydown)="onEnterClick($event)">
-  </mat-form-field>
+  <form [formGroup]="form">
+    <mat-form-field>
+      <mat-label>Preset Name</mat-label>
+      <input formControlName="modPresetName" matInput type="text" (keydown)="onEnterClick($event)">
+      <mat-error *ngIf="hasFormError('modPresetName', 'required')">This field is required</mat-error>
+    </mat-form-field>
+  </form>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="prepareDialogResult()">Create</button>
+  <button mat-button (click)="closeDialog()">Create</button>
   <button mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
 </div>
