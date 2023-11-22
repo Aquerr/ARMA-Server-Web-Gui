@@ -1,14 +1,13 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam;
 
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotUpdateArmaServerException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
-import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 
 public interface SteamService
 {
@@ -18,13 +17,17 @@ public interface SteamService
 
     List<ArmaServerPlayer> getServerPlayers();
 
-    boolean updateArma() throws CouldNotUpdateArmaServerException;
+    UUID scheduleArmaUpdate();
 
     ArmaWorkshopMod getWorkshopMod(long modId);
 
-    Path downloadModFromWorkshop(long fileId) throws CouldNotDownloadWorkshopModException;
+    UUID scheduleWorkshopModDownload(long fileId, String title);
 
     boolean canUseWorkshop();
 
     boolean isSteamCmdInstalled();
+
+    List<WorkshopModInstallationRequest> getInstallingMods();
+
+    boolean hasFinished(UUID taskId);
 }

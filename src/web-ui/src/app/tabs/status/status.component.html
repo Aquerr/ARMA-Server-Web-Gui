@@ -4,13 +4,6 @@
     Status: <span [ngStyle]="isServerOffline() ? {'color': 'red'} : {'color': 'green'}">{{getServerStatus().statusText}}</span>
   </div>
   <div style="margin-top: 5px;">
-    <button *ngIf="isServerStarting()" mat-flat-button color="primary">
-      <ngx-spinner name="primary"
-                   [fullScreen]="false"
-                   type="cog"
-                   size="large"
-                   color="#fff"></ngx-spinner>
-    </button>
     <div style="display: flex;">
       <div *ngIf="canToggleServer()">
         <div *ngIf="isServerOffline(); else serverOfflineBlock" style="display: flex; flex-direction: column;">

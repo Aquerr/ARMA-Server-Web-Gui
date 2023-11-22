@@ -13,7 +13,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaSer
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotUpdateArmaServerException;
 import reactor.core.publisher.Sinks;
 
 import java.io.BufferedReader;
@@ -28,6 +27,7 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -147,14 +147,30 @@ public class ProcessServiceImpl implements ProcessService
         {
             if (steamService.isSteamCmdInstalled())
             {
-                steamService.updateArma();
+                UUID taskId = steamService.scheduleArmaUpdate();
+
+                // Wait for update
+                while (true)
+                {
+                    if (!steamService.hasFinished(taskId))
+                    {
+                        Thread.sleep(2000);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
             }
         }
-        catch (CouldNotUpdateArmaServerException e)
+        catch (InterruptedException e)
         {
-            log.warn("Could not update ArmA server!", e);
+            throw new RuntimeException(e);
         }
-        this.isUpdating = false;
+        finally
+        {
+            this.isUpdating = false;
+        }
     }
 
     @Override

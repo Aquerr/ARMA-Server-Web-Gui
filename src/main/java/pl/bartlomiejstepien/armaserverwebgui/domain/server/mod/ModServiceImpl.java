@@ -41,7 +41,6 @@ public class ModServiceImpl implements ModService
     private final ASWGConfig aswgConfig;
     private final InstalledModConverter installedModConverter;
     private final SteamService steamService;
-    private final WorkShopModInstallService workShopModInstallService;
     private final ModKeyService modKeyService;
     private final ModWorkshopUrlBuilder modWorkshopUrlBuilder;
 
@@ -62,16 +61,16 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public Mono<InstalledModEntity> installModFromWorkshop(long fileId, String modName)
+    public Mono<Void> installModFromWorkshop(long fileId, String modName)
     {
-        workShopModInstallService.queueWorkshopModInstallation(new WorkshopModInstallationRequest(fileId, modName));
+        steamService.scheduleWorkshopModDownload(fileId, modName);
         return Mono.empty();
     }
 
     @Override
     public List<WorkshopModInstallationRequest> getWorkShopModInstallRequests()
     {
-        return workShopModInstallService.getWorkShopModInstallRequests();
+        return steamService.getInstallingMods();
     }
 
     @Transactional

@@ -1,6 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception;
 
-public class CouldNotDownloadWorkshopModException extends Exception
+public class CouldNotDownloadWorkshopModException extends RetryableException
 {
     public CouldNotDownloadWorkshopModException(String message)
     {

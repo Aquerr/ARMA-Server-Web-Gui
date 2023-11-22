@@ -2,81 +2,45 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.steam;
 
 import com.github.koraktor.steamcondenser.steam.SteamPlayer;
 import com.github.koraktor.steamcondenser.steam.servers.GoldSrcServer;
-import io.github.aquerr.steamwebapiclient.SteamWebApiClient;
-import io.github.aquerr.steamwebapiclient.request.PublishedFileDetailsRequest;
-import io.github.aquerr.steamwebapiclient.request.WorkShopQueryFilesRequest;
-import io.github.aquerr.steamwebapiclient.response.PublishedFileDetailsResponse;
-import io.github.aquerr.steamwebapiclient.response.WorkShopQueryResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotUpdateArmaServerException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdNotInstalled;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamCmdAppUpdateParameters;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamCmdWorkshopDownloadParameters;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.GameUpdateSteamTask;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamTask;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopModInstallSteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SteamServiceImpl implements SteamService
 {
-    private static final Integer ARMA_APP_ID = 107410;
-
     private static final String LOCALHOST_ADDRESS = "localhost";
     private static final int DEFAULT_SERVER_STEAM_QUERY_PORT = 2303;
 
     private final ASWGConfig aswgConfig;
-    private final SteamWebApiClient steamWebApiClient;
-    private final ArmaWorkshopModConverter armaWorkshopModConverter;
-
-    private Thread ioDownloadThread;
-    private Thread ioDownloadErrorThread;
+    private final SteamWebApiService steamWebApiService;
+    private final SteamCmdHandler steamCmdHandler;
 
     @Override
-    public ArmaWorkshopQueryResponse queryWorkshopMods(WorkshopQueryParams params) {
-        WorkShopQueryResponse workShopQueryResponse = steamWebApiClient.getSteamPublishedFileWebApiClient().queryFiles(WorkShopQueryFilesRequest.builder()
-                .appId(ARMA_APP_ID)
-                .cursor(StringUtils.hasText(params.getCursor()) ? params.getCursor() : "*")
-                .numPerPage(10)
-                .searchText(StringUtils.hasText(params.getSearchText()) ? params.getSearchText() : null)
-                .returnPreviews(true)
-                .queryType(WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TOTAL_UNIQUE_SUBSCRIPTIONS)
-                .fileType(WorkShopQueryFilesRequest.PublishedFileInfoMatchingFileType.ITEMS)
-                .build());
-
-        String nextPageCursor = null;
-        List<ArmaWorkshopMod> armaWorkshopMods = Collections.emptyList();
-        if (workShopQueryResponse != null)
-        {
-            nextPageCursor = workShopQueryResponse.getResponse().getNextCursor();
-            armaWorkshopMods = workShopQueryResponse.getResponse().getPublishedFileDetails().stream()
-                    .map(armaWorkshopModConverter::convert)
-                    .toList();
-        }
-
-        return ArmaWorkshopQueryResponse.builder()
-                .nextCursor(nextPageCursor)
-                .mods(armaWorkshopMods)
-                .build();
+    public ArmaWorkshopQueryResponse queryWorkshopMods(WorkshopQueryParams params)
+    {
+        return steamWebApiService.queryWorkshopMods(params);
     }
 
     @Override
@@ -114,71 +78,27 @@ public class SteamServiceImpl implements SteamService
     }
 
     @Override
-    public boolean updateArma() throws CouldNotUpdateArmaServerException
+    public UUID scheduleArmaUpdate()
     {
-        String steamCmdPath = this.aswgConfig.getSteamCmdPath();
-        if (!StringUtils.hasText(steamCmdPath))
-            throw new SteamCmdPathNotSetException();
-        try
-        {
-            performArmaUpdate(SteamCmdAppUpdateParameters.builder()
-                    .appId(ARMA_APP_ID)
-                    .serverDirectoryPath(this.aswgConfig.getServerDirectoryPath())
-                    .steamCmdPath(steamCmdPath)
-                    .steamUsername(this.aswgConfig.getSteamCmdUsername())
-                    .steamPassword(this.aswgConfig.getSteamCmdPassword())
-                    .build()).join();
-            return true;
-        }
-        catch (CompletionException e)
-        {
-            throw new CouldNotUpdateArmaServerException(e.getMessage(), e);
-        }
+        if (!isSteamCmdInstalled())
+            throw new SteamCmdNotInstalled();
+
+        return this.steamCmdHandler.queueSteamTask(new GameUpdateSteamTask());
     }
 
     @Override
     public ArmaWorkshopMod getWorkshopMod(long modId)
     {
-        return Optional.ofNullable(this.steamWebApiClient.getSteamRemoteStorageClient().getPublishedFileDetails(new PublishedFileDetailsRequest(List.of(modId))))
-                .map(PublishedFileDetailsResponse::getResponse)
-                .map(PublishedFileDetailsResponse.QueryFilesResponse::getPublishedFileDetails)
-                .filter(list -> !list.isEmpty())
-                .map(list -> list.get(0))
-                .map(this.armaWorkshopModConverter::convert)
-                .orElse(null);
+        return steamWebApiService.getWorkshopMod(modId);
     }
 
-    /**
-     * Downloads the file and returns its path in the filesystem.
-     *
-     * @param fileId the id of the file to download.
-     * @return the path to the downloaded file.
-     */
     @Override
-    public Path downloadModFromWorkshop(long fileId) throws CouldNotDownloadWorkshopModException
+    public UUID scheduleWorkshopModDownload(long fileId, String title)
     {
-        String steamCmdPath = this.aswgConfig.getSteamCmdPath();
-        if (!StringUtils.hasText(steamCmdPath))
-            throw new SteamCmdPathNotSetException();
-        try
-        {
-            Path path = downloadModThroughSteamCmd(SteamCmdWorkshopDownloadParameters.builder()
-                    .fileId(fileId)
-                    .appId(ARMA_APP_ID)
-                    .steamCmdPath(aswgConfig.getSteamCmdPath())
-                    .steamUsername(aswgConfig.getSteamCmdUsername())
-                    .steamPassword(aswgConfig.getSteamCmdPassword())
-                    .build()).join();
-            if (Files.notExists(path))
-            {
-                throw new CouldNotDownloadWorkshopModException("Could not download mod file.");
-            }
-            return path;
-        }
-        catch (CompletionException e)
-        {
-            throw new CouldNotDownloadWorkshopModException(e.getMessage(), e);
-        }
+        if (!isSteamCmdInstalled())
+            throw new SteamCmdNotInstalled();
+
+        return this.steamCmdHandler.queueSteamTask(new WorkshopModInstallSteamTask(fileId, title));
     }
 
     @Override
@@ -193,108 +113,19 @@ public class SteamServiceImpl implements SteamService
         return !this.aswgConfig.getSteamCmdPath().isBlank() && Files.exists(Paths.get(this.aswgConfig.getSteamCmdPath()));
     }
 
-    private CompletableFuture<Path> downloadModThroughSteamCmd(SteamCmdWorkshopDownloadParameters parameters)
+    @Override
+    public List<WorkshopModInstallationRequest> getInstallingMods()
     {
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.directory(Paths.get(parameters.getSteamCmdPath()).getParent().toFile());
-        processBuilder.command(parameters.asExecutionParameters());
-        Process process;
-        try
-        {
-            log.info("Starting workshop mod download process with params: {}", parameters);
-            process = processBuilder.start();
-            handleDownloadProcessInputOutput(process);
-            log.info("Download process started!");
-        }
-        catch (Exception e)
-        {
-            closeDownloadProcessInputOutput();
-            return CompletableFuture.failedFuture(e);
-        }
-        return process.onExit().thenApplyAsync(p ->
-            {
-                int exitValue = p.exitValue();
-                log.info("Exit value: " + exitValue);
-                closeDownloadProcessInputOutput();
-                if (exitValue == 0)
-                {
-                    log.info("Mod download complete!");
-                    return CompletableFuture.completedFuture("Ok!");
-                }
-                else
-                {
-                    return CompletableFuture.failedFuture(new RuntimeException("Could not download the mod file! Exit value: " + exitValue));
-                }
-            })
-            .thenApplyAsync(t -> buildWorkshopModDownloadPath(parameters.getFileId()));
+        return this.steamCmdHandler.getSteamTasks(SteamTask.Type.WORKSHOP_DOWNLOAD).stream()
+                .map(WorkshopModInstallSteamTask.class::cast)
+                .map(task -> new WorkshopModInstallationRequest(task.getFileId(), task.getTitle()))
+                .toList();
     }
 
-    private Path buildWorkshopModDownloadPath(long fileId)
+    @Override
+    public boolean hasFinished(UUID taskId)
     {
-        Path path;
-        if (SystemUtils.isWindows())
-        {
-            path = buildSteamAppsPath(Paths.get(aswgConfig.getSteamCmdPath())
-                    .getParent(), fileId);
-        }
-        else
-        {
-            path = buildSteamAppsPath(Paths.get(System.getProperty("user.home"))
-                    .resolve("Steam"), fileId);
-
-            if (!Files.exists(path))
-            {
-                path = buildSteamAppsPath(Paths.get(System.getProperty("user.home"))
-                        .resolve(".local")
-                        .resolve("share")
-                        .resolve("Steam"), fileId);
-            }
-        }
-        return path;
-    }
-
-    private Path buildSteamAppsPath(Path basePath, long fileId)
-    {
-        return basePath
-                .resolve("steamapps")
-                .resolve("workshop")
-                .resolve("content")
-                .resolve(String.valueOf(ARMA_APP_ID))
-                .resolve(String.valueOf(fileId));
-    }
-
-    private CompletableFuture<?> performArmaUpdate(SteamCmdAppUpdateParameters parameters)
-    {
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.directory(Paths.get(parameters.getSteamCmdPath()).getParent().toFile());
-        processBuilder.command(parameters.asExecutionParameters());
-        Process process;
-        try
-        {
-            log.info("Starting ARMA update process with params: {}", parameters);
-            process = processBuilder.start();
-            handleDownloadProcessInputOutput(process);
-            log.info("Update started...");
-        }
-        catch (Exception e)
-        {
-            closeDownloadProcessInputOutput();
-            return CompletableFuture.failedFuture(e);
-        }
-        return process.onExit().thenApplyAsync(p -> {
-            int exitValue = p.exitValue();
-            log.info("Exit value: " + exitValue);
-            closeDownloadProcessInputOutput();
-            if (exitValue == 0)
-            {
-                log.info("Arma update complete!");
-                return CompletableFuture.completedFuture("Ok!");
-            }
-            else
-            {
-                return CompletableFuture.failedFuture(new RuntimeException("Could not update ARMA server! Exit value: " + exitValue));
-            }
-        });
+        return this.steamCmdHandler.hasFinished(taskId);
     }
 
     private ArmaServerPlayer mapToArmaServerPlayer(SteamPlayer steamPlayer)
@@ -302,58 +133,5 @@ public class SteamServiceImpl implements SteamService
         return ArmaServerPlayer.builder()
                 .name(steamPlayer.getName())
                 .build();
-    }
-
-    private void handleDownloadProcessInputOutput(Process process)
-    {
-        this.ioDownloadThread = new Thread(() ->
-        {
-            try {
-                final BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    log.info(line);
-                }
-                reader.close();
-            } catch (final Exception e) {
-                e.printStackTrace();
-                log.error("Error", e);
-            }
-        });
-
-        this.ioDownloadErrorThread = new Thread(() ->
-        {
-            try {
-                final BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getErrorStream()));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    log.info(line);
-                }
-                reader.close();
-            } catch (final Exception e) {
-                e.printStackTrace();
-                log.error("Error", e);
-            }
-        });
-        this.ioDownloadErrorThread.setDaemon(true);
-        this.ioDownloadErrorThread.start();
-        this.ioDownloadThread.setDaemon(true);
-        this.ioDownloadThread.start();
-    }
-
-    private void closeDownloadProcessInputOutput()
-    {
-        if (ioDownloadThread != null)
-        {
-            ioDownloadThread.interrupt();
-            ioDownloadThread = null;
-        }
-        if (ioDownloadErrorThread != null)
-        {
-            ioDownloadErrorThread.interrupt();
-            ioDownloadErrorThread = null;
-        }
     }
 }

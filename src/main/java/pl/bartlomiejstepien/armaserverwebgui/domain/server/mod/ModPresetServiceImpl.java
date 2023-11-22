@@ -11,6 +11,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.PresetD
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSaveParams;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetEntryRepository;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetRepository;
 import reactor.core.publisher.Flux;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 public class ModPresetServiceImpl implements ModPresetService
 {
     private final ModService modService;
-    private final WorkShopModInstallService workShopModInstallService;
+    private final SteamService steamService;
     private final ModPresetConverter modPresetConverter;
     private final ModPresetRepository modPresetRepository;
     private final ModPresetEntryRepository modPresetEntryRepository;
@@ -139,7 +140,7 @@ public class ModPresetServiceImpl implements ModPresetService
                 .flatMap(Flux::collectList)
                 .flatMapMany(entries -> Flux.fromIterable(entries.stream().map(entry -> new WorkshopModInstallationRequest(entry.getId(), entry.getName())).toList()))
                 .map(request -> {
-                    this.workShopModInstallService.queueWorkshopModInstallation(request);
+                    this.steamService.scheduleWorkshopModDownload(request.getFileId(), request.getTitle());
                     return request;
                 }).then();
     }

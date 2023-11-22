@@ -19,7 +19,7 @@ public interface ModService
 
     Mono<ModsView> getModsView();
 
-    Mono<InstalledModEntity> installModFromWorkshop(long fileId, String modName);
+    Mono<Void> installModFromWorkshop(long fileId, String modName);
 
     List<WorkshopModInstallationRequest> getWorkShopModInstallRequests();
 
