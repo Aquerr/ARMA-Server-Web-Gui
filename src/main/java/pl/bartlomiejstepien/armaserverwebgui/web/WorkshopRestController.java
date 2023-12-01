@@ -48,6 +48,13 @@ public class WorkshopRestController
         ).map(this::toInstalledItemsResponse);
     }
 
+    @PostMapping("/install")
+    public Mono<WorkShopModInstallResponse> installMod(@RequestBody WorkShopModInstallRequest request)
+    {
+        return this.modService.installModFromWorkshop(request.getFileId(), request.getModName())
+                .thenReturn(new WorkShopModInstallResponse(request.getFileId()));
+    }
+
     private InstalledItemsResponse toInstalledItemsResponse(Tuple2<List<ArmaWorkshopMod>, List<WorkshopModInstallationRequest>> objects)
     {
         return new InstalledItemsResponse(objects.getT1(), toResponse(objects.getT2()));
@@ -62,13 +69,6 @@ public class WorkshopRestController
             apiResponse.setModName(request.getTitle());
             return apiResponse;
         }).toList();
-    }
-
-    @PostMapping("/install")
-    public Mono<WorkShopModInstallResponse> installMod(@RequestBody WorkShopModInstallRequest request)
-    {
-        return this.modService.installModFromWorkshop(request.getFileId(), request.getModName())
-                .thenReturn(new WorkShopModInstallResponse(request.getFileId()));
     }
 
     private WorkshopQueryParams toWorkshopQueryParams(WorkshopQueryRequest request)

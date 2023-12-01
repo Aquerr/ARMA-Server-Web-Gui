@@ -9,10 +9,15 @@
       </a>
       <div class="mod-list-item-inner-panel-actions">
         <div style="display: flex;">
-          <div class="text-center" class="mod-list-item-inner-panel-actions-action">
+          <div class="text-center mod-list-item-inner-panel-actions-action">
             <mat-checkbox [checked]="mod.serverMod" (change)="mod.serverMod = !mod.serverMod">Server Mod</mat-checkbox>
           </div>
-          <div class="text-center" class="mod-list-item-inner-panel-actions-action">
+          <div class="text-center mod-list-item-inner-panel-actions-action">
+            <button mat-icon-button (click)="showForceUpdateConfirmationDialog(mod.workshopFileId, mod.name)">
+              <mat-icon>update</mat-icon>
+            </button>
+          </div>
+          <div class="text-center mod-list-item-inner-panel-actions-action">
             <button mat-icon-button (click)="showModDeleteConfirmationDialog(mod.name)">
               <mat-icon>delete</mat-icon>
             </button>

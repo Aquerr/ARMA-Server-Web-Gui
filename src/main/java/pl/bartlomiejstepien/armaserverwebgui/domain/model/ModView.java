@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ModView
 {
+    private Long workshopFileId;
     private String name;
     private boolean serverMod;
     private String previewUrl;

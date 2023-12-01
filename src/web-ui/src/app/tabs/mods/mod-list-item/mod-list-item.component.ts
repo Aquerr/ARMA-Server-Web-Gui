@@ -4,6 +4,11 @@ import {ModDeleteConfirmDialogComponent} from "../mod-delete-confirm-dialog/mod-
 import {MatDialog} from "@angular/material/dialog";
 import {MaskService} from "../../../service/mask.service";
 import {ServerModsService} from "../../../service/server-mods.service";
+import {
+  ModForceUpdateConfirmDialogComponent
+} from "../mod-force-update-confirm-dialog/mod-force-update-confirm-dialog.component";
+import {WorkshopService} from "../../../service/workshop.service";
+import {NotificationService} from "../../../service/notification.service";
 
 @Component({
   selector: '[app-mod-list-item]',
@@ -17,7 +22,9 @@ export class ModListItemComponent {
 
   constructor(private matDialog: MatDialog,
               private maskService: MaskService,
-              private modService: ServerModsService) {}
+              private modService: ServerModsService,
+              private workshopService: WorkshopService,
+              private notificationService: NotificationService) {}
 
   showModDeleteConfirmationDialog(modName: string) {
     const dialogRef = this.matDialog.open(ModDeleteConfirmDialogComponent, {
@@ -38,6 +45,28 @@ export class ModListItemComponent {
     this.modService.deleteMod(modName).subscribe(response => {
       this.maskService.hide();
       this.onModDelete.next(this.mod);
+    });
+  }
+
+  showForceUpdateConfirmationDialog(fileId: number, modName: string) {
+    const dialogRef = this.matDialog.open(ModForceUpdateConfirmDialogComponent, {
+      width: '250px',
+      enterAnimationDuration: '200ms',
+      exitAnimationDuration: '200ms'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.forceUpdateMod(fileId, modName);
+      }
+    });
+  }
+
+  private forceUpdateMod(modId: number, modName: string) {
+    this.maskService.show();
+    this.workshopService.installMod(modId, modName).subscribe(response => {
+      this.maskService.hide();
+      this.notificationService.infoNotification("Mod update scheduled");
     });
   }
 }

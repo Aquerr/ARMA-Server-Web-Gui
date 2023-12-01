@@ -63,6 +63,7 @@ import { ModPresetItemComponent } from './tabs/mods/mod-presets/mod-preset-item/
 import { ModPresetAddDialogComponent } from './tabs/mods/mod-presets/mod-preset-add-dialog/mod-preset-add-dialog.component';
 import { ModPresetSaveDialogComponent } from './tabs/mods/mod-presets/mod-preset-save-dialog/mod-preset-save-dialog.component';
 import { ModPresetDeleteDialogComponent } from './tabs/mods/mod-presets/mod-preset-delete-dialog/mod-preset-delete-dialog.component';
+import { ModForceUpdateConfirmDialogComponent } from './tabs/mods/mod-force-update-confirm-dialog/mod-force-update-confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { ModPresetDeleteDialogComponent } from './tabs/mods/mod-presets/mod-pres
     ModPresetItemComponent,
     ModPresetAddDialogComponent,
     ModPresetSaveDialogComponent,
-    ModPresetDeleteDialogComponent
+    ModPresetDeleteDialogComponent,
+    ModForceUpdateConfirmDialogComponent
   ],
     imports: [
         BrowserModule,
