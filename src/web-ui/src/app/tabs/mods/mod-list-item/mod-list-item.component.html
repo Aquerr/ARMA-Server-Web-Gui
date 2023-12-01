@@ -1,7 +1,14 @@
 <mat-accordion>
   <mat-expansion-panel hideToggle class="mod-list-item-expansion-panel">
     <mat-expansion-panel-header class="mod-list-item-expansion-panel-header">
-      {{mod.name}}
+      <div>
+        {{mod.name}}
+      </div>
+      <div>
+        <mat-tooltip-component>
+          <mat-icon>warning</mat-icon>
+        </mat-tooltip-component>
+      </div>
     </mat-expansion-panel-header>
     <div class="mod-list-item-inner-panel">
       <a class="image-wrapper" [href]="mod.workshopUrl" target="_blank">

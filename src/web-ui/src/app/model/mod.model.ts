@@ -4,6 +4,7 @@ export interface Mod {
   serverMod: boolean;
   previewUrl: string;
   workshopUrl: string;
+  fileExists: boolean;
 }
 
 export interface ModPresetEntry {

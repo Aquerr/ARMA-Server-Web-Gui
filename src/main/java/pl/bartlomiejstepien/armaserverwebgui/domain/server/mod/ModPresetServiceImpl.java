@@ -168,7 +168,11 @@ public class ModPresetServiceImpl implements ModPresetService
     private Set<ModView> convertToModViews(List<ModPreset.Entry> entries)
     {
         return entries.stream()
-                .map(entry -> new ModView(entry.getModId(), entry.getName(), false, null, null))
+                .map(entry -> ModView.builder()
+                        .workshopFileId(entry.getModId())
+                        .name(entry.getName())
+                        .serverMod(false)
+                        .build())
                 .collect(Collectors.toSet());
     }
 }

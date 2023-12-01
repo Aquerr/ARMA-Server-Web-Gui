@@ -180,12 +180,20 @@ public class ModServiceImpl implements ModService
 
     private ModsView toModsView(List<InstalledModEntity> installedModEntities)
     {
+        List<InstalledFileSystemMod> fileSystemMods = this.modStorage.getInstalledModsFromFileSystem();
         Set<ModDir> enabledModDirs = this.aswgConfig.getActiveModDirs();
 
         ModsView modsView = new ModsView();
         Set<ModView> disabledModViews = installedModEntities.stream()
                 .filter(installedMod -> enabledModDirs.stream().noneMatch(modDir -> installedMod.getModDirectoryName().equals(modDir.getDirName())))
-                .map(installedMod -> new ModView(installedMod.getWorkshopFileId(), installedMod.getName(), false, installedMod.getPreviewUrl(), modWorkshopUrlBuilder.buildUrlForFileId(installedMod.getWorkshopFileId())))
+                .map(installedMod -> ModView.builder()
+                                .workshopFileId(installedMod.getWorkshopFileId())
+                                .name(installedMod.getName())
+                                .serverMod(false) //TODO: Fix after migrating active mods to DB
+                                .previewUrl(installedMod.getPreviewUrl())
+                                .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(installedMod.getWorkshopFileId()))
+                                .fileExists(fileSystemMods.stream().anyMatch(mod -> mod.getWorkshopFileId() == installedMod.getWorkshopFileId()))
+                                .build())
                 .collect(Collectors.toSet());
 
         Set<ModView> enabledModViews = new HashSet<>();
@@ -198,7 +206,13 @@ public class ModServiceImpl implements ModService
 
             if (installedActiveMod == null)
                 continue;
-            enabledModViews.add(new ModView(installedActiveMod.getWorkshopFileId(), installedActiveMod.getName(), modDir.isServerMod(), installedActiveMod.getPreviewUrl(), modWorkshopUrlBuilder.buildUrlForFileId(installedActiveMod.getWorkshopFileId())));
+            enabledModViews.add(ModView.builder()
+                    .workshopFileId(installedActiveMod.getWorkshopFileId())
+                    .name(installedActiveMod.getName())
+                    .serverMod(modDir.isServerMod())
+                    .previewUrl(installedActiveMod.getPreviewUrl())
+                    .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(installedActiveMod.getWorkshopFileId()))
+                    .build());
         }
 
         modsView.setDisabledMods(disabledModViews);
