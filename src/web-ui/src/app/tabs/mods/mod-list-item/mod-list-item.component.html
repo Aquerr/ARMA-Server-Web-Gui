@@ -4,7 +4,7 @@
       <div>
         {{mod.name}}
       </div>
-      <div>
+      <div *ngIf="!mod.fileExists">
         <mat-tooltip-component>
           <mat-icon>warning</mat-icon>
         </mat-tooltip-component>
