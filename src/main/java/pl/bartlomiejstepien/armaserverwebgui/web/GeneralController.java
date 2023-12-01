@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.GeneralService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ArmaServerParametersGenerator;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.GeneralService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple4;
 

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerIsAlreadyRunningException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
@@ -27,7 +28,9 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

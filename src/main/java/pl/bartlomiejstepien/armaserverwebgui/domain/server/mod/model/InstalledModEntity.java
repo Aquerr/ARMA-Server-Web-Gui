@@ -37,6 +37,12 @@ public class InstalledModEntity
     @Column("created_date")
     private OffsetDateTime createdDate;
 
+    @Column("enabled")
+    private boolean enabled;
+
+    @Column("server_mod")
+    private boolean serverMod;
+
     public String getModDirectoryName()
     {
         return Paths.get(directoryPath).getFileName().toString();

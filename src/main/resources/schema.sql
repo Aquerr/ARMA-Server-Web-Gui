@@ -4,7 +4,9 @@ CREATE TABLE IF NOT EXISTS installed_mod (
     name VARCHAR(255) NOT NULL,
     directory_path VARCHAR(255) NOT NULL,
     preview_url VARCHAR(255),
-    created_date TIMESTAMP WITH TIME ZONE NOT NULL
+    created_date TIMESTAMP WITH TIME ZONE NOT NULL,
+    enabled BOOLEAN NOT NULL DEFAULT FALSE,
+    server_mod BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS mod_preset (

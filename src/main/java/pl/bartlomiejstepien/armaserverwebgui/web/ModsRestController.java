@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModPresetService;
@@ -53,9 +54,9 @@ public class ModsRestController
     }
 
     @PostMapping("/enabled")
-    public Mono<ResponseEntity<?>> saveEnabledModsList(@RequestBody SaveEnabledModsListRequest saveEnabledModsListRequest)
+    public Mono<ResponseEntity<?>> saveEnabledModsList(@RequestBody SaveEnabledModsListRequest request)
     {
-        return Mono.empty().doFirst(() -> this.modService.saveEnabledModList(saveEnabledModsListRequest.getMods()))
+        return Mono.empty().doFirst(() -> this.modService.saveEnabledModList(request.getMods()))
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
@@ -145,7 +146,7 @@ public class ModsRestController
     @Data
     private static class SaveEnabledModsListRequest
     {
-        Set<ModView> mods;
+        Set<EnabledMod> mods;
     }
 
     @Value(staticConstructor = "of")

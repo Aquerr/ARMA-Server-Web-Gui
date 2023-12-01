@@ -3,7 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModPresetConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModPreset;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.PresetImportParams;
@@ -165,14 +165,10 @@ public class ModPresetServiceImpl implements ModPresetService
                 .flatMap(this.modPresetRepository::delete);
     }
 
-    private Set<ModView> convertToModViews(List<ModPreset.Entry> entries)
+    private Set<EnabledMod> convertToModViews(List<ModPreset.Entry> entries)
     {
         return entries.stream()
-                .map(entry -> ModView.builder()
-                        .workshopFileId(entry.getModId())
-                        .name(entry.getName())
-                        .serverMod(false)
-                        .build())
+                .map(entry -> new EnabledMod(entry.getModId(), false))
                 .collect(Collectors.toSet());
     }
 }

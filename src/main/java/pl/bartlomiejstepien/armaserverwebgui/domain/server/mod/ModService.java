@@ -1,7 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
 import org.springframework.http.codec.multipart.FilePart;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
@@ -31,7 +31,7 @@ public interface ModService
 
     Mono<Boolean> deleteMod(String modName);
 
-    void saveEnabledModList(Set<ModView> modDirs);
+    void saveEnabledModList(Set<EnabledMod> workshopModIds);
 
     Flux<InstalledModEntity> getInstalledMods();
 

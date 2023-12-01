@@ -4,12 +4,16 @@ import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModDir;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.File;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -20,6 +24,8 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
     private final ServerConfigStorage serverConfigStorage;
     @Resource
     private final ASWGConfig aswgConfig;
+    @Resource
+    private final ModService modService;
 
     @Override
     public ArmaServerParameters generateParameters()
@@ -28,20 +34,29 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
 
         String serverExecToUse = is64Bit() ? "arma3server_x64" : "arma3server";
 
+
+        List<InstalledModEntity> installedMods = modService.getInstalledMods().collectList()
+                .subscribeOn(Schedulers.single())
+                .block();
+
+        Set<String> modsDirs = installedMods.stream()
+                .filter(installedModEntity -> !installedModEntity.isServerMod())
+                .map(InstalledModEntity::getModDirectoryName)
+                .collect(Collectors.toSet());
+
+        Set<String> serverModsDirs = installedMods.stream()
+                .filter(InstalledModEntity::isServerMod)
+                .map(InstalledModEntity::getModDirectoryName)
+                .collect(Collectors.toSet());
+
         return ArmaServerParameters.builder()
                 .serverName(armaServerConfig.getHostname())
                 .serverDirectory(aswgConfig.getServerDirectoryPath())
                 .configPath(aswgConfig.getServerDirectoryPath() + File.separator + "server.cfg")
                 .executablePath(aswgConfig.getServerDirectoryPath() + File.separator + serverExecToUse)
                 .port(aswgConfig.getServerPort())
-                .mods(aswgConfig.getActiveModDirs().stream()
-                        .filter(mod -> !mod.isServerMod())
-                        .map(ModDir::getDirName)
-                        .collect(Collectors.toSet()))
-                .serverMods(aswgConfig.getActiveModDirs().stream()
-                        .filter(ModDir::isServerMod)
-                        .map(ModDir::getDirName)
-                        .collect(Collectors.toSet()))
+                .mods(modsDirs)
+                .serverMods(serverModsDirs)
                 .build();
     }
 

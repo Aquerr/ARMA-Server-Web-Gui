@@ -5,7 +5,7 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModDir;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.InstalledModConverter;
@@ -26,7 +26,6 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.OffsetDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -38,7 +37,6 @@ public class ModServiceImpl implements ModService
 {
     private final ModStorage modStorage;
     private final InstalledModRepository installedModRepository;
-    private final ASWGConfig aswgConfig;
     private final InstalledModConverter installedModConverter;
     private final SteamService steamService;
     private final ModKeyService modKeyService;
@@ -103,36 +101,30 @@ public class ModServiceImpl implements ModService
     public Mono<Boolean> deleteMod(String modName)
     {
         return this.modStorage.getInstalledMod(modName)
-                .doOnSuccess(installedMod -> {
-                    Set<ModDir> enabledModDirs = this.aswgConfig.getActiveModDirs();
-                    enabledModDirs.removeIf(mod -> mod.getDirName().equals(installedMod.getModDirectoryName()));
-                    this.aswgConfig.setActiveModDirs(enabledModDirs);
-                })
                 .flatMap(this.modStorage::deleteMod);
     }
 
     @Override
-    public void saveEnabledModList(Set<ModView> mods)
+    public void saveEnabledModList(Set<EnabledMod> enabledMods)
     {
         List<InstalledFileSystemMod> installedModEntities = getInstalledModsFromFileSystem();
-        Set<InstalledFileSystemMod> installedActiveMods = mods.stream()
+        Set<InstalledFileSystemMod> installedActiveMods = enabledMods.stream()
                 .map(modView -> installedModEntities.stream()
-                    .filter(mod -> mod.getName().equals(modView.getName()))
+                    .filter(mod -> mod.getWorkshopFileId() == (modView.getWorkshopFileId()))
                     .findFirst()
                     .orElse(null))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        Set<ModDir> activeModDirs = installedActiveMods.stream()
-                .map(installedMod -> new ModDir(installedMod.getModDirectory().getName(), mods.stream()
-                        .filter(modView -> modView.getName().equals(installedMod.getName()))
-                        .findFirst()
-                        .map(ModView::isServerMod)
-                        .orElse(false))
-                )
-                .collect(Collectors.toSet());
+        installedModRepository.disableAllMods().subscribe();
+        installedModRepository.enableMods(enabledMods.stream()
+                .map(EnabledMod::getWorkshopFileId)
+                .toList()).subscribe();
+        installedModRepository.setServerMods(enabledMods.stream()
+                .filter(EnabledMod::getServerMod)
+                .map(EnabledMod::getWorkshopFileId)
+                .toList()).subscribe();
 
-        this.aswgConfig.setActiveModDirs(activeModDirs);
         modKeyService.clearServerKeys();
         installedActiveMods.forEach(modKeyService::copyKeysForMod);
     }
@@ -181,39 +173,31 @@ public class ModServiceImpl implements ModService
     private ModsView toModsView(List<InstalledModEntity> installedModEntities)
     {
         List<InstalledFileSystemMod> fileSystemMods = this.modStorage.getInstalledModsFromFileSystem();
-        Set<ModDir> enabledModDirs = this.aswgConfig.getActiveModDirs();
 
         ModsView modsView = new ModsView();
         Set<ModView> disabledModViews = installedModEntities.stream()
-                .filter(installedMod -> enabledModDirs.stream().noneMatch(modDir -> installedMod.getModDirectoryName().equals(modDir.getDirName())))
-                .map(installedMod -> ModView.builder()
-                                .workshopFileId(installedMod.getWorkshopFileId())
-                                .name(installedMod.getName())
-                                .serverMod(false) //TODO: Fix after migrating active mods to DB
-                                .previewUrl(installedMod.getPreviewUrl())
-                                .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(installedMod.getWorkshopFileId()))
-                                .fileExists(fileSystemMods.stream().anyMatch(mod -> mod.getWorkshopFileId() == installedMod.getWorkshopFileId()))
+                .filter(mod -> !mod.isEnabled())
+                .map(modEntity -> ModView.builder()
+                                .workshopFileId(modEntity.getWorkshopFileId())
+                                .name(modEntity.getName())
+                                .serverMod(modEntity.isServerMod())
+                                .previewUrl(modEntity.getPreviewUrl())
+                                .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(modEntity.getWorkshopFileId()))
+                                .fileExists(fileSystemMods.stream().anyMatch(mod -> mod.getWorkshopFileId() == modEntity.getWorkshopFileId()))
                                 .build())
                 .collect(Collectors.toSet());
 
-        Set<ModView> enabledModViews = new HashSet<>();
-        for (final ModDir modDir : enabledModDirs)
-        {
-            final InstalledModEntity installedActiveMod = installedModEntities.stream()
-                    .filter(mod -> modDir.getDirName().equals(mod.getModDirectoryName()))
-                    .findFirst()
-                    .orElse(null);
-
-            if (installedActiveMod == null)
-                continue;
-            enabledModViews.add(ModView.builder()
-                    .workshopFileId(installedActiveMod.getWorkshopFileId())
-                    .name(installedActiveMod.getName())
-                    .serverMod(modDir.isServerMod())
-                    .previewUrl(installedActiveMod.getPreviewUrl())
-                    .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(installedActiveMod.getWorkshopFileId()))
-                    .build());
-        }
+        Set<ModView> enabledModViews = installedModEntities.stream()
+                .filter(InstalledModEntity::isEnabled)
+                .map(modEntity -> ModView.builder()
+                        .workshopFileId(modEntity.getWorkshopFileId())
+                        .name(modEntity.getName())
+                        .serverMod(modEntity.isServerMod())
+                        .previewUrl(modEntity.getPreviewUrl())
+                        .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(modEntity.getWorkshopFileId()))
+                        .fileExists(fileSystemMods.stream().anyMatch(mod -> mod.getWorkshopFileId() == modEntity.getWorkshopFileId()))
+                        .build())
+                .collect(Collectors.toSet());
 
         modsView.setDisabledMods(disabledModViews);
         modsView.setEnabledMods(enabledModViews);
