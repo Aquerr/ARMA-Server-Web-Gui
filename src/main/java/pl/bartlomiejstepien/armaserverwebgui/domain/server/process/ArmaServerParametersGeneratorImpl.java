@@ -40,11 +40,13 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
                 .toFuture().join();
 
         Set<String> modsDirs = installedMods.stream()
+                .filter(InstalledModEntity::isEnabled)
                 .filter(installedModEntity -> !installedModEntity.isServerMod())
                 .map(InstalledModEntity::getModDirectoryName)
                 .collect(Collectors.toSet());
 
         Set<String> serverModsDirs = installedMods.stream()
+                .filter(InstalledModEntity::isEnabled)
                 .filter(InstalledModEntity::isServerMod)
                 .map(InstalledModEntity::getModDirectoryName)
                 .collect(Collectors.toSet());
