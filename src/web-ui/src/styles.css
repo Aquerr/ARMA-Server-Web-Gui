@@ -5,7 +5,6 @@
   --aswg-primary-color-hover: #37288f;
   --aswg-primary-text-color: #ffffff;
   --aswg-bg-primary-bg-color: #ffffff;
-  --aswg-bg-primary-font-color: #000000;
   --aswg-input-bg-color: whitesmoke;
   --aswg-border-color: #444c56 !important;
   --mat-icon-color: var(--aswg-primary-color) !important;
@@ -74,7 +73,7 @@ a {
 }
 
 .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input {
-  caret-color: var(--aswg-bg-primary-font-color) !important;
+  caret-color: var(--aswg-primary-text-color) !important;
 }
 
 .mat-primary .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
@@ -82,7 +81,7 @@ a {
 }
 
 .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
-  color: var(--aswg-bg-primary-font-color) !important;
+  color: var(--aswg-primary-text-color) !important;
 }
 
 .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
@@ -123,11 +122,11 @@ a {
 }
 
 .mdc-list-item__primary-text {
-  color: var(--aswg-bg-primary-font-color) !important;
+  color: var(--aswg-primary-text-color) !important;
 }
 
 .mat-mdc-checkbox .mdc-form-field {
-  color: var(--aswg-bg-primary-font-color) !important;
+  color: var(--aswg-primary-text-color) !important;
 }
 
 .mdc-text-field--filled:not(.mdc-text-field--disabled) {
@@ -135,23 +134,23 @@ a {
 }
 
 .mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label {
-  color: var(--aswg-bg-primary-font-color) !important;
+  color: var(--aswg-primary-text-color) !important;
 }
 
 .mat-mdc-form-field .mdc-text-field__input {
-  color: var(--aswg-bg-primary-font-color) !important;
+  color: var(--aswg-primary-text-color) !important;
 }
 
 .mat-focused .mat-form-field-placeholder {
-  color: var(--aswg-bg-primary-font-color) !important;
+  color: var(--aswg-primary-text-color) !important;
 }
 
 input::placeholder {
-  color: var(--aswg-bg-primary-font-color) !important;
+  color: var(--aswg-primary-text-color) !important;
 }
 
 .mat-mdc-select {
-  color: var(--aswg-bg-primary-font-color) !important;
+  color: var(--aswg-primary-text-color) !important;
 }
 
 .cdk-overlay-pane:not(.mat-mdc-select-panel-above) div.mat-mdc-select-panel {
@@ -168,20 +167,20 @@ input::placeholder {
 
 .mat-accordion .mat-expansion-panel:last-of-type {
   background-color: var(--aswg-input-bg-color) !important;
-  color: var(--aswg-bg-primary-font-color) !important;
+  color: var(--aswg-primary-text-color) !important;
 }
 
 .mat-accordion .mat-expansion-panel:first-of-type {
   background-color: var(--aswg-input-bg-color) !important;
-  color: var(--aswg-bg-primary-font-color) !important;
+  color: var(--aswg-primary-text-color) !important;
 }
 
 .mat-mdc-dialog-container .mdc-dialog__title {
-  color: var(--aswg-bg-primary-font-color) !important;
+  color: var(--aswg-primary-text-color) !important;
 }
 
 .mat-mdc-dialog-container .mdc-dialog__content {
-  color: var(--aswg-bg-primary-font-color) !important;
+  color: var(--aswg-primary-text-color) !important;
 }
 
 .mat-mdc-dialog-container .mdc-dialog__surface {
@@ -208,6 +207,10 @@ input::placeholder {
   justify-content: center !important;
 }
 
+.mat-expansion-panel-header-title {
+  color: var(--aswg-primary-text-color) !important;
+}
+
 body, html {
   width: 100%;
   height: 100%;
@@ -217,7 +220,7 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-color: var(--aswg-bg-primary-bg-color);
-  color: var(--aswg-bg-primary-font-color);
+  color: var(--aswg-primary-text-color);
 }
 
 

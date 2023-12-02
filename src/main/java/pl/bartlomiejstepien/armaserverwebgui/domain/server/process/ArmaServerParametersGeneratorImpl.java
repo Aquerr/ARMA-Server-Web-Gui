@@ -9,7 +9,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMo
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
-import reactor.core.scheduler.Schedulers;
 
 import java.io.File;
 import java.util.List;
@@ -37,7 +36,8 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
 
         List<InstalledModEntity> installedMods = modService.getInstalledMods()
                 .collectList()
-                .toFuture().join();
+                .toFuture()
+                .join();
 
         Set<String> modsDirs = installedMods.stream()
                 .filter(InstalledModEntity::isEnabled)

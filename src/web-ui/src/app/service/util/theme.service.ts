@@ -35,18 +35,16 @@ export class ThemeService {
     switch (theme) {
       case 'light':
         document.documentElement.style.setProperty('--aswg-primary-color', '#4634b7');
+        document.documentElement.style.setProperty('--aswg-primary-text-color', '#000000');
         document.documentElement.style.setProperty('--aswg-primary-color-hover', '#37288f');
-        document.documentElement.style.setProperty('--aswg-primary-text-color', '#ffffff');
         document.documentElement.style.setProperty('--aswg-bg-primary-bg-color', '#ffffff');
-        document.documentElement.style.setProperty('--aswg-bg-primary-font-color', '#000000');
         document.documentElement.style.setProperty('--aswg-input-bg-color', 'whitesmoke');
         break;
       case 'dark':
-        document.documentElement.style.setProperty('--aswg-primary-text-color', '#adbac7');
         document.documentElement.style.setProperty('--aswg-primary-color', '#46954a');
+        document.documentElement.style.setProperty('--aswg-primary-text-color', '#adbac7');
         document.documentElement.style.setProperty('--aswg-primary-color-hover', '#3b803e');
         document.documentElement.style.setProperty('--aswg-bg-primary-bg-color', '#22272e');
-        document.documentElement.style.setProperty('--aswg-bg-primary-font-color', '#adbac7');
         document.documentElement.style.setProperty('--aswg-input-bg-color', '#2d333b');
         break;
     }

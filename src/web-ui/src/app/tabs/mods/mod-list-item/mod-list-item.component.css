@@ -43,3 +43,9 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
+.mod-list-item-expansion-panel-header-description {
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 0;
+}
