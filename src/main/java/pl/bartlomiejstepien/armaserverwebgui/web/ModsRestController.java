@@ -56,7 +56,7 @@ public class ModsRestController
     @PostMapping("/enabled")
     public Mono<ResponseEntity<?>> saveEnabledModsList(@RequestBody SaveEnabledModsListRequest request)
     {
-        return Mono.empty().doFirst(() -> this.modService.saveEnabledModList(request.getMods()))
+        return this.modService.saveEnabledModList(request.getMods())
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 

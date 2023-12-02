@@ -149,8 +149,7 @@ public class ModPresetServiceImpl implements ModPresetService
     public Mono<Void> selectPreset(String name)
     {
         return getModPreset(name)
-                .flatMap(modPreset -> Mono.empty().doFirst(() -> this.modService.saveEnabledModList(convertToModViews(modPreset.getEntries()))))
-                .then();
+                .flatMap(modPreset -> this.modService.saveEnabledModList(convertToModViews(modPreset.getEntries())));
     }
 
     @Override

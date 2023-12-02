@@ -31,7 +31,7 @@ public interface ModService
 
     Mono<Boolean> deleteMod(String modName);
 
-    void saveEnabledModList(Set<EnabledMod> workshopModIds);
+    Mono<Void> saveEnabledModList(Set<EnabledMod> workshopModIds);
 
     Flux<InstalledModEntity> getInstalledMods();
 

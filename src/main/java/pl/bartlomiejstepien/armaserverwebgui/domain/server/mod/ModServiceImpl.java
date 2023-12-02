@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
@@ -105,7 +104,7 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public void saveEnabledModList(Set<EnabledMod> enabledMods)
+    public Mono<Void> saveEnabledModList(Set<EnabledMod> enabledMods)
     {
         List<InstalledFileSystemMod> installedModEntities = getInstalledModsFromFileSystem();
         Set<InstalledFileSystemMod> installedActiveMods = enabledMods.stream()
@@ -116,17 +115,16 @@ public class ModServiceImpl implements ModService
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        installedModRepository.disableAllMods().subscribe();
-        installedModRepository.enableMods(enabledMods.stream()
-                .map(EnabledMod::getWorkshopFileId)
-                .toList()).subscribe();
-        installedModRepository.setServerMods(enabledMods.stream()
-                .filter(EnabledMod::getServerMod)
-                .map(EnabledMod::getWorkshopFileId)
-                .toList()).subscribe();
-
-        modKeyService.clearServerKeys();
-        installedActiveMods.forEach(modKeyService::copyKeysForMod);
+        return installedModRepository.disableAllMods()
+                        .then(installedModRepository.enableMods(enabledMods.stream()
+                                .map(EnabledMod::getWorkshopFileId)
+                                .toList()))
+                        .then(installedModRepository.setServerMods(enabledMods.stream()
+                                .filter(EnabledMod::getServerMod)
+                                .map(EnabledMod::getWorkshopFileId)
+                                .toList()))
+                        .then(Mono.fromRunnable(modKeyService::clearServerKeys))
+                        .then(Mono.fromRunnable(() -> installedActiveMods.forEach(modKeyService::copyKeysForMod)));
     }
 
     @Override
