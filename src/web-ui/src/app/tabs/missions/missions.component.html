@@ -19,12 +19,16 @@
             {{mission.name}}
           </div>
           <div class="text-center" style="flex: 14%">
-            <button mat-icon-button (click)="showMissionModifyDialog(mission)">
+            <button mat-icon-button
+                    matTooltip="Configure parameters"
+                    (click)="showMissionModifyDialog(mission)">
               <mat-icon>settings</mat-icon>
             </button>
           </div>
           <div class="text-center" style="flex: 14%">
-            <button mat-icon-button (click)="showMissionDeleteConfirmationDialog(mission.name)">
+            <button mat-icon-button
+                    matTooltip="Delete the mission"
+                    (click)="showMissionDeleteConfirmationDialog(mission.name)">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
