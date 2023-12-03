@@ -54,6 +54,7 @@ export class SideMenuComponent implements OnInit {
     preCheck(routerLink).subscribe({
       next: canAccessLink => {
         if (!canAccessLink) {
+          this.maskService.hide();
           return
         }
 
