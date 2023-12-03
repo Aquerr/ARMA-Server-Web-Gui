@@ -25,12 +25,13 @@
 
 .mod-list-item-inner-panel-actions {
   display: flex;
-  flex: 28%;
   flex-flow: column;
+  width: 100%;
+  justify-content: space-evenly;
+  margin-left: 24px;
 }
 
 .mod-list-item-inner-panel-actions-action {
-  flex: 14%;
   display: flex;
   justify-content: center;
   align-items: center;

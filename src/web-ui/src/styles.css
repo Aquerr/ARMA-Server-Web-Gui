@@ -17,7 +17,6 @@
   --mat-badge-background-color: var(--aswg-primary-color) !important;
   --mdc-circular-progress-active-indicator-color: var(--aswg-primary-color) !important;
   --mdc-icon-button-icon-color: var(--aswg-primary-color) !important;
-  --mat-mdc-button-persistent-ripple-color: var(--aswg-primary-color) !important;
   --mdc-outlined-button-label-text-color: var(--aswg-primary-color) !important;
   --mdc-protected-button-container-color: var(--aswg-primary-color) !important;
   --mdc-filled-button-container-color: var(--aswg-primary-color) !important;
@@ -209,6 +208,11 @@ input::placeholder {
 
 .mat-expansion-panel-header-title {
   color: var(--aswg-primary-text-color) !important;
+}
+
+.mat-mdc-icon-button {
+  --mat-mdc-button-persistent-ripple-color: var(--aswg-primary-text-color) !important;
+  --mat-mdc-button-ripple-color: rgba(0, 0, 0, 0.1) !important;
 }
 
 body, html {

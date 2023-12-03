@@ -13,18 +13,18 @@
         <img [ngSrc]="mod.previewUrl" [width]="200" [height]="200" alt="No Image">
       </a>
       <div class="mod-list-item-inner-panel-actions">
-        <div style="display: flex;">
-          <div class="text-center mod-list-item-inner-panel-actions-action">
-            <mat-checkbox [checked]="mod.serverMod" (change)="mod.serverMod = !mod.serverMod">Server Mod</mat-checkbox>
-          </div>
-          <div class="text-center mod-list-item-inner-panel-actions-action">
+        <div class="mod-list-item-inner-panel-actions-action">
+          <mat-checkbox [checked]="mod.serverMod" (change)="mod.serverMod = !mod.serverMod">Server Mod</mat-checkbox>
+        </div>
+        <div class="mod-list-item-inner-panel-actions-action" style="justify-content: space-evenly;">
+          <div class="mod-list-item-inner-panel-actions-action">
             <button mat-icon-button
                     matTooltip="Force update the mod"
                     (click)="showForceUpdateConfirmationDialog(mod.workshopFileId, mod.name)">
               <mat-icon>update</mat-icon>
             </button>
           </div>
-          <div class="text-center mod-list-item-inner-panel-actions-action">
+          <div class="mod-list-item-inner-panel-actions-action">
             <button mat-icon-button
                     matTooltip="Delete the mod"
                     (click)="showModDeleteConfirmationDialog(mod.name)">
