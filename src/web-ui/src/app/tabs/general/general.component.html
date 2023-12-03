@@ -25,6 +25,13 @@
           <mat-option [value]="false">No</mat-option>
         </mat-select>
       </mat-form-field>
+      <mat-form-field>
+        <mat-label>Drawing in map </mat-label>
+        <mat-select [(ngModel)]="drawingInMap" name="drawing-in-map">
+          <mat-option [value]="true">Yes</mat-option>
+          <mat-option [value]="false">No</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <section class="motd-section">
       <app-motd-list #motdListComponent></app-motd-list>

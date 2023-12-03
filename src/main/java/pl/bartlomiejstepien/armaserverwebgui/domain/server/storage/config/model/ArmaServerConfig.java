@@ -28,7 +28,7 @@ public class ArmaServerConfig
     private String logFile = "";
 
     @CfgProperty(name = "maxPlayers", type = PropertyType.INTEGER)
-    private int maxPlayers = 0;
+    private int maxPlayers = 64;
 
     @CfgProperty(name = "motd[]", type = PropertyType.STRING_ARRAY)
     private String[] motd = new String[0];
@@ -70,7 +70,10 @@ public class ArmaServerConfig
     private int enablePlayerDiag = 0;
 
     @CfgProperty(name = "steamProtocolMaxDataSize", type = PropertyType.INTEGER)
-    private int steamProtocolMaxDataSize;
+    private int steamProtocolMaxDataSize = 1024;
+
+    @CfgProperty(name = "drawingInMap", type = PropertyType.RAW_STRING)
+    private String drawingInMap = "true";
 
     @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
     private Missions missions = new Missions();

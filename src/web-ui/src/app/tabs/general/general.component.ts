@@ -19,6 +19,7 @@ export class GeneralComponent implements OnInit {
   port: number = 2302;
   maxPlayers: number = 64;
   persistent: boolean = false;
+  drawingInMap: boolean = true;
 
   constructor(private maskService: MaskService,
               private serverGeneralService: ServerGeneralService,
@@ -36,6 +37,7 @@ export class GeneralComponent implements OnInit {
       this.motdListComponent.pupulateModtList(response.motd);
       this.motdListComponent.motdInterval = response.motdInterval;
       this.persistent = response.persistent;
+      this.drawingInMap = response.drawingInMap;
       this.maskService.hide();
     });
   }
@@ -50,7 +52,8 @@ export class GeneralComponent implements OnInit {
       maxPlayers: this.maxPlayers,
       motd: this.motdListComponent.getMotdMessages(),
       motdInterval: this.motdListComponent.motdInterval,
-      persistent: this.persistent
+      persistent: this.persistent,
+      drawingInMap: this.drawingInMap
     } as SaveGeneralProperties;
 
     this.serverGeneralService.saveGeneralProperties(saveGeneralProperties).subscribe(response => {

@@ -14,4 +14,5 @@ public class GeneralProperties
     private List<String> motd;
     private int motdInterval;
     private boolean persistent;
+    private boolean drawingInMap;
 }

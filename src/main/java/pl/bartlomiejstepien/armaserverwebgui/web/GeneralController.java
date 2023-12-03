@@ -58,6 +58,7 @@ public class GeneralController
                     .motd(properties.getMotd())
                     .motdInterval(properties.getMotdInterval())
                     .persistent(properties.isPersistent())
+                    .drawingInMap(properties.isDrawingInMap())
                     .build());
         }).then(Mono.just(ResponseEntity.ok().build()));
     }
@@ -74,6 +75,7 @@ public class GeneralController
         List<String> motd;
         int motdInterval;
         boolean persistent;
+        boolean drawingInMap;
 
         static GeneralPropertiesResponse of(String serverDirectory, Integer port, ArmaServerParameters armaServerParameters, GeneralProperties generalProperties)
         {
@@ -86,6 +88,7 @@ public class GeneralController
                     .motd(generalProperties.getMotd())
                     .motdInterval(generalProperties.getMotdInterval())
                     .persistent(generalProperties.isPersistent())
+                    .drawingInMap(generalProperties.isDrawingInMap())
                     .build();
         }
     }
@@ -100,5 +103,6 @@ public class GeneralController
         private List<String> motd;
         private int motdInterval;
         private boolean persistent;
+        private boolean drawingInMap;
     }
 }
