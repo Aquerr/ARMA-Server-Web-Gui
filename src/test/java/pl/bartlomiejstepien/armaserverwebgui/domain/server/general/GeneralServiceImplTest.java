@@ -80,6 +80,7 @@ class GeneralServiceImplTest
         expectedArmaServerConfig.setMaxPlayers(MAX_PLAYERS);
         expectedArmaServerConfig.setMotd(new String[]{"testmod"});
         expectedArmaServerConfig.setPersistent(1);
+        expectedArmaServerConfig.setDrawingInMap("true");
         assertThat(armaServerConfigArgumentCaptor.getValue()).isEqualTo(expectedArmaServerConfig);
     }
 
@@ -91,6 +92,7 @@ class GeneralServiceImplTest
                 .motd(MOTD)
                 .persistent(true)
                 .motdInterval(5)
+                .drawingInMap(true)
                 .build();
     }
 }
