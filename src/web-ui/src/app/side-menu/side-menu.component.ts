@@ -43,6 +43,10 @@ export class SideMenuComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  isAuthenticated() {
+    return this.authService.isAuthenticated();
+  }
+
   routerLinkClicked(routerLink: string) {
     this.maskService.show();
     let preCheck = this.routePreCheck.get(routerLink);
