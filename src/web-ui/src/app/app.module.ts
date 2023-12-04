@@ -64,6 +64,7 @@ import { ModPresetAddDialogComponent } from './tabs/mods/mod-presets/mod-preset-
 import { ModPresetSaveDialogComponent } from './tabs/mods/mod-presets/mod-preset-save-dialog/mod-preset-save-dialog.component';
 import { ModPresetDeleteDialogComponent } from './tabs/mods/mod-presets/mod-preset-delete-dialog/mod-preset-delete-dialog.component';
 import { ModForceUpdateConfirmDialogComponent } from './tabs/mods/mod-force-update-confirm-dialog/mod-force-update-confirm-dialog.component';
+import { SettingsComponent } from './tabs/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { ModForceUpdateConfirmDialogComponent } from './tabs/mods/mod-force-upda
     ModPresetAddDialogComponent,
     ModPresetSaveDialogComponent,
     ModPresetDeleteDialogComponent,
-    ModForceUpdateConfirmDialogComponent
+    ModForceUpdateConfirmDialogComponent,
+    SettingsComponent
   ],
     imports: [
         BrowserModule,

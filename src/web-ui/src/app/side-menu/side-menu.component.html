@@ -39,6 +39,12 @@
     <span>Logging</span>
     <mat-icon [fontIcon]="'description'"></mat-icon>
   </mat-list-item>
+  <mat-divider></mat-divider>
+  <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/settings')">
+    <span>Settings</span>
+    <mat-icon [fontIcon]="'settings'"></mat-icon>
+  </mat-list-item>
+  <mat-divider></mat-divider>
   <mat-list-item class="aswg-list-item" (click)="logout()">
     <span>Logout</span>
     <mat-icon [fontIcon]="'logout'"></mat-icon>

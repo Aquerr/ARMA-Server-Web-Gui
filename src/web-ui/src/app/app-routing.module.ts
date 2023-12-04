@@ -12,6 +12,7 @@ import {StatusComponent} from "./tabs/status/status.component";
 import {WorkshopComponent} from './tabs/workshop/workshop.component';
 import {WorkshopService} from "./service/workshop.service";
 import {map} from "rxjs";
+import {SettingsComponent} from "./tabs/settings/settings.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/status', pathMatch: "full"},
@@ -25,6 +26,7 @@ const routes: Routes = [
   {path: 'workshop', component: WorkshopComponent,
     canMatch: [() => inject(AuthService).isAuthenticated() && inject(WorkshopService).canUseWorkshop().pipe(map(response => response.active))]
   },
+  {path: 'settings', component: SettingsComponent, canActivate: [AuthService]},
   {path: 'login', component: LoginComponent},
   {path: '**', redirectTo: 'status'}
 ];
