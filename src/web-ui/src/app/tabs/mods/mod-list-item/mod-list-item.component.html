@@ -5,7 +5,9 @@
         {{mod.name}}
       </mat-panel-title>
       <mat-panel-description *ngIf="!mod.fileExists" class="mod-list-item-expansion-panel-header-description">
-        <mat-icon [color]="'warn'">warning</mat-icon>
+        <mat-icon
+          matTooltip="Mod files seems to be missing"
+          [color]="'warn'">warning</mat-icon>
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="mod-list-item-inner-panel">

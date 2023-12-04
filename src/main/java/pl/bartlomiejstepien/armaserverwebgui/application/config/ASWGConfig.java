@@ -37,6 +37,9 @@ public class ASWGConfig
 
     private static final String SERVER_PORT = "aswg.server-port";
 
+    private static final String FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY = "aswg.job.file-scanner.installation.enabled";
+    private static final String FILE_SCANNER_DELETION_ENABLED_PROPERTY = "aswg.job.file-scanner.deletion.enabled";
+
     @Value("${aswg.username}")
     private String username;
     @Value("${aswg.password}")
@@ -54,31 +57,16 @@ public class ASWGConfig
     private String steamCmdPassword;
     @Value("${aswg.steam.web-api-token:}")
     private String steamApiKey;
+    @Value("${aswg.job.file-scanner.installation.enabled:true}")
+    private boolean fileScannerInstallationEnabled;
+    @Value("${aswg.job.file-scanner.deletion.enabled:false}")
+    private boolean fileScannerDeletionEnabled;
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationRead() throws IOException
     {
         // Create configuration file on startup
         createConfigFileIfNotExists();
-    }
-
-    private void createConfigFileIfNotExists() throws IOException
-    {
-        if (Files.notExists(ASWG_CONFIGURATION_FILE_PATH))
-        {
-            Files.createFile(ASWG_CONFIGURATION_FILE_PATH);
-            Properties configurationProperties = new Properties();
-            configurationProperties.setProperty(SERVER_DIRECTORY_PATH_PROPERTY, this.serverDirectoryPath);
-            configurationProperties.setProperty(USERNAME_PROPERTY, this.username);
-            configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
-            configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
-            configurationProperties.setProperty(SERVER_PORT, String.valueOf(this.serverPort));
-            configurationProperties.setProperty(STEAM_API_KEY, this.steamApiKey);
-            configurationProperties.setProperty(STEAMCMD_USERNAME, this.steamCmdUsername);
-            configurationProperties.setProperty(STEAMCMD_PASSWORD, this.steamCmdPassword);
-
-            saveProperties();
-        }
     }
 
     public String getUsername()
@@ -117,20 +105,27 @@ public class ASWGConfig
         saveProperties();
     }
 
+    public int getServerPort()
+    {
+        return this.serverPort;
+    }
+
+    public boolean isFileScannerDeletionEnabled()
+    {
+        return fileScannerDeletionEnabled;
+    }
+
+    public boolean isFileScannerInstallationEnabled()
+    {
+        return fileScannerInstallationEnabled;
+    }
+
     private void saveProperties()
     {
         try(FileWriter fileWriter = new FileWriter(ASWG_CONFIGURATION_FILE_PATH.toFile(), StandardCharsets.UTF_8);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter))
         {
-            Properties configurationProperties = new Properties();
-            configurationProperties.setProperty(SERVER_DIRECTORY_PATH_PROPERTY, this.serverDirectoryPath);
-            configurationProperties.setProperty(USERNAME_PROPERTY, this.username);
-            configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
-            configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
-            configurationProperties.setProperty(SERVER_PORT, String.valueOf(this.serverPort));
-            configurationProperties.setProperty(STEAM_API_KEY, this.steamApiKey);
-            configurationProperties.setProperty(STEAMCMD_USERNAME, this.steamCmdUsername);
-            configurationProperties.setProperty(STEAMCMD_PASSWORD, this.steamCmdPassword);
+            Properties configurationProperties = prepareProperties();
             configurationProperties.store(bufferedWriter, "ASWG Configuration File");
         }
         catch (IOException e)
@@ -139,8 +134,28 @@ public class ASWGConfig
         }
     }
 
-    public int getServerPort()
+    private void createConfigFileIfNotExists() throws IOException
     {
-        return this.serverPort;
+        if (Files.notExists(ASWG_CONFIGURATION_FILE_PATH))
+        {
+            Files.createFile(ASWG_CONFIGURATION_FILE_PATH);
+            saveProperties();
+        }
+    }
+
+    private Properties prepareProperties()
+    {
+        Properties configurationProperties = new Properties();
+        configurationProperties.setProperty(SERVER_DIRECTORY_PATH_PROPERTY, this.serverDirectoryPath);
+        configurationProperties.setProperty(USERNAME_PROPERTY, this.username);
+        configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
+        configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
+        configurationProperties.setProperty(SERVER_PORT, String.valueOf(this.serverPort));
+        configurationProperties.setProperty(STEAM_API_KEY, this.steamApiKey);
+        configurationProperties.setProperty(STEAMCMD_USERNAME, this.steamCmdUsername);
+        configurationProperties.setProperty(STEAMCMD_PASSWORD, this.steamCmdPassword);
+        configurationProperties.setProperty(FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY, String.valueOf(this.fileScannerInstallationEnabled));
+        configurationProperties.setProperty(FILE_SCANNER_DELETION_ENABLED_PROPERTY, String.valueOf(this.fileScannerDeletionEnabled));
+        return configurationProperties;
     }
 }

@@ -1,8 +1,10 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.job;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
@@ -16,14 +18,22 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class InstallDeleteModsFromFilesystemJob
 {
+    private final ASWGConfig aswgConfig;
     private final ModService modService;
     private final SteamService steamService;
 
     @Scheduled(fixedDelay = 1L, timeUnit = TimeUnit.HOURS)
     public void scanModDirectories()
     {
+        if (!this.aswgConfig.isFileScannerDeletionEnabled() && !this.aswgConfig.isFileScannerInstallationEnabled())
+        {
+            log.info("File scanner job is disabled. Skipping...");
+            return;
+        }
+
         List<InstalledFileSystemMod> installedFileSystemMods = modService.getInstalledModsFromFileSystem();
         saveOrDeleteModsFromDB(installedFileSystemMods);
     }
@@ -33,13 +43,34 @@ public class InstallDeleteModsFromFilesystemJob
         modService.getInstalledMods()
                 .collectList()
                 .map(installedModsInDB -> {
-                    List<InstalledModEntity> modsToAddToDB = findModsToAddToDB(installedModsInDB, installedFileSystemMods);
-                    List<InstalledModEntity> modsToDeleteInDB = findModsToDeleteFromDB(installedModsInDB, installedFileSystemMods);
-
-                    modsToAddToDB.forEach(mod -> modService.saveToDB(mod).subscribeOn(Schedulers.boundedElastic()).subscribe());
-                    modsToDeleteInDB.forEach(mod -> modService.deleteFromDB(mod.getId()).subscribeOn(Schedulers.boundedElastic()).subscribe());
+                    installNewMods(installedModsInDB, installedFileSystemMods);
+                    deleteOldMods(installedModsInDB, installedFileSystemMods);
                     return installedModsInDB;
                 }).subscribe();
+    }
+
+    private void deleteOldMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
+    {
+        if (!aswgConfig.isFileScannerDeletionEnabled())
+        {
+            log.info("File scanner deletion job is disabled. Skipping...");
+            return;
+        }
+
+        List<InstalledModEntity> modsToDeleteInDB = findModsToDeleteFromDB(installedModsInDB, installedFileSystemMods);
+        modsToDeleteInDB.forEach(mod -> modService.deleteFromDB(mod.getId()).subscribeOn(Schedulers.boundedElastic()).subscribe());
+    }
+
+    private void installNewMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
+    {
+        if (!aswgConfig.isFileScannerInstallationEnabled())
+        {
+            log.info("File scanner installation job is disabled. Skipping...");
+            return;
+        }
+
+        List<InstalledModEntity> modsToAddToDB = findModsToAddToDB(installedModsInDB, installedFileSystemMods);
+        modsToAddToDB.forEach(mod -> modService.saveToDB(mod).subscribeOn(Schedulers.boundedElastic()).subscribe());
     }
 
     private List<InstalledModEntity> findModsToAddToDB(List<InstalledModEntity> databaseMods, List<InstalledFileSystemMod> installedFileSystemMods)
