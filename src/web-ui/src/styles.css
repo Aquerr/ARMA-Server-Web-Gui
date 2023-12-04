@@ -112,6 +112,12 @@ a {
   color: var(--aswg-primary-color, inherit) !important;
 }
 
+.mat-mdc-outlined-button:not(:disabled) {
+  border-color: var(--aswg-border-color, inherit) !important;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
 .mat-primary .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-minimal::after, .mat-primary .mat-pseudo-checkbox-indeterminate.mat-pseudo-checkbox-minimal::after {
   color: #444c56 !important;
 }
