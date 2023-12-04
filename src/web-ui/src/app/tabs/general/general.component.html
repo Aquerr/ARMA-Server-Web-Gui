@@ -37,8 +37,8 @@
       <app-motd-list #motdListComponent></app-motd-list>
     </section>
     <div>
-      <input class="command-line-input" disabled [value]="commandLineParams" type="text">
-      <!--      <textarea style="width: 100%; white-space: nowrap; overflow-y: hidden;" disabled [value]="commandLineParams"></textarea>-->
+      <mat-label>Current command-line params</mat-label>
+      <input class="command-line-params" disabled [value]="commandLineParams" type="text">
     </div>
   </div>
   <div class="button-container">

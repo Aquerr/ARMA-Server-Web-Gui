@@ -16,9 +16,10 @@
   margin-bottom: 1rem;
 }
 
-.command-line-input {
+.command-line-params {
   color: black;
   width: 100%;
+  overflow-x: scroll;
 }
 
 @media (max-width: 800px) {
