@@ -93,6 +93,7 @@ export class ModPresetsComponent {
     this.modsService.selectPreset({name: presetName}).subscribe(response => {
       this.modPresetSelected.emit(presetName);
       this.maskService.hide();
+      this.notificationService.successNotification("Mod preset loaded!");
     });
   }
 
@@ -118,13 +119,13 @@ export class ModPresetsComponent {
       if (result.create) {
         this.modsService.savePreset({name: result.modPresetName, modNames: []}).subscribe(response => {
           this.reloadModPresets();
+          this.notificationService.successNotification("Mod preset created!");
         });
       }
     });
   }
 
   onPresetSaved(presetName: string) {
-    console.log(`Saving preset ${presetName} with mods [${this.enabledMods}]`);
     this.showModalSavePreset(presetName);
   }
 
@@ -140,6 +141,7 @@ export class ModPresetsComponent {
       if (result) {
         this.modsService.savePreset({name: presetName, modNames: this.enabledMods.map(mod => mod.name)} as ModPresetSaveRequest).subscribe(response => {
           this.reloadModPresets();
+          this.notificationService.successNotification("Mod preset saved!");
         });
       }
     });
@@ -159,6 +161,7 @@ export class ModPresetsComponent {
         this.modsService.deletePreset(presetName).subscribe(response => {
           this.removePresetFromList(this.modPresets, presetName);
           this.maskService.hide();
+          this.notificationService.successNotification("Mod preset deleted!");
         });
       }
     });
