@@ -1,6 +1,10 @@
 <mat-accordion>
-  <mat-expansion-panel hideToggle class="mod-list-item-expansion-panel">
-    <mat-expansion-panel-header class="mod-list-item-expansion-panel-header">
+  <mat-expansion-panel hideToggle
+                       [(expanded)]="expanded"
+                       class="mod-list-item-expansion-panel">
+    <mat-expansion-panel-header class="mod-list-item-expansion-panel-header"
+                                [ngStyle]="expanded ? {'background-color': 'var(--aswg-input-bg-color)'} : null"
+    >
       <mat-panel-title>
         {{mod.name}}
       </mat-panel-title>

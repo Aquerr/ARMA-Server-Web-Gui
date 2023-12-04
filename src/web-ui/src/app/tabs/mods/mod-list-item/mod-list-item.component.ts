@@ -19,7 +19,7 @@ export class ModListItemComponent {
 
   @Input() mod!: Mod;
   @Output() onModDelete: EventEmitter<Mod> = new EventEmitter<Mod>();
-
+  expanded: boolean = false;
   constructor(private matDialog: MatDialog,
               private maskService: MaskService,
               private modService: ServerModsService,

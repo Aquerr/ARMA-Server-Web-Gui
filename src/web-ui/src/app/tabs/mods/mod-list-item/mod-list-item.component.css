@@ -38,7 +38,6 @@
 }
 
 .mod-list-item-expansion-panel-header {
-  /* To rework as header bg color changes after clicking on different item */
   background-color: var(--aswg-bg-primary-bg-color);
   display: flex;
   flex-direction: row;
