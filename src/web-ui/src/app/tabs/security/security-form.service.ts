@@ -11,9 +11,9 @@ export class SecurityFormService {
 
   getForm(): FormGroup {
     return this.fb.group({
-      serverPassword: ['', [Validators.required]],
-      serverAdminPassword: ['', [Validators.required]],
-      serverCommandPassword: ['', [Validators.required]],
+      serverPassword: [''],
+      serverAdminPassword: [''],
+      serverCommandPassword: [''],
       battleEye: [true, [Validators.required]],
       verifySignatures: [true, [Validators.required]],
       allowedFilePatching: [0, [Validators.required]],
