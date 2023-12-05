@@ -19,7 +19,7 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>BattleEye</mat-label>
-        <mat-select [(ngModel)]="battleEye" formControlName="battleEye">
+        <mat-select formControlName="battleEye">
           <mat-option [value]="true">Yes</mat-option>
           <mat-option [value]="false">No</mat-option>
         </mat-select>
@@ -27,7 +27,7 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Verify Addons Signatures</mat-label>
-        <mat-select [(ngModel)]="verifySignatures" formControlName="verifySignatures">
+        <mat-select formControlName="verifySignatures">
           <mat-option [value]="true">Yes</mat-option>
           <mat-option [value]="false">No</mat-option>
         </mat-select>
@@ -35,12 +35,34 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Allowed File Patching</mat-label>
-        <mat-select [(ngModel)]="allowedFilePatching" formControlName="allowedFilePatching">
+        <mat-select formControlName="allowedFilePatching">
           <mat-option [value]="0">NOT ALLOWED</mat-option>
           <mat-option [value]="1">ALLOWED FOR HEADLESS CLIENTS</mat-option>
           <mat-option [value]="2">ALLOWED FOR ALL CLIENTS</mat-option>
         </mat-select>
         <mat-error *ngIf="hasFormError('allowedFilePatching', 'required')">This field is required</mat-error>
+      </mat-form-field>
+      <mat-form-field style="width: 100%;">
+        <mat-label>Allowed Load File Extensions</mat-label>
+        <mat-chip-grid #allowedLoadFileExtensionsGrid aria-label="Allowed Load File Extensions" formControlName="allowedLoadFileExtensions">
+          <mat-chip-row *ngFor="let fileExtension of formService.getAllowedLoadFileExtensions(form).value"
+                        [editable]="true"
+                        (edited)="editAllowedFileExtension(fileExtension, $event)"
+                        (removed)="removeAllowedFileExtension(fileExtension)"
+                        [aria-description]="'press enter to edit ' + fileExtension"
+          >
+            {{fileExtension}}
+            <button matChipRemove [attr.aria-label]="'remove ' + fileExtension">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          <input placeholder="New extension..."
+                 [matChipInputFor]="allowedLoadFileExtensionsGrid"
+                 [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
+                 [matChipInputAddOnBlur]="true"
+                 (matChipInputTokenEnd)="addNewAllowedFileExtension($event)"
+          />
+        </mat-chip-grid>
       </mat-form-field>
     </div>
   </div>

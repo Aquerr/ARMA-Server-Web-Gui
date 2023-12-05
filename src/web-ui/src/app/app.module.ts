@@ -65,6 +65,7 @@ import { ModPresetSaveDialogComponent } from './tabs/mods/mod-presets/mod-preset
 import { ModPresetDeleteDialogComponent } from './tabs/mods/mod-presets/mod-preset-delete-dialog/mod-preset-delete-dialog.component';
 import { ModForceUpdateConfirmDialogComponent } from './tabs/mods/mod-force-update-confirm-dialog/mod-force-update-confirm-dialog.component';
 import { SettingsComponent } from './tabs/settings/settings.component';
+import {MatChipsModule} from "@angular/material/chips";
 
 @NgModule({
   declarations: [
@@ -131,7 +132,8 @@ import { SettingsComponent } from './tabs/settings/settings.component';
         NgOptimizedImage,
         MatExpansionModule,
         MatTooltipModule,
-        MatMenuModule
+        MatMenuModule,
+        MatChipsModule
     ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}

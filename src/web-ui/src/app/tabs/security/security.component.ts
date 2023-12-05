@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {SaveServerSecurityRequest, ServerSecurityService} from "../../service/server-security.service";
+import {ServerSecurityService} from "../../service/server-security.service";
 import {MaskService} from "../../service/mask.service";
 import {NotificationService} from "../../service/notification.service";
 import {SecurityFormService} from './security-form.service';
 import {FormGroup} from '@angular/forms';
+import {MatChipEditedEvent, MatChipInputEvent} from "@angular/material/chips";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
 
 @Component({
   selector: 'app-security',
@@ -11,18 +13,13 @@ import {FormGroup} from '@angular/forms';
   styleUrls: ['./security.component.css']
 })
 export class SecurityComponent implements OnInit {
-  form: FormGroup;
-  serverPassword: string = "";
-  serverAdminPassword: string = "";
-  serverCommandPassword: string = "";
-  battleEye: boolean = true;
-  verifySignatures: boolean = true;
-  allowedFilePatching: number = 0;
+  public form: FormGroup;
+  readonly separatorKeyCodes: number[] = [ENTER, COMMA];
 
   constructor(private serverSecurityService: ServerSecurityService,
               private maskService: MaskService,
               private notificationService: NotificationService,
-              private formService: SecurityFormService) {
+              public formService: SecurityFormService) {
     this.form = this.formService.getForm();
   }
 
@@ -54,5 +51,38 @@ export class SecurityComponent implements OnInit {
 
   hasFormError(controlName: string, errorName: string): boolean {
     return this.form.get(controlName)?.hasError(errorName)!;
+  }
+
+  addNewAllowedFileExtension(event: MatChipInputEvent) {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      this.formService.getAllowedLoadFileExtensions(this.form).value.push(value);
+    }
+    this.formService.getAllowedLoadFileExtensions(this.form).updateValueAndValidity();
+
+    event.chipInput!.clear();
+  }
+
+  editAllowedFileExtension(fileExtension: string, event: MatChipEditedEvent) {
+    const value = event.value.trim();
+
+    if (!value) {
+      this.removeAllowedFileExtension(value);
+      return;
+    }
+
+    const index = this.formService.getAllowedLoadFileExtensions(this.form).value.indexOf(fileExtension);
+    if (index >= 0) {
+      this.formService.getAllowedLoadFileExtensions(this.form).value[index] = value;
+    }
+  }
+
+  removeAllowedFileExtension(fileExtension: string) {
+    const index = this.formService.getAllowedLoadFileExtensions(this.form).value.indexOf(fileExtension);
+    if (index >= 0) {
+      this.formService.getAllowedLoadFileExtensions(this.form).value.splice(index, 1);
+      this.formService.getAllowedLoadFileExtensions(this.form).updateValueAndValidity();
+    }
   }
 }

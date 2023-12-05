@@ -28,6 +28,7 @@ export interface SaveServerSecurityRequest {
   battleEye: boolean;
   verifySignatures: boolean;
   allowedFilePatching: number;
+  allowedLoadFileExtensions: string[];
 }
 
 export interface GetServerSecurityResponse {
@@ -37,4 +38,5 @@ export interface GetServerSecurityResponse {
   battleEye: boolean;
   verifySignatures: boolean;
   allowedFilePatching: number;
+  allowedLoadFileExtensions: string[];
 }

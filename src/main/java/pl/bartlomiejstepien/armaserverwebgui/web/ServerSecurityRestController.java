@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.ServerSecurity;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.ServerSecurityProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.ServerSecurityService;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/security")
@@ -34,27 +36,29 @@ public class ServerSecurityRestController
         return Mono.just(ResponseEntity.ok().build());
     }
 
-    private ServerSecurity toDomainModel(SaveServerSecurityRequest saveServerSecurityRequest)
+    private ServerSecurityProperties toDomainModel(SaveServerSecurityRequest saveServerSecurityRequest)
     {
-        return ServerSecurity.builder()
+        return ServerSecurityProperties.builder()
                 .serverPassword(saveServerSecurityRequest.getServerPassword())
                 .serverAdminPassword(saveServerSecurityRequest.getServerAdminPassword())
                 .serverCommandPassword(saveServerSecurityRequest.getServerCommandPassword())
                 .battleEye(saveServerSecurityRequest.isBattleEye())
                 .verifySignatures(saveServerSecurityRequest.isVerifySignatures())
                 .allowedFilePatching(saveServerSecurityRequest.getAllowedFilePatching())
+                .allowedLoadFileExtensions(saveServerSecurityRequest.getAllowedLoadFileExtensions())
                 .build();
     }
 
-    private GetServerSecurity toViewResponse(ServerSecurity serverSecurity)
+    private GetServerSecurity toViewResponse(ServerSecurityProperties serverSecurityProperties)
     {
         return GetServerSecurity.builder()
-                .serverPassword(serverSecurity.getServerPassword())
-                .serverAdminPassword(serverSecurity.getServerAdminPassword())
-                .serverCommandPassword(serverSecurity.getServerCommandPassword())
-                .battleEye(serverSecurity.isBattleEye())
-                .verifySignatures(serverSecurity.isVerifySignatures())
-                .allowedFilePatching(serverSecurity.getAllowedFilePatching())
+                .serverPassword(serverSecurityProperties.getServerPassword())
+                .serverAdminPassword(serverSecurityProperties.getServerAdminPassword())
+                .serverCommandPassword(serverSecurityProperties.getServerCommandPassword())
+                .battleEye(serverSecurityProperties.isBattleEye())
+                .verifySignatures(serverSecurityProperties.isVerifySignatures())
+                .allowedFilePatching(serverSecurityProperties.getAllowedFilePatching())
+                .allowedLoadFileExtensions(serverSecurityProperties.getAllowedLoadFileExtensions())
                 .build();
     }
 
@@ -68,6 +72,7 @@ public class ServerSecurityRestController
         private boolean battleEye;
         private boolean verifySignatures;
         private int allowedFilePatching;
+        private List<String> allowedLoadFileExtensions;
     }
 
     @Data
@@ -80,5 +85,6 @@ public class ServerSecurityRestController
         private boolean battleEye;
         private boolean verifySignatures;
         private int allowedFilePatching;
+        private List<String> allowedLoadFileExtensions;
     }
 }

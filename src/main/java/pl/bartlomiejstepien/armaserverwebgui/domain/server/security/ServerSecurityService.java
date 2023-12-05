@@ -1,10 +1,10 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.security;
 
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.ServerSecurity;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.ServerSecurityProperties;
 
 public interface ServerSecurityService
 {
-    ServerSecurity getServerSecurity();
+    ServerSecurityProperties getServerSecurity();
 
-    void saveServerSecurity(ServerSecurity serverSecurity);
+    void saveServerSecurity(ServerSecurityProperties serverSecurityProperties);
 }
