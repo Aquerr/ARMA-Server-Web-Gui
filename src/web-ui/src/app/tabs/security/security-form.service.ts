@@ -17,7 +17,8 @@ export class SecurityFormService {
       battleEye: [true, [Validators.required]],
       verifySignatures: [true, [Validators.required]],
       allowedFilePatching: [0, [Validators.required]],
-      allowedLoadFileExtensions: [[]]
+      allowedLoadFileExtensions: [[]],
+      adminUUIDs: [[]]
     });
   }
 
@@ -29,6 +30,7 @@ export class SecurityFormService {
     this.getVerifySignaturesControl(form).setValue(data.verifySignatures);
     this.getAllowedFilePatchingControl(form).setValue(data.allowedFilePatching);
     this.getAllowedLoadFileExtensions(form).setValue(data.allowedLoadFileExtensions);
+    this.getAdminUUIDs(form).setValue(data.adminUUIDs);
   }
 
   get(form: FormGroup) {
@@ -39,7 +41,8 @@ export class SecurityFormService {
       battleEye: this.getBattleEyeControl(form).value,
       verifySignatures: this.getVerifySignaturesControl(form).value,
       allowedFilePatching: this.getAllowedFilePatchingControl(form).value,
-      allowedLoadFileExtensions: this.getAllowedLoadFileExtensions(form).value
+      allowedLoadFileExtensions: this.getAllowedLoadFileExtensions(form).value,
+      adminUUIDs: this.getAdminUUIDs(form).value
     } as SaveServerSecurityRequest;
   }
 
@@ -69,5 +72,9 @@ export class SecurityFormService {
 
   getAllowedLoadFileExtensions(form: FormGroup) {
     return form.get('allowedLoadFileExtensions') as AbstractControl;
+  }
+
+  getAdminUUIDs(form: FormGroup) {
+    return form.get('adminUUIDs') as AbstractControl;
   }
 }

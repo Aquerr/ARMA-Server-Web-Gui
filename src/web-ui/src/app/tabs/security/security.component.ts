@@ -14,7 +14,6 @@ import {COMMA, ENTER} from "@angular/cdk/keycodes";
 })
 export class SecurityComponent implements OnInit {
   public form: FormGroup;
-  readonly separatorKeyCodes: number[] = [ENTER, COMMA];
 
   constructor(private serverSecurityService: ServerSecurityService,
               private maskService: MaskService,
@@ -61,7 +60,7 @@ export class SecurityComponent implements OnInit {
     }
     this.formService.getAllowedLoadFileExtensions(this.form).updateValueAndValidity();
 
-    event.chipInput!.clear();
+    event.chipInput.clear();
   }
 
   editAllowedFileExtension(fileExtension: string, event: MatChipEditedEvent) {
@@ -84,5 +83,41 @@ export class SecurityComponent implements OnInit {
       this.formService.getAllowedLoadFileExtensions(this.form).value.splice(index, 1);
       this.formService.getAllowedLoadFileExtensions(this.form).updateValueAndValidity();
     }
+  }
+
+  protected readonly ENTER = ENTER;
+  protected readonly COMMA = COMMA;
+
+  editAdminUUID(adminUUID: string, event: MatChipEditedEvent) {
+    const value = event.value.trim();
+
+    if (!value) {
+      this.removeAdminUUID(value);
+      return;
+    }
+
+    const index = this.formService.getAdminUUIDs(this.form).value.indexOf(adminUUID);
+    if (index >= 0) {
+      this.formService.getAdminUUIDs(this.form).value[index] = value;
+    }
+  }
+
+  removeAdminUUID(adminUUID: string) {
+    const index = this.formService.getAdminUUIDs(this.form).value.indexOf(adminUUID);
+    if (index >= 0) {
+      this.formService.getAdminUUIDs(this.form).value.splice(index, 1);
+      this.formService.getAdminUUIDs(this.form).updateValueAndValidity();
+    }
+  }
+
+  addNewAdminUUID(event: MatChipInputEvent) {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      this.formService.getAdminUUIDs(this.form).value.push(value);
+    }
+    this.formService.getAdminUUIDs(this.form).updateValueAndValidity();
+
+    event.chipInput.clear();
   }
 }

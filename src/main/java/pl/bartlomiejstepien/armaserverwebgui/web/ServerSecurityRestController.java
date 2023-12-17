@@ -46,6 +46,7 @@ public class ServerSecurityRestController
                 .verifySignatures(saveServerSecurityRequest.isVerifySignatures())
                 .allowedFilePatching(saveServerSecurityRequest.getAllowedFilePatching())
                 .allowedLoadFileExtensions(saveServerSecurityRequest.getAllowedLoadFileExtensions())
+                .adminUUIDs(saveServerSecurityRequest.getAdminUUIDs())
                 .build();
     }
 
@@ -59,6 +60,7 @@ public class ServerSecurityRestController
                 .verifySignatures(serverSecurityProperties.isVerifySignatures())
                 .allowedFilePatching(serverSecurityProperties.getAllowedFilePatching())
                 .allowedLoadFileExtensions(serverSecurityProperties.getAllowedLoadFileExtensions())
+                .adminUUIDs(serverSecurityProperties.getAdminUUIDs())
                 .build();
     }
 
@@ -73,6 +75,7 @@ public class ServerSecurityRestController
         private boolean verifySignatures;
         private int allowedFilePatching;
         private List<String> allowedLoadFileExtensions;
+        private List<String> adminUUIDs;
     }
 
     @Data
@@ -86,5 +89,6 @@ public class ServerSecurityRestController
         private boolean verifySignatures;
         private int allowedFilePatching;
         private List<String> allowedLoadFileExtensions;
+        private List<String> adminUUIDs;
     }
 }

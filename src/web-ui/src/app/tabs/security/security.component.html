@@ -17,6 +17,28 @@
         <input formControlName="serverCommandPassword" matInput type="text">
         <mat-error *ngIf="hasFormError('serverCommandPassword', 'required')">This field is required</mat-error>
       </mat-form-field>
+      <mat-form-field style="width: 100%;">
+        <mat-label>Admins (steamID64)</mat-label>
+        <mat-chip-grid #adminUUIDsGrid aria-label="Admins" formControlName="adminUUIDs">
+          <mat-chip-row *ngFor="let adminUUID of formService.getAdminUUIDs(form).value"
+                        [editable]="true"
+                        (edited)="editAdminUUID(adminUUID, $event)"
+                        (removed)="removeAdminUUID(adminUUID)"
+                        [aria-description]="'press enter to edit ' + adminUUID"
+          >
+            {{adminUUID}}
+            <button matChipRemove [attr.aria-label]="'remove ' + adminUUID">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          <input placeholder="New admin..."
+                 [matChipInputFor]="adminUUIDsGrid"
+                 [matChipInputSeparatorKeyCodes]="[ENTER, COMMA]"
+                 [matChipInputAddOnBlur]="true"
+                 (matChipInputTokenEnd)="addNewAdminUUID($event)"
+          />
+        </mat-chip-grid>
+      </mat-form-field>
       <mat-form-field>
         <mat-label>BattleEye</mat-label>
         <mat-select formControlName="battleEye">
@@ -58,7 +80,7 @@
           </mat-chip-row>
           <input placeholder="New extension..."
                  [matChipInputFor]="allowedLoadFileExtensionsGrid"
-                 [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
+                 [matChipInputSeparatorKeyCodes]="[ENTER, COMMA]"
                  [matChipInputAddOnBlur]="true"
                  (matChipInputTokenEnd)="addNewAllowedFileExtension($event)"
           />

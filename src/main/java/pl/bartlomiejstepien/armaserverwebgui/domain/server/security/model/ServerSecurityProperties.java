@@ -16,4 +16,5 @@ public class ServerSecurityProperties
     private boolean verifySignatures;
     private int allowedFilePatching;
     private List<String> allowedLoadFileExtensions;
+    private List<String> adminUUIDs;
 }

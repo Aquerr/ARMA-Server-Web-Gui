@@ -78,6 +78,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "allowedLoadFileExtensions[]", type = PropertyType.STRING_ARRAY)
     private String[] allowedLoadFileExtensions = {"hpp","sqs","sqf","fsm","cpp","paa","txt","xml","inc","ext","sqm","ods","fxy","lip","csv","kb","bik","bikb","html","htm","biedi"};
 
+    @CfgProperty(name = "admins", type = PropertyType.STRING_ARRAY)
+    private String[] admins = {};
+
     @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
     private Missions missions = new Missions();
 

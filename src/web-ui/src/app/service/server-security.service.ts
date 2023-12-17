@@ -29,6 +29,7 @@ export interface SaveServerSecurityRequest {
   verifySignatures: boolean;
   allowedFilePatching: number;
   allowedLoadFileExtensions: string[];
+  adminUUIDs: string[];
 }
 
 export interface GetServerSecurityResponse {
@@ -39,4 +40,5 @@ export interface GetServerSecurityResponse {
   verifySignatures: boolean;
   allowedFilePatching: number;
   allowedLoadFileExtensions: string[];
+  adminUUIDs: string[];
 }

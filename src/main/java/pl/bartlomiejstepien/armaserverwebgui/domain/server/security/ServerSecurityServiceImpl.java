@@ -6,6 +6,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.Server
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 @Service
@@ -25,7 +26,8 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
                 .battleEye(armaServerConfig.getBattleEye() == 1)
                 .verifySignatures(armaServerConfig.getVerifySignatures() == 2)
                 .allowedFilePatching(armaServerConfig.getAllowedFilePatching())
-                .allowedLoadFileExtensions(Stream.of(armaServerConfig.getAllowedLoadFileExtensions()).toList())
+                .allowedLoadFileExtensions(Arrays.asList(armaServerConfig.getAllowedLoadFileExtensions()))
+                .adminUUIDs(Arrays.asList(armaServerConfig.getAdmins()))
                 .build();
     }
 
@@ -40,6 +42,7 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
         armaServerConfig.setVerifySignatures(serverSecurityProperties.isVerifySignatures() ? 2 : 0);
         armaServerConfig.setAllowedFilePatching(serverSecurityProperties.getAllowedFilePatching());
         armaServerConfig.setAllowedLoadFileExtensions(serverSecurityProperties.getAllowedLoadFileExtensions().toArray(new String[0]));
+        armaServerConfig.setAdmins(serverSecurityProperties.getAdminUUIDs().toArray(new String[0]));
         serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 }
