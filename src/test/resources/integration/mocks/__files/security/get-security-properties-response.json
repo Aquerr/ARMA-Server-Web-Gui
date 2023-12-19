@@ -1,0 +1,14 @@
+{
+  "serverPassword": "server_password",
+  "serverAdminPassword": "admin_password",
+  "serverCommandPassword": "command_password",
+  "battleEye": true,
+  "verifySignatures": true,
+  "allowedFilePatching": "ALLOWED_FOR_HEADLESS_CLIENTS",
+  "allowedLoadFileExtensions": [
+    "SQF"
+  ],
+  "adminUUIDs": [
+    "12341235421321"
+  ]
+}

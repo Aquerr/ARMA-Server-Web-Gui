@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ServerSecurityService} from "../../service/server-security.service";
+import {AllowedFilePatching, ServerSecurityService} from "../../service/server-security.service";
 import {MaskService} from "../../service/mask.service";
 import {NotificationService} from "../../service/notification.service";
 import {SecurityFormService} from './security-form.service';
@@ -120,4 +120,6 @@ export class SecurityComponent implements OnInit {
 
     event.chipInput.clear();
   }
+
+  protected readonly AllowedFilePatching = AllowedFilePatching;
 }

@@ -23,7 +23,7 @@ public class ServerSecurityRestController
     private final ServerSecurityService serverSecurityService;
 
     @GetMapping
-    public Mono<GetServerSecurity> getServerSecurity()
+    public Mono<ServerSecurityResponse> getServerSecurity()
     {
         return Mono.just(this.serverSecurityService.getServerSecurity())
                 .map(this::toViewResponse);
@@ -50,9 +50,9 @@ public class ServerSecurityRestController
                 .build();
     }
 
-    private GetServerSecurity toViewResponse(ServerSecurityProperties serverSecurityProperties)
+    private ServerSecurityResponse toViewResponse(ServerSecurityProperties serverSecurityProperties)
     {
-        return GetServerSecurity.builder()
+        return ServerSecurityResponse.builder()
                 .serverPassword(serverSecurityProperties.getServerPassword())
                 .serverAdminPassword(serverSecurityProperties.getServerAdminPassword())
                 .serverCommandPassword(serverSecurityProperties.getServerCommandPassword())
@@ -73,21 +73,21 @@ public class ServerSecurityRestController
         private String serverCommandPassword;
         private boolean battleEye;
         private boolean verifySignatures;
-        private int allowedFilePatching;
+        private ServerSecurityProperties.AllowedFilePatching allowedFilePatching;
         private List<String> allowedLoadFileExtensions;
         private List<String> adminUUIDs;
     }
 
     @Data
     @Builder
-    private static class GetServerSecurity
+    private static class ServerSecurityResponse
     {
         private String serverPassword;
         private String serverAdminPassword;
         private String serverCommandPassword;
         private boolean battleEye;
         private boolean verifySignatures;
-        private int allowedFilePatching;
+        private ServerSecurityProperties.AllowedFilePatching allowedFilePatching;
         private List<String> allowedLoadFileExtensions;
         private List<String> adminUUIDs;
     }

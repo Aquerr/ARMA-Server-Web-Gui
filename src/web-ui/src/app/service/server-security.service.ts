@@ -42,3 +42,9 @@ export interface GetServerSecurityResponse {
   allowedLoadFileExtensions: string[];
   adminUUIDs: string[];
 }
+
+export enum AllowedFilePatching {
+  NOT_ALLOWED = 'NOT_ALLOWED',
+  ALLOWED_FOR_HEADLESS_CLIENTS = 'ALLOWED_FOR_HEADLESS_CLIENTS',
+  ALLOWED_FOR_ALL_CLIENTS = 'ALLOWED_FOR_ALL_CLIENTS'
+}

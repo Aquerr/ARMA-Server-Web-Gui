@@ -1,6 +1,10 @@
 import {Injectable} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {GetServerSecurityResponse, SaveServerSecurityRequest} from '../../service/server-security.service';
+import {
+  AllowedFilePatching,
+  GetServerSecurityResponse,
+  SaveServerSecurityRequest
+} from '../../service/server-security.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +20,7 @@ export class SecurityFormService {
       serverCommandPassword: [''],
       battleEye: [true, [Validators.required]],
       verifySignatures: [true, [Validators.required]],
-      allowedFilePatching: [0, [Validators.required]],
+      allowedFilePatching: [AllowedFilePatching.NOT_ALLOWED, [Validators.required]],
       allowedLoadFileExtensions: [[]],
       adminUUIDs: [[]]
     });

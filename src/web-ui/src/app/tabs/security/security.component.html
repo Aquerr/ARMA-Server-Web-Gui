@@ -58,9 +58,9 @@
       <mat-form-field>
         <mat-label>Allowed File Patching</mat-label>
         <mat-select formControlName="allowedFilePatching">
-          <mat-option [value]="0">NOT ALLOWED</mat-option>
-          <mat-option [value]="1">ALLOWED FOR HEADLESS CLIENTS</mat-option>
-          <mat-option [value]="2">ALLOWED FOR ALL CLIENTS</mat-option>
+          <mat-option [value]="AllowedFilePatching.NOT_ALLOWED">NOT ALLOWED</mat-option>
+          <mat-option [value]="AllowedFilePatching.ALLOWED_FOR_HEADLESS_CLIENTS">ALLOWED FOR HEADLESS CLIENTS</mat-option>
+          <mat-option [value]="AllowedFilePatching.ALLOWED_FOR_ALL_CLIENTS">ALLOWED FOR ALL CLIENTS</mat-option>
         </mat-select>
         <mat-error *ngIf="hasFormError('allowedFilePatching', 'required')">This field is required</mat-error>
       </mat-form-field>
