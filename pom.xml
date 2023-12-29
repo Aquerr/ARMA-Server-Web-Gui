@@ -21,6 +21,7 @@
         <steam-condenser.version>1.3.9</steam-condenser.version>
         <jjwt.version>0.12.3</jjwt.version>
         <zip4j.version>2.11.5</zip4j.version>
+        <steam-web-api-client.version>main-SNAPSHOT</steam-web-api-client.version>
 
         <!-- Front -->
         <node.version>v20.10.0</node.version>
@@ -120,7 +121,7 @@
         <dependency>
             <groupId>com.github.Aquerr</groupId>
             <artifactId>steam-web-api-client</artifactId>
-            <version>main-SNAPSHOT</version>
+            <version>${steam-web-api-client.version}</version>
         </dependency>
 
         <!-- Database -->
