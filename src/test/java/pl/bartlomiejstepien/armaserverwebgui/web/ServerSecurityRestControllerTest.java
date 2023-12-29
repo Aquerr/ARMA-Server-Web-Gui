@@ -3,10 +3,11 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.bartlomiejstepien.armaserverwebgui.IntegrationTest;
+import pl.bartlomiejstepien.armaserverwebgui.application.config.security.JwtService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 
@@ -21,18 +22,20 @@ class ServerSecurityRestControllerTest
 
     @Autowired
     private WebTestClient webTestClient;
+    @Autowired
+    private JwtService jwtService;
 
     @MockBean
     private ServerConfigStorage serverConfigStorage;
 
     @Test
-    @WithMockUser
     void shouldReturnSecurityProperties()
     {
         given(serverConfigStorage.getServerConfig()).willReturn(prepareArmaServerConfig());
 
         webTestClient.get()
                 .uri(SECURITY_PROPERTIES_URL)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtService.createJwt("test_user"))
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -43,13 +46,13 @@ class ServerSecurityRestControllerTest
     }
 
     @Test
-    @WithMockUser
     void shouldSaveSecurityProperties()
     {
         given(serverConfigStorage.getServerConfig()).willReturn(new ArmaServerConfig());
 
         webTestClient.post()
                 .uri(SECURITY_PROPERTIES_URL)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtService.createJwt("test_user"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(loadJsonIntegrationContractFor("security/save-security-properties-request.json"))
                 .exchange()

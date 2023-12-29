@@ -68,15 +68,15 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "arma-web-gui:build",
-            "proxyConfig": "proxy.config.json"
+            "proxyConfig": "proxy.config.json",
+            "buildTarget": "arma-web-gui:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "arma-web-gui:build:production"
+              "buildTarget": "arma-web-gui:build:production"
             },
             "development": {
-              "browserTarget": "arma-web-gui:build:development"
+              "buildTarget": "arma-web-gui:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "arma-web-gui:build"
+            "buildTarget": "arma-web-gui:build"
           }
         },
         "test": {

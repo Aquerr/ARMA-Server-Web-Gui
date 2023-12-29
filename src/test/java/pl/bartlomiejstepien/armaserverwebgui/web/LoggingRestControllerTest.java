@@ -3,10 +3,11 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.bartlomiejstepien.armaserverwebgui.IntegrationTest;
+import pl.bartlomiejstepien.armaserverwebgui.application.config.security.JwtService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.model.LoggingProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.LoggingService;
 
@@ -22,18 +23,20 @@ class LoggingRestControllerTest
 
     @Autowired
     private WebTestClient webTestClient;
+    @Autowired
+    private JwtService jwtService;
 
     @MockBean
     private LoggingService loggingService;
 
     @Test
-    @WithMockUser
     void getLoggingPropertiesShouldReturnLoggingSectionData()
     {
         given(loggingService.getLoggingProperties()).willReturn(prepareLoggingProperties());
 
         webTestClient.get()
                 .uri(LOGGING_PROPERTIES_URL)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtService.createJwt("test_user"))
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -54,11 +57,11 @@ class LoggingRestControllerTest
     }
 
     @Test
-    @WithMockUser
     void saveLoggingPropertiesShouldSavePropertiesUsingService()
     {
         webTestClient.post()
                 .uri(LOGGING_PROPERTIES_URL)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtService.createJwt("test_user"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(loadJsonIntegrationContractFor("logging/save-logging-properties.json"))
                 .exchange()

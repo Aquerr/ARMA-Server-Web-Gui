@@ -1,5 +1,5 @@
 import {inject, NgModule} from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {provideRouter, RouterModule, Routes} from '@angular/router';
 import {GeneralComponent} from "./tabs/general/general.component";
 import {NetworkComponent} from "./tabs/network/network.component";
 import {MissionsComponent} from "./tabs/missions/missions.component";
@@ -32,7 +32,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [provideRouter(routes)]
 })
 export class AppRoutingModule { }

@@ -3,11 +3,12 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.bartlomiejstepien.armaserverwebgui.IntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.application.config.security.JwtService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.GeneralService;
 
@@ -23,6 +24,8 @@ class GeneralControllerTest
 
     @Autowired
     private WebTestClient webTestClient;
+    @Autowired
+    private JwtService jwtService;
 
     @MockBean
     private GeneralService generalService;
@@ -30,7 +33,6 @@ class GeneralControllerTest
     private ASWGConfig aswgConfig;
 
     @Test
-    @WithMockUser
     void getGeneralPropertiesShouldReturnServerDirectoryFromASWGConfig()
     {
         given(aswgConfig.getServerDirectoryPath()).willReturn("fake/fakeServerDirectory");
@@ -40,6 +42,7 @@ class GeneralControllerTest
 
         webTestClient.get()
                 .uri(API_GENERAL_PROPERTIES_URL)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtService.createJwt("test_user"))
                 .exchange()
                 .expectStatus()
                     .isOk()
@@ -60,11 +63,11 @@ class GeneralControllerTest
     }
 
     @Test
-    @WithMockUser
     void saveGeneralPropertiesShouldUpdateServerDirectoryInASWGConfig()
     {
         webTestClient.post()
                 .uri(API_GENERAL_PROPERTIES_URL)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtService.createJwt("test_user"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(loadJsonIntegrationContractFor("general/save-general-properties-request.json"))
                 .exchange()
