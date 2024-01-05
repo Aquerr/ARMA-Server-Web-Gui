@@ -18,6 +18,8 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.String.format;
+
 @Component
 @AllArgsConstructor
 @Slf4j
@@ -112,7 +114,7 @@ public class InstallDeleteModsFromFilesystemJob
         catch (Exception exception)
         {
             // exception mostly ignored as it should not stop the process.
-            log.warn(exception.getMessage(), exception);
+            log.warn(format("Could not fetch mod [%s] preview url.", installedFileSystemMod.getWorkshopFileId()), exception);
         }
         return entity;
     }
