@@ -42,6 +42,8 @@ public class InstallDeleteModsFromFilesystemJob
             return;
         }
 
+        log.info("Running mod directory scan.");
+
         List<InstalledFileSystemMod> installedFileSystemMods = modService.getInstalledModsFromFileSystem();
         saveOrDeleteModsFromDB(installedFileSystemMods);
     }
