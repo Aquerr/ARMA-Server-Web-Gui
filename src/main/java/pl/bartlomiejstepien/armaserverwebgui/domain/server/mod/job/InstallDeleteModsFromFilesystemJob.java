@@ -82,7 +82,19 @@ public class InstallDeleteModsFromFilesystemJob
         }
 
         List<InstalledModEntity> modsToAddToDB = findModsToAddToDB(installedModsInDB, installedFileSystemMods);
-        modsToAddToDB.forEach(mod -> modService.saveToDB(mod).subscribeOn(Schedulers.boundedElastic()).subscribe());
+        modsToAddToDB.forEach(mod -> saveToDB(mod));
+    }
+
+    private void saveToDB(InstalledModEntity mod)
+    {
+        try
+        {
+            modService.saveToDB(mod).subscribeOn(Schedulers.boundedElastic()).subscribe();
+        }
+        catch (Exception exception)
+        {
+            log.warn(format("Could not add mod to DB. Mod = %s", mod.toString()), exception);
+        }
     }
 
     private List<InstalledModEntity> findModsToAddToDB(List<InstalledModEntity> databaseMods, List<InstalledFileSystemMod> installedFileSystemMods)
