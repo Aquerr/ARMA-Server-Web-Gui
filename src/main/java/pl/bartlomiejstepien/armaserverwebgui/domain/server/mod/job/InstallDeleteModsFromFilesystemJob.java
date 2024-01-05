@@ -88,6 +88,7 @@ public class InstallDeleteModsFromFilesystemJob
         return installedFileSystemMods.stream()
                 .filter(InstalledFileSystemMod::isValid)
                 .filter(installedMod -> databaseMods.stream().noneMatch(databaseMod -> databaseMod.getWorkshopFileId() == installedMod.getWorkshopFileId()))
+                .peek(mod -> log.info("Found new file system mod: " + mod))
                 .map(this::toEntity)
                 .toList();
     }
@@ -100,10 +101,18 @@ public class InstallDeleteModsFromFilesystemJob
         entity.setDirectoryPath(installedFileSystemMod.getModDirectory().getPath().toString());
         entity.setCreatedDate(OffsetDateTime.now());
 
-        ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(installedFileSystemMod.getWorkshopFileId());
-        if (armaWorkshopMod != null)
+        try
         {
-            entity.setPreviewUrl(armaWorkshopMod.getPreviewUrl());
+            ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(installedFileSystemMod.getWorkshopFileId());
+            if (armaWorkshopMod != null)
+            {
+                entity.setPreviewUrl(armaWorkshopMod.getPreviewUrl());
+            }
+        }
+        catch (Exception exception)
+        {
+            // exception mostly ignored as it should not stop the process.
+            log.warn(exception.getMessage(), exception);
         }
         return entity;
     }
@@ -112,6 +121,7 @@ public class InstallDeleteModsFromFilesystemJob
     {
         return databaseMods.stream()
                 .filter(installedDatabaseMod -> installedFileSystemMods.stream().noneMatch(fileSystemMod -> fileSystemMod.getWorkshopFileId() == installedDatabaseMod.getWorkshopFileId()))
+                .peek(mod -> log.info("Found mod to delete: " + mod))
                 .toList();
     }
 }
