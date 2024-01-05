@@ -2,6 +2,8 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.job;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
@@ -24,6 +26,12 @@ public class InstallDeleteModsFromFilesystemJob
     private final ASWGConfig aswgConfig;
     private final ModService modService;
     private final SteamService steamService;
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void scanOnStartup()
+    {
+        scanModDirectories();
+    }
 
     @Scheduled(fixedDelay = 1L, timeUnit = TimeUnit.HOURS)
     public void scanModDirectories()
