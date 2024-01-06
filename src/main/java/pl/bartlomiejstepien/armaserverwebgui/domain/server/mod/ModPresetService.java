@@ -12,8 +12,6 @@ public interface ModPresetService
 
     Flux<ModPreset> getModPresets();
 
-    Mono<Void> saveModPreset(ModPreset modPreset);
-
     Mono<Void> saveModPreset(ModPresetSaveParams modPresetSaveParams);
 
     Mono<ModPreset> getModPreset(Long id);

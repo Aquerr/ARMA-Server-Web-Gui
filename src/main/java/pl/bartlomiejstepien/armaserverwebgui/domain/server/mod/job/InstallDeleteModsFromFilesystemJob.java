@@ -82,7 +82,7 @@ public class InstallDeleteModsFromFilesystemJob
         }
 
         List<InstalledModEntity> modsToAddToDB = findModsToAddToDB(installedModsInDB, installedFileSystemMods);
-        modsToAddToDB.forEach(mod -> saveToDB(mod));
+        modsToAddToDB.forEach(this::saveToDB);
     }
 
     private void saveToDB(InstalledModEntity mod)

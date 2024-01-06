@@ -18,6 +18,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -58,8 +59,7 @@ public class ModPresetServiceImpl implements ModPresetService
         return this.modPresetConverter.convert(tuple.getT1(), entries);
     }
 
-    @Override
-    public Mono<Void> saveModPreset(ModPreset modPreset)
+    private Mono<Void> saveModPreset(ModPreset modPreset)
     {
         return Mono.fromCallable(() -> this.modPresetConverter.convert(modPreset))
                 .flatMap(this.modPresetRepository::save)
@@ -87,7 +87,7 @@ public class ModPresetServiceImpl implements ModPresetService
                                 .name(modPreset.getName())
                                 .entries(entries)
                                 .build()))
-                .log(log.getName())
+                .doOnNext(modPreset -> log.info("Saving mod preset: {}", modPreset))
                 .flatMap(this::saveModPreset)
                 .then();
     }
@@ -122,7 +122,6 @@ public class ModPresetServiceImpl implements ModPresetService
     @Override
     public Mono<Void> importPreset(PresetImportParams params)
     {
-        // We should just trigger download of mods that are not yet downloaded.
         return this.modPresetRepository.findByName(params.getName())
                 .defaultIfEmpty(new ModPresetEntity(null, params.getName()))
                 .flatMap(this.modPresetRepository::save)
@@ -135,7 +134,7 @@ public class ModPresetServiceImpl implements ModPresetService
                                                 .modId(modParam.getId())
                                                 .modPresetId(modPresetEntity.getId())
                                                 .build()).toList())))
-                        .log(log.getName())
+                        .doOnNext(entryEntities -> log.info("Saving mod preset entities {}", Arrays.toString(entryEntities.toArray())))
                         .map(this.modPresetEntryRepository::saveAll))
                 .flatMap(Flux::collectList)
                 .flatMapMany(entries -> Flux.fromIterable(entries.stream().map(entry -> new WorkshopModInstallationRequest(entry.getModId(), entry.getName())).toList()))
@@ -161,6 +160,7 @@ public class ModPresetServiceImpl implements ModPresetService
                 .flatMap(this.modPresetEntryRepository::delete)
                 .then(this.modPresetRepository.findByName(presetName))
                 .switchIfEmpty(Mono.error(new PresetDoesNotExistException()))
+                .doOnNext(modPresetEntity -> log.info("Deleting mod preset: {}", modPresetEntity))
                 .flatMap(this.modPresetRepository::delete);
     }
 
