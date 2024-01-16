@@ -4,7 +4,7 @@
   padding-left: 16px;
   padding-right: 16px;
   min-height: 48px;
-  color: var(--aswg-bg-primary-font-color);
+  color: var(--aswg-primary-text-color);
   font-family: var(--mat-menu-item-label-text-font);
   line-height: var(--mat-menu-item-label-text-line-height);
   font-size: var(--mat-menu-item-label-text-size);
@@ -12,16 +12,21 @@
   font-weight: var(--mat-menu-item-label-text-weight);
 }
 
-.preset-item-name-button {
+.preset-item-name {
   background: none;
   border: 0;
   cursor: pointer;
-  color: var(--aswg-bg-primary-font-color);
+  word-break: break-word;
+  color: var(--aswg-primary-text-color);
   font-family: var(--mat-menu-item-label-text-font);
   line-height: var(--mat-menu-item-label-text-line-height);
   font-size: var(--mat-menu-item-label-text-size);
   letter-spacing: var(--mat-menu-item-label-text-tracking);
   font-weight: var(--mat-menu-item-label-text-weight);
+}
+
+.preset-item-buttons {
+  display: flex;
 }
 
 .preset-item mat-divider {

@@ -1,6 +1,6 @@
 <div class="preset-item">
-  <button class="preset-item-name-button" (click)="presetSelected()">{{presetName}}</button>
-  <div>
+  <button class="preset-item-name" (click)="presetSelected()">{{presetName}}</button>
+  <div class="preset-item-buttons">
     <button mat-icon-button (click)="savePreset($event)"><mat-icon [fontIcon]="'save'"></mat-icon></button>
     <button mat-icon-button (click)="deletePreset($event)"><mat-icon [fontIcon]="'delete'"></mat-icon></button>
   </div>
