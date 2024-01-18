@@ -2,17 +2,16 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.job;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
-import reactor.core.scheduler.Schedulers;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -29,13 +28,7 @@ public class InstallDeleteModsFromFilesystemJob
     private final ModService modService;
     private final SteamService steamService;
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void scanOnStartup()
-    {
-        scanModDirectories();
-    }
-
-    @Scheduled(fixedDelay = 1L, timeUnit = TimeUnit.HOURS)
+    @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.MINUTES)
     public void scanModDirectories()
     {
         if (!this.aswgConfig.isFileScannerDeletionEnabled() && !this.aswgConfig.isFileScannerInstallationEnabled())
@@ -54,47 +47,40 @@ public class InstallDeleteModsFromFilesystemJob
     {
         modService.getInstalledMods()
                 .collectList()
-                .map(installedModsInDB -> {
-                    installNewMods(installedModsInDB, installedFileSystemMods);
-                    deleteOldMods(installedModsInDB, installedFileSystemMods);
-                    return installedModsInDB;
-                }).subscribe();
+                .flatMapMany(installedModsInDB -> Flux.concat(deleteOldMods(installedModsInDB, installedFileSystemMods),
+                        installNewMods(installedModsInDB, installedFileSystemMods)))
+                .subscribe();
     }
 
-    private void deleteOldMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
+    private Flux<Void> deleteOldMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
     {
         if (!aswgConfig.isFileScannerDeletionEnabled())
         {
             log.info("File scanner deletion job is disabled. Skipping...");
-            return;
+            return Flux.empty();
         }
 
         List<InstalledModEntity> modsToDeleteInDB = findModsToDeleteFromDB(installedModsInDB, installedFileSystemMods);
-        modsToDeleteInDB.forEach(mod -> modService.deleteFromDB(mod.getId()).subscribeOn(Schedulers.boundedElastic()).subscribe());
+        return Flux.fromIterable(modsToDeleteInDB).flatMapSequential(mod -> modService.deleteFromDB(mod.getId()));
     }
 
-    private void installNewMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
+    private Flux<Void> installNewMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
     {
         if (!aswgConfig.isFileScannerInstallationEnabled())
         {
             log.info("File scanner installation job is disabled. Skipping...");
-            return;
+            return Flux.empty();
         }
 
         List<InstalledModEntity> modsToAddToDB = findModsToAddToDB(installedModsInDB, installedFileSystemMods);
-        modsToAddToDB.forEach(this::saveToDB);
+        return Flux.fromIterable(modsToAddToDB).flatMapSequential(this::saveToDB);
     }
 
-    private void saveToDB(InstalledModEntity mod)
+    private Mono<Void> saveToDB(InstalledModEntity mod)
     {
-        try
-        {
-            modService.saveToDB(mod).subscribeOn(Schedulers.boundedElastic()).subscribe();
-        }
-        catch (Exception exception)
-        {
-            log.warn(format("Could not add mod to DB. Mod = %s", mod.toString()), exception);
-        }
+        return modService.saveToDB(mod)
+                .doOnError(exception -> log.warn(format("Could not add mod to DB. Mod = %s", mod.toString()), exception))
+                .then();
     }
 
     private List<InstalledModEntity> findModsToAddToDB(List<InstalledModEntity> databaseMods, List<InstalledFileSystemMod> installedFileSystemMods)
