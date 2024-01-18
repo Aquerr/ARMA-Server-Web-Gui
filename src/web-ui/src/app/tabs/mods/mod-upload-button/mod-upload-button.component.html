@@ -1,7 +1,7 @@
 <div class="container">
-    <input style="display: none;" type="file" #fileInput (change)="onFileSelected($event)" accept=".zip">
-    Upload mod file
-    <button mat-mini-fab color="primary" (click)="fileInput.click()">
-      <mat-icon>attach_file</mat-icon>
-    </button>
-  </div>
+  <input style="display: none;" type="file" #fileInput (change)="onFileSelected($event)" accept=".zip">
+  <div>Upload (zipped) mod file</div>
+  <button mat-mini-fab color="primary" (click)="fileInput.click()">
+    <mat-icon>upload</mat-icon>
+  </button>
+</div>

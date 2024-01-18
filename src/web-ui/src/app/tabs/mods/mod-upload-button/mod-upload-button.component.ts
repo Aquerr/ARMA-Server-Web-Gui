@@ -1,6 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { MaskService } from 'src/app/service/mask.service';
-import { ServerModsService } from 'src/app/service/server-mods.service';
+import { Component } from '@angular/core';
 import {ModUploadService} from "../service/mod-upload.service";
 
 @Component({
@@ -8,14 +6,9 @@ import {ModUploadService} from "../service/mod-upload.service";
   templateUrl: './mod-upload-button.component.html',
   styleUrls: ['./mod-upload-button.component.css']
 })
-export class ModUploadButtonComponent implements OnInit {
+export class ModUploadButtonComponent {
 
-  constructor(private maskService: MaskService,
-              private modService: ServerModsService,
-              private modUploadService: ModUploadService) { }
-
-  ngOnInit(): void {
-  }
+  constructor(private modUploadService: ModUploadService) { }
 
   onFileSelected(event: Event) {
     console.log(event);

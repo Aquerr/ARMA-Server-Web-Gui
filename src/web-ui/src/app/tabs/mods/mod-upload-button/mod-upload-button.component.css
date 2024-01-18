@@ -1,3 +1,13 @@
+mat-icon {
+  color: var(--mdc-filled-button-label-text-color);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 @media (max-width: 800px) {
   .container {
     display: flex;
