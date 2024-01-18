@@ -1,20 +1,29 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ContainerNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.server.WebFilter;
+import org.zalando.logbook.BodyFilter;
+import org.zalando.logbook.ContentType;
 import org.zalando.logbook.Logbook;
-import org.zalando.logbook.core.BodyFilters;
 import org.zalando.logbook.core.DefaultCorrelationId;
 import org.zalando.logbook.core.DefaultHttpLogWriter;
 import org.zalando.logbook.core.DefaultSink;
 import org.zalando.logbook.core.ResponseFilters;
 import org.zalando.logbook.json.FastJsonHttpLogFormatter;
+import org.zalando.logbook.json.JsonBodyFilters;
 import org.zalando.logbook.spring.webflux.LogbookWebFilter;
 
+import javax.annotation.Nullable;
+import java.util.Set;
+
 import static org.zalando.logbook.core.Conditions.contentType;
-import static org.zalando.logbook.json.JsonPathBodyFilters.jsonPath;
 
 @Configuration
 public class LogbookConfig implements WebFluxConfigurer
@@ -28,12 +37,12 @@ public class LogbookConfig implements WebFluxConfigurer
     }
 
     @Bean
-    public Logbook logbook()
+    public Logbook logbook(ObjectMapper objectMapper)
     {
         Logbook logbook = Logbook.builder()
                 .responseFilter(ResponseFilters.replaceBody(response -> contentType("text/html", IGNORED_FILE_CONTENT).test(response) ? "<skipped>" : null))
-                .bodyFilter(jsonPath("$.password").replace("XXX"))
-                .bodyFilter(jsonPath("$.publishedFileDetails").delete())
+                .bodyFilter(JsonBodyFilters.replaceJsonStringProperty(Set.of("password"), "XXX"))
+                .bodyFilter(new FilterJsonAttribute(objectMapper, "publishedFileDetails"))
                 .correlationId(new DefaultCorrelationId())
                 .sink(new DefaultSink(
                         new FastJsonHttpLogFormatter(),
@@ -41,5 +50,36 @@ public class LogbookConfig implements WebFluxConfigurer
                 ))
                 .build();
         return logbook;
+    }
+
+    @AllArgsConstructor
+    private static class FilterJsonAttribute implements BodyFilter
+    {
+        private final ObjectMapper objectMapper;
+        private final String fieldName;
+
+        @Override
+        public String filter(@Nullable String contentType, String body)
+        {
+            if (!ContentType.isJsonMediaType(contentType))
+            {
+                return body;
+            }
+
+            try
+            {
+                ObjectNode objectNode = objectMapper.readValue(body, ObjectNode.class);
+                ContainerNode<?> foundJsonNode = (ContainerNode<?>) objectNode.findValue(fieldName);
+                if (foundJsonNode == null || foundJsonNode.isEmpty())
+                    return body;
+
+                foundJsonNode.removeAll();
+                return objectMapper.writeValueAsString(objectNode);
+            }
+            catch (JsonProcessingException e)
+            {
+                return body;
+            }
+        }
     }
 }
