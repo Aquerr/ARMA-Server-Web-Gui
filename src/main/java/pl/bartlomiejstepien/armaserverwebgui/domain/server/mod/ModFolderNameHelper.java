@@ -16,9 +16,7 @@ public class ModFolderNameHelper
         {
             modName = "@" + modName;
         }
-
-        modName = toLowerCaseWithUncerscores(modName);
-        return modName;
+        return normalize(modName);
     }
 
     public String normalize(String modName)
