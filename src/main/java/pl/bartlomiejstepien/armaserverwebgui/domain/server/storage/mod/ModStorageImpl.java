@@ -154,7 +154,6 @@ public class ModStorageImpl implements ModStorage
         try
         {
             Files.createSymbolicLink(modDirectoryPath, steamCmdModFolderPath);
-            FileSystemUtils.copyRecursively(steamCmdModFolderPath, modDirectoryPath);
             normalizeEachFileNameInFolderRecursively(modDirectoryPath); // TO REMOVE ?
         }
         catch (IOException e)
