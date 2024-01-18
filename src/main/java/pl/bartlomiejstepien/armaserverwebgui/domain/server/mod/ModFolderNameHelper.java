@@ -9,6 +9,13 @@ public class ModFolderNameHelper
     private static final String[] CHARACTERS_TO_REPLACE = {" ", "\\", "/", ":", "*", "?", "\"", "<", ">", "|"};
     private static final String REPLACEMENT = "_";
 
+
+    public String buildForWithoutExtension(FilePart filePart)
+    {
+        String fileName = buildFor(filePart);
+        return fileName.substring(0, fileName.lastIndexOf("."));
+    }
+
     public String buildFor(FilePart multipartFile)
     {
         String modName = multipartFile.filename();

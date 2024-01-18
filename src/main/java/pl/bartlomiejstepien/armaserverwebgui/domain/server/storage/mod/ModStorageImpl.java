@@ -80,7 +80,7 @@ public class ModStorageImpl implements ModStorage
     @Override
     public boolean doesModExists(FilePart filename)
     {
-        return Files.exists(modDirectory.get().resolve(modFolderNameHelper.buildFor(filename)));
+        return Files.exists(modDirectory.get().resolve(modFolderNameHelper.buildForWithoutExtension(filename)));
     }
 
     @Override
