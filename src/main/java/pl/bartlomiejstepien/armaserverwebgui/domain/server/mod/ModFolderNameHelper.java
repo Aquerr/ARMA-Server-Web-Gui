@@ -19,6 +19,15 @@ public class ModFolderNameHelper
         return normalize(modName);
     }
 
+    public String buildFor(String modName)
+    {
+        if (!modName.startsWith("@"))
+        {
+            modName = "@" + modName;
+        }
+        return normalize(modName);
+    }
+
     public String normalize(String modName)
     {
         return toLowerCaseWithUncerscores(modName);

@@ -8,6 +8,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModFolderNameHelper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -129,7 +130,7 @@ public class ModStorageImpl implements ModStorage
     @Override
     public Path copyModFolderFromSteamCmd(Path steamCmdModFolderPath, Path armaServerDir, String modName)
     {
-        String normalizedModDirectoryName = "@" + modFolderNameHelper.normalize(modName);
+        String normalizedModDirectoryName = modFolderNameHelper.buildFor(modName);
         Path modDirectoryPath = armaServerDir.resolve(normalizedModDirectoryName);
         try
         {
@@ -140,7 +141,25 @@ public class ModStorageImpl implements ModStorage
         }
         catch (IOException e)
         {
-            throw new RuntimeException(e);
+            throw new CouldNotInstallWorkshopModException(e.getMessage(), e);
+        }
+        return modDirectoryPath;
+    }
+
+    @Override
+    public Path linkModFolderToSteamCmdModFolder(Path steamCmdModFolderPath, Path armaServerDir, String modName)
+    {
+        String normalizedModDirectoryName = modFolderNameHelper.buildFor(modName);
+        Path modDirectoryPath = armaServerDir.resolve(normalizedModDirectoryName);
+        try
+        {
+            Files.createSymbolicLink(modDirectoryPath, steamCmdModFolderPath);
+            FileSystemUtils.copyRecursively(steamCmdModFolderPath, modDirectoryPath);
+            normalizeEachFileNameInFolderRecursively(modDirectoryPath); // TO REMOVE ?
+        }
+        catch (IOException e)
+        {
+            throw new CouldNotInstallWorkshopModException(e.getMessage(), e);
         }
         return modDirectoryPath;
     }

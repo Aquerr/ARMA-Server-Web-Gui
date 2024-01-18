@@ -14,6 +14,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModMetaFi
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotUpdateArmaServerException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.RetryableException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
@@ -178,7 +179,8 @@ public class SteamCmdHandler
         Path steamCmdModFolderPath = downloadModFromWorkshop(task.getFileId());
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 50));
 
-        Path modDirectoryPath = this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()), task.getTitle());
+//        Path modDirectoryPath = this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()), task.getTitle());
+        Path modDirectoryPath = this.modStorage.linkModFolderToSteamCmdModFolder(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()), task.getTitle());
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 75));
 
         saveModInDatabase(task.getFileId(), task.getTitle(), modDirectoryPath);
@@ -236,7 +238,7 @@ public class SteamCmdHandler
         }
         catch (CouldNotReadModMetaFile e)
         {
-            throw new IllegalStateException(e);
+            throw new CouldNotInstallWorkshopModException(e.getMessage(), e);
         }
 
         InstalledModEntity.InstalledModEntityBuilder installedModBuilder;
