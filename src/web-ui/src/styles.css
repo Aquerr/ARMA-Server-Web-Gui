@@ -3,9 +3,9 @@
 :root {
   --aswg-primary-color: #4634b7;
   --aswg-primary-color-hover: #37288f;
-  --aswg-primary-text-color: #ffffff;
-  --aswg-bg-primary-bg-color: #ffffff;
-  --aswg-input-bg-color: whitesmoke;
+  --aswg-primary-text-color: #adbac7;
+  --aswg-bg-primary-bg-color: #22272e;
+  --aswg-input-bg-color: #2d333b;
   --aswg-border-color: #444c56 !important;
   --mat-icon-color: var(--aswg-primary-color) !important;
   --mat-stepper-header-edit-state-icon-background-color: var(--aswg-primary-color) !important;
@@ -362,6 +362,10 @@ hr {
 
 .text-center {
   text-align: center;
+}
+
+.aswg-menu-default {
+  max-width: none !important;
 }
 
 @media (max-width: 800px) {

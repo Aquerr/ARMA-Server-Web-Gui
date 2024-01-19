@@ -1,6 +1,6 @@
 <div class="mod-preset-menu-button">
   <button mat-button [matMenuTriggerFor]="presetMenu">Mod presets</button>
-  <mat-menu #presetMenu>
+  <mat-menu #presetMenu [class]="'aswg-menu-default'">
     <app-mod-preset-item *ngFor="let preset of modPresets" [presetName]="preset"
                          (presetSelected)="onPresetSelect($event)"
                          (presetDeleted)="onPresetDelete($event)"

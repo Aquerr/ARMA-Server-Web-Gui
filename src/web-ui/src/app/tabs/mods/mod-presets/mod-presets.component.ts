@@ -64,6 +64,7 @@ export class ModPresetsComponent {
 
         this.modsService.importPreset(modPresetImportRequest).subscribe(response => {
           this.maskService.hide();
+          this.reloadModPresets();
           this.notificationService.successNotification("Mod preset has been imported!", "Preset Imported!")
         });
       }

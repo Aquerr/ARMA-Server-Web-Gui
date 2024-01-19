@@ -9,35 +9,40 @@
       <app-mod-presets [mods]="enabledMods" (modPresetSelected)="onModPresetSelected($event)"></app-mod-presets>
     </div>
   </div>
-    <div class="mod-list-group" cdkDropListGroup>
-      <div class="mods-list">
-        <h2>Disabled</h2>
-        <div
-          id="disabled-mods-list"
-          cdkDropList
-          [cdkDropListData]="filteredDisabledMods"
-          class="list"
-          [cdkDropListSortingDisabled]="true"
-          (cdkDropListDropped)="onModItemDragDrop($event)">
-          <div app-mod-list-item *ngFor="let mod of filteredDisabledMods" [mod]="mod" (onModDelete)="onModDelete($event)" cdkDrag>
-          </div>
-        </div>
+  <div class="mod-list-group" cdkDropListGroup>
+    <div class="mods-list">
+      <h2>Disabled</h2>
+      <div class="mod-list-buttons">
+        <button mat-button>Enable all<mat-icon>arrow_forward</mat-icon></button>
       </div>
 
-      <div class="mods-list" style="margin-left: 1rem;">
-        <h2>Enabled</h2>
-        <div
-          id="enabled-mods-list"
-          cdkDropList
-          [cdkDropListData]="filteredEnabledMods"
-          class="list"
-          [cdkDropListSortingDisabled]="true"
-          (cdkDropListDropped)="onModItemDragDrop($event)">
-          <div app-mod-list-item *ngFor="let mod of filteredEnabledMods" cdkDrag [mod]="mod" (onModDelete)="onModDelete($event)">
-          </div>
-        </div>
-     </div>
+      <div
+        id="disabled-mods-list"
+        cdkDropList
+        [cdkDropListData]="filteredDisabledMods"
+        class="list"
+        [cdkDropListSortingDisabled]="true"
+        (cdkDropListDropped)="onModItemDragDrop($event)">
+        <div app-mod-list-item *ngFor="let mod of filteredDisabledMods" [mod]="mod" (onModDelete)="onModDelete($event)" cdkDrag></div>
+      </div>
     </div>
+
+    <div class="mods-list" style="margin-left: 1rem;">
+      <h2>Enabled</h2>
+      <div class="mod-list-buttons">
+        <button mat-button>Disable all<mat-icon>arrow_backward</mat-icon></button>
+      </div>
+      <div
+        id="enabled-mods-list"
+        cdkDropList
+        [cdkDropListData]="filteredEnabledMods"
+        class="list"
+        [cdkDropListSortingDisabled]="true"
+        (cdkDropListDropped)="onModItemDragDrop($event)">
+        <div app-mod-list-item *ngFor="let mod of filteredEnabledMods" cdkDrag [mod]="mod" (onModDelete)="onModDelete($event)"></div>
+      </div>
+   </div>
+  </div>
   <div class="mods-save-and-upload">
     <div>
       <button mat-flat-button color="primary" (click)="save()">Save</button>
