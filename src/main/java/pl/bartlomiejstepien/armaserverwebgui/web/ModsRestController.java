@@ -34,6 +34,8 @@ import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.ModFileValidator;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -146,20 +148,20 @@ public class ModsRestController
     @Data
     private static class SaveEnabledModsListRequest
     {
-        Set<EnabledMod> mods;
+        Set<EnabledMod> mods = new HashSet<>();
     }
 
     @Value(staticConstructor = "of")
     private static class ModPresetNamesResponse
     {
-        List<String> presets;
+        List<String> presets = new ArrayList<>();
     }
 
     @Data
     private static class PresetImportRequest
     {
         private String name;
-        private List<ModParam> modParams;
+        private List<ModParam> modParams = new ArrayList<>();
 
         @Data
         static class ModParam
@@ -185,7 +187,7 @@ public class ModsRestController
     private static class PresetSaveRequest
     {
         private String name;
-        private List<String> modNames;
+        private List<String> modNames = new ArrayList<>();
     }
 
     @Value

@@ -162,7 +162,7 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   disableAllMods() {
     this.maskService.show();
-    this.modService.saveEnabledMods({} as SaveEnabledModsRequest).subscribe(response => {
+    this.modService.saveEnabledMods({mods: []} as SaveEnabledModsRequest).subscribe(response => {
       this.maskService.hide();
       this.reloadMods();
       this.notificationService.successNotification('Mods list updated!', 'Success');
