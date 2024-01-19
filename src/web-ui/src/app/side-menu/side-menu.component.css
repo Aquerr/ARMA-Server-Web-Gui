@@ -27,13 +27,17 @@
   width: inherit;
 }
 
+.nav-container mat-icon  {
+  color: white;
+}
+
 .nav-container > a {
   color: white;
   font-size: 16px;
 }
 
 mat-icon {
-  color: white;
+  color: var(--aswg-primary-text-color);
 }
 
 @media (max-width: 800px) {
