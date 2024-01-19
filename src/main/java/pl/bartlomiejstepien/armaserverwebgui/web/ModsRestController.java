@@ -154,7 +154,7 @@ public class ModsRestController
     @Value(staticConstructor = "of")
     private static class ModPresetNamesResponse
     {
-        List<String> presets = new ArrayList<>();
+        List<String> presets;
     }
 
     @Data
