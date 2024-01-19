@@ -1,8 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import { MaskService } from 'src/app/service/mask.service';
-import { ServerModsService } from 'src/app/service/server-mods.service';
-import {MatDialog} from "@angular/material/dialog";
+import {SaveEnabledModsRequest, ServerModsService} from 'src/app/service/server-mods.service';
 import {NotificationService} from "../../service/notification.service";
 import {Mod} from "../../model/mod.model";
 import {FormControl} from "@angular/forms";
@@ -33,7 +32,6 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   constructor(private modService: ServerModsService,
               private maskService: MaskService,
-              private matDialog: MatDialog,
               private notificationService: NotificationService,
               private matSnackBar: MatSnackBar,
               private modUploadService: ModUploadService) {
@@ -58,7 +56,6 @@ export class ModsComponent implements OnInit, OnDestroy {
     this.searchBoxControl.valueChanges.subscribe(value => {
       this.filterMods(value);
     });
-
     this.reloadMods();
   }
 
@@ -152,5 +149,23 @@ export class ModsComponent implements OnInit, OnDestroy {
   onModPresetSelected(presetName: string) {
     console.log("Reload mod list...");
     this.reloadModsDataSubject.next(null);
+  }
+
+  enableAllMods() {
+    this.maskService.show();
+    this.modService.saveEnabledMods({mods: this.enabledMods.concat(this.disabledMods)}).subscribe(response => {
+      this.maskService.hide();
+      this.reloadMods();
+      this.notificationService.successNotification('Mods list updated!', 'Success');
+    });
+  }
+
+  disableAllMods() {
+    this.maskService.show();
+    this.modService.saveEnabledMods({} as SaveEnabledModsRequest).subscribe(response => {
+      this.maskService.hide();
+      this.reloadMods();
+      this.notificationService.successNotification('Mods list updated!', 'Success');
+    });
   }
 }

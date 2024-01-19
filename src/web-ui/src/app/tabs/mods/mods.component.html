@@ -13,7 +13,7 @@
     <div class="mods-list">
       <h2>Disabled</h2>
       <div class="mod-list-buttons">
-        <button mat-button>Enable all<mat-icon>arrow_forward</mat-icon></button>
+        <button mat-button (click)="enableAllMods()">Enable all<mat-icon>arrow_forward</mat-icon></button>
       </div>
 
       <div
@@ -30,7 +30,7 @@
     <div class="mods-list" style="margin-left: 1rem;">
       <h2>Enabled</h2>
       <div class="mod-list-buttons">
-        <button mat-button>Disable all<mat-icon>arrow_backward</mat-icon></button>
+        <button mat-button (click)="disableAllMods()">Disable all<mat-icon>arrow_backward</mat-icon></button>
       </div>
       <div
         id="enabled-mods-list"
