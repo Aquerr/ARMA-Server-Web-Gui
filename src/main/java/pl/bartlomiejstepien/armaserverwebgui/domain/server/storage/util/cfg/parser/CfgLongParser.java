@@ -9,7 +9,7 @@ public class CfgLongParser implements CfgSimpleParser<Long>
     }
 
     @Override
-    public String parseToString(Object value)
+    public String parseToString(Long value)
     {
         return value + ";";
     }

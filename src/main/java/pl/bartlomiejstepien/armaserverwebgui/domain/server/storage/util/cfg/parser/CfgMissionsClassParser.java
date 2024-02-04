@@ -1,7 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgConfigReader;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReflectionUtil;
 
@@ -131,17 +131,16 @@ public class CfgMissionsClassParser implements CfgClassParser<ArmaServerConfig.M
     }
 
     @Override
-    public String parseToString(Object value)
+    public String parseToString(ArmaServerConfig.Missions value)
     {
         if (value == null)
             return "";
 
-        ArmaServerConfig.Missions missions = (ArmaServerConfig.Missions)value;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("class Missions\n")
                 .append("{");
 
-        for (final ArmaServerConfig.Missions.Mission mission : missions.getMissions())
+        for (final ArmaServerConfig.Missions.Mission mission : value.getMissions())
         {
             stringBuilder.append("\t");
             stringBuilder.append(cfgMissionClassParser.parseToString(mission));
@@ -159,7 +158,8 @@ public class CfgMissionsClassParser implements CfgClassParser<ArmaServerConfig.M
         if (field == null)
             return;
 
-        Object value = CfgConfigReader.PARSERS.get(field.getAnnotation(CfgProperty.class).type()).parse(propertyValue);
+        CfgSimpleParser<?> cfgSimpleParser = (CfgSimpleParser<?>) CfgFileHandler.PARSERS.get(field.getAnnotation(CfgProperty.class).type());
+        Object value = cfgSimpleParser.parse(propertyValue);
         field.setAccessible(true);
         field.set(missions, value);
         field.setAccessible(false);

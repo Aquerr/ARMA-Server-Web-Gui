@@ -1,8 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgConfigReader;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgConfigWriter;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReflectionUtil;
 
@@ -133,15 +132,14 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
     }
 
     @Override
-    public String parseToString(Object value)
+    public String parseToString(ArmaServerConfig.Missions.Mission value)
     {
         if (value == null)
             return "";
 
-        ArmaServerConfig.Missions.Mission mission = (ArmaServerConfig.Missions.Mission) value;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n\tclass ")
-                .append(mission.getTemplate().replaceAll("\\.", "_").replaceAll("-", "_"))
+                .append(value.getTemplate().replaceAll("\\.", "_").replaceAll("-", "_"))
                 .append("\n\t{")
                 .append("\n");
 
@@ -152,7 +150,7 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
             try
             {
                 stringBuilder.append("\t\t");
-                writeFieldValueToStringBuilder(mission, field, stringBuilder);
+                writeFieldValueToStringBuilder(value, field, stringBuilder);
             }
             catch (IllegalAccessException | IOException e)
             {
@@ -173,19 +171,21 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
         if (field == null)
             return;
 
-        Object value = CfgConfigReader.PARSERS.get(field.getAnnotation(CfgProperty.class).type()).parse(propertyValue);
+        CfgSimpleParser<?> cfgSimpleParser = (CfgSimpleParser<?>) CfgFileHandler.PARSERS.get(field.getAnnotation(CfgProperty.class).type());
+        Object value = cfgSimpleParser.parse(propertyValue);
         field.setAccessible(true);
         field.set(mission, value);
         field.setAccessible(false);
     }
 
-    private void writeFieldValueToStringBuilder(ArmaServerConfig.Missions.Mission mission, Field field, StringBuilder stringBuilder) throws IllegalAccessException, IOException
+    private <T> void writeFieldValueToStringBuilder(ArmaServerConfig.Missions.Mission mission, Field field, StringBuilder stringBuilder) throws IllegalAccessException, IOException
     {
         CfgProperty cfgProperty = field.getAnnotation(CfgProperty.class);
         field.setAccessible(true);
         Object fieldValue = field.get(mission);
         field.setAccessible(false);
-        String fieldValueAsString = CfgConfigWriter.PARSERS.get(cfgProperty.type()).parseToString(fieldValue);
+        CfgParser<T, ?> cfgParser = (CfgParser<T, ?>) CfgFileHandler.PARSERS.get(cfgProperty.type());
+        String fieldValueAsString = cfgParser.parseToString((T)fieldValue);
 
         if (cfgProperty.isClass())
         {

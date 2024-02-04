@@ -2,7 +2,12 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.par
 
 public interface CfgParser<T, V>
 {
-    T parse(V value);
+    T parse(V input);
 
-    String parseToString(Object value);
+    default T parse(V input, Class<? extends T> returnType)
+    {
+        return parse(input);
+    }
+
+    String parseToString(T value);
 }

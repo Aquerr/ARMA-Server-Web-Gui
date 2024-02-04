@@ -9,7 +9,7 @@ public class CfgIntegerParser implements CfgSimpleParser<Integer>
     }
 
     @Override
-    public String parseToString(Object value)
+    public String parseToString(Integer value)
     {
         return value + ";";
     }
