@@ -9,7 +9,7 @@ public class CfgRawStringParser implements CfgSimpleParser<String>
     }
 
     @Override
-    public String parseToString(Object value)
+    public String parseToString(String value)
     {
         return value + ";";
     }

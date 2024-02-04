@@ -2,9 +2,10 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod;
 
 import lombok.Data;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgConfigReader;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReflectionUtil;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgSimpleParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
 
 import java.io.IOException;
@@ -40,8 +41,9 @@ public final class ModMetaFile
                 if (field != null)
                 {
                     CfgProperty cfgProperty = field.getAnnotation(CfgProperty.class);
+                    CfgSimpleParser<?> cfgSimpleParser = (CfgSimpleParser<?>) CfgFileHandler.PARSERS.get(cfgProperty.type());
                     field.setAccessible(true);
-                    field.set(modMetaFile, CfgConfigReader.PARSERS.get(cfgProperty.type()).parse(propertyValue));
+                    field.set(modMetaFile, cfgSimpleParser.parse(propertyValue));
                     field.setAccessible(false);
                 }
             }

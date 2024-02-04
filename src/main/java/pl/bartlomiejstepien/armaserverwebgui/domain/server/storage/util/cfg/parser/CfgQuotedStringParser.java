@@ -9,7 +9,7 @@ public class CfgQuotedStringParser implements CfgSimpleParser<String>
     }
 
     @Override
-    public String parseToString(Object value)
+    public String parseToString(String value)
     {
         return String.format("\"%s\";", value);
     }
