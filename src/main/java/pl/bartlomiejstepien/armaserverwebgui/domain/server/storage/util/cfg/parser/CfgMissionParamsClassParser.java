@@ -1,7 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgConfigReader;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
 
 import java.io.BufferedReader;
@@ -130,19 +130,18 @@ public class CfgMissionParamsClassParser implements CfgClassParser<ArmaServerCon
     }
 
     @Override
-    public String parseToString(Object value)
+    public String parseToString(ArmaServerConfig.Missions.Mission.Params value)
     {
         if (value == null)
         {
             return "class Params {};";
         }
 
-        ArmaServerConfig.Missions.Mission.Params params = (ArmaServerConfig.Missions.Mission.Params)value;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("class Params\n")
                 .append("\t\t{");
 
-        for (final Map.Entry<String, String> param : params.getParams().entrySet())
+        for (final Map.Entry<String, String> param : value.getParams().entrySet())
         {
             stringBuilder.append("\n\t\t\t");
             writeParamToStringBuilder(param.getKey(), param.getValue(), stringBuilder);
@@ -164,7 +163,8 @@ public class CfgMissionParamsClassParser implements CfgClassParser<ArmaServerCon
     {
         String propertyName = property.substring(0, property.indexOf("=")).trim();
         String propertyValue = property.substring(property.indexOf("=") + 1).trim();
-        String parsedValue = (String) CfgConfigReader.PARSERS.get(PropertyType.RAW_STRING).parse(propertyValue);
+        CfgSimpleParser<String> cfgSimpleParser = (CfgSimpleParser<String>) CfgFileHandler.PARSERS.get(PropertyType.RAW_STRING);
+        String parsedValue = cfgSimpleParser.parse(propertyValue);
         params.getParams().put(propertyName, parsedValue);
     }
 }

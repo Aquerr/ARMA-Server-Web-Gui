@@ -30,7 +30,7 @@ public class ArmaServerConfig
     @CfgProperty(name = "maxPlayers", type = PropertyType.INTEGER)
     private int maxPlayers = 64;
 
-    @CfgProperty(name = "motd[]", type = PropertyType.STRING_ARRAY)
+    @CfgProperty(name = "motd[]", type = PropertyType.ARRAY_OF_STRINGS)
     private String[] motd = new String[0];
 
     @CfgProperty(name = "motdInterval", type = PropertyType.INTEGER)
@@ -75,13 +75,16 @@ public class ArmaServerConfig
     @CfgProperty(name = "drawingInMap", type = PropertyType.RAW_STRING)
     private String drawingInMap = "true";
 
-    @CfgProperty(name = "allowedLoadFileExtensions[]", type = PropertyType.STRING_ARRAY)
+    @CfgProperty(name = "allowedLoadFileExtensions[]", type = PropertyType.ARRAY_OF_STRINGS)
     private String[] allowedLoadFileExtensions = {"hpp","sqs","sqf","fsm","cpp","paa","txt","xml","inc","ext","sqm","ods","fxy","lip","csv","kb","bik","bikb","html","htm","biedi"};
 
-    @CfgProperty(name = "admins[]", type = PropertyType.STRING_ARRAY)
+    @CfgProperty(name = "admins[]", type = PropertyType.ARRAY_OF_STRINGS)
     private String[] admins = {};
 
-    @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
+    @CfgProperty(name = "allowedVoteCmds[]", type = PropertyType.ARRAY_OF_CLASS_FIELD_VALUES)
+    private VoteCmd[] allowedVoteCmds;
+
+    @CfgProperty(name = "Missions", type = PropertyType.CLASS, isClass = true)
     private Missions missions = new Missions();
 
     @Data

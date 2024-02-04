@@ -40,12 +40,11 @@ public class CfgStringArrayParser implements CfgSimpleParser<String[]>
     }
 
     @Override
-    public String parseToString(Object value)
+    public String parseToString(String[] value)
     {
-        String[] array = (String[]) value;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{");
-        for (String text : array)
+        for (String text : value)
         {
             stringBuilder.append("\n\t\"")
                     .append(text)

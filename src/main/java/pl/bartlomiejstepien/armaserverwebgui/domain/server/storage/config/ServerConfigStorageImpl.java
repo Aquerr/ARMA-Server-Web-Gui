@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgConfigReader;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgConfigWriter;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.DefaultCfgConfigReader;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.DefaultCfgConfigWriter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.function.Supplier;
 
 @Repository
@@ -16,8 +18,10 @@ import java.util.function.Supplier;
 public class ServerConfigStorageImpl implements ServerConfigStorage
 {
     private final ASWGConfig aswgConfig;
-    private final CfgConfigReader cfgConfigReader;
-    private final CfgConfigWriter cfgConfigWriter;
+    private final CfgFileHandler cfgFileHandler = new CfgFileHandler(
+            new DefaultCfgConfigReader(),
+            new DefaultCfgConfigWriter()
+    );
     private Supplier<String> cfgFilePath;
 
     @PostConstruct
@@ -29,12 +33,26 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
     @Override
     public ArmaServerConfig getServerConfig()
     {
-        return cfgConfigReader.readConfig(new File(cfgFilePath.get()));
+        try
+        {
+            return cfgFileHandler.readConfig(new File(cfgFilePath.get()), ArmaServerConfig.class);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void saveServerConfig(ArmaServerConfig armaServerConfig)
     {
-        cfgConfigWriter.saveConfig(new File(cfgFilePath.get()), armaServerConfig);
+        try
+        {
+            cfgFileHandler.saveConfig(new File(cfgFilePath.get()), armaServerConfig);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }
