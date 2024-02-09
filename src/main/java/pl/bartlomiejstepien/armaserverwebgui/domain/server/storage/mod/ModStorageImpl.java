@@ -153,8 +153,13 @@ public class ModStorageImpl implements ModStorage
         Path modDirectoryPath = armaServerDir.resolve(normalizedModDirectoryName);
         try
         {
-            Files.createSymbolicLink(modDirectoryPath, steamCmdModFolderPath);
-            normalizeEachFileNameInFolderRecursively(modDirectoryPath); // TO REMOVE ?
+            if (Files.notExists(modDirectoryPath)
+                    || (Files.isSymbolicLink(modDirectoryPath) && !Files.readSymbolicLink(modDirectoryPath).equals(steamCmdModFolderPath)))
+            {
+                Files.deleteIfExists(modDirectoryPath);
+                Files.createSymbolicLink(modDirectoryPath, steamCmdModFolderPath);
+            }
+            normalizeEachFileNameInFolderRecursively(modDirectoryPath);
         }
         catch (IOException e)
         {
