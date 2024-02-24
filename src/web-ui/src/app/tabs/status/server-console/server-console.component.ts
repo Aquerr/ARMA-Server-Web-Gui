@@ -41,7 +41,6 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
 
     this.fetchEventSource(this.eventSource).subscribe({
       next: value => {
-        console.log(value);
         this.logs += value + "\n";
         this.scrollConsoleToBottom();
       },
