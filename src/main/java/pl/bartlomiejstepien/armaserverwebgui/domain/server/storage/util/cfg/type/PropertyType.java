@@ -7,7 +7,7 @@ public enum PropertyType
     INTEGER,
     LONG,
     ARRAY_OF_STRINGS,
-    ARRAY_OF_CLASS_FIELD_VALUES,
+    ARRAY_OF_NO_FIELDS_OBJECT,
     MISSIONS,
     PARAMS,
     CLASS

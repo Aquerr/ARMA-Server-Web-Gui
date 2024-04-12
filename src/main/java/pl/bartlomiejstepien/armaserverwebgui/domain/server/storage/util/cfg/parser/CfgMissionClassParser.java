@@ -158,7 +158,7 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
             }
         }
 
-        stringBuilder.append("\n\t};\n");
+        stringBuilder.append("\n\t}\n");
 
         return stringBuilder.toString();
     }
@@ -189,14 +189,14 @@ public class CfgMissionClassParser implements CfgClassParser<ArmaServerConfig.Mi
 
         if (cfgProperty.isClass())
         {
-            stringBuilder.append(fieldValueAsString);
+            stringBuilder.append(fieldValueAsString + ";");
         }
         else
         {
             stringBuilder.append(cfgProperty.name())
                     .append(" = ")
                     .append(fieldValueAsString)
-                    .append("\n");
+                    .append(";\n");
         }
     }
 }

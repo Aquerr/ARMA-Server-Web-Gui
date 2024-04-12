@@ -147,7 +147,7 @@ public class CfgMissionParamsClassParser implements CfgClassParser<ArmaServerCon
             writeParamToStringBuilder(param.getKey(), param.getValue(), stringBuilder);
         }
 
-        stringBuilder.append("\n\t\t};\n");
+        stringBuilder.append("\n\t\t}\n");
         return stringBuilder.toString();
     }
 

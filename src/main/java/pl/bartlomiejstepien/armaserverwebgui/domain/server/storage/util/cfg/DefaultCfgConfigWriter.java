@@ -36,17 +36,20 @@ public class DefaultCfgConfigWriter implements CfgConfigWriter
         CfgParser<T, ?> cfgParser = (CfgParser<T, ?>) CfgFileHandler.PARSERS.get(cfgProperty.type());
         field.setAccessible(true);
         Object fieldValue = field.get(instance);
-
         field.setAccessible(false);
-        String fieldValueAsString = cfgParser.parseToString((T)fieldValue);
+
+        String fieldValueAsString = fieldValue != null ? cfgParser.parseToString((T)fieldValue) : null;
+
+        if (cfgProperty.skipIfNull() && fieldValueAsString == null)
+            return;
 
         if (cfgProperty.isClass())
         {
-            bufferedWriter.write(fieldValueAsString);
+            bufferedWriter.write(fieldValueAsString + ";");
         }
         else
         {
-            bufferedWriter.write(cfgProperty.name() + " = " + fieldValueAsString + "\n");
+            bufferedWriter.write(cfgProperty.name() + " = " + fieldValueAsString + ";\n");
         }
     }
 }
