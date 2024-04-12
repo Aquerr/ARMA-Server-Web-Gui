@@ -27,7 +27,7 @@ public class CfgFileHandler
             PropertyType.ARRAY_OF_STRINGS, new CfgStringArrayParser(),
             PropertyType.MISSIONS, new CfgMissionsClassParser(),
             PropertyType.PARAMS, new CfgMissionParamsClassParser(),
-            PropertyType.ARRAY_OF_CLASS_FIELD_VALUES, new CfgArrayClassFieldValuesParser<>().parse("test", String.class)
+            PropertyType.ARRAY_OF_NO_FIELDS_OBJECT, new CfgArrayClassFieldValuesParser<>()
     );
 
     private final CfgConfigReader cfgConfigReader;

@@ -5,12 +5,12 @@ public class CfgIntegerParser implements CfgSimpleParser<Integer>
     @Override
     public Integer parse(String text)
     {
-        return Integer.valueOf(text.substring(0, text.length() - 1).trim());
+        return Integer.valueOf(text.trim());
     }
 
     @Override
     public String parseToString(Integer value)
     {
-        return value + ";";
+        return String.valueOf(value);
     }
 }

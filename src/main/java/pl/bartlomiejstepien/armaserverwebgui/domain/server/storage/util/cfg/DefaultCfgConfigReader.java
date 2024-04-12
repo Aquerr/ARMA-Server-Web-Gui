@@ -19,7 +19,7 @@ public class DefaultCfgConfigReader implements CfgConfigReader
     {
         try
         {
-            T instance = clazz.getDeclaredConstructor(null).newInstance(null);
+            T instance = clazz.getDeclaredConstructor().newInstance();
 
             if (!file.exists())
                 return instance;
@@ -29,7 +29,6 @@ public class DefaultCfgConfigReader implements CfgConfigReader
             boolean lastSymbolSlash = false;
             boolean isComment = false;
             boolean isString = false;
-            boolean endValue = false;
 
             try(FileReader fileReader = new FileReader(file);
                 BufferedReader bufferedReader = new BufferedReader(fileReader))
@@ -96,7 +95,9 @@ public class DefaultCfgConfigReader implements CfgConfigReader
                     {
                         if (!isString)
                         {
-                            endValue = true;
+                            stringBuilder.setLength(stringBuilder.length() - 1);
+                            parseProperty(instance, clazz, stringBuilder.toString().trim());
+                            stringBuilder.setLength(0);
                         }
                     }
 
@@ -116,13 +117,6 @@ public class DefaultCfgConfigReader implements CfgConfigReader
                     if ('}' == character)
                     {
                         continue;
-                    }
-
-                    if (endValue)
-                    {
-                        parseProperty(instance, clazz, stringBuilder.toString().trim());
-                        endValue = false;
-                        stringBuilder.setLength(0);
                     }
                 }
             }
@@ -169,8 +163,8 @@ public class DefaultCfgConfigReader implements CfgConfigReader
             {
                 return;
             }
-            CfgSimpleParser<?> cfgSimpleParser = (CfgSimpleParser<?>) CfgFileHandler.PARSERS.get(field.getAnnotation(CfgProperty.class).type());
-            Object value = cfgSimpleParser.parse(propertyValue);
+            CfgSimpleParser cfgSimpleParser = (CfgSimpleParser<?>) CfgFileHandler.PARSERS.get(field.getAnnotation(CfgProperty.class).type());
+            Object value = cfgSimpleParser.parse(propertyValue, field.getType());
             field.setAccessible(true);
             field.set(instance, value);
             field.setAccessible(false);

@@ -16,4 +16,6 @@ public @interface CfgProperty
     PropertyType type();
 
     boolean isClass() default false;
+
+    boolean skipIfNull() default true;
 }

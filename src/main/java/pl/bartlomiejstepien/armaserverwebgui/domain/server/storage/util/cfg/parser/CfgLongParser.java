@@ -5,12 +5,12 @@ public class CfgLongParser implements CfgSimpleParser<Long>
     @Override
     public Long parse(String text)
     {
-        return Long.valueOf(text.substring(0, text.length() - 1).trim());
+        return Long.valueOf(text.trim());
     }
 
     @Override
     public String parseToString(Long value)
     {
-        return value + ";";
+        return String.valueOf(value);
     }
 }

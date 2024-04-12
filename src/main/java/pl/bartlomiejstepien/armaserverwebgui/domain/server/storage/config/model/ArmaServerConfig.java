@@ -81,10 +81,10 @@ public class ArmaServerConfig
     @CfgProperty(name = "admins[]", type = PropertyType.ARRAY_OF_STRINGS)
     private String[] admins = {};
 
-    @CfgProperty(name = "allowedVoteCmds[]", type = PropertyType.ARRAY_OF_CLASS_FIELD_VALUES)
+    @CfgProperty(name = "allowedVoteCmds[]", type = PropertyType.ARRAY_OF_NO_FIELDS_OBJECT)
     private VoteCmd[] allowedVoteCmds;
 
-    @CfgProperty(name = "Missions", type = PropertyType.CLASS, isClass = true)
+    @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
     private Missions missions = new Missions();
 
     @Data
