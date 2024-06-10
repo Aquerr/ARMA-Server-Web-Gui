@@ -159,7 +159,7 @@ public class SteamCmdHandler
         try
         {
             performArmaUpdate(SteamCmdAppUpdateParameters.builder()
-                    .appId(SteamUtils.ARMA_APP_ID)
+                    .appId(SteamUtils.ARMA_SERVER_APP_ID)
                     .serverDirectoryPath(this.aswgConfig.getServerDirectoryPath())
                     .steamCmdPath(steamCmdPath)
                     .steamUsername(this.aswgConfig.getSteamCmdUsername())
