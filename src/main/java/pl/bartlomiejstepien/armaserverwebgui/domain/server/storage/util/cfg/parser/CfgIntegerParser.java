@@ -1,15 +1,19 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
-public class CfgIntegerParser implements CfgSimpleParser<Integer>
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
+
+import java.lang.reflect.Field;
+
+public class CfgIntegerParser implements CfgSimpleParser<String>
 {
     @Override
-    public Integer parse(String text)
+    public <T> T parse(String input, Class<T> clazz) throws ParsingException
     {
-        return Integer.valueOf(text.trim());
+        return (T)Integer.valueOf(input.trim());
     }
 
     @Override
-    public String parseToString(Integer value)
+    public String parseToString(Field field, Object value) throws ParsingException
     {
         return String.valueOf(value);
     }

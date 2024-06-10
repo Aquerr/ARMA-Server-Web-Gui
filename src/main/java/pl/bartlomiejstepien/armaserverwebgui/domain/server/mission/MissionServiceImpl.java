@@ -10,6 +10,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.Server
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -55,13 +56,9 @@ public class MissionServiceImpl implements MissionService
     public void saveEnabledMissionList(List<Mission> missions)
     {
         ArmaServerConfig armaServerConfig = this.serverConfigStorage.getServerConfig();
-        ArmaServerConfig.Missions missionsConfigObject = new ArmaServerConfig.Missions();
-        armaServerConfig.setMissions(missionsConfigObject);
-
-        missionsConfigObject.setMissions(missions.stream()
+        armaServerConfig.setMissions(new ArrayList<>(missions.stream()
                 .map(this::convertToArmaMissionObject)
-                .collect(Collectors.toList()));
-
+                .collect(Collectors.toList())));
         this.serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 
@@ -69,7 +66,7 @@ public class MissionServiceImpl implements MissionService
     public Missions getMissions()
     {
         List<String> installedMissionsNames = getInstalledMissionNames();
-        List<Mission> enabledMissions = this.serverConfigStorage.getServerConfig().getMissions().getMissions().stream()
+        List<Mission> enabledMissions = this.serverConfigStorage.getServerConfig().getMissions().stream()
                 .map(this::convertToDomainMission)
                 .collect(Collectors.toList());
         Missions missions = new Missions();
@@ -90,9 +87,9 @@ public class MissionServiceImpl implements MissionService
         return mission;
     }
 
-    private Set<Mission.Parameter> convertToDomainMissionParameters(ArmaServerConfig.Missions.Mission.Params params)
+    private Set<Mission.Parameter> convertToDomainMissionParameters(Map<String, String> params)
     {
-        return params.getParams().entrySet().stream()
+        return params.entrySet().stream()
                 .map(entry -> new Mission.Parameter(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toSet());
     }
@@ -106,11 +103,9 @@ public class MissionServiceImpl implements MissionService
         return armaMission;
     }
 
-    private ArmaServerConfig.Missions.Mission.Params convertToArmaMissionParams(Set<Mission.Parameter> parameters)
+    private Map<String, String> convertToArmaMissionParams(Set<Mission.Parameter> parameters)
     {
-        ArmaServerConfig.Missions.Mission.Params params = new ArmaServerConfig.Missions.Mission.Params();
         Map<String, String> paramsMap = parameters.stream().collect(Collectors.toMap(Mission.Parameter::getName, Mission.Parameter::getValue));
-        params.setParams(paramsMap);
-        return params;
+        return paramsMap;
     }
 }

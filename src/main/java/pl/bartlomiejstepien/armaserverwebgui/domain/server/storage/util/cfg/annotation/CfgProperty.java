@@ -1,4 +1,4 @@
-package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg;
+package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation;
 
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
 

@@ -2,7 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.par
 
 import java.io.BufferedReader;
 
-public interface CfgClassParser<T> extends CfgParser<T, BufferedReader>
+public interface CfgClassParser extends CfgParser<BufferedReader>
 {
     
 }

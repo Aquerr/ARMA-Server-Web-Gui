@@ -1,6 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model;
 
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgProperty;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
 
 public class VoteCmd

@@ -1,15 +1,19 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
-public class CfgRawStringParser implements CfgSimpleParser<Object>
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
+
+import java.lang.reflect.Field;
+
+public class CfgRawStringParser implements CfgSimpleParser<String>
 {
     @Override
-    public String parse(String text)
+    public <T> T parse(String input, Class<T> clazz) throws ParsingException
     {
-        return text.trim();
+        return (T)input.trim();
     }
 
     @Override
-    public String parseToString(Object value)
+    public String parseToString(Field field, Object value)
     {
         return String.valueOf(value);
     }
