@@ -1,35 +1,39 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgProperty;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReflectionUtil;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<T[]>{
+public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<String>{
 
     @Override
-    public String parseToString(T[] value)
+    public String parseToString(Field field, Object value) throws ParsingException
     {
+        if (!value.getClass().isArray())
+            throw new ParsingException("Provided value is not an array: " + value);
+
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{");
-        for (int i = 0; i < value.length; i++)
+        for (int i = 0; i < Array.getLength(value); i++)
         {
-            Object object = value[i];
+            Object object = Array.get(value, i);
             stringBuilder.append("\n\t")
                     .append(toPrimitiveObjectString(object));
 
-            if (i < value.length - 1)
+            if (i < Array.getLength(value) - 1)
                 stringBuilder.append(",");
         }
         stringBuilder.append("\n};");
         return stringBuilder.toString();
     }
 
-    private <T> String toPrimitiveObjectString(Object object)
+    private <T> String toPrimitiveObjectString(Object object) throws ParsingException
     {
         if (object == null)
             return "";
@@ -37,27 +41,27 @@ public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<T[]>{
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{");
 
-        Field[] fields = object.getClass().getDeclaredFields();
-        for (int i = 0; i < fields.length; i++)
+        List<Field> fields = CfgReflectionUtil.findAllCfgProperties(object.getClass());
+        for (int i = 0; i < fields.size(); i++)
         {
-            Field field = fields[i];
+            Field field = fields.get(i);
             try
             {
                 CfgSimpleParser<T> cfgSimpleParser = (CfgSimpleParser<T>) CfgFileHandler.PARSERS.get(field.getAnnotation(CfgProperty.class).type());
                 field.setAccessible(true);
-                String value = cfgSimpleParser.parseToString((T)field.get(object));
+                String value = cfgSimpleParser.parseToString(field, (T)field.get(object));
                 field.setAccessible(false);
                 stringBuilder.append(value);
                 int lastIndexOfSemicolon = stringBuilder.lastIndexOf(";");
                 if (lastIndexOfSemicolon == stringBuilder.length() - 1) // Remove semicolon ;
                     stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 
-                if (i < fields.length - 1)
+                if (i < fields.size() - 1)
                     stringBuilder.append(",");
             }
             catch (IllegalAccessException e)
             {
-                throw new RuntimeException(e);
+                throw new ParsingException(e);
             }
         }
 
@@ -72,96 +76,97 @@ public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<T[]>{
     }
 
     @Override
-    public T[] parse(String text, Class<T[]> clazz) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException
+    public <T> T parse(String text, Class<T> clazz) throws ParsingException
     {
-        StringBuilder stringBuilder = new StringBuilder();
-        boolean isString = false;
-        boolean insideArray = false;
-        boolean insideObject = false;
-        List<T> objects = null;
-        T currentObject = null;
-        List<String> fieldValues = new ArrayList<>();
-        for (char character : text.trim().toCharArray())
+        try
         {
-            if ('\n' == character || '\t' == character)
+            StringBuilder stringBuilder = new StringBuilder();
+            boolean isString = false;
+            boolean insideArray = false;
+            boolean insideObject = false;
+            List<T> objects = null;
+            T currentObject = null;
+            List<String> fieldValues = new ArrayList<>();
+            for (char character : text.trim().toCharArray())
             {
-                continue;
-            }
+                if ('\n' == character || '\t' == character)
+                {
+                    continue;
+                }
 
-            if ('\"' == character)
-            {
-                isString = !isString;
-                continue;
-            }
+                if ('\"' == character)
+                {
+                    isString = !isString;
+                    continue;
+                }
 
-            if (isString)
-            {
-                stringBuilder.append(character);
-                continue;
-            }
+                if (isString)
+                {
+                    stringBuilder.append(character);
+                    continue;
+                }
 
-            if (character == '{' && !insideArray)
-            {
-                insideArray = true;
-                objects = new ArrayList<>();
-                continue;
-            }
-            else if (character == '{' && !insideObject)
-            {
-                insideObject = true;
-                currentObject = (T)clazz.getComponentType().getDeclaredConstructor().newInstance();
-                continue;
-            }
+                if (character == '{' && !insideArray)
+                {
+                    insideArray = true;
+                    objects = new ArrayList<>();
+                    continue;
+                }
+                else if (character == '{' && !insideObject)
+                {
+                    insideObject = true;
+                    currentObject = (T)clazz.getComponentType().getDeclaredConstructor().newInstance();
+                    continue;
+                }
 
-            if (character == '}' && insideObject)
-            {
-                fieldValues.add(stringBuilder.toString().trim());
-                stringBuilder.setLength(0);
-                insideObject = false;
-                populateObjectFields(currentObject, fieldValues);
-                fieldValues = new ArrayList<>();
-                objects.add(currentObject);
-                currentObject = null;
-                continue;
-            }
-
-            if (',' == character)
-            {
-                if (insideObject)
+                if (character == '}' && insideObject)
                 {
                     fieldValues.add(stringBuilder.toString().trim());
                     stringBuilder.setLength(0);
+                    insideObject = false;
+                    populateObjectFields(currentObject, fieldValues);
+                    fieldValues = new ArrayList<>();
+                    objects.add(currentObject);
+                    currentObject = null;
+                    continue;
                 }
-                continue;
+
+                if (',' == character)
+                {
+                    if (insideObject)
+                    {
+                        fieldValues.add(stringBuilder.toString().trim());
+                        stringBuilder.setLength(0);
+                    }
+                    continue;
+                }
+
+                stringBuilder.append(character);
             }
 
-            stringBuilder.append(character);
+            if (objects == null)
+                return null;
+
+            Object result = Array.newInstance(clazz.getComponentType(), objects.size());
+            for (int i = 0; i < objects.size(); i++)
+            {
+                Array.set(result, i, objects.get(i));
+            }
+
+            return (T)result;
         }
-
-        if (objects == null)
-            return null;
-
-        Object result = Array.newInstance(clazz.getComponentType(), objects.size());
-        for (int i = 0; i < objects.size(); i++)
+        catch (Exception exception)
         {
-            Array.set(result, i, objects.get(i));
+            throw new ParsingException(exception);
         }
-
-        return (T[])result;
     }
 
-    @Override
-    public T[] parse(String text)
+    private void populateObjectFields(Object currentObject, List<String> fieldValues) throws IllegalAccessException, ParsingException
     {
-        return null;
-    }
-
-    private void populateObjectFields(T currentObject, List<String> fieldValues) throws IllegalAccessException
-    {
-        Field[] fields = currentObject.getClass().getDeclaredFields();
+        List<Field> fields = CfgReflectionUtil.findAllCfgProperties(currentObject.getClass());
         for (int i = 0; i < fieldValues.size(); i++)
         {
-            Field field = fields[i];
+            Field field = fields.get(i);
             CfgProperty cfgProperty = field.getAnnotation(CfgProperty.class);
             if (cfgProperty == null)
                 continue;
@@ -170,11 +175,11 @@ public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<T[]>{
             if (field.getType().isPrimitive()) {
                 value = PrimitiveParser.parse(fieldValues.get(i), field.getType());
             } else {
-                CfgSimpleParser<?> cfgSimpleParser = (CfgSimpleParser<?>) CfgFileHandler.PARSERS.get(field.getAnnotation(CfgProperty.class).type());
+                CfgSimpleParser cfgSimpleParser = (CfgSimpleParser) CfgFileHandler.PARSERS.get(field.getAnnotation(CfgProperty.class).type());
                 if (cfgSimpleParser instanceof CfgQuotedStringParser) {
-                    value = cfgSimpleParser.parse("\"" + fieldValues.get(i) + "\"");
+                    value = cfgSimpleParser.parse("\"" + fieldValues.get(i) + "\"", String.class);
                 } else {
-                    value = cfgSimpleParser.parse(fieldValues.get(i));
+                    value = cfgSimpleParser.parse(fieldValues.get(i), String.class);
                 }
             }
 

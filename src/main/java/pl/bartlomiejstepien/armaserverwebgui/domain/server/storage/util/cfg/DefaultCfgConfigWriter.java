@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg;
 
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgParser;
 
 import java.io.BufferedWriter;
@@ -8,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class DefaultCfgConfigWriter implements CfgConfigWriter
 {
@@ -18,27 +20,28 @@ public class DefaultCfgConfigWriter implements CfgConfigWriter
         try(FileWriter fileWriter = new FileWriter(file, false);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter))
         {
-            Field[] declaredFields = ArmaServerConfig.class.getDeclaredFields();
-            for (final Field field : declaredFields)
+            List<Field> cfgPropertyFields = CfgReflectionUtil.findAllCfgProperties(instance.getClass());
+            for (final Field field : cfgPropertyFields)
             {
                 writeFieldInFile(instance, field, bufferedWriter);
             }
         }
-        catch (IOException | IllegalAccessException e)
+        catch (IOException | IllegalAccessException | ParsingException e)
         {
             e.printStackTrace();
         }
+        CfgFileHandler.INDENTATION = 0;
     }
 
-    private <T, I> void writeFieldInFile(I instance, Field field, BufferedWriter bufferedWriter) throws IllegalAccessException, IOException
+    private <T> void writeFieldInFile(T instance, Field field, BufferedWriter bufferedWriter) throws IllegalAccessException, IOException, ParsingException
     {
         CfgProperty cfgProperty = field.getAnnotation(CfgProperty.class);
-        CfgParser<T, ?> cfgParser = (CfgParser<T, ?>) CfgFileHandler.PARSERS.get(cfgProperty.type());
+        CfgParser<?> cfgParser = CfgFileHandler.PARSERS.get(cfgProperty.type());
         field.setAccessible(true);
         Object fieldValue = field.get(instance);
         field.setAccessible(false);
 
-        String fieldValueAsString = fieldValue != null ? cfgParser.parseToString((T)fieldValue) : null;
+        String fieldValueAsString = fieldValue != null ? cfgParser.parseToString(field, fieldValue) : null;
 
         if (cfgProperty.skipIfNull() && fieldValueAsString == null)
             return;

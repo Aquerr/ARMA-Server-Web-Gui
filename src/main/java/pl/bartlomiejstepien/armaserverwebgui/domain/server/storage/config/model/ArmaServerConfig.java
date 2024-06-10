@@ -1,7 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model;
 
 import lombok.Data;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgProperty;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.ClassList;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.ClassName;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
 
 import java.util.ArrayList;
@@ -84,29 +86,31 @@ public class ArmaServerConfig
     @CfgProperty(name = "allowedVoteCmds[]", type = PropertyType.ARRAY_OF_NO_FIELDS_OBJECT)
     private VoteCmd[] allowedVoteCmds;
 
-    @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
-    private Missions missions = new Missions();
+    @CfgProperty(name = "Missions", type = PropertyType.CLASS, isClass = true)
+    @ClassList
+    private List<Missions.Mission> missions = new ArrayList<>();
 
     @Data
     public static class Missions
     {
-        private List<Mission> missions = new ArrayList<>();
+//        private List<Mission> missions = new ArrayList<>();
 
         @Data
         public static class Mission
         {
-            @CfgProperty(name = "template", type = PropertyType.RAW_STRING)
+            @ClassName
+            @CfgProperty(name = "template", type = PropertyType.QUOTED_STRING)
             private String template;
             @CfgProperty(name = "difficulty", type = PropertyType.QUOTED_STRING)
             private String difficulty;
-            @CfgProperty(name = "params", type = PropertyType.PARAMS, isClass = true)
-            private Params params = new Params();
+            @CfgProperty(name = "params", type = PropertyType.CLASS, isClass = true)
+            private Map<String, String> params = new HashMap<>();
 
-            @Data
-            public static class Params
-            {
-                private Map<String, String> params = new HashMap<>();
-            }
+//            @Data
+//            public static class Params
+//            {
+//                private Map<String, String> params = new HashMap<>();
+//            }
         }
     }
 }

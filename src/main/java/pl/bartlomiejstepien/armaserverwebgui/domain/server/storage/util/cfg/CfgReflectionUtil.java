@@ -1,6 +1,11 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg;
 
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 
 public class CfgReflectionUtil
 {
@@ -16,5 +21,27 @@ public class CfgReflectionUtil
                 return field;
         }
         return null;
+    }
+
+    public static Field findFieldWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass)
+    {
+        for (final Field field : clazz.getDeclaredFields())
+        {
+            if (field.isAnnotationPresent(annotationClass))
+                return field;
+        }
+        return null;
+    }
+
+    public static List<Field> findAllCfgProperties(Class<?> clazz)
+    {
+        return findAllFieldsWithAnnotation(clazz, CfgProperty.class);
+    }
+
+    public static List<Field> findAllFieldsWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotation)
+    {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(annotation))
+                .toList();
     }
 }

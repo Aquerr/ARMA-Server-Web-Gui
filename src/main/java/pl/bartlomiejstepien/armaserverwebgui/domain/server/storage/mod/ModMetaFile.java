@@ -3,8 +3,9 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod;
 import lombok.Data;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgProperty;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReflectionUtil;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgSimpleParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
 
@@ -41,14 +42,14 @@ public final class ModMetaFile
                 if (field != null)
                 {
                     CfgProperty cfgProperty = field.getAnnotation(CfgProperty.class);
-                    CfgSimpleParser<?> cfgSimpleParser = (CfgSimpleParser<?>) CfgFileHandler.PARSERS.get(cfgProperty.type());
+                    CfgSimpleParser cfgSimpleParser = (CfgSimpleParser) CfgFileHandler.PARSERS.get(cfgProperty.type());
                     field.setAccessible(true);
-                    field.set(modMetaFile, cfgSimpleParser.parse(propertyValue));
+                    field.set(modMetaFile, cfgSimpleParser.parse(propertyValue, field.getType()));
                     field.setAccessible(false);
                 }
             }
         }
-        catch (IOException | IllegalAccessException e)
+        catch (IOException | IllegalAccessException | ParsingException e)
         {
             throw new CouldNotReadModMetaFile(e);
         }

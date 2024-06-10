@@ -1,8 +1,12 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
-public interface CfgParser<T, V>
-{
-    T parse(V input);
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
 
-    String parseToString(T value);
+import java.lang.reflect.Field;
+
+public interface CfgParser<V>
+{
+    <T> T parse(V input, Class<T> clazz) throws ParsingException;
+
+    String parseToString(Field field, Object value) throws ParsingException;
 }
