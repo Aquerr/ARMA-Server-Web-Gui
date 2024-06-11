@@ -44,6 +44,8 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import static java.lang.String.format;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -176,7 +178,7 @@ public class SteamCmdHandler
     {
         WorkshopModInstallSteamTask task = (WorkshopModInstallSteamTask) steamTask;
 
-        Path steamCmdModFolderPath = downloadModFromWorkshop(task.getFileId());
+        Path steamCmdModFolderPath = downloadModFromWorkshop(task.getFileId(), task.getTitle());
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 50));
 
         Path modDirectoryPath = null;
@@ -203,9 +205,10 @@ public class SteamCmdHandler
      * Downloads the file and returns its path in the filesystem.
      *
      * @param fileId the id of the file to download.
+     * @param title the title of the mod.
      * @return the path to the downloaded file.
      */
-    private Path downloadModFromWorkshop(long fileId) throws CouldNotDownloadWorkshopModException
+    private Path downloadModFromWorkshop(long fileId, String title) throws CouldNotDownloadWorkshopModException
     {
         String steamCmdPath = this.aswgConfig.getSteamCmdPath();
         if (!StringUtils.hasText(steamCmdPath))
@@ -216,6 +219,7 @@ public class SteamCmdHandler
         {
             path = downloadModThroughSteamCmd(SteamCmdWorkshopDownloadParameters.builder()
                     .fileId(fileId)
+                    .title(title)
                     .appId(SteamUtils.ARMA_APP_ID)
                     .steamCmdPath(aswgConfig.getSteamCmdPath())
                     .steamUsername(aswgConfig.getSteamCmdUsername())
@@ -229,7 +233,7 @@ public class SteamCmdHandler
 
         if (path == null || Files.notExists(path))
         {
-            throw new CouldNotDownloadWorkshopModException("Could not download mod file.");
+            throw new CouldNotDownloadWorkshopModException(format("Could not download mod id=%s title=%s.", fileId, title));
         }
 
         return path;
@@ -402,7 +406,7 @@ public class SteamCmdHandler
                         new InputStreamReader(process.getErrorStream()));
                 String line = null;
                 while ((line = reader.readLine()) != null) {
-                    log.info(line);
+                    log.error(line);
                 }
                 reader.close();
             } catch (final Exception e) {

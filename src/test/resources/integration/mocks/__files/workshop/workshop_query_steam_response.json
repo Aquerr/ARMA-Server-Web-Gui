@@ -1,0 +1,275 @@
+{
+  "response": {
+    "total": 146249,
+    "publishedfiledetails": [
+      {
+        "result": 1,
+        "publishedfileid": "123",
+        "creator": "421214",
+        "creator_appid": 31321,
+        "consumer_appid": 312321,
+        "consumer_shortcutid": 0,
+        "filename": "",
+        "file_size": "12923919756",
+        "preview_file_size": "150365",
+        "preview_url": "http://modpreview.com",
+        "url": "",
+        "hcontent_file": "4976181854206952864",
+        "hcontent_preview": "967620532722577898",
+        "title": "First Mod",
+        "file_description": "First Mod Desc",
+        "time_created": 4214124413,
+        "time_updated": 4212131333,
+        "visibility": 0,
+        "flags": 3213,
+        "workshop_file": false,
+        "workshop_accepted": false,
+        "show_subscribe_all": false,
+        "num_comments_public": 3213,
+        "banned": false,
+        "ban_reason": "",
+        "banner": "76561197960265728",
+        "can_be_deleted": true,
+        "app_name": "Arma 3",
+        "file_type": 0,
+        "can_subscribe": true,
+        "subscriptions": 262734,
+        "favorited": 19815,
+        "followers": 0,
+        "lifetime_subscriptions": 585554,
+        "lifetime_favorited": 21855,
+        "lifetime_followers": 0,
+        "lifetime_playtime": "0",
+        "lifetime_playtime_sessions": "0",
+        "views": 626239,
+        "num_children": 1,
+        "num_reports": 0,
+        "previews": [
+          {
+            "previewid": "32898115",
+            "sortorder": 0,
+            "url": "https://steamuserimages-a.akamaihd.net/ugc/2022731711507484101/D279133C03050598F362E26054FB95D25E8D9AAC/",
+            "size": 82111,
+            "filename": "to_the_last_by_thestrikewyvern_deod0no-pre.jpg",
+            "preview_type": 0
+          },
+          {
+            "previewid": "32898155",
+            "sortorder": 1,
+            "url": "https://steamuserimages-a.akamaihd.net/ugc/2022731711507502597/A4338C4D8A71CD915D329C2A15180FED6477E04A/",
+            "size": 112819,
+            "filename": "evacuation_by_thestrikewyvern_dfsdg42-pre.jpg",
+            "preview_type": 0
+          },
+          {
+            "previewid": "32917417",
+            "sortorder": 2,
+            "url": "https://steamuserimages-a.akamaihd.net/ugc/2022731800079291737/87B6AA9CE534C043C3D253284DED186E7A304583/",
+            "size": 485113,
+            "filename": "20220914182211_1.jpg",
+            "preview_type": 0
+          },
+          {
+            "previewid": "32898127",
+            "sortorder": 3,
+            "url": "https://steamuserimages-a.akamaihd.net/ugc/2022731711507487223/1D191F4A7C820AA10CAE63C4E67FE9716F6C67E9/",
+            "size": 90943,
+            "filename": "spartan_deployment_by_thestrikewyvern_dfdfom4-pre.jpg",
+            "preview_type": 0
+          },
+          {
+            "previewid": "32898153",
+            "sortorder": 4,
+            "url": "https://steamuserimages-a.akamaihd.net/ugc/2022731711507502068/DB5F9E2F069CC04B038279016A89571DB8F06640/",
+            "size": 144008,
+            "filename": "spartan_iiis_part_ii_by_thestrikewyvern_dfsdfv2-pre.jpg",
+            "preview_type": 0
+          },
+          {
+            "previewid": "32898119",
+            "sortorder": 5,
+            "url": "https://steamuserimages-a.akamaihd.net/ugc/2022731711507484937/7E75946D1A3923AE644A7D2F52C98827D83EFBE0/",
+            "size": 83883,
+            "filename": "blood_gulch_by_thestrikewyvern_dfm88oq-pre.jpg",
+            "preview_type": 0
+          },
+          {
+            "previewid": "32898130",
+            "sortorder": 6,
+            "url": "https://steamuserimages-a.akamaihd.net/ugc/2022731711507488762/05F2EFBE85E36231BE2844EB95C1C4C317AA4F6F/",
+            "size": 55637,
+            "filename": "m875_scorpion_self_propelled_howitzer_by_thestrikewyvern_dfg6xie-pre.jpg",
+            "preview_type": 0
+          },
+          {
+            "previewid": "32898123",
+            "sortorder": 7,
+            "url": "https://steamuserimages-a.akamaihd.net/ugc/2022731711507485918/6133128EFE4B2AAE18A05324323BCC9B70CD9684/",
+            "size": 97654,
+            "filename": "combine_arms_by_thestrikewyvern_dfnc2yf-pre.jpg",
+            "preview_type": 0
+          },
+          {
+            "previewid": "32898132",
+            "sortorder": 8,
+            "url": "https://steamuserimages-a.akamaihd.net/ugc/2022731711507490075/70E69B09F8FEAFCD5B9622B8E6F3CF61A09A9BE2/",
+            "size": 101440,
+            "filename": "tense_advance_by_thestrikewyvern_dffzb1c-pre.jpg",
+            "preview_type": 0
+          },
+          {
+            "previewid": "22261803",
+            "sortorder": 12,
+            "youtubevideoid": "SUp_ijBCOVA",
+            "preview_type": 1,
+            "external_reference": ""
+          }
+        ],
+        "tags": [
+          {
+            "tag": "Helicopter",
+            "display_name": "Helicopter"
+          },
+          {
+            "tag": "Wheeled",
+            "display_name": "Wheeled"
+          },
+          {
+            "tag": "Terrain",
+            "display_name": "Terrain"
+          },
+          {
+            "tag": "Character",
+            "display_name": "Character"
+          },
+          {
+            "tag": "Equipment",
+            "display_name": "Equipment"
+          },
+          {
+            "tag": "Plane",
+            "display_name": "Plane"
+          },
+          {
+            "tag": "Sound",
+            "display_name": "Sound"
+          },
+          {
+            "tag": "Structure",
+            "display_name": "Structure"
+          },
+          {
+            "tag": "Weapon",
+            "display_name": "Weapon"
+          },
+          {
+            "tag": "Mod",
+            "display_name": "Mod"
+          },
+          {
+            "tag": "Tag Review",
+            "display_name": "Tag Review"
+          }
+        ],
+        "language": 0,
+        "maybe_inappropriate_sex": false,
+        "maybe_inappropriate_violence": false,
+        "revision_change_number": "147",
+        "revision": 1,
+        "ban_text_check_result": 5
+      },
+      {
+        "result": 1,
+        "publishedfileid": "456",
+        "creator": "31312312",
+        "creator_appid": 321312,
+        "consumer_appid": 321312,
+        "consumer_shortcutid": 0,
+        "filename": "",
+        "file_size": "628454",
+        "preview_file_size": "20763",
+        "preview_url": "http://modpreviewsecond.com",
+        "url": "",
+        "hcontent_file": "2107160696969528608",
+        "hcontent_preview": "88224496142496922",
+        "title": "Second Mod",
+        "file_description": "Second Mod Desc",
+        "time_created": 4444444444,
+        "time_updated": 5555555555,
+        "visibility": 0,
+        "flags": 3213,
+        "workshop_file": false,
+        "workshop_accepted": false,
+        "show_subscribe_all": false,
+        "num_comments_public": 3213,
+        "banned": false,
+        "ban_reason": "",
+        "banner": "76561197960265728",
+        "can_be_deleted": true,
+        "app_name": "Arma 3",
+        "file_type": 0,
+        "can_subscribe": true,
+        "subscriptions": 1232939,
+        "favorited": 26858,
+        "followers": 0,
+        "lifetime_subscriptions": 1892371,
+        "lifetime_favorited": 29525,
+        "lifetime_followers": 0,
+        "lifetime_playtime": "0",
+        "lifetime_playtime_sessions": "0",
+        "views": 801020,
+        "num_children": 0,
+        "num_reports": 0,
+        "previews": [
+          {
+            "previewid": "12881504",
+            "sortorder": 0,
+            "youtubevideoid": "Nv91Qw4MAGk",
+            "preview_type": 1,
+            "external_reference": ""
+          },
+          {
+            "previewid": "12300843",
+            "sortorder": 1,
+            "youtubevideoid": "AXB_N8YmTFo",
+            "preview_type": 1,
+            "external_reference": ""
+          },
+          {
+            "previewid": "8181065",
+            "sortorder": 7,
+            "url": "https://steamuserimages-a.akamaihd.net/ugc/88224496142492609/0C6CF4EB1043036FB15ADF8D26809EDEE88A1320/",
+            "size": 108156,
+            "filename": "EM_SWS.jpg",
+            "preview_type": 0
+          }
+        ],
+        "tags": [
+          {
+            "tag": "Mod",
+            "display_name": "Mod"
+          },
+          {
+            "tag": "Animation",
+            "display_name": "Animation"
+          },
+          {
+            "tag": "Character",
+            "display_name": "Character"
+          },
+          {
+            "tag": "Mechanics",
+            "display_name": "Mechanics"
+          }
+        ],
+        "language": 0,
+        "maybe_inappropriate_sex": false,
+        "maybe_inappropriate_violence": false,
+        "revision_change_number": "0",
+        "revision": 1,
+        "ban_text_check_result": 0
+      }
+    ],
+    "next_cursor": "S23damoipad/toTasd"
+  }
+}

@@ -107,7 +107,7 @@ public class WorkshopRestController
     }
 
     @Value
-    private static class WorkshopActiveResponse
+    public static class WorkshopActiveResponse
     {
         boolean active;
     }

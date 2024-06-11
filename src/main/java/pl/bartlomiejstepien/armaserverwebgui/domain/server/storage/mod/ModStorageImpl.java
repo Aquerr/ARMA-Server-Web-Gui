@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod;
 
+import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.ZipFile;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Repository;
@@ -28,6 +29,9 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
+
+@Slf4j
 @Repository
 public class ModStorageImpl implements ModStorage
 {
@@ -178,6 +182,7 @@ public class ModStorageImpl implements ModStorage
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
                 {
                     Path newFilePath = file.resolveSibling(modFolderNameHelper.normalize(file.getFileName().toString()));
+                    log.info(format("Renaming %s to %s", file.getFileName().toString(), newFilePath.getFileName().toString()));
                     file.toFile().renameTo(newFilePath.toAbsolutePath().toFile());
                     return FileVisitResult.CONTINUE;
                 }
@@ -186,6 +191,7 @@ public class ModStorageImpl implements ModStorage
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
                 {
                     Path newFilePath = dir.resolveSibling(modFolderNameHelper.normalize(dir.getFileName().toString()));
+                    log.info(format("Renaming %s to %s", dir.getFileName().toString(), newFilePath.getFileName().toString()));
                     dir.toFile().renameTo(newFilePath.toAbsolutePath().toFile());
                     return FileVisitResult.CONTINUE;
                 }

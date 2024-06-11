@@ -1,0 +1,19 @@
+{
+  "nextCursor": "S23damoipad/toTasd",
+  "mods": [
+    {
+      "fileId": 123,
+      "title": "First Mod",
+      "description": "First Mod Desc",
+      "previewUrl": "http://modpreview.com",
+      "modWorkshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=123"
+    },
+    {
+      "fileId": 456,
+      "title": "Second Mod",
+      "description": "Second Mod Desc",
+      "previewUrl": "http://modpreviewsecond.com",
+      "modWorkshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=456"
+    }
+  ]
+}

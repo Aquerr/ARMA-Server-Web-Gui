@@ -10,6 +10,7 @@ import java.util.List;
 public class SteamCmdWorkshopDownloadParameters
 {
     private long fileId;
+    private String title;
     private int appId;
     private String steamCmdPath;
     private String steamUsername;
@@ -34,6 +35,7 @@ public class SteamCmdWorkshopDownloadParameters
     {
         return "SteamCmdWorkshopDownloadParameters{" +
                 "fileId=" + fileId +
+                ", title='" + title + '\'' +
                 ", appId=" + appId +
                 ", steamCmdPath='" + steamCmdPath + '\'' +
                 ", steamUsername='" + steamUsername + '\'' +

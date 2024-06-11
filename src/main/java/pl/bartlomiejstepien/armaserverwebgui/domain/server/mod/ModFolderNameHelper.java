@@ -37,10 +37,10 @@ public class ModFolderNameHelper
 
     public String normalize(String modName)
     {
-        return toLowerCaseWithUncerscores(modName);
+        return toLowerCaseWithUnderscores(modName);
     }
 
-    private String toLowerCaseWithUncerscores(String modName)
+    private String toLowerCaseWithUnderscores(String modName)
     {
         modName = modName.toLowerCase();
         for (final String characterToReplace : CHARACTERS_TO_REPLACE)
