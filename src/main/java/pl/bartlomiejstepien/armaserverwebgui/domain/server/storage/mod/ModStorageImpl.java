@@ -9,6 +9,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModFolderNameHelper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.FileUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 import reactor.core.publisher.Mono;
@@ -118,7 +119,7 @@ public class ModStorageImpl implements ModStorage
                 if (file.getName().equals(installedModEntity.getModDirectoryName()))
                 {
                     log.info("Deleting mod directory {}", installedModEntity.getModDirectoryName());
-                    FileSystemUtils.deleteRecursively(file);
+                    FileUtils.deleteFilesRecursively(file.toPath(), true);
                     break;
                 }
             }
