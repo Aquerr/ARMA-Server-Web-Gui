@@ -24,6 +24,8 @@ import javax.annotation.Nullable;
 import java.util.Set;
 
 import static org.zalando.logbook.core.Conditions.contentType;
+import static org.zalando.logbook.core.Conditions.exclude;
+import static org.zalando.logbook.core.Conditions.requestTo;
 
 @Configuration
 public class LogbookConfig implements WebFluxConfigurer
@@ -42,6 +44,10 @@ public class LogbookConfig implements WebFluxConfigurer
         Logbook logbook = Logbook.builder()
                 .responseFilter(ResponseFilters.replaceBody(response -> contentType("text/html", IGNORED_FILE_CONTENT).test(response) ? "<skipped>" : null))
                 .bodyFilter(JsonBodyFilters.replaceJsonStringProperty(Set.of("password"), "XXX"))
+                .condition(exclude(
+                        requestTo("/api/v1/logging/latest-logs"),
+                        requestTo("/api/v1/logging/logs-sse"))
+                )
                 .bodyFilter(new FilterJsonAttribute(objectMapper, "publishedFileDetails"))
                 .correlationId(new DefaultCorrelationId())
                 .sink(new DefaultSink(

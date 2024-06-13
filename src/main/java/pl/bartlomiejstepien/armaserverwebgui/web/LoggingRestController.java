@@ -77,7 +77,7 @@ public class LoggingRestController
     }
 
     @Value(staticConstructor = "of")
-    private static class LatestServerLogsResponse
+    public static class LatestServerLogsResponse
     {
         List<String> logs;
     }
