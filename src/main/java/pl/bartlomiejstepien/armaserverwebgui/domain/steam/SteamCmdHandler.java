@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -265,7 +266,7 @@ public class SteamCmdHandler
             installedModBuilder.workshopFileId(modMetaFile.getPublishedFileId());
         }
 
-        installedModBuilder.name(modMetaFile.getName());
+        installedModBuilder.name(Optional.ofNullable(modMetaFile.getName()).orElse(modName));
         installedModBuilder.directoryPath(modDirectory.toAbsolutePath().toString());
 
         ArmaWorkshopMod armaWorkshopMod = steamWebApiService.getWorkshopMod(modMetaFile.getPublishedFileId());
