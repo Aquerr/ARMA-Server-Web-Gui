@@ -53,12 +53,20 @@ public class SteamWebApiService
 
     public ArmaWorkshopMod getWorkshopMod(long modId)
     {
-        return Optional.ofNullable(this.steamWebApiClient.getSteamRemoteStorageClient().getPublishedFileDetails(new PublishedFileDetailsRequest(List.of(modId))))
-                .map(PublishedFileDetailsResponse::getResponse)
-                .map(PublishedFileDetailsResponse.QueryFilesResponse::getPublishedFileDetails)
-                .filter(list -> !list.isEmpty())
-                .map(list -> list.get(0))
-                .map(this.armaWorkshopModConverter::convert)
-                .orElse(null);
+        try
+        {
+            return Optional.ofNullable(this.steamWebApiClient.getSteamRemoteStorageClient().getPublishedFileDetails(new PublishedFileDetailsRequest(List.of(modId))))
+                    .map(PublishedFileDetailsResponse::getResponse)
+                    .map(PublishedFileDetailsResponse.QueryFilesResponse::getPublishedFileDetails)
+                    .filter(list -> !list.isEmpty())
+                    .map(list -> list.getFirst())
+                    .map(this.armaWorkshopModConverter::convert)
+                    .orElse(null);
+        }
+        catch (Exception exception)
+        {
+            exception.printStackTrace();
+            return null;
+        }
     }
 }

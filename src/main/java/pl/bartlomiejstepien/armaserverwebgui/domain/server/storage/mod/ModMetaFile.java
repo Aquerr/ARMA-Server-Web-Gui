@@ -37,7 +37,7 @@ public final class ModMetaFile
             for (String line : lines)
             {
                 String propertyName = line.substring(0, line.indexOf("=")).trim();
-                String propertyValue = line.substring(line.indexOf("=") + 1).trim();
+                String propertyValue = line.substring(line.indexOf("=") + 1, line.length() - 1).trim();
                 Field field = CfgReflectionUtil.findClassFieldForCfgConfigProperty(ModMetaFile.class, propertyName);
                 if (field != null)
                 {
