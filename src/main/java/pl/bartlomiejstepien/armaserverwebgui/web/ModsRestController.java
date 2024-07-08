@@ -121,7 +121,7 @@ public class ModsRestController
     }
 
     @ExceptionHandler(value = ModFileAlreadyExistsException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
     public RestErrorResponse onModsFileAlreadyExistsException(ModFileAlreadyExistsException exception)
     {
         return RestErrorResponse.of("Mod file already exists!", HttpStatus.BAD_REQUEST.value());
