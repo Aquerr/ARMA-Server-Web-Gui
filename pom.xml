@@ -275,11 +275,11 @@
                             </includes>
                             <replacements>
                                 <replacement>
-                                    <token>{API_BASE_URL}</token>
+                                    <token>@API_BASE_URL@</token>
                                     <value>${aswg.api-base-url}</value>
                                 </replacement>
                                 <replacement>
-                                    <token>{API_WS_BASE_URL}</token>
+                                    <token>@API_WS_BASE_URL@</token>
                                     <value>${aswg.api-ws-base-url}</value>
                                 </replacement>
                             </replacements>
