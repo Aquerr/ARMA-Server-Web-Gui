@@ -53,6 +53,7 @@ For SteamCMD installation check [SteamCMD wiki](https://developer.valvesoftware.
 # Building
 
 To build ASWG: 
+- Install JDK 21
 - Clone repo
 - Go to project directory
 - Run `./mvnw.cmd clean package -Daswg.api-base-url=https://mydomain.com/api/v1 -Daswg.api-ws-base-url=wss://mydomain.com/api/v1/ws`
