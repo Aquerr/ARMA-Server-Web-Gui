@@ -33,18 +33,18 @@ Check the feature list below to get to know more.
 ![Mods](https://i.imgur.com/uT9LHXY.png)
 ![Workshop](https://i.imgur.com/eqypD2G.png)
 ![Light theme](https://i.imgur.com/CX36nzu.png)
-![Configuration](https://i.imgur.com/vlwkjwr.png)
+![Configuration](https://i.imgur.com/6CqEexJ.png)
 
 # Setup
 
 ASWG is very easy to set up.
 
 Installation:
-- Install JRE 17
-- Download latest `ASWG.jar` or build it yourself.
+- Install JRE 21
+- [Build ASWG yourself](#Building). (There is no download link ATM)
 - Put ASWG jar file in desired folder where you want your ASWG to be running.
 - Run ASWG jar by executing `java -jar aswg.jar` in the console.
-- A configuration file will be created after running ASWG. Edit it to set the ASWG username and password.
+- A configuration file will be created after running ASWG. Edit it to set the ASWG username and password. Restart ASWG after making changes.
 - Open `http://localhost:8085` to enter ASWG.
 - Extra: If you want to use steam workshop and download mods automatically, configure steamcmd properties.
 
@@ -55,7 +55,8 @@ For SteamCMD installation check [SteamCMD wiki](https://developer.valvesoftware.
 To build ASWG: 
 - Clone repo
 - Go to project directory
-- Run `./mvnw clean package`
+- Run `./mvnw.cmd clean package -Daswg.api-base-url=https://mydomain.com/api/v1 -Daswg.api-ws-base-url=wss://mydomain.com/api/v1/ws`
+  - When you don't specify the `aswg.api-base-url` parameter, the `http://localhost:8085` will be used by default.
 - The `ASWG.jar` artifact will be located inside `target` directory.
 
 ## Credits / Thanks
