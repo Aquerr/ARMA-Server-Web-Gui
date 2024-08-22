@@ -14,6 +14,12 @@
     <name>arma-server-web-gui</name>
     <description>Mangamenet Web GUI for Arma Servers</description>
     <packaging>jar</packaging>
+
+    <scm>
+        <connection>scm:git:https://github.com/Aquerr/ARMA-Server-Web-Gui.git</connection>
+        <developerConnection>scm:git:https://github.com/Aquerr/ARMA-Server-Web-Gui.git</developerConnection>
+        <url>https://github.com/Aquerr/ARMA-Server-Web-Gui</url>
+    </scm>
     
     <properties>
         <java.version>21</java.version>
@@ -22,14 +28,6 @@
         <jjwt.version>0.12.5</jjwt.version>
         <zip4j.version>2.11.5</zip4j.version>
         <steam-web-api-client.version>1.2.0</steam-web-api-client.version>
-
-        <!-- BACKEND PROPERTIES -->
-        <aswg.backend.port>8085</aswg.backend.port>
-
-        <!-- FRONT END PROPERTIES -->
-        <!-- Overwritten by build tools in respective environments -->
-        <aswg.api-base-url>http://localhost:${aswg.backend.port}</aswg.api-base-url>
-        <aswg.api-ws-base-url>ws://localhost:${aswg.backend.port}/api/v1/ws</aswg.api-ws-base-url>
 
         <!-- Front -->
         <node.version>v20.10.0</node.version>
@@ -256,36 +254,6 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>replacer</artifactId>
-                <version>1.5.3</version>
-                <executions>
-                    <execution>
-                        <id>populate-front-properties</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>
-                        <configuration>
-                            <basedir>${project.basedir}/src/web-ui/src/environments</basedir>
-                            <includes>
-                                <include>environment.prod.ts</include>
-                            </includes>
-                            <replacements>
-                                <replacement>
-                                    <token>@API_BASE_URL@</token>
-                                    <value>${aswg.api-base-url}</value>
-                                </replacement>
-                                <replacement>
-                                    <token>@API_WS_BASE_URL@</token>
-                                    <value>${aswg.api-ws-base-url}</value>
-                                </replacement>
-                            </replacements>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
