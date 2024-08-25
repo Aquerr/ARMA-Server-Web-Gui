@@ -269,10 +269,17 @@ public class SteamCmdHandler
         installedModBuilder.name(Optional.ofNullable(modMetaFile.getName()).orElse(modName));
         installedModBuilder.directoryPath(modDirectory.toAbsolutePath().toString());
 
-        ArmaWorkshopMod armaWorkshopMod = steamWebApiService.getWorkshopMod(modMetaFile.getPublishedFileId());
-        if (armaWorkshopMod != null)
+        try
         {
-            installedModBuilder.previewUrl(armaWorkshopMod.getPreviewUrl());
+            ArmaWorkshopMod armaWorkshopMod = steamWebApiService.getWorkshopMod(modMetaFile.getPublishedFileId());
+            if (armaWorkshopMod != null)
+            {
+                installedModBuilder.previewUrl(armaWorkshopMod.getPreviewUrl());
+            }
+        }
+        catch (Exception exception)
+        {
+            log.warn("Could not fetch mod preview url. Mod = {}", modName, exception);
         }
 
         installedModRepository.save(installedModBuilder.build()).subscribe();

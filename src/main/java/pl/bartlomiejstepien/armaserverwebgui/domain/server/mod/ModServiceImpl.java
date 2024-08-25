@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ModServiceImpl implements ModService
 {
     private final ModStorage modStorage;
@@ -158,10 +160,17 @@ public class ModServiceImpl implements ModService
         installedModBuilder.directoryPath(modDirectory.toAbsolutePath().toString());
         installedModBuilder.createdDate(OffsetDateTime.now());
 
-        ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(modMetaFile.getPublishedFileId());
-        if (armaWorkshopMod != null)
+        try
         {
-            installedModBuilder.previewUrl(armaWorkshopMod.getPreviewUrl());
+            ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(modMetaFile.getPublishedFileId());
+            if (armaWorkshopMod != null)
+            {
+                installedModBuilder.previewUrl(armaWorkshopMod.getPreviewUrl());
+            }
+        }
+        catch (Exception exception)
+        {
+            log.warn("Could not fetch mod preview url. Mod = {}", modMetaFile.getName(), exception);
         }
         InstalledModEntity installedModEntity = installedModBuilder.build();
 
