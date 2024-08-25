@@ -63,7 +63,6 @@ public class InstallDeleteModsFromFilesystemJob
 
         List<InstalledModEntity> modsToDeleteInDB = findModsToDeleteFromDB(installedModsInDB, installedFileSystemMods);
         return Flux.fromIterable(modsToDeleteInDB)
-                .filter(Objects::nonNull)
                 .flatMapSequential(mod -> modService.deleteFromDB(mod.getId()));
     }
 
@@ -77,7 +76,6 @@ public class InstallDeleteModsFromFilesystemJob
 
         List<InstalledModEntity> modsToAddToDB = findModsToAddToDB(installedModsInDB, installedFileSystemMods);
         return Flux.fromIterable(modsToAddToDB)
-                .filter(Objects::nonNull)
                 .flatMapSequential(this::saveToDB);
     }
 
@@ -102,6 +100,7 @@ public class InstallDeleteModsFromFilesystemJob
                 .filter(installedMod -> databaseMods.stream().noneMatch(databaseMod -> databaseMod.getWorkshopFileId() == installedMod.getWorkshopFileId()))
                 .peek(mod -> log.info("Found new file system mod: {}", mod))
                 .map(this::toEntity)
+                .filter(Objects::nonNull)
                 .toList();
     }
 
@@ -139,7 +138,7 @@ public class InstallDeleteModsFromFilesystemJob
     {
         return databaseMods.stream()
                 .filter(installedDatabaseMod -> installedFileSystemMods.stream().noneMatch(fileSystemMod -> fileSystemMod.getWorkshopFileId() == installedDatabaseMod.getWorkshopFileId()))
-                .peek(mod -> log.info("Found mod to delete: " + mod))
+                .peek(mod -> log.info("Found mod to delete: {}", mod))
                 .toList();
     }
 }
