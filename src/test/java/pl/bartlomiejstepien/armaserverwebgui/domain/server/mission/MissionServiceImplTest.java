@@ -75,7 +75,7 @@ class MissionServiceImplTest
         missionService.saveEnabledMissionList(missions);
 
         verify(serverConfigStorage).saveServerConfig(armaServerConfigArgumentCaptor.capture());
-        assertThat(armaServerConfigArgumentCaptor.getValue().getMissions().getMissions())
+        assertThat(armaServerConfigArgumentCaptor.getValue().getMissions())
                 .extracting(ArmaServerConfig.Missions.Mission::getTemplate)
                 .containsExactlyElementsOf(List.of(MISSION_NAME_1, MISSION_NAME_2));
     }
@@ -104,9 +104,7 @@ class MissionServiceImplTest
     private ArmaServerConfig prepareArmaServerConfig(List<String> missionNames)
     {
         ArmaServerConfig armaServerConfig = new ArmaServerConfig();
-        ArmaServerConfig.Missions missions = new ArmaServerConfig.Missions();
-        armaServerConfig.setMissions(missions);
-        missions.setMissions(missionNames.stream().map(this::prepareMission).collect(Collectors.toList()));
+        armaServerConfig.setMissions(missionNames.stream().map(this::prepareMission).collect(Collectors.toList()));
         return armaServerConfig;
     }
 

@@ -1,7 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model;
 
 import lombok.Data;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgProperty;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.ClassList;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.ClassName;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class ArmaServerConfig
     @CfgProperty(name = "maxPlayers", type = PropertyType.INTEGER)
     private int maxPlayers = 64;
 
-    @CfgProperty(name = "motd[]", type = PropertyType.STRING_ARRAY)
+    @CfgProperty(name = "motd[]", type = PropertyType.ARRAY_OF_STRINGS)
     private String[] motd = new String[0];
 
     @CfgProperty(name = "motdInterval", type = PropertyType.INTEGER)
@@ -75,35 +77,32 @@ public class ArmaServerConfig
     @CfgProperty(name = "drawingInMap", type = PropertyType.RAW_STRING)
     private String drawingInMap = "true";
 
-    @CfgProperty(name = "allowedLoadFileExtensions[]", type = PropertyType.STRING_ARRAY)
+    @CfgProperty(name = "allowedLoadFileExtensions[]", type = PropertyType.ARRAY_OF_STRINGS)
     private String[] allowedLoadFileExtensions = {"hpp","sqs","sqf","fsm","cpp","paa","txt","xml","inc","ext","sqm","ods","fxy","lip","csv","kb","bik","bikb","html","htm","biedi"};
 
-    @CfgProperty(name = "admins[]", type = PropertyType.STRING_ARRAY)
+    @CfgProperty(name = "admins[]", type = PropertyType.ARRAY_OF_STRINGS)
     private String[] admins = {};
 
-    @CfgProperty(name = "Missions", type = PropertyType.MISSIONS, isClass = true)
-    private Missions missions = new Missions();
+    @CfgProperty(name = "allowedVoteCmds[]", type = PropertyType.ARRAY_OF_NO_FIELDS_OBJECT)
+    private VoteCmd[] allowedVoteCmds;
+
+    @CfgProperty(name = "Missions", type = PropertyType.CLASS, isClass = true)
+    @ClassList
+    private List<Missions.Mission> missions = new ArrayList<>();
 
     @Data
     public static class Missions
     {
-        private List<Mission> missions = new ArrayList<>();
-
         @Data
         public static class Mission
         {
-            @CfgProperty(name = "template", type = PropertyType.RAW_STRING)
+            @ClassName
+            @CfgProperty(name = "template", type = PropertyType.QUOTED_STRING)
             private String template;
             @CfgProperty(name = "difficulty", type = PropertyType.QUOTED_STRING)
             private String difficulty;
-            @CfgProperty(name = "params", type = PropertyType.PARAMS, isClass = true)
-            private Params params = new Params();
-
-            @Data
-            public static class Params
-            {
-                private Map<String, String> params = new HashMap<>();
-            }
+            @CfgProperty(name = "params", type = PropertyType.CLASS, isClass = true)
+            private Map<String, String> params = new HashMap<>();
         }
     }
 }

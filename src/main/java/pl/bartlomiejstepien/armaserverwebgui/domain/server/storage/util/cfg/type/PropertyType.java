@@ -6,7 +6,9 @@ public enum PropertyType
     QUOTED_STRING,
     INTEGER,
     LONG,
-    STRING_ARRAY,
+    ARRAY_OF_STRINGS,
+    ARRAY_OF_NO_FIELDS_OBJECT,
     MISSIONS,
     PARAMS,
+    CLASS
 }

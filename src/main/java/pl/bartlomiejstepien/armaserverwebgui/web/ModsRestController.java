@@ -32,6 +32,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSa
 import pl.bartlomiejstepien.armaserverwebgui.web.exception.NotAllowedFileTypeException;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.ModFileValidator;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class ModsRestController
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Mono<ResponseEntity<?>> uploadModFile(@RequestPart("file") Mono<FilePart> multipartFile)
+    public Mono<ResponseEntity<?>> uploadModFile(@RequestPart("file") Flux<FilePart> multipartFile)
     {
         return multipartFile
                 .doOnNext(modFileValidator::validate)
@@ -120,7 +121,7 @@ public class ModsRestController
     }
 
     @ExceptionHandler(value = ModFileAlreadyExistsException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
     public RestErrorResponse onModsFileAlreadyExistsException(ModFileAlreadyExistsException exception)
     {
         return RestErrorResponse.of("Mod file already exists!", HttpStatus.BAD_REQUEST.value());
