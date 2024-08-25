@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
@@ -61,7 +62,9 @@ public class InstallDeleteModsFromFilesystemJob
         }
 
         List<InstalledModEntity> modsToDeleteInDB = findModsToDeleteFromDB(installedModsInDB, installedFileSystemMods);
-        return Flux.fromIterable(modsToDeleteInDB).flatMapSequential(mod -> modService.deleteFromDB(mod.getId()));
+        return Flux.fromIterable(modsToDeleteInDB)
+                .filter(Objects::nonNull)
+                .flatMapSequential(mod -> modService.deleteFromDB(mod.getId()));
     }
 
     private Flux<Void> installNewMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
@@ -73,14 +76,23 @@ public class InstallDeleteModsFromFilesystemJob
         }
 
         List<InstalledModEntity> modsToAddToDB = findModsToAddToDB(installedModsInDB, installedFileSystemMods);
-        return Flux.fromIterable(modsToAddToDB).flatMapSequential(this::saveToDB);
+        return Flux.fromIterable(modsToAddToDB)
+                .filter(Objects::nonNull)
+                .flatMapSequential(this::saveToDB);
     }
 
     private Mono<Void> saveToDB(InstalledModEntity mod)
     {
-        return modService.saveToDB(mod)
-                .doOnError(exception -> log.warn(format("Could not add mod to DB. Mod = %s", mod.toString()), exception))
-                .then();
+        try
+        {
+            return modService.saveToDB(mod)
+                    .doOnError(exception -> log.warn(format("Could not add mod to DB. Mod = %s", mod.toString()), exception))
+                    .then();
+        }
+        catch (Exception exception)
+        {
+            return Mono.empty();
+        }
     }
 
     private List<InstalledModEntity> findModsToAddToDB(List<InstalledModEntity> databaseMods, List<InstalledFileSystemMod> installedFileSystemMods)
@@ -88,13 +100,19 @@ public class InstallDeleteModsFromFilesystemJob
         return installedFileSystemMods.stream()
                 .filter(InstalledFileSystemMod::isValid)
                 .filter(installedMod -> databaseMods.stream().noneMatch(databaseMod -> databaseMod.getWorkshopFileId() == installedMod.getWorkshopFileId()))
-                .peek(mod -> log.info("Found new file system mod: " + mod))
+                .peek(mod -> log.info("Found new file system mod: {}", mod))
                 .map(this::toEntity)
                 .toList();
     }
 
     private InstalledModEntity toEntity(InstalledFileSystemMod installedFileSystemMod)
     {
+        if (installedFileSystemMod.getWorkshopFileId() == 0)
+        {
+            log.warn("Installed mod {} has published file id = 0", installedFileSystemMod.getName());
+            return null;
+        }
+
         InstalledModEntity entity = new InstalledModEntity();
         entity.setWorkshopFileId(installedFileSystemMod.getWorkshopFileId());
         entity.setName(installedFileSystemMod.getName());

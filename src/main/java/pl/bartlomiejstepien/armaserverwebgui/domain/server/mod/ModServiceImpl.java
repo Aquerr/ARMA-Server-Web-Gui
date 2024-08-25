@@ -154,6 +154,14 @@ public class ModServiceImpl implements ModService
             throw new RuntimeException(e);
         }
 
+        return installedModRepository.findByName(modMetaFile.getName())
+                .mapNotNull(installedModEntity -> installedModEntity)
+                .switchIfEmpty(Mono.just(buildNewInstalledModEntity(modMetaFile, modDirectory)))
+                .flatMap(installedModRepository::save);
+    }
+
+    private InstalledModEntity buildNewInstalledModEntity(ModMetaFile modMetaFile, Path modDirectory)
+    {
         InstalledModEntity.InstalledModEntityBuilder installedModBuilder = InstalledModEntity.builder();
         installedModBuilder.workshopFileId(modMetaFile.getPublishedFileId());
         installedModBuilder.name(modMetaFile.getName());
@@ -172,9 +180,7 @@ public class ModServiceImpl implements ModService
         {
             log.warn("Could not fetch mod preview url. Mod = {}", modMetaFile.getName(), exception);
         }
-        InstalledModEntity installedModEntity = installedModBuilder.build();
-
-        return installedModRepository.save(installedModEntity);
+        return installedModBuilder.build();
     }
 
     private ModsView toModsView(List<InstalledModEntity> installedModEntities)
