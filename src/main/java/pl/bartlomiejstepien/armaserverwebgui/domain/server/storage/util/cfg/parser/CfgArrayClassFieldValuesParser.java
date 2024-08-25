@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.par
 
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReflectionUtil;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgWriteContext;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
 
@@ -10,10 +11,10 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<String>{
+public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<String> {
 
     @Override
-    public String parseToString(Field field, Object value) throws ParsingException
+    public String parseToString(CfgWriteContext context, Object value) throws ParsingException
     {
         if (!value.getClass().isArray())
             throw new ParsingException("Provided value is not an array: " + value);
@@ -24,16 +25,16 @@ public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<String
         {
             Object object = Array.get(value, i);
             stringBuilder.append("\n\t")
-                    .append(toPrimitiveObjectString(object));
+                    .append(toPrimitiveObjectString(context, object));
 
             if (i < Array.getLength(value) - 1)
                 stringBuilder.append(",");
         }
-        stringBuilder.append("\n};");
+        stringBuilder.append("\n}");
         return stringBuilder.toString();
     }
 
-    private <T> String toPrimitiveObjectString(Object object) throws ParsingException
+    private <T> String toPrimitiveObjectString(CfgWriteContext context, Object object) throws ParsingException
     {
         if (object == null)
             return "";
@@ -49,7 +50,7 @@ public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<String
             {
                 CfgSimpleParser<T> cfgSimpleParser = (CfgSimpleParser<T>) CfgFileHandler.PARSERS.get(field.getAnnotation(CfgProperty.class).type());
                 field.setAccessible(true);
-                String value = cfgSimpleParser.parseToString(field, (T)field.get(object));
+                String value = cfgSimpleParser.parseToString(context, field.get(object));
                 field.setAccessible(false);
                 stringBuilder.append(value);
                 int lastIndexOfSemicolon = stringBuilder.lastIndexOf(";");

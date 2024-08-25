@@ -1,8 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgWriteContext;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
-
-import java.lang.reflect.Field;
 
 public class CfgRawStringParser implements CfgSimpleParser<String>
 {
@@ -13,7 +12,7 @@ public class CfgRawStringParser implements CfgSimpleParser<String>
     }
 
     @Override
-    public String parseToString(Field field, Object value)
+    public String parseToString(CfgWriteContext context, Object value)
     {
         return String.valueOf(value);
     }

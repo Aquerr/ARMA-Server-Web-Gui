@@ -1,32 +1,36 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReadContext;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgWriteContext;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
 
 import java.io.BufferedReader;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CfgClassListParser implements CfgSimpleParser<BufferedReader>
+public class CfgClassListParser
 {
 
-    @Override
-    public <T> T parse(BufferedReader bufferedReader, Class<T> clazz) throws ParsingException
+    public <T> Collection<T> parse(CfgReadContext context, Class<T> clazz) throws ParsingException
     {
         List<T> arrayList = new ArrayList<>();
+        BufferedReader bufferedReader = context.getBufferedReader();
 
         try
         {
             while (bufferedReader.ready())
             {
                 char character = (char)bufferedReader.read();
+                if (character == '{')
+                {
+                    CfgParser cfgParser = CfgFileHandler.PARSERS.get(PropertyType.CLASS);
 
-                CfgParser cfgParser = CfgFileHandler.PARSERS.get(PropertyType.CLASS);
-                Object instance = cfgParser.parse(bufferedReader, clazz);
-                arrayList.add((T)instance);
+                    Object instance = cfgParser.parse(context, clazz);
+                    arrayList.add((T)instance);
+                }
             }
         }
         catch (Exception exception)
@@ -34,11 +38,10 @@ public class CfgClassListParser implements CfgSimpleParser<BufferedReader>
             throw new ParsingException(exception);
         }
 
-        return (T)arrayList;
+        return arrayList;
     }
 
-    @Override
-    public String parseToString(Field field, Object collectionObject) throws ParsingException
+    public String parseToString(CfgWriteContext context, Object collectionObject) throws ParsingException
     {
         Collection<?> collection = (Collection<?>) collectionObject;
 
@@ -46,7 +49,7 @@ public class CfgClassListParser implements CfgSimpleParser<BufferedReader>
 
         for (Object object : collection)
         {
-            stringBuilder.append(CfgFileHandler.PARSERS.get(PropertyType.CLASS).parseToString(field, object))
+            stringBuilder.append(CfgFileHandler.PARSERS.get(PropertyType.CLASS).parseToString(context, object))
                     .append(";")
                     .append("\n");
         }

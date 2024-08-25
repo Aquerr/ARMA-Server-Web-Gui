@@ -24,7 +24,7 @@ public class DefaultCfgConfigReader implements CfgConfigReader
             try(FileReader fileReader = new FileReader(file);
                 BufferedReader bufferedReader = new BufferedReader(fileReader))
             {
-                return parse(bufferedReader, clazz);
+                return parse(new CfgReadContext(new StringBuilder(), bufferedReader, clazz), clazz);
             }
         }
         catch (Exception exception)
@@ -34,9 +34,9 @@ public class DefaultCfgConfigReader implements CfgConfigReader
         }
     }
 
-    private static  <T> T parse(BufferedReader bufferedReader, Class<T> clazz) throws ParsingException
+    private static <T> T parse(CfgReadContext context, Class<T> clazz) throws ParsingException
     {
         CfgClassParser cfgClassParser = (CfgClassParser) CfgFileHandler.PARSERS.get(PropertyType.CLASS);
-        return cfgClassParser.parse(bufferedReader, clazz);
+        return cfgClassParser.parse(context, clazz);
     }
 }

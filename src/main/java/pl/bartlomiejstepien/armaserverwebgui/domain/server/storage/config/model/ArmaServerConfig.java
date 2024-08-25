@@ -93,8 +93,6 @@ public class ArmaServerConfig
     @Data
     public static class Missions
     {
-//        private List<Mission> missions = new ArrayList<>();
-
         @Data
         public static class Mission
         {
@@ -105,12 +103,6 @@ public class ArmaServerConfig
             private String difficulty;
             @CfgProperty(name = "params", type = PropertyType.CLASS, isClass = true)
             private Map<String, String> params = new HashMap<>();
-
-//            @Data
-//            public static class Params
-//            {
-//                private Map<String, String> params = new HashMap<>();
-//            }
         }
     }
 }

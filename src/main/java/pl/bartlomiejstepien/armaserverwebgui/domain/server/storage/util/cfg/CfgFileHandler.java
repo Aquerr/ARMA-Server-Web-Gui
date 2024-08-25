@@ -2,20 +2,18 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg;
 
 import lombok.AllArgsConstructor;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgArrayClassFieldValuesParser;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgClassParser;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgClassListParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgClassParserImpl;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgIntegerParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgLongParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgQuotedStringParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgRawStringParser;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgSimpleParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgStringArrayParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -27,15 +25,11 @@ public class CfgFileHandler
             PropertyType.INTEGER, new CfgIntegerParser(),
             PropertyType.LONG, new CfgLongParser(),
             PropertyType.ARRAY_OF_STRINGS, new CfgStringArrayParser(),
-//            PropertyType.MISSIONS, new CfgMissionsClassParser(),
-//            PropertyType.PARAMS, new CfgMissionParamsClassParser(),
             PropertyType.ARRAY_OF_NO_FIELDS_OBJECT, new CfgArrayClassFieldValuesParser<>(),
             PropertyType.CLASS, new CfgClassParserImpl()
     );
 
-    public static final CfgClassParser CLASS_LIST_PARSER = new CfgClassParserImpl();
-
-    public static Integer INDENTATION = 0;
+    public static final CfgClassListParser CLASS_LIST_PARSER = new CfgClassListParser();
 
     private final CfgConfigReader cfgConfigReader;
     private final CfgConfigWriter cfgConfigWriter;

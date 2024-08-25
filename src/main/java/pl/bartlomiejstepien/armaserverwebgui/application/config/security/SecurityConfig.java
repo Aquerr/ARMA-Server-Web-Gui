@@ -68,17 +68,15 @@ public class SecurityConfig
         @Bean
         public ReactiveAuthenticationManager jwtAuthenticationManager(JwtService jwtService)
         {
-            return authentication -> {
-                return Mono.just(authentication)
-                        .map(authentication1 -> jwtService.validateJwt(String.valueOf(authentication1.getCredentials())))
-                        .onErrorResume(Exception.class, err -> Mono.error(new BadCredentialsException("Bad auth token!")))
-                        .mapNotNull(jws -> {
-                            return new UsernamePasswordAuthenticationToken(
-                                    jws.getBody().getSubject(),
-                                    String.valueOf(authentication.getCredentials()),
-                                    List.of(new SimpleGrantedAuthority("USER"))); // Needed to make user authenticated!
-                        });
-            };
+            return authentication -> Mono.just(authentication)
+                    .map(authentication1 -> jwtService.validateJwt(String.valueOf(authentication1.getCredentials())))
+                    .onErrorResume(Exception.class, err -> Mono.error(new BadCredentialsException("Bad auth token!")))
+                    .mapNotNull(jws -> {
+                        return new UsernamePasswordAuthenticationToken(
+                                jws.getPayload().getSubject(),
+                                String.valueOf(authentication.getCredentials()),
+                                List.of(new SimpleGrantedAuthority("USER"))); // Needed to make user authenticated!
+                    });
         }
 
         @Bean

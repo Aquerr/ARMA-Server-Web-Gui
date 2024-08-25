@@ -1,9 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgWriteContext;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class CfgStringArrayParser implements CfgSimpleParser<String>
     }
 
     @Override
-    public String parseToString(Field field, Object value) throws ParsingException
+    public String parseToString(CfgWriteContext context, Object value) throws ParsingException
     {
         if (!value.getClass().isArray())
             throw new ParsingException("Provided value is not an array: " + value);

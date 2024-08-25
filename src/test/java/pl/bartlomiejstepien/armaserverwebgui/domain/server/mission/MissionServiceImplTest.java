@@ -104,9 +104,6 @@ class MissionServiceImplTest
     private ArmaServerConfig prepareArmaServerConfig(List<String> missionNames)
     {
         ArmaServerConfig armaServerConfig = new ArmaServerConfig();
-//        ArmaServerConfig.Missions missions = new ArmaServerConfig.Missions();
-//        armaServerConfig.setMissions(missions);
-//        missions.setMissions(missionNames.stream().map(this::prepareMission).collect(Collectors.toList()));
         armaServerConfig.setMissions(missionNames.stream().map(this::prepareMission).collect(Collectors.toList()));
         return armaServerConfig;
     }

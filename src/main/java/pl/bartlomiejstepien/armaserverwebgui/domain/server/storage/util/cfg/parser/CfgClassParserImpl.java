@@ -2,7 +2,9 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.par
 
 import lombok.extern.slf4j.Slf4j;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReadContext;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReflectionUtil;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgWriteContext;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.ClassName;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
@@ -22,8 +24,10 @@ import java.util.Optional;
 public class CfgClassParserImpl implements CfgClassParser
 {
     @Override
-    public <T> T parse(BufferedReader bufferedReader, Class<T> clazz) throws ParsingException
+    public <T> T parse(CfgReadContext context, Class<T> clazz) throws ParsingException
     {
+        BufferedReader bufferedReader = context.getBufferedReader();
+
         try
         {
             T instance = null;
@@ -80,6 +84,7 @@ public class CfgClassParserImpl implements CfgClassParser
                     }
                 }
 
+                context.getReadData().append(character);
                 stringBuilder.append(character);
 
                 if ('\"' == character)
@@ -112,16 +117,20 @@ public class CfgClassParserImpl implements CfgClassParser
                     if (possibleClassProperty.startsWith("class"))
                     {
                         String classPropertyName = possibleClassProperty.substring(5, possibleClassProperty.length() - 1).trim();
-                        parseClassProperty(instance, classPropertyName, bufferedReader);
+                        parseClassProperty(instance, classPropertyName, context);
                         stringBuilder.setLength(0);
                     }
 
                     continue;
                 }
 
+                if (stringBuilder.toString().equals("};")) {
+                    break;
+                }
+
                 if (endValue)
                 {
-                    parseProperty(instance, stringBuilder.toString());
+                    parseProperty(context, instance, stringBuilder.toString());
                     endValue = false;
                     stringBuilder = new StringBuilder();
                 }
@@ -132,12 +141,12 @@ public class CfgClassParserImpl implements CfgClassParser
         }
         catch (Exception exception)
         {
-            throw new ParsingException(exception);
+            throw new ParsingException(context.prepareErrorMessage(), exception);
         }
     }
 
     @Override
-    public String parseToString(Field field, Object instance) throws ParsingException
+    public String parseToString(CfgWriteContext context, Object instance) throws ParsingException
     {
         if (instance == null)
             return "";
@@ -148,6 +157,8 @@ public class CfgClassParserImpl implements CfgClassParser
 
             StringBuilder stringBuilder = new StringBuilder();
 
+            Field field = context.getCurrentField();
+
             String className = getClassNameFromField(field);
             Field classNameField = CfgReflectionUtil.findFieldWithAnnotation(clazz, ClassName.class);
             if (classNameField != null)
@@ -156,26 +167,25 @@ public class CfgClassParserImpl implements CfgClassParser
             }
 
             stringBuilder
-                    .append(resolveIndentation())
+                    .append(context.indentation())
                     .append("class ")
                     .append(className)
                     .append("\n")
-                    .append(resolveIndentation())
+                    .append(context.indentation())
                     .append("{")
-                    .append(resolveIndentation())
+                    .append(context.indentation())
                     .append("\n");
 
-            CfgFileHandler.INDENTATION++;
+
+            context.incrementIndentation();
 
             if (Collection.class.isAssignableFrom(instance.getClass()))
             {
-//                stringBuilder.append(new CfgClassListParser().parseToString(field, instance));
-
                 Collection<?> collection = (Collection<?>) instance;
                 for (Object object : collection)
                 {
                     stringBuilder
-                            .append(CfgFileHandler.PARSERS.get(PropertyType.CLASS).parseToString(field, object))
+                            .append(CfgFileHandler.PARSERS.get(PropertyType.CLASS).parseToString(context, object))
                             .append(";")
                             .append("\n");
                 }
@@ -185,7 +195,9 @@ public class CfgClassParserImpl implements CfgClassParser
                 Map<?, ?> map = (Map<?, ?>) instance;
                 for (Map.Entry<?, ?> mapEntry : map.entrySet())
                 {
-                    stringBuilder.append(mapEntry.getKey())
+                    stringBuilder
+                            .append(context.indentation())
+                            .append(mapEntry.getKey())
                             .append(" = ")
                             .append(mapEntry.getValue())
                             .append(";\n");
@@ -197,15 +209,15 @@ public class CfgClassParserImpl implements CfgClassParser
 
                 for (Field delcaredField : declaredFields)
                 {
-                    stringBuilder.append(resolveIndentation());
-                    writeFieldValueToStringBuilder(instance, delcaredField, stringBuilder);
+                    stringBuilder.append(context.indentation());
+                    writeFieldValueToStringBuilder(new CfgWriteContext(context.getBufferedWriter(), instance, delcaredField, context.getIndentation()), stringBuilder);
                 }
             }
 
-            CfgFileHandler.INDENTATION--;
+            context.decrementIndentation();
 
             stringBuilder.append("\n")
-                    .append(resolveIndentation())
+                    .append(context.indentation())
                     .append("}");
 
             return stringBuilder.toString();
@@ -216,17 +228,7 @@ public class CfgClassParserImpl implements CfgClassParser
         }
     }
 
-    private String resolveIndentation()
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < CfgFileHandler.INDENTATION; i++)
-        {
-            stringBuilder.append("\t");
-        }
-        return stringBuilder.toString();
-    }
-
-    private String getClassNameFromField(Field field) throws IllegalAccessException
+    private static String getClassNameFromField(Field field)
     {
         return Optional.ofNullable(field.getAnnotation(CfgProperty.class))
                 .map(CfgProperty::name)
@@ -235,7 +237,7 @@ public class CfgClassParserImpl implements CfgClassParser
                 .replaceAll("-", "_");
     }
 
-    private String getClassNameFromField(Object instance, Field field) throws IllegalAccessException
+    private static String getClassNameFromField(Object instance, Field field) throws IllegalAccessException
     {
         boolean canAccessField = field.canAccess(instance);
         if (!canAccessField)
@@ -248,24 +250,45 @@ public class CfgClassParserImpl implements CfgClassParser
         return fieldValue;
     }
 
-    private static <T> void parseClassProperty(T instance, String classPropertyName, BufferedReader bufferedReader)
+    private static <T> void parseClassProperty(T instance, String classPropertyName, CfgReadContext context)
     {
         try
         {
             Field field = CfgReflectionUtil.findClassFieldForCfgConfigProperty(instance.getClass(), classPropertyName);
-            if (field == null)
+            if (Collection.class.isAssignableFrom(instance.getClass()))
+            {
+                Collection collection = (Collection<?>) instance;
+
+                var object = ((CfgClassParser)CfgFileHandler.PARSERS.get(PropertyType.CLASS)).parse(context, collection.getClass().arrayType());
+
+                ((Collection) instance).add(object);
+                return;
+            }
+            else if (field == null)
             {
                 return;
             }
 
-            if (Collection.class.isAssignableFrom(field.getType())) {
-
-                new CfgClassListParser().parse(bufferedReader, (Class<? extends Object>) ((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0]);
+            if (Collection.class.isAssignableFrom(field.getType()))
+            {
+                Collection collection = CfgFileHandler.CLASS_LIST_PARSER.parse(context, (Class<? extends Object>) ((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0]);
+                field.setAccessible(true);
+                field.set(instance, collection);
+                field.setAccessible(false);
+                return;
+            }
+            else if(Map.class.isAssignableFrom(field.getType()))
+            {
+                Map map = ((CfgClassParser)CfgFileHandler.PARSERS.get(PropertyType.CLASS)).parse(context, Map.class);
+                field.setAccessible(true);
+                field.set(instance, map);
+                field.setAccessible(false);
+                return;
             }
 
             CfgParser<?> cfgParser = CfgFileHandler.PARSERS.get(field.getAnnotation(CfgProperty.class).type());
             CfgClassParser cfgClassParser = (CfgClassParser) cfgParser;
-            Object object = cfgClassParser.parse(bufferedReader, field.getType());
+            Object object = cfgClassParser.parse(context, field.getType());
 
             field.setAccessible(true);
             field.set(instance, object);
@@ -273,16 +296,26 @@ public class CfgClassParserImpl implements CfgClassParser
         }
         catch (Exception exception)
         {
-            log.error("Error during parsing of class property: {}", classPropertyName, exception);
+            log.error("Could not parse class property: '{}', {}", classPropertyName, context.prepareErrorMessage(), exception);
         }
     }
 
-    private static <T> void parseProperty(T instance, String property)
+    private static <T> void parseProperty(CfgReadContext context, T instance, String property)
     {
         try
         {
             String propertyName = property.substring(0, property.indexOf("=")).trim();
             String propertyValue = property.substring(property.indexOf("=") + 1, property.length() - 1).trim();
+
+
+            if (Map.class.isAssignableFrom(instance.getClass()))
+            {
+                CfgSimpleParser cfgSimpleParser = (CfgSimpleParser<?>) CfgFileHandler.PARSERS.get(PropertyType.RAW_STRING);
+                Object value = cfgSimpleParser.parse(propertyValue, String.class);
+                ((Map) instance).put(propertyName, value);
+                return;
+            }
+
             Field field = CfgReflectionUtil.findClassFieldForCfgConfigProperty(instance.getClass(), propertyName);
             if (field == null)
             {
@@ -296,22 +329,25 @@ public class CfgClassParserImpl implements CfgClassParser
         }
         catch (Exception exception)
         {
-            log.error("Error during parsing of property: {}", property, exception);
+            log.error("Could not parse property: '{}', {}", property, context.prepareErrorMessage(), exception);
         }
     }
 
-    private <T> void writeFieldValueToStringBuilder(Object instance, Field field, StringBuilder stringBuilder) throws IllegalAccessException, ParsingException
+    private void writeFieldValueToStringBuilder(CfgWriteContext context, StringBuilder stringBuilder) throws IllegalAccessException, ParsingException
     {
+        Field field = context.getCurrentField();
+        Object instance = context.getInstance();
         CfgProperty cfgProperty = field.getAnnotation(CfgProperty.class);
         field.setAccessible(true);
         Object fieldValue = field.get(instance);
         field.setAccessible(false);
         CfgParser<?> cfgParser = CfgFileHandler.PARSERS.get(cfgProperty.type());
-        String fieldValueAsString = cfgParser.parseToString(field, fieldValue);
+        String fieldValueAsString = cfgParser.parseToString(context, fieldValue);
 
         if (cfgProperty.isClass())
         {
-            stringBuilder.append(fieldValueAsString + ";\n");
+            stringBuilder.append(fieldValueAsString)
+                    .append(";\n");
         }
         else
         {
