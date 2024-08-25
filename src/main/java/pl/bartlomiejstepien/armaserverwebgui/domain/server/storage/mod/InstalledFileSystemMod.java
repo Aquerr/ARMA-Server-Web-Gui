@@ -55,7 +55,7 @@ public class InstalledFileSystemMod
 
     public String getName()
     {
-        return this.modMetaFile.map(ModMetaFile::getName).orElse(null);
+        return this.modMetaFile.map(ModMetaFile::getName).orElse(modDirectory.getName());
     }
 
     public boolean isValid()
