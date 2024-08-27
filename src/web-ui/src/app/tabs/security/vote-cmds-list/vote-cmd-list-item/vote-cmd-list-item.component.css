@@ -1,0 +1,6 @@
+.vote-cmd-list-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 15rem;
+}

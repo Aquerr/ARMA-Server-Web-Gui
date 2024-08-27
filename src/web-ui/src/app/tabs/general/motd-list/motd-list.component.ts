@@ -16,7 +16,7 @@ export class MotdListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  deleteMotdLite(motdLineIndex: number) {
+  deleteMotdLine(motdLineIndex: number) {
     this.motd = this.motd.filter((value, index) => {
       return index != motdLineIndex;
     });

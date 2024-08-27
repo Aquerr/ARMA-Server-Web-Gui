@@ -66,6 +66,9 @@ import { ModPresetDeleteDialogComponent } from './tabs/mods/mod-presets/mod-pres
 import { ModForceUpdateConfirmDialogComponent } from './tabs/mods/mod-force-update-confirm-dialog/mod-force-update-confirm-dialog.component';
 import { SettingsComponent } from './tabs/settings/settings.component';
 import {MatChipsModule} from "@angular/material/chips";
+import {VoteCmdListItemComponent} from "./tabs/security/vote-cmds-list/vote-cmd-list-item/vote-cmd-list-item.component";
+import {VoteCmdsListComponent} from "./tabs/security/vote-cmds-list/vote-cmds-list.component";
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -82,6 +85,8 @@ import {MatChipsModule} from "@angular/material/chips";
     MissionUploadButtonComponent,
     DragAndDropFileDirective,
     SecurityComponent,
+    VoteCmdListItemComponent,
+    VoteCmdsListComponent,
     MissionDeleteConfirmDialogComponent,
     MotdListComponent,
     StatusComponent,
@@ -106,35 +111,36 @@ import {MatChipsModule} from "@angular/material/chips";
     ModForceUpdateConfirmDialogComponent,
     SettingsComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        RouterModule,
-        BrowserAnimationsModule,
-        MatListModule,
-        MatRippleModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatTableModule,
-        MatCheckboxModule,
-        MatDialogModule,
-        NgxSpinnerModule,
-        HttpClientModule,
-        ReactiveFormsModule,
-        FormsModule,
-        DragDropModule,
-        ToastrModule.forRoot(),
-        MatSelectModule,
-        MatProgressBarModule,
-        MatSnackBarModule,
-        NgOptimizedImage,
-        MatExpansionModule,
-        MatTooltipModule,
-        MatMenuModule,
-        MatChipsModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    RouterModule,
+    BrowserAnimationsModule,
+    MatListModule,
+    MatRippleModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    NgxSpinnerModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule,
+    DragDropModule,
+    ToastrModule.forRoot(),
+    MatSelectModule,
+    MatProgressBarModule,
+    MatSnackBarModule,
+    NgOptimizedImage,
+    MatExpansionModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatChipsModule,
+    MatCardModule
+  ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}
   ],

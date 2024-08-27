@@ -1,0 +1,12 @@
+.vote-cmd-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.vote-cmd-add-new {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {API_BASE_URL} from "../../environments/environment";
 import {Observable} from "rxjs";
+import {VoteCmd} from "../model/vote-cmd.model";
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,7 @@ export interface SaveServerSecurityRequest {
   allowedFilePatching: number;
   allowedLoadFileExtensions: string[];
   adminUUIDs: string[];
+  allowedVoteCmds: VoteCmd[];
 }
 
 export interface GetServerSecurityResponse {
@@ -41,6 +43,7 @@ export interface GetServerSecurityResponse {
   allowedFilePatching: number;
   allowedLoadFileExtensions: string[];
   adminUUIDs: string[];
+  allowedVoteCmds: VoteCmd[];
 }
 
 export enum AllowedFilePatching {

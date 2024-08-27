@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.ServerSecurityProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.ServerSecurityService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.VoteCommand;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -47,6 +48,7 @@ public class ServerSecurityRestController
                 .allowedFilePatching(saveServerSecurityRequest.getAllowedFilePatching())
                 .allowedLoadFileExtensions(saveServerSecurityRequest.getAllowedLoadFileExtensions())
                 .adminUUIDs(saveServerSecurityRequest.getAdminUUIDs())
+                .voteCommands(saveServerSecurityRequest.getAllowedVoteCmds())
                 .build();
     }
 
@@ -61,6 +63,7 @@ public class ServerSecurityRestController
                 .allowedFilePatching(serverSecurityProperties.getAllowedFilePatching())
                 .allowedLoadFileExtensions(serverSecurityProperties.getAllowedLoadFileExtensions())
                 .adminUUIDs(serverSecurityProperties.getAdminUUIDs())
+                .allowedVoteCmds(serverSecurityProperties.getVoteCommands())
                 .build();
     }
 
@@ -76,6 +79,7 @@ public class ServerSecurityRestController
         private ServerSecurityProperties.AllowedFilePatching allowedFilePatching;
         private List<String> allowedLoadFileExtensions;
         private List<String> adminUUIDs;
+        private List<VoteCommand> allowedVoteCmds;
     }
 
     @Data
@@ -90,5 +94,6 @@ public class ServerSecurityRestController
         private ServerSecurityProperties.AllowedFilePatching allowedFilePatching;
         private List<String> allowedLoadFileExtensions;
         private List<String> adminUUIDs;
+        private List<VoteCommand> allowedVoteCmds;
     }
 }

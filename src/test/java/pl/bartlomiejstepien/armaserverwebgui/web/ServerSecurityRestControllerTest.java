@@ -10,6 +10,7 @@ import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.security.JwtService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.VoteCmd;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -73,6 +74,7 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
         armaServerConfig.setAllowedFilePatching(1);
         armaServerConfig.setAllowedLoadFileExtensions(new String[]{"SQF"});
         armaServerConfig.setAdmins(new String[]{"12341235421321"});
+        armaServerConfig.setAllowedVoteCmds(null);
         return armaServerConfig;
     }
 }

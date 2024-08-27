@@ -6,6 +6,7 @@ import {SecurityFormService} from './security-form.service';
 import {FormGroup} from '@angular/forms';
 import {MatChipEditedEvent, MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {VoteCmd} from "../../model/vote-cmd.model";
 
 @Component({
   selector: 'app-security',
@@ -122,4 +123,8 @@ export class SecurityComponent implements OnInit {
   }
 
   protected readonly AllowedFilePatching = AllowedFilePatching;
+
+  setVoteCmds($event: VoteCmd[]) {
+    this.form.get('allowedVoteCmds')?.setValue($event);
+  }
 }

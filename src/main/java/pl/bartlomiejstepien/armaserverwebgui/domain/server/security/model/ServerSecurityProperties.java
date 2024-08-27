@@ -20,6 +20,7 @@ public class ServerSecurityProperties
     private AllowedFilePatching allowedFilePatching;
     private List<String> allowedLoadFileExtensions;
     private List<String> adminUUIDs;
+    private List<VoteCommand> voteCommands;
 
     @Getter
     public enum AllowedFilePatching

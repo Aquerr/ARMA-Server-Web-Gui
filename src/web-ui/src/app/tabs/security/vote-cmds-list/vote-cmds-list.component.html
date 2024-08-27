@@ -1,0 +1,10 @@
+<div class="vote-cmd-list">
+  @for (item of voteCommandsItems; track item.command.name) {
+    <app-vote-cmd-list-item [item]="item" (onDelete)="deleteItem(item)"></app-vote-cmd-list-item>
+  }
+  <div class="vote-cmd-add-new">
+    <button mat-icon-button color="primary" (click)="addNewCommand()">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </div>
+</div>

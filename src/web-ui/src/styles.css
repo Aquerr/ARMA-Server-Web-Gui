@@ -61,6 +61,8 @@
   --mat-divider-vertical-color: #444c56 !important;
   --mat-menu-item-label-text-color: var(--aswg-primary-color) !important;
   --mat-menu-container-color: var(--aswg-bg-primary-bg-color) !important;
+  --mdc-elevated-card-container-color: var(--aswg-input-bg-color) !important;
+  --mdc-filled-text-field-disabled-label-text-color: var(--aswg-primary-text-color) !important;
 }
 
 a {
@@ -69,6 +71,10 @@ a {
 
 .mat-mdc-raised-button.mat-unthemed {
   --mdc-protected-button-container-color: var(--aswg-primary-color) !important;
+}
+
+.mdc-text-field--disabled {
+  background-color: #384149 !important;
 }
 
 .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input {

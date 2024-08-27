@@ -22,7 +22,8 @@ export class SecurityFormService {
       verifySignatures: [true, [Validators.required]],
       allowedFilePatching: [AllowedFilePatching.NOT_ALLOWED, [Validators.required]],
       allowedLoadFileExtensions: [[]],
-      adminUUIDs: [[]]
+      adminUUIDs: [[]],
+      allowedVoteCmds: [[]]
     });
   }
 
@@ -35,6 +36,7 @@ export class SecurityFormService {
     this.getAllowedFilePatchingControl(form).setValue(data.allowedFilePatching);
     this.getAllowedLoadFileExtensions(form).setValue(data.allowedLoadFileExtensions);
     this.getAdminUUIDs(form).setValue(data.adminUUIDs);
+    this.getAllowedVoteCmds(form).setValue(data.allowedVoteCmds);
   }
 
   get(form: FormGroup) {
@@ -46,7 +48,8 @@ export class SecurityFormService {
       verifySignatures: this.getVerifySignaturesControl(form).value,
       allowedFilePatching: this.getAllowedFilePatchingControl(form).value,
       allowedLoadFileExtensions: this.getAllowedLoadFileExtensions(form).value,
-      adminUUIDs: this.getAdminUUIDs(form).value
+      adminUUIDs: this.getAdminUUIDs(form).value,
+      allowedVoteCmds: this.getAllowedVoteCmds(form).value
     } as SaveServerSecurityRequest;
   }
 
@@ -80,5 +83,9 @@ export class SecurityFormService {
 
   getAdminUUIDs(form: FormGroup) {
     return form.get('adminUUIDs') as AbstractControl;
+  }
+
+  getAllowedVoteCmds(form: FormGroup) {
+    return form.get('allowedVoteCmds') as AbstractControl;
   }
 }
