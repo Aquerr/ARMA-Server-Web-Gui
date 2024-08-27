@@ -8,11 +8,17 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Allowed Pre Mission</mat-label>
-          <input matInput [(ngModel)]="item.command.allowedPreMission" [ngModelOptions]="{standalone: true}" (keydown.enter)="onEnter()">
+          <mat-select [(ngModel)]="item.command.allowedPreMission" [ngModelOptions]="{standalone: true}">
+            <mat-option [value]="true">Yes</mat-option>
+            <mat-option [value]="false">No</mat-option>
+          </mat-select>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Allowed Post Mission</mat-label>
-          <input matInput [(ngModel)]="item.command.allowedPostMission" [ngModelOptions]="{standalone: true}" (keydown.enter)="onEnter()">
+          <mat-select [(ngModel)]="item.command.allowedPostMission" [ngModelOptions]="{standalone: true}">
+            <mat-option [value]="true">Yes</mat-option>
+            <mat-option [value]="false">No</mat-option>
+          </mat-select>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Voting Threshold</mat-label>
@@ -32,11 +38,17 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Allowed Pre Mission</mat-label>
-          <input matInput [value]="item.command.allowedPreMission" [disabled]="true">
+          <mat-select [(ngModel)]="item.command.allowedPreMission" [ngModelOptions]="{standalone: true}" [disabled]="true">
+            <mat-option [value]="true">Yes</mat-option>
+            <mat-option [value]="false">No</mat-option>
+          </mat-select>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Allowed Post Mission</mat-label>
-          <input matInput [value]="item.command.allowedPostMission" [disabled]="true">
+          <mat-select [(ngModel)]="item.command.allowedPostMission" [ngModelOptions]="{standalone: true}" [disabled]="true">
+            <mat-option [value]="true">Yes</mat-option>
+            <mat-option [value]="false">No</mat-option>
+          </mat-select>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Voting Threshold</mat-label>
