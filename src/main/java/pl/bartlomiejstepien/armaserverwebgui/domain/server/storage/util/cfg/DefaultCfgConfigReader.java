@@ -13,6 +13,8 @@ import java.io.IOException;
 @Slf4j
 public class DefaultCfgConfigReader implements CfgConfigReader
 {
+    public static final DefaultCfgConfigReader INSTNACE = new DefaultCfgConfigReader();
+
     @Override
     public <T> T readConfig(File file, Class<T> clazz) throws IOException
     {

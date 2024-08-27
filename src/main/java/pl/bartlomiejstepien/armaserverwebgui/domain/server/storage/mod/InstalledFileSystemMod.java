@@ -12,7 +12,8 @@ import java.util.Optional;
 @ToString
 public class InstalledFileSystemMod
 {
-    private Optional<ModMetaFile> modMetaFile = Optional.empty();
+    private Optional<MetaCppFile> modMetaFile = Optional.empty();
+    private Optional<ModCppFile> modFile = Optional.empty();
 
     private final ModDirectory modDirectory;
 
@@ -21,8 +22,8 @@ public class InstalledFileSystemMod
         this.modDirectory = modDirectory;
         try
         {
-            ModMetaFile modMetaFile = modDirectory.readModMetaFile();
-            this.modMetaFile = Optional.ofNullable(modMetaFile);
+            MetaCppFile metaCppFile = modDirectory.readModMetaFile();
+            this.modMetaFile = Optional.ofNullable(metaCppFile);
         }
         catch (Exception exception)
         {
@@ -39,7 +40,7 @@ public class InstalledFileSystemMod
     {
         try
         {
-            ModMetaFile modMetaFile = modDirectory.readModMetaFile();
+            MetaCppFile metaCppFile = modDirectory.readModMetaFile();
 
         }
         catch (Exception exception)
@@ -50,12 +51,12 @@ public class InstalledFileSystemMod
 
     public long getWorkshopFileId()
     {
-        return this.modMetaFile.map(ModMetaFile::getPublishedFileId).orElse(0L);
+        return this.modMetaFile.map(MetaCppFile::getPublishedFileId).orElse(0L);
     }
 
     public String getName()
     {
-        return this.modMetaFile.map(ModMetaFile::getName).orElse(modDirectory.getName());
+        return this.modMetaFile.map(MetaCppFile::getName).orElse(modDirectory.getDirectoryName());
     }
 
     public boolean isValid()

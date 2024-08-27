@@ -103,9 +103,15 @@ public class ModStorageImpl implements ModStorage
     }
 
     @Override
-    public ModMetaFile readModMetaFile(Path modDirectory) throws CouldNotReadModMetaFile
+    public MetaCppFile readModMetaFile(Path modDirectory) throws CouldNotReadModMetaFile
     {
-        return ModMetaFile.forFile(modDirectory.resolve("meta.cpp"));
+        return CppFileHelper.readFile(modDirectory.resolve(CppFileHelper.META_CPP), MetaCppFile.class);
+    }
+
+    @Override
+    public ModCppFile readModFile(Path modDirectory) throws CouldNotReadModMetaFile
+    {
+        return CppFileHelper.readFile(modDirectory.resolve(CppFileHelper.MOD_CPP), ModCppFile.class);
     }
 
     @Override

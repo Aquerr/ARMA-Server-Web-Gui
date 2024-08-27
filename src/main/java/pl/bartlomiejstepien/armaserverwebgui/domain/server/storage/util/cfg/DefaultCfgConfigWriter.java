@@ -15,6 +15,8 @@ import java.util.List;
 @Slf4j
 public class DefaultCfgConfigWriter implements CfgConfigWriter
 {
+    public static final DefaultCfgConfigWriter INSTANCE = new DefaultCfgConfigWriter();
+
     @Override
     public <T> void saveConfig(File file, T instance) throws IOException
     {

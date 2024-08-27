@@ -10,7 +10,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.WorkshopModInstal
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModMetaFile;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.MetaCppFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
@@ -243,10 +243,10 @@ public class SteamCmdHandler
     private void saveModInDatabase(long workshopFileId, String modName, Path modDirectory)
     {
         InstalledModEntity installedModEntity = this.installedModRepository.findByWorkshopFileId(workshopFileId).block();
-        ModMetaFile modMetaFile = null;
+        MetaCppFile metaCppFile = null;
         try
         {
-            modMetaFile = modStorage.readModMetaFile(modDirectory);
+            metaCppFile = modStorage.readModMetaFile(modDirectory);
         }
         catch (CouldNotReadModMetaFile e)
         {
@@ -263,15 +263,15 @@ public class SteamCmdHandler
         {
             installedModBuilder = InstalledModEntity.builder();
             installedModBuilder.createdDate(OffsetDateTime.now());
-            installedModBuilder.workshopFileId(modMetaFile.getPublishedFileId());
+            installedModBuilder.workshopFileId(metaCppFile.getPublishedFileId());
         }
 
-        installedModBuilder.name(Optional.ofNullable(modMetaFile.getName()).orElse(modName));
+        installedModBuilder.name(Optional.ofNullable(metaCppFile.getName()).orElse(modName));
         installedModBuilder.directoryPath(modDirectory.toAbsolutePath().toString());
 
         try
         {
-            ArmaWorkshopMod armaWorkshopMod = steamWebApiService.getWorkshopMod(modMetaFile.getPublishedFileId());
+            ArmaWorkshopMod armaWorkshopMod = steamWebApiService.getWorkshopMod(metaCppFile.getPublishedFileId());
             if (armaWorkshopMod != null)
             {
                 installedModBuilder.previewUrl(armaWorkshopMod.getPreviewUrl());

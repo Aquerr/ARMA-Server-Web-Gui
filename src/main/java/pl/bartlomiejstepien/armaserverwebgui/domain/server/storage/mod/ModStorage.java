@@ -17,7 +17,9 @@ public interface ModStorage {
 
     List<InstalledFileSystemMod> getInstalledModsFromFileSystem();
 
-    ModMetaFile readModMetaFile(Path modDirectory) throws CouldNotReadModMetaFile;
+    MetaCppFile readModMetaFile(Path modDirectory) throws CouldNotReadModMetaFile;
+
+    ModCppFile readModFile(Path modDirectory) throws CouldNotReadModMetaFile;
 
     Mono<Boolean> deleteMod(InstalledModEntity installedModEntity);
 

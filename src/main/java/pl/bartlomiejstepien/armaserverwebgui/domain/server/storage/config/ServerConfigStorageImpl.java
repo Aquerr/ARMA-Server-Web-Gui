@@ -19,8 +19,8 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
 {
     private final ASWGConfig aswgConfig;
     private final CfgFileHandler cfgFileHandler = new CfgFileHandler(
-            new DefaultCfgConfigReader(),
-            new DefaultCfgConfigWriter()
+            DefaultCfgConfigReader.INSTNACE,
+            DefaultCfgConfigWriter.INSTANCE
     );
     private Supplier<String> cfgFilePath;
 

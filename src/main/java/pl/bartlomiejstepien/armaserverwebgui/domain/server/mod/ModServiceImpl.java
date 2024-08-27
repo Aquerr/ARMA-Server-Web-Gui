@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
@@ -15,7 +16,8 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMo
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModMetaFile;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.MetaCppFile;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
@@ -28,6 +30,7 @@ import java.nio.file.Path;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -142,35 +145,27 @@ public class ModServiceImpl implements ModService
                 .map(installedModConverter::convertToWorkshopMod);
     }
 
-    private Mono<InstalledModEntity> saveModInDatabase(Path modDirectory)
+    private Mono<InstalledModEntity> saveModInDatabase(Path modDirectoryPath)
     {
-        ModMetaFile modMetaFile = null;
-        try
-        {
-            modMetaFile = modStorage.readModMetaFile(modDirectory);
-        }
-        catch (CouldNotReadModMetaFile e)
-        {
-            throw new RuntimeException(e);
-        }
-
-        return installedModRepository.findByName(modMetaFile.getName())
+        ModDirectory modDirectory = ModDirectory.from(modDirectoryPath);
+        return installedModRepository.findByName(modDirectory.getModName())
                 .mapNotNull(installedModEntity -> installedModEntity)
-                .switchIfEmpty(Mono.just(buildNewInstalledModEntity(modMetaFile, modDirectory)))
+                .switchIfEmpty(Mono.just(buildNewInstalledModEntity(modDirectory)))
                 .flatMap(installedModRepository::save);
     }
 
-    private InstalledModEntity buildNewInstalledModEntity(ModMetaFile modMetaFile, Path modDirectory)
+    private InstalledModEntity buildNewInstalledModEntity(ModDirectory modDirectory)
     {
+        MetaCppFile metaCppFile = modDirectory.getMetaCppFile();
         InstalledModEntity.InstalledModEntityBuilder installedModBuilder = InstalledModEntity.builder();
-        installedModBuilder.workshopFileId(modMetaFile.getPublishedFileId());
-        installedModBuilder.name(modMetaFile.getName());
-        installedModBuilder.directoryPath(modDirectory.toAbsolutePath().toString());
+        installedModBuilder.workshopFileId(metaCppFile.getPublishedFileId());
+        installedModBuilder.name(metaCppFile.getName());
+        installedModBuilder.directoryPath(modDirectory.getPath().toAbsolutePath().toString());
         installedModBuilder.createdDate(OffsetDateTime.now());
 
         try
         {
-            ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(modMetaFile.getPublishedFileId());
+            ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(metaCppFile.getPublishedFileId());
             if (armaWorkshopMod != null)
             {
                 installedModBuilder.previewUrl(armaWorkshopMod.getPreviewUrl());
@@ -178,7 +173,7 @@ public class ModServiceImpl implements ModService
         }
         catch (Exception exception)
         {
-            log.warn("Could not fetch mod preview url. Mod = {}", modMetaFile.getName(), exception);
+            log.warn("Could not fetch mod preview url. Mod = {}", metaCppFile.getName(), exception);
         }
         return installedModBuilder.build();
     }
