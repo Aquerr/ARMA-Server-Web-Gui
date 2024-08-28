@@ -31,8 +31,8 @@ class MissionServiceImplTest
     private static final String MISSION_NAME_1 = "MyMission";
     private static final String MISSION_NAME_2 = "MySecondMission";
 
-    private static final Mission MISSION_1 = new Mission(MISSION_NAME_1, Collections.emptySet());
-    private static final Mission MISSION_2 = new Mission(MISSION_NAME_2, Collections.emptySet());
+    private static final Mission MISSION_1 = new Mission(MISSION_NAME_1, Mission.Difficulty.REGULAR, Collections.emptySet());
+    private static final Mission MISSION_2 = new Mission(MISSION_NAME_2, Mission.Difficulty.REGULAR, Collections.emptySet());
 
     @Mock
     private MissionStorage missionStorage;

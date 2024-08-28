@@ -1,7 +1,7 @@
 <mat-card class="vote-cmd-list-item" (dblclick)="doubleClick()">
   <mat-card-content>
     <div class="" *ngIf="item.editing; else notEditing">
-      <form matTooltip="Double-click to save">
+      <form matTooltip="Double-click to lock">
         <mat-form-field>
           <mat-label>Name</mat-label>
           <input matInput [(ngModel)]="item.command.name" [ngModelOptions]="{standalone: true}" (keydown.enter)="onEnter()">

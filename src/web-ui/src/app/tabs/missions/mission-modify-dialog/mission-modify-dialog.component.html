@@ -1,5 +1,16 @@
 <h1 mat-dialog-title>Modify Mission</h1>
 <div mat-dialog-content>
+  <h4>Mission Settings</h4>
+  <mat-form-field>
+    <mat-label>Difficulty</mat-label>
+    <mat-select [(ngModel)]="difficulty" name="difficulty">
+      <mat-option [value]="'RECRUIT'">Recruit</mat-option>
+      <mat-option [value]="'REGULAR'">Regular</mat-option>
+      <mat-option [value]="'VETERAN'">Veteran</mat-option>
+      <mat-option [value]="'CUSTOM'">Custom</mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <h4>Mission Parameters</h4>
   <form>
     <ng-template #viewContainerRef></ng-template>

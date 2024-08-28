@@ -1,7 +1,7 @@
 import {Component, ComponentRef, Inject, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {MissionParameterComponent} from "./mission-parameter/mission-parameter.component";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Mission, MissionParam} from "../../../model/mission.model";
+import {Mission, MissionDifficulty, MissionParam} from "../../../model/mission.model";
 import {Subscription} from "rxjs";
 
 @Component({
@@ -13,6 +13,7 @@ export class MissionModifyDialogComponent implements OnInit {
 
   @ViewChild("viewContainerRef", {read: ViewContainerRef, static: true}) viewContainerRef!: ViewContainerRef;
 
+  difficulty: MissionDifficulty = MissionDifficulty.REGULAR;
   parameters: MissionParam[] = [];
 
   constructor(@Inject(MAT_DIALOG_DATA) public mission: Mission, public dialogRef: MatDialogRef<MissionModifyDialogComponent>) {
@@ -24,6 +25,8 @@ export class MissionModifyDialogComponent implements OnInit {
         this.createNewParameter(parameter.name, parameter.value);
       });
     }
+    console.log(this.mission.difficulty);
+    this.difficulty = this.mission.difficulty;
   }
 
   createNewParameter(name: string | null, value: string | null) {
@@ -50,6 +53,8 @@ export class MissionModifyDialogComponent implements OnInit {
   }
 
   onMissionParamsSave() {
+    this.mission.parameters = this.parameters;
+    this.mission.difficulty = this.difficulty;
     this.dialogRef.close(this.parameters);
   }
 }

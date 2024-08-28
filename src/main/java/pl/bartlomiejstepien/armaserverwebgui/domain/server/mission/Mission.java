@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @Data
 @AllArgsConstructor
@@ -13,6 +14,7 @@ import java.util.Set;
 public class Mission
 {
     private String name;
+    private Difficulty difficulty;
     private Set<Parameter> parameters = new HashSet<>();
 
     @Data
@@ -22,5 +24,21 @@ public class Mission
     {
         private String name;
         private String value;
+    }
+
+    public enum Difficulty
+    {
+        RECRUIT,
+        REGULAR,
+        VETERAN,
+        CUSTOM;
+
+        public static Difficulty findOrDefault(String value)
+        {
+            return Stream.of(values())
+                    .filter(difficulty -> difficulty.name().toUpperCase().equals(value))
+                    .findFirst()
+                    .orElse(REGULAR);
+        }
     }
 }

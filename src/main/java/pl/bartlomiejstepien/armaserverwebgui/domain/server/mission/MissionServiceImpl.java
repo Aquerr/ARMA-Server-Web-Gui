@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -73,7 +74,7 @@ public class MissionServiceImpl implements MissionService
         missions.setEnabledMissions(enabledMissions);
         missions.setDisabledMissions(installedMissionsNames.stream()
                 .filter(mission -> enabledMissions.stream().noneMatch(mission1 -> mission1.getName().equals(mission)))
-                .map(missionName -> new Mission(missionName, Collections.emptySet()))
+                .map(missionName -> new Mission(missionName, Mission.Difficulty.REGULAR, Collections.emptySet()))
                 .collect(Collectors.toList()));
 
         return missions;
@@ -83,6 +84,9 @@ public class MissionServiceImpl implements MissionService
     {
         Mission mission = new Mission();
         mission.setName(armaMission.getTemplate());
+        mission.setDifficulty(Mission.Difficulty.findOrDefault(Optional.ofNullable(armaMission.getDifficulty())
+                .map(String::toUpperCase)
+                .orElse(null)));
         mission.setParameters(convertToDomainMissionParameters(armaMission.getParams()));
         return mission;
     }
@@ -98,7 +102,7 @@ public class MissionServiceImpl implements MissionService
     {
         ArmaServerConfig.Missions.Mission armaMission = new ArmaServerConfig.Missions.Mission();
         armaMission.setTemplate(mission.getName());
-        armaMission.setDifficulty("regular");
+        armaMission.setDifficulty(mission.getDifficulty().name().toLowerCase());
         armaMission.setParams(convertToArmaMissionParams(mission.getParameters()));
         return armaMission;
     }
