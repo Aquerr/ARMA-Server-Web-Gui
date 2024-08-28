@@ -31,6 +31,15 @@ export interface SaveServerNetworkProperties {
   maxPacketLoss: number;
   enablePlayerDiag: boolean;
   steamProtocolMaxDataSize: number;
+  minBandwidth: number;
+  maxBandwidth: number;
+  maxMsgSend: number;
+  maxSizeGuaranteed: number;
+  maxSizeNonGuaranteed: number;
+  minErrorToSend: number;
+  minErrorToSendNear: number;
+  maxCustomFileSize: number;
+  maxPacketSize: number;
 }
 
 export interface GetServerNetworkProperties {
@@ -42,4 +51,13 @@ export interface GetServerNetworkProperties {
   maxPacketLoss: number;
   enablePlayerDiag: boolean;
   steamProtocolMaxDataSize: number;
+  minBandwidth: number;
+  maxBandwidth: number;
+  maxMsgSend: number;
+  maxSizeGuaranteed: number;
+  maxSizeNonGuaranteed: number;
+  minErrorToSend: number;
+  minErrorToSendNear: number;
+  maxCustomFileSize: number;
+  maxPacketSize: number;
 }

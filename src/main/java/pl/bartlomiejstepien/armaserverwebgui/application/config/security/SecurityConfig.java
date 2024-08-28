@@ -57,6 +57,7 @@ public class SecurityConfig
                     .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                     .formLogin((ServerHttpSecurity.FormLoginSpec::disable))
                     .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+                    .authenticationManager(jwtAuthenticationManager)
                     .exceptionHandling(exceptionHandlingSpec -> {
                         exceptionHandlingSpec.authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED));
                     })

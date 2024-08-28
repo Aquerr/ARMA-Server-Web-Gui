@@ -30,7 +30,9 @@ public class CfgStringArrayParser implements CfgSimpleParser<String>
 
             if (('}' == character || ',' == character) && !isString)
             {
-                strings.add(stringBuilder.toString().trim());
+                if (!stringBuilder.isEmpty()) {
+                    strings.add(stringBuilder.toString().trim());
+                }
                 stringBuilder.setLength(0);
                 continue;
             }

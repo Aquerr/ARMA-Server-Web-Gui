@@ -15,4 +15,15 @@ public class NetworkProperties
     private int maxPacketLoss;
     private boolean enablePlayerDiag;
     private int steamProtocolMaxDataSize;
+
+    // Performance properties
+    private long minBandwidth;
+    private long maxBandwidth;
+    private int maxMsgSend;
+    private int maxSizeGuaranteed;
+    private int maxSizeNonGuaranteed;
+    private String minErrorToSend;
+    private String minErrorToSendNear;
+    private int maxCustomFileSize;
+    private int maxPacketSize;
 }

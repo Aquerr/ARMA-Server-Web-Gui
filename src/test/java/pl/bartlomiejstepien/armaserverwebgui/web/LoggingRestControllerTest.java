@@ -1,13 +1,10 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
-import pl.bartlomiejstepien.armaserverwebgui.application.config.security.JwtService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.model.LoggingProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.LoggingService;
 
@@ -19,11 +16,6 @@ class LoggingRestControllerTest extends BaseIntegrationTest
 {
     private static final String LOG_FILE_PATH = "log/logFilePath";
     private static final String LOGGING_PROPERTIES_URL = "/api/v1/logging/properties";
-
-    @Autowired
-    private WebTestClient webTestClient;
-    @Autowired
-    private JwtService jwtService;
 
     @MockBean
     private LoggingService loggingService;

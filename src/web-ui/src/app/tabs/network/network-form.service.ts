@@ -14,11 +14,20 @@ export class NetworkFormService {
       upnp: [false, [Validators.required]],
       maxPing: [500, [Validators.required]],
       loopback: [false, [Validators.required]],
-      disconnectTimeout: [5, [Validators.required, Validators.min(5)]],
+      disconnectTimeout: [5, [Validators.required, Validators.min(1)]],
       maxDesync: [150, [Validators.required]],
       maxPacketLoss: [150, [Validators.required]],
       enablePlayerDiag: [false, [Validators.required]],
-      steamProtocolMaxDataSize: [1024, [Validators.required]]
+      steamProtocolMaxDataSize: [1024, [Validators.required]],
+      minBandwidth: [131072, Validators.required],
+      maxBandwidth: [10000000000, Validators.required],
+      maxMsgSend: [128, Validators.required],
+      maxSizeGuaranteed: [512, Validators.required],
+      maxSizeNonGuaranteed: [256, Validators.required],
+      minErrorToSend: ['0.001', [Validators.required, Validators.pattern("[0-9]+(.[0-9]+)?")]],
+      minErrorToSendNear: ['0.01', [Validators.required, Validators.pattern("[0-9]+(.[0-9]+)?")]],
+      maxCustomFileSize: [0, Validators.required],
+      maxPacketSize: [1400, Validators.required]
     });
   }
 
@@ -31,6 +40,15 @@ export class NetworkFormService {
     this.getMaxPacketLossControl(form).setValue(data.maxPacketLoss);
     this.getEnablePlayerDiagControl(form).setValue(data.enablePlayerDiag);
     this.getSteamProtocolMaxDataSizeControl(form).setValue(data.steamProtocolMaxDataSize);
+    this.getMinBandwidth(form).setValue(data.minBandwidth);
+    this.getMaxBandwidth(form).setValue(data.maxBandwidth);
+    this.getMaxMsgSend(form).setValue(data.maxMsgSend);
+    this.getMaxSizeGuaranteed(form).setValue(data.maxSizeGuaranteed);
+    this.getMaxSizeNonGuaranteed(form).setValue(data.maxSizeNonGuaranteed);
+    this.getMinErrorToSend(form).setValue(data.minErrorToSend);
+    this.getMinErrorToSendNear(form).setValue(data.minErrorToSendNear);
+    this.getMaxCustomFileSize(form).setValue(data.maxCustomFileSize);
+    this.getMaxPacketSize(form).setValue(data.maxPacketSize);
   }
 
   get(form: FormGroup) {
@@ -42,7 +60,16 @@ export class NetworkFormService {
       maxDesync: this.getMaxDesyncControl(form).value,
       maxPacketLoss: this.getMaxPacketLossControl(form).value,
       enablePlayerDiag: this.getEnablePlayerDiagControl(form).value,
-      steamProtocolMaxDataSize: this.getSteamProtocolMaxDataSizeControl(form).value
+      steamProtocolMaxDataSize: this.getSteamProtocolMaxDataSizeControl(form).value,
+      minBandwidth: this.getMinBandwidth(form).value,
+      maxBandwidth: this.getMaxBandwidth(form).value,
+      maxMsgSend: this.getMaxMsgSend(form).value,
+      maxSizeGuaranteed: this.getMaxSizeGuaranteed(form).value,
+      maxSizeNonGuaranteed: this.getMaxSizeNonGuaranteed(form).value,
+      minErrorToSend: this.getMinErrorToSend(form).value,
+      minErrorToSendNear: this.getMinErrorToSendNear(form).value,
+      maxCustomFileSize: this.getMaxCustomFileSize(form).value,
+      maxPacketSize: this.getMaxPacketSize(form).value
     } as SaveServerNetworkProperties;
   }
 
@@ -76,5 +103,41 @@ export class NetworkFormService {
 
   getSteamProtocolMaxDataSizeControl(form: FormGroup) {
     return form.get('steamProtocolMaxDataSize') as AbstractControl;
+  }
+
+  getMinBandwidth(form: FormGroup) {
+    return form.get('minBandwidth') as AbstractControl;
+  }
+
+  getMaxBandwidth(form: FormGroup) {
+    return form.get('maxBandwidth') as AbstractControl;
+  }
+
+  getMaxMsgSend(form: FormGroup) {
+    return form.get('maxMsgSend') as AbstractControl;
+  }
+
+  getMaxSizeGuaranteed(form: FormGroup) {
+    return form.get('maxSizeGuaranteed') as AbstractControl;
+  }
+
+  getMaxSizeNonGuaranteed(form: FormGroup) {
+    return form.get('maxSizeNonGuaranteed') as AbstractControl;
+  }
+
+  getMinErrorToSend(form: FormGroup) {
+    return form.get('minErrorToSend') as AbstractControl;
+  }
+
+  getMinErrorToSendNear(form: FormGroup) {
+    return form.get('minErrorToSendNear') as AbstractControl;
+  }
+
+  getMaxCustomFileSize(form: FormGroup) {
+    return form.get('maxCustomFileSize') as AbstractControl;
+  }
+
+  getMaxPacketSize(form: FormGroup) {
+    return form.get('maxPacketSize') as AbstractControl;
   }
 }

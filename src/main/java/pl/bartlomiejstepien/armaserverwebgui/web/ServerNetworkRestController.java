@@ -21,36 +21,45 @@ public class ServerNetworkRestController
     private final ServerNetworkService networkService;
 
     @GetMapping("/properties")
-    public Mono<GetNetworkPropertiesResponse> getNetworkProperties()
+    public Mono<NetworkPropertiesResponse> getNetworkProperties()
     {
         return Mono.just(this.networkService.getNetworkProperties())
                 .map(this::toViewResponse);
     }
     
     @PostMapping("/properties")
-    public Mono<ResponseEntity<?>> saveServerSecurity(@RequestBody SaveNetworkPropertiesRequest saveNetworkPropertiesRequest)
+    public Mono<ResponseEntity<?>> saveServerSecurity(@RequestBody NetworkPropertiesRequest saveNetworkPropertiesRequest)
     {
         this.networkService.saveNetworkProperties(toDomainModel(saveNetworkPropertiesRequest));
         return Mono.just(ResponseEntity.ok().build());
     }
 
-    private NetworkProperties toDomainModel(SaveNetworkPropertiesRequest saveNetworkPropertiesRequest)
+    private NetworkProperties toDomainModel(NetworkPropertiesRequest networkPropertiesRequest)
     {
         return NetworkProperties.builder()
-                .upnp(saveNetworkPropertiesRequest.isUpnp())
-                .maxPing(saveNetworkPropertiesRequest.getMaxPing())
-                .loopback(saveNetworkPropertiesRequest.isLoopback())
-                .disconnectTimeout(saveNetworkPropertiesRequest.getDisconnectTimeout())
-                .maxDesync(saveNetworkPropertiesRequest.getMaxDesync())
-                .maxPacketLoss(saveNetworkPropertiesRequest.getMaxPacketLoss())
-                .enablePlayerDiag(saveNetworkPropertiesRequest.isEnablePlayerDiag())
-                .steamProtocolMaxDataSize(saveNetworkPropertiesRequest.getSteamProtocolMaxDataSize())
+                .upnp(networkPropertiesRequest.isUpnp())
+                .maxPing(networkPropertiesRequest.getMaxPing())
+                .loopback(networkPropertiesRequest.isLoopback())
+                .disconnectTimeout(networkPropertiesRequest.getDisconnectTimeout())
+                .maxDesync(networkPropertiesRequest.getMaxDesync())
+                .maxPacketLoss(networkPropertiesRequest.getMaxPacketLoss())
+                .enablePlayerDiag(networkPropertiesRequest.isEnablePlayerDiag())
+                .steamProtocolMaxDataSize(networkPropertiesRequest.getSteamProtocolMaxDataSize())
+                .minBandwidth(networkPropertiesRequest.getMinBandwidth())
+                .maxBandwidth(networkPropertiesRequest.getMaxBandwidth())
+                .maxMsgSend(networkPropertiesRequest.getMaxMsgSend())
+                .maxSizeGuaranteed(networkPropertiesRequest.getMaxSizeGuaranteed())
+                .maxSizeNonGuaranteed(networkPropertiesRequest.getMaxSizeNonGuaranteed())
+                .minErrorToSend(networkPropertiesRequest.getMinErrorToSend())
+                .minErrorToSendNear(networkPropertiesRequest.getMinErrorToSendNear())
+                .maxCustomFileSize(networkPropertiesRequest.getMaxCustomFileSize())
+                .maxPacketSize(networkPropertiesRequest.getMaxPacketSize())
                 .build();
     }
 
-    private GetNetworkPropertiesResponse toViewResponse(NetworkProperties networkProperties)
+    private NetworkPropertiesResponse toViewResponse(NetworkProperties networkProperties)
     {
-        return GetNetworkPropertiesResponse.builder()
+        return NetworkPropertiesResponse.builder()
                 .upnp(networkProperties.isUpnp())
                 .maxPing(networkProperties.getMaxPing())
                 .loopback(networkProperties.isLoopback())
@@ -59,12 +68,21 @@ public class ServerNetworkRestController
                 .maxPacketLoss(networkProperties.getMaxPacketLoss())
                 .enablePlayerDiag(networkProperties.isEnablePlayerDiag())
                 .steamProtocolMaxDataSize(networkProperties.getSteamProtocolMaxDataSize())
+                .minBandwidth(networkProperties.getMinBandwidth())
+                .maxBandwidth(networkProperties.getMaxBandwidth())
+                .maxMsgSend(networkProperties.getMaxMsgSend())
+                .maxSizeGuaranteed(networkProperties.getMaxSizeGuaranteed())
+                .maxSizeNonGuaranteed(networkProperties.getMaxSizeNonGuaranteed())
+                .minErrorToSend(networkProperties.getMinErrorToSend())
+                .minErrorToSendNear(networkProperties.getMinErrorToSendNear())
+                .maxCustomFileSize(networkProperties.getMaxCustomFileSize())
+                .maxPacketSize(networkProperties.getMaxPacketSize())
                 .build();
     }
 
     @Builder
     @Data
-    private static class SaveNetworkPropertiesRequest
+    private static class NetworkPropertiesRequest
     {
         private boolean upnp;
         private int maxPing;
@@ -74,11 +92,22 @@ public class ServerNetworkRestController
         private int maxPacketLoss;
         private boolean enablePlayerDiag;
         private int steamProtocolMaxDataSize;
+
+        // Performance properties
+        private long minBandwidth;
+        private long maxBandwidth;
+        private int maxMsgSend;
+        private int maxSizeGuaranteed;
+        private int maxSizeNonGuaranteed;
+        private String minErrorToSend;
+        private String minErrorToSendNear;
+        private int maxCustomFileSize;
+        private int maxPacketSize;
     }
 
     @Builder
     @Data
-    private static class GetNetworkPropertiesResponse
+    private static class NetworkPropertiesResponse
     {
         private boolean upnp;
         private int maxPing;
@@ -88,5 +117,16 @@ public class ServerNetworkRestController
         private int maxPacketLoss;
         private boolean enablePlayerDiag;
         private int steamProtocolMaxDataSize;
+
+        // Performance properties
+        private long minBandwidth;
+        private long maxBandwidth;
+        private int maxMsgSend;
+        private int maxSizeGuaranteed;
+        private int maxSizeNonGuaranteed;
+        private String minErrorToSend;
+        private String minErrorToSendNear;
+        private int maxCustomFileSize;
+        private int maxPacketSize;
     }
 }

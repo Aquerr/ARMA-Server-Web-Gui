@@ -21,9 +21,6 @@ import java.util.List;
 class ModsRestControllerTest extends BaseIntegrationTest
 {
     @Autowired
-    private WebTestClient webTestClient;
-
-    @Autowired
     private ModService modService;
 
     @BeforeEach

@@ -9,6 +9,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMo
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ServerFiles;
 
 import java.io.File;
 import java.util.List;
@@ -54,7 +55,8 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
         return ArmaServerParameters.builder()
                 .serverName(armaServerConfig.getHostname())
                 .serverDirectory(aswgConfig.getServerDirectoryPath())
-                .configPath(aswgConfig.getServerDirectoryPath() + File.separator + "server.cfg")
+                .networkConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.NETWORK_CONFIG)
+                .serverConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.SERVER_CONFIG)
                 .executablePath(aswgConfig.getServerDirectoryPath() + File.separator + serverExecToUse)
                 .port(aswgConfig.getServerPort())
                 .mods(modsDirs)

@@ -16,7 +16,8 @@ import java.util.Set;
 @Builder
 public class ArmaServerParameters
 {
-    private final String configPath;
+    private final String serverConfigPath;
+    private final String networkConfigPath;
     @Builder.Default
     private final int port = 2302;
     private final String serverName;
@@ -55,7 +56,8 @@ public class ArmaServerParameters
     {
         List<String> args = new ArrayList<>();
         args.add("-port=" + port);
-        args.add("\"-config=" + configPath + "\"");
+        args.add("\"-cfg= " + networkConfigPath + "\"");
+        args.add("\"-config=" + serverConfigPath + "\"");
 
         if (StringUtils.hasText(serverName))
         {

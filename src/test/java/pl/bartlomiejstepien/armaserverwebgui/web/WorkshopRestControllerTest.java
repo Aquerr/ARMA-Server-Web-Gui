@@ -12,7 +12,6 @@ import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.TestUtils;
@@ -22,9 +21,6 @@ import static org.mockito.BDDMockito.given;
 
 class WorkshopRestControllerTest extends BaseIntegrationTest
 {
-    @Autowired
-    private WebTestClient webTestClient;
-
     @Autowired
     private ObjectMapper objectMapper;
 

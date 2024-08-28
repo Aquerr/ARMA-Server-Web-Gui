@@ -1,61 +1,114 @@
 <form [formGroup]="form" class="container">
-  <h1>Network</h1>
-  <div class="network-properties">
-    <mat-form-field>
-      <mat-label>Loopback</mat-label>
-      <mat-select formControlName="loopback">
-        <mat-option [value]="true">Yes</mat-option>
-        <mat-option [value]="false">No</mat-option>
-      </mat-select>
-      <mat-error *ngIf="hasFormError('loopback', 'required')">This field is required</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Upnp</mat-label>
-      <mat-select formControlName="upnp">
-        <mat-option [value]="true">Yes</mat-option>
-        <mat-option [value]="false">No</mat-option>
-      </mat-select>
-      <mat-error *ngIf="hasFormError('upnp', 'required')">This field is required</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Max Ping</mat-label>
-      <input name="maxping" formControlName="maxPing" matInput type="number" min="0"
-             onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
-      <mat-error *ngIf="hasFormError('maxPing', 'required')">This field is required</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Disconnect Timeout</mat-label>
-      <input name="disconnectTimeout" formControlName="disconnectTimeout" matInput type="number" min="5"
-             onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
-      <mat-error *ngIf="hasFormError('disconnectTimeout', 'min')">Minimum value is 5</mat-error>
-      <mat-error *ngIf="hasFormError('disconnectTimeout', 'required')">This field is required</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Max Desync</mat-label>
-      <input name="maxDesync" formControlName="maxDesync" matInput type="number" min="0"
-             onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
-      <mat-error *ngIf="hasFormError('maxDesync', 'required')">This field is required</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Max Packet Loss</mat-label>
-      <input name="maxPacketLoss" formControlName="maxPacketLoss" matInput type="number" min="0"
-             onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
-      <mat-error *ngIf="hasFormError('maxPacketLoss', 'required')">This field is required</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Enable Players' Bandwidth Diagnostics</mat-label>
-      <mat-select formControlName="enablePlayerDiag">
-        <mat-option [value]="true">Yes</mat-option>
-        <mat-option [value]="false">No</mat-option>
-      </mat-select>
-      <mat-error *ngIf="hasFormError('enablePlayerDiag', 'required')">This field is required</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Steam Protocol Max Data Size</mat-label>
-      <input name="steamProtocolMaxDataSize" formControlName="steamProtocolMaxDataSize" matInput type="number" min="0"
-             onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
-      <mat-error *ngIf="hasFormError('steamProtocolMaxDataSize', 'required')">This field is required</mat-error>
-    </mat-form-field>
+  <div class="network-properties-wrapper">
+    <div class="network-properties">
+      <h1>Network</h1>
+      <div class="properties-flex">
+        <mat-form-field matTooltip="Adding this option will force server into LAN mode." matTooltipPosition="right">
+          <mat-label>Loopback</mat-label>
+          <mat-select formControlName="loopback">
+            <mat-option [value]="true">Yes</mat-option>
+            <mat-option [value]="false">No</mat-option>
+          </mat-select>
+          <mat-error *ngIf="hasFormError('loopback', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="Automatically creates port mapping on UPNP/IGD enabled router. This option allows to create a server behind NAT (the router must have public IP and support UPNP/IGD protocol)." matTooltipPosition="right">
+          <mat-label>Upnp</mat-label>
+          <mat-select formControlName="upnp">
+            <mat-option [value]="true">Yes</mat-option>
+            <mat-option [value]="false">No</mat-option>
+          </mat-select>
+          <mat-error *ngIf="hasFormError('upnp', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="Max ping value until server kick the user" matTooltipPosition="right">
+          <mat-label>Max Ping</mat-label>
+          <input name="maxping" formControlName="maxPing" matInput type="number" min="0" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('maxPing', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Disconnect Timeout</mat-label>
+          <input name="disconnectTimeout" formControlName="disconnectTimeout" matInput type="number" min="5" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('disconnectTimeout', 'min')">Minimum value is 5</mat-error>
+          <mat-error *ngIf="hasFormError('disconnectTimeout', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="Max desync value until server kick the user" matTooltipPosition="right">
+          <mat-label>Max Desync</mat-label>
+          <input name="maxDesync" formControlName="maxDesync" matInput type="number" min="0" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('maxDesync', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="Max packetloss value until server kick the user" matTooltipPosition="right">
+          <mat-label>Max Packet Loss</mat-label>
+          <input name="maxPacketLoss" formControlName="maxPacketLoss" matInput type="number" min="0" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('maxPacketLoss', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="Logs players' bandwidth and desync info every 60 seconds, as well as 'network message is pending' owner identity." matTooltipPosition="right">
+          <mat-label>Enable Players' Bandwidth Diagnostics</mat-label>
+          <mat-select formControlName="enablePlayerDiag">
+            <mat-option [value]="true">Yes</mat-option>
+            <mat-option [value]="false">No</mat-option>
+          </mat-select>
+          <mat-error *ngIf="hasFormError('enablePlayerDiag', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="Limit for maximum Steam Query packet length. Increasing this value is dangerous as it can cause Arma 3 server to send UDP packets of a size larger than the MTU. This will cause UDP packets to be fragmented which is not supported by some older routers. But increasing this will fix the modlist length limit in Arma 3: Launcher." matTooltipPosition="right">
+          <mat-label>Steam Protocol Max Data Size</mat-label>
+          <input name="steamProtocolMaxDataSize" formControlName="steamProtocolMaxDataSize" matInput type="number" min="0" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('steamProtocolMaxDataSize', 'required')">This field is required</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="network-properties">
+      <hr>
+      <h1>Network Performance</h1>
+      <div class="properties-flex">
+        <mat-form-field matTooltip="Bandwidth the server is guaranteed to have (in bps). This value helps server to estimate bandwidth available. Increasing it to too optimistic values can increase lag and CPU load, as too many messages will be sent but discarded." matTooltipPosition="right">
+          <mat-label>Min Bandwidth</mat-label>
+          <input name="minBandwidth" formControlName="minBandwidth" matInput type="number" min="0" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('minBandwidth', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="Bandwidth the server is guaranteed to never have (in bps). This value helps the server to estimate bandwidth available." matTooltipPosition="right">
+          <mat-label>Max Bandwidth</mat-label>
+          <input name="maxBandwidth" formControlName="maxBandwidth" matInput type="number" min="0" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('maxBandwidth', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Max Msg Send</mat-label>
+          <input name="maxMsgSend" formControlName="maxMsgSend" matInput type="number" min="0" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('maxMsgSend', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="Maximum size (payload) of guaranteed packet in bytes (without headers). Small messages are packed to larger packets (aggregate messages). Guaranteed packets (aggregate messages) are used for non-repetitive events like shooting." matTooltipPosition="right">
+          <mat-label>Max Size Guaranteed</mat-label>
+          <input name="maxSizeGuaranteed" formControlName="maxSizeGuaranteed" matInput type="number" min="0" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('maxSizeGuaranteed', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="Maximum size (payload) of non-guaranteed packet in bytes (without headers). Small messages are packed to larger packets (aggregate messages). Non-guaranteed packets (aggregate messages) are used for repetitive updates like soldier or vehicle position. Increasing this value may improve bandwidth requirement, but it may increase lag." matTooltipPosition="right">
+          <mat-label>Max Size Non Guaranteed</mat-label>
+          <input name="maxSizeNonGuaranteed" formControlName="maxSizeNonGuaranteed" matInput type="number" min="0" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('maxSizeNonGuaranteed', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="Minimal error to send updates across network. Using a smaller value can make units observed by binoculars or sniper rifle to move smoother at the trade off of increased network traffic." matTooltipPosition="right">
+          <mat-label>Min Error To Send</mat-label>
+          <input name="minErrorToSend" formControlName="minErrorToSend" matInput type="text" (keydown)="allowDecimals($event)">
+          <mat-error *ngIf="hasFormError('minErrorToSend', 'required')">This field is required</mat-error>
+          <mat-error *ngIf="hasFormError('minErrorToSend', 'pattern')">Wrong pattern</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="Minimal error to send updates across network for near units. Using larger value can reduce traffic sent for near units. Used to control client to server traffic as well." matTooltipPosition="right">
+          <mat-label>Min Error To Send Near</mat-label>
+          <input name="minErrorToSendNear" formControlName="minErrorToSendNear" matInput type="text" (keydown)="allowDecimals($event)">
+          <mat-error *ngIf="hasFormError('minErrorToSendNear', 'required')">This field is required</mat-error>
+          <mat-error *ngIf="hasFormError('minErrorToSendNear', 'pattern')">Wrong pattern</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="sers with custom face or custom sound larger than this size are kicked when trying to connect." matTooltipPosition="right">
+          <mat-label>Max Custom File Size</mat-label>
+          <input name="maxCustomFileSize" formControlName="maxCustomFileSize" matInput type="number" min="0" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('maxCustomFileSize', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="Maximal size of packet sent over network." matTooltipPosition="right">
+          <mat-label>Max Packet Size</mat-label>
+          <input name="maxPacketSize" formControlName="maxPacketSize" matInput type="number" min="0" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('maxPacketSize', 'required')">This field is required</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
   </div>
   <div>
     <button mat-flat-button color="primary" (click)="save()">Save</button>

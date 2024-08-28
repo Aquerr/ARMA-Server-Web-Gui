@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.NetworkConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ServerFiles;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.DefaultCfgConfigReader;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.DefaultCfgConfigWriter;
@@ -22,12 +24,14 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
             DefaultCfgConfigReader.INSTNACE,
             DefaultCfgConfigWriter.INSTANCE
     );
-    private Supplier<String> cfgFilePath;
+    private Supplier<String> serverConfigFilePath;
+    private Supplier<String> serverNetworkConfigFilePath;
 
     @PostConstruct
     private void postConstruct()
     {
-        this.cfgFilePath = () -> aswgConfig.getServerDirectoryPath() + File.separator + "server.cfg";
+        this.serverConfigFilePath = () -> aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.SERVER_CONFIG;
+        this.serverNetworkConfigFilePath = () -> aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.NETWORK_CONFIG;
     }
 
     @Override
@@ -35,7 +39,7 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
     {
         try
         {
-            return cfgFileHandler.readConfig(new File(cfgFilePath.get()), ArmaServerConfig.class);
+            return cfgFileHandler.readConfig(new File(serverConfigFilePath.get()), ArmaServerConfig.class);
         }
         catch (IOException e)
         {
@@ -48,7 +52,33 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
     {
         try
         {
-            cfgFileHandler.saveConfig(new File(cfgFilePath.get()), armaServerConfig);
+            cfgFileHandler.saveConfig(new File(serverConfigFilePath.get()), armaServerConfig);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public NetworkConfig getNetworkConfig()
+    {
+        try
+        {
+            return cfgFileHandler.readConfig(new File(serverNetworkConfigFilePath.get()), NetworkConfig.class);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void saveNetworkConfig(NetworkConfig networkConfig)
+    {
+        try
+        {
+            cfgFileHandler.saveConfig(new File(serverNetworkConfigFilePath.get()), networkConfig);
         }
         catch (IOException e)
         {

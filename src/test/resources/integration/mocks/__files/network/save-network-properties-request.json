@@ -1,0 +1,19 @@
+{
+  "upnp": true,
+  "maxPing": 100,
+  "loopback": true,
+  "disconnectTimeout": 30,
+  "maxDesync": 10,
+  "maxPacketLoss": 150,
+  "enablePlayerDiag": true,
+  "steamProtocolMaxDataSize": 300,
+  "minBandwidth": 100,
+  "maxBandwidth": 120,
+  "maxMsgSend": 140,
+  "maxSizeGuaranteed": 160,
+  "maxSizeNonGuaranteed": 180,
+  "minErrorToSend": "0.67",
+  "minErrorToSendNear": "0.123",
+  "maxCustomFileSize": 1000,
+  "maxPacketSize": 13000
+}

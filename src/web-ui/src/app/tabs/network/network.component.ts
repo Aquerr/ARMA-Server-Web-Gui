@@ -12,14 +12,6 @@ import {FormGroup} from '@angular/forms';
 })
 export class NetworkComponent implements OnInit {
   form: FormGroup;
-  upnp: boolean = false;
-  maxPing: number = 500;
-  loopback: boolean = false;
-  disconnectTimeout: number = 5;
-  maxDesync: number = 150;
-  maxPacketLoss: number = 150;
-  enablePlayerDiag: boolean = false;
-  steamProtocolMaxDataSize: number = 1024;
 
   constructor(private maskService: MaskService,
               private notificationService: NotificationService,
@@ -56,5 +48,18 @@ export class NetworkComponent implements OnInit {
 
   hasFormError(controlName: string, errorName: string): boolean {
     return this.form.get(controlName)?.hasError(errorName)!;
+  }
+
+  allowDecimals(event: KeyboardEvent) {
+    return this.allowDigits(event) || event.key === ".";
+  }
+
+  allowDigits(event: KeyboardEvent) {
+    const number = event.key as unknown as number;
+    return number >= 0 && number <= 9 || this.isInputAllowedKey(event.key);
+  }
+
+  isInputAllowedKey(key: string) {
+    return key === 'Backspace' || key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Tab' || key === 'Delete';
   }
 }

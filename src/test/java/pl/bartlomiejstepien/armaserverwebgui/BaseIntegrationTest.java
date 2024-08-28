@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.security.JwtService;
 
 @ActiveProfiles("test")
@@ -20,4 +21,6 @@ public abstract class BaseIntegrationTest
     protected WireMockServer wireMockServer;
     @Autowired
     protected JwtService jwtService;
+    @Autowired
+    protected WebTestClient webTestClient;
 }

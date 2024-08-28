@@ -40,7 +40,6 @@ export class AswgHttpInterceptor implements HttpInterceptor {
           this.maskService.hide();
           this.notificationService.errorNotification("Resource has not been found.", "Not found");
         } else if (error.status === 500) {
-          this.router.navigate(['']);
           this.maskService.hide();
           this.notificationService.errorNotification("An error occurred on the server.", "Server error");
         } else {

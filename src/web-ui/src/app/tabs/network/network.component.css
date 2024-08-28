@@ -1,8 +1,21 @@
-.network-properties {
+.network-properties-wrapper {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   margin-bottom: 1rem;
+}
+
+.network-properties {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.properties-flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 @media (max-width: 800px) {
@@ -11,5 +24,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+
+  .network-properties {
+    align-items: center;
+  }
+
+  .properties-flex {
+    justify-content: center;
+    gap: 0px;
   }
 }
