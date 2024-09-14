@@ -36,17 +36,9 @@ public class InstalledFileSystemMod
         return new InstalledFileSystemMod(ModDirectory.from(modDirectory));
     }
 
-    public void refreshDataFromMetaFile()
+    public static InstalledFileSystemMod from(ModDirectory modDirectory)
     {
-        try
-        {
-            MetaCppFile metaCppFile = modDirectory.readModMetaFile();
-
-        }
-        catch (Exception exception)
-        {
-            exception.printStackTrace();
-        }
+        return new InstalledFileSystemMod(modDirectory);
     }
 
     public long getWorkshopFileId()

@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
@@ -14,9 +13,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModWork
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.MetaCppFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
@@ -27,10 +24,8 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,6 +40,7 @@ public class ModServiceImpl implements ModService
     private final SteamService steamService;
     private final ModKeyService modKeyService;
     private final ModWorkshopUrlBuilder modWorkshopUrlBuilder;
+    private final InstalledModEntityHelper installedModEntityHelper;
 
     @Override
     public Mono<InstalledModEntity> saveModFile(FilePart multipartFile)
@@ -150,32 +146,8 @@ public class ModServiceImpl implements ModService
         ModDirectory modDirectory = ModDirectory.from(modDirectoryPath);
         return installedModRepository.findByName(modDirectory.getModName())
                 .mapNotNull(installedModEntity -> installedModEntity)
-                .switchIfEmpty(Mono.just(buildNewInstalledModEntity(modDirectory)))
+                .switchIfEmpty(Mono.just(installedModEntityHelper.toEntity(InstalledFileSystemMod.from(modDirectory))))
                 .flatMap(installedModRepository::save);
-    }
-
-    private InstalledModEntity buildNewInstalledModEntity(ModDirectory modDirectory)
-    {
-        MetaCppFile metaCppFile = modDirectory.getMetaCppFile();
-        InstalledModEntity.InstalledModEntityBuilder installedModBuilder = InstalledModEntity.builder();
-        installedModBuilder.workshopFileId(metaCppFile.getPublishedFileId());
-        installedModBuilder.name(metaCppFile.getName());
-        installedModBuilder.directoryPath(modDirectory.getPath().toAbsolutePath().toString());
-        installedModBuilder.createdDate(OffsetDateTime.now());
-
-        try
-        {
-            ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(metaCppFile.getPublishedFileId());
-            if (armaWorkshopMod != null)
-            {
-                installedModBuilder.previewUrl(armaWorkshopMod.getPreviewUrl());
-            }
-        }
-        catch (Exception exception)
-        {
-            log.warn("Could not fetch mod preview url. Mod = {}", metaCppFile.getName(), exception);
-        }
-        return installedModBuilder.build();
     }
 
     private ModsView toModsView(List<InstalledModEntity> installedModEntities)

@@ -5,15 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.InstalledModEntityHelper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +25,7 @@ public class InstallDeleteModsFromFilesystemJob
 {
     private final ASWGConfig aswgConfig;
     private final ModService modService;
-    private final SteamService steamService;
+    private final InstalledModEntityHelper helper;
 
     @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.MINUTES)
     public void scanModDirectories()
@@ -112,26 +110,7 @@ public class InstallDeleteModsFromFilesystemJob
             return null;
         }
 
-        InstalledModEntity entity = new InstalledModEntity();
-        entity.setWorkshopFileId(installedFileSystemMod.getWorkshopFileId());
-        entity.setName(installedFileSystemMod.getName());
-        entity.setDirectoryPath(installedFileSystemMod.getModDirectory().getPath().toString());
-        entity.setCreatedDate(OffsetDateTime.now());
-
-        try
-        {
-            ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(installedFileSystemMod.getWorkshopFileId());
-            if (armaWorkshopMod != null)
-            {
-                entity.setPreviewUrl(armaWorkshopMod.getPreviewUrl());
-            }
-        }
-        catch (Exception exception)
-        {
-            // exception mostly ignored as it should not stop the process.
-            log.warn(format("Could not fetch mod [%s] preview url.", installedFileSystemMod.getWorkshopFileId()), exception);
-        }
-        return entity;
+        return helper.toEntity(installedFileSystemMod);
     }
 
     private List<InstalledModEntity> findModsToDeleteFromDB(List<InstalledModEntity> databaseMods, List<InstalledFileSystemMod> installedFileSystemMods)
