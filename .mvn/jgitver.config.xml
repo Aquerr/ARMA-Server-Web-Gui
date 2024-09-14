@@ -1,13 +1,10 @@
-<configuration xmlns="http://jgitver.github.io/maven/configuration/1.1.0"
+ <configuration xmlns="http://jgitver.github.io/maven/configuration/1.1.0"
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://jgitver.github.io/maven/configuration/1.1.0 https://jgitver.github.io/maven/configuration/jgitver-configuration-v1_1_0.xsd">
-    <strategy>MAVEN</strategy>
+    <strategy>CONFIGURABLE</strategy>
     <policy>LATEST</policy>    <!-- LookupPolicy to select the base tag/commit for the version computation -->
     <autoIncrementPatch>false</autoIncrementPatch>
     <useDirty>true</useDirty>
-    <useGitCommitId>true</useGitCommitId>
-    <useSnapshot>false</useSnapshot> <!-- use -SNAPSHOT in CONFIGURABLE strategy -->
-    <gitCommitIdLength>8</gitCommitIdLength>  <!-- between [8,40] -->
     <regexVersionTag>^([0-9]+\.[0-9]+\.[0-9]+)$</regexVersionTag>  <!-- a java regular expression with a capture group matching only tags of the form r0, r1, ..., r34-->
     <useDefaultBranchingPolicy>true</useDefaultBranchingPolicy>   <!-- uses jgitver#BranchingPolicy#DEFAULT_FALLBACK as fallback branch policy-->
     <nonQualifierBranches>main</nonQualifierBranches>
