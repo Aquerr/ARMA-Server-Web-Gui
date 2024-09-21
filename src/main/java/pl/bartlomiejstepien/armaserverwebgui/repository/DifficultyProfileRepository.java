@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface DifficultyProfileRepository extends ReactiveCrudRepository<DifficultyProfileEntity, Integer>
 {
-    Mono<DifficultyProfileEntity> findByActiveTrue();
+    Mono<DifficultyProfileEntity> findFirstByActiveTrue();
 
     Mono<DifficultyProfileEntity> findByName(String name);
 }
