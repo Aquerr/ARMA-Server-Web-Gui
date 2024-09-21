@@ -32,7 +32,6 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
     {
         String serverExecToUse = is64Bit() ? "arma3server_x64" : "arma3server";
 
-
         List<InstalledModEntity> installedMods = modService.getInstalledMods()
                 .collectList()
                 .toFuture()

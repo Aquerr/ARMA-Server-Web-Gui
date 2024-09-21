@@ -37,7 +37,7 @@ public class StatusController
     public Mono<Void> toggleServerStatus(@RequestBody() ToggleStatusRequest toggleStatusRequest)
     {
         return Mono.just(toggleStatusRequest)
-                .map(request ->
+                .flatMap(request ->
                 {
                     if (request.getRequestedStatus() == ServerStatus.Status.OFFLINE)
                         return this.processService.stopServer();

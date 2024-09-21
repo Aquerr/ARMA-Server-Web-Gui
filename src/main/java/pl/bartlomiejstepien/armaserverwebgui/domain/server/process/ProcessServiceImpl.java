@@ -98,7 +98,7 @@ public class ProcessServiceImpl implements ProcessService
         }
 
         return serverParametersGenerator.generateParameters()
-                .map(this::startServerProcess)
+                .flatMap(this::startServerProcess)
                 .then();
     }
 

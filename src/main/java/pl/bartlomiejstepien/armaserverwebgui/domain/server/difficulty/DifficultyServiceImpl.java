@@ -62,8 +62,8 @@ public class DifficultyServiceImpl implements DifficultyService
     @Override
     public Mono<String> getActiveDifficultyProfile()
     {
-        return difficultyProfileRepository.findFirstByActiveTrue()
-                .map(DifficultyProfileEntity::getName)
+        return difficultyProfileRepository.findByActiveTrue()
+                .mapNotNull(DifficultyProfileEntity::getName)
                 .switchIfEmpty(Mono.just(DEFAULT_PROFILE_NAME));
     }
 
