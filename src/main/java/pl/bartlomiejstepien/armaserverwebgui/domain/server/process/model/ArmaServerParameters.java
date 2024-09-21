@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +21,8 @@ public class ArmaServerParameters
     private final String networkConfigPath;
     @Builder.Default
     private final int port = 2302;
-    private final String serverName;
+    @Builder.Default
+    private final String profileName = "player";
     private final String executablePath;
     @Builder.Default
     private final Set<String> mods = new HashSet<>();
@@ -59,9 +61,14 @@ public class ArmaServerParameters
         args.add("\"-cfg= " + networkConfigPath + "\"");
         args.add("\"-config=" + serverConfigPath + "\"");
 
-        if (StringUtils.hasText(serverName))
+        if (SystemUtils.isWindows())
         {
-            args.add("\"-name=" + serverName + "\"");
+            args.add("\"-profiles=" + Paths.get(serverDirectory).resolve("aswg_profiles").toAbsolutePath() + "\"");
+        }
+
+        if (StringUtils.hasText(profileName))
+        {
+            args.add("\"-name=" + profileName + "\"");
         }
         if (!mods.isEmpty())
         {

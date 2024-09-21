@@ -8,8 +8,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.NetworkConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ServerFiles;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.DefaultCfgConfigReader;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.DefaultCfgConfigWriter;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,10 +18,7 @@ import java.util.function.Supplier;
 public class ServerConfigStorageImpl implements ServerConfigStorage
 {
     private final ASWGConfig aswgConfig;
-    private final CfgFileHandler cfgFileHandler = new CfgFileHandler(
-            DefaultCfgConfigReader.INSTNACE,
-            DefaultCfgConfigWriter.INSTANCE
-    );
+    private final CfgFileHandler cfgFileHandler;
     private Supplier<String> serverConfigFilePath;
     private Supplier<String> serverNetworkConfigFilePath;
 

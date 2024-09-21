@@ -14,6 +14,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaSer
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
+import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
 import java.io.BufferedReader;
@@ -28,9 +29,7 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -86,7 +85,7 @@ public class ProcessServiceImpl implements ProcessService
     }
 
     @Override
-    public void startServer(boolean performUpdate)
+    public Mono<Void> startServer(boolean performUpdate)
     {
         if (getServerStatus().getStatus() != ServerStatus.Status.OFFLINE || serverStartScheduled)
             throw new ServerIsAlreadyRunningException("Server is already running!");
@@ -98,13 +97,18 @@ public class ProcessServiceImpl implements ProcessService
             tryUpdateArmaServer();
         }
 
-        ArmaServerParameters serverParams = serverParametersGenerator.generateParameters();
+        return serverParametersGenerator.generateParameters()
+                .map(this::startServerProcess)
+                .then();
+    }
 
+    private Mono<Void> startServerProcess(ArmaServerParameters serverParameters)
+    {
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.directory(new File(serverParams.getServerDirectory()));
-        processBuilder.command(serverParams.asList());
+        processBuilder.directory(new File(serverParameters.getServerDirectory()));
+        processBuilder.command(serverParameters.asList());
 
-        log.info("Starting server process with params: {}", serverParams.asList());
+        log.info("Starting server process with params: {}", serverParameters.asList());
 
         try
         {
@@ -136,6 +140,8 @@ public class ProcessServiceImpl implements ProcessService
         });
         this.serverThread.setDaemon(true);
         this.serverThread.start();
+
+        return Mono.empty();
     }
 
     private void clearLogsFile() throws IOException
@@ -177,7 +183,7 @@ public class ProcessServiceImpl implements ProcessService
     }
 
     @Override
-    public void stopServer()
+    public Mono<Void> stopServer()
     {
         long pid;
         try
@@ -222,6 +228,7 @@ public class ProcessServiceImpl implements ProcessService
         {
             throw new RuntimeException("Could not save server pid.", e);
         }
+        return Mono.empty();
     }
 
     @Override
@@ -235,6 +242,10 @@ public class ProcessServiceImpl implements ProcessService
     {
         try
         {
+            File serverLogsFile = getServerLogsFile();
+            if (!serverLogsFile.exists()) {
+                return Collections.emptyList();
+            }
             return Files.readAllLines(getServerLogsFile().toPath());
         }
         catch (IOException e)
@@ -303,7 +314,7 @@ public class ProcessServiceImpl implements ProcessService
     {
         File pidFile = getPidFile();
         if (!pidFile.exists())
-            saveServerPid(0L);
+            return 0;
         try(FileReader fileReader = new FileReader(pidFile);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             Scanner scanner = new Scanner(bufferedReader))

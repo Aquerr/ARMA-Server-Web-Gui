@@ -8,7 +8,5 @@ public enum PropertyType
     LONG,
     ARRAY_OF_STRINGS,
     ARRAY_OF_NO_FIELDS_OBJECT,
-    MISSIONS,
-    PARAMS,
     CLASS
 }

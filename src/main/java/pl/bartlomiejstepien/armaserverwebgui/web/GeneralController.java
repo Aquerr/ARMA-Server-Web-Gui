@@ -36,7 +36,7 @@ public class GeneralController
         return Mono.zip(
                 Mono.justOrEmpty(aswgConfig.getServerDirectoryPath()),
                 Mono.justOrEmpty(aswgConfig.getServerPort()),
-                Mono.just(armaServerParametersGenerator.generateParameters()),
+                armaServerParametersGenerator.generateParameters(),
                 Mono.just(generalService.getGeneralProperties())
         ).map(this::mapToResponse);
     }

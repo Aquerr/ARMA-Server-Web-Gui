@@ -1,4 +1,4 @@
 {
-  "serverDirectory": "fake/fakeServerDirectory",
+  "serverDirectory": "./target",
   "maxPlayers": 10
 }

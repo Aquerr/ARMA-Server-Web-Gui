@@ -68,7 +68,7 @@ Many thanks to:
 
 Also thanks to JetBrains for their IDE
 
-<img width="200" alt="jetbrains" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png">
+<img width="200" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.png" alt="JetBrains logo.">
 
 ## License
 

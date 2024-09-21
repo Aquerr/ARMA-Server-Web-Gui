@@ -13,6 +13,7 @@ import {WorkshopComponent} from './tabs/workshop/workshop.component';
 import {WorkshopService} from "./service/workshop.service";
 import {map} from "rxjs";
 import {SettingsComponent} from "./tabs/settings/settings.component";
+import {DifficultyComponent} from "./tabs/difficulty/difficulty.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/status', pathMatch: "full"},
@@ -20,6 +21,7 @@ const routes: Routes = [
   {path: 'general', component: GeneralComponent, canActivate: [AuthService]},
   {path: 'security', component: SecurityComponent, canActivate: [AuthService]},
   {path: 'network', component: NetworkComponent, canActivate: [AuthService]},
+  {path: 'difficulty', component: DifficultyComponent, canActivate: [AuthService]},
   {path: 'missions', component: MissionsComponent, canActivate: [AuthService]},
   {path: 'mods', component: ModsComponent, canActivate: [AuthService]},
   {path: 'logging', component: LoggingComponent, canActivate: [AuthService]},

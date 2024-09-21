@@ -63,6 +63,7 @@
   --mat-menu-container-color: var(--aswg-bg-primary-bg-color) !important;
   --mdc-elevated-card-container-color: var(--aswg-input-bg-color) !important;
   --mdc-filled-text-field-disabled-label-text-color: var(--aswg-primary-text-color) !important;
+  --mat-select-panel-background-color: var(--aswg-bg-primary-bg-color) !important;
 }
 
 a {
@@ -240,7 +241,7 @@ body {
 }
 
 
-.mat-snack-bar-container {
+.mat-nack-bar-container {
   width: 40rem !important;
 }
 

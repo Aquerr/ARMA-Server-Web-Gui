@@ -1,0 +1,8 @@
+.difficulty-page-content {
+  margin-bottom: 1rem;
+}
+
+.difficulty-add-new {
+  border-radius: var(--mdc-outlined-button-container-shape);
+  width: 100%;
+}

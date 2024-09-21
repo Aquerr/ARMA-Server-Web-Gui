@@ -4,12 +4,12 @@ import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.DifficultyService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ServerFiles;
+import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.util.List;
@@ -21,17 +21,15 @@ import java.util.stream.Collectors;
 public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGenerator
 {
     @Resource
-    private final ServerConfigStorage serverConfigStorage;
-    @Resource
     private final ASWGConfig aswgConfig;
     @Resource
     private final ModService modService;
+    @Resource
+    private final DifficultyService difficultyService;
 
     @Override
-    public ArmaServerParameters generateParameters()
+    public Mono<ArmaServerParameters> generateParameters()
     {
-        ArmaServerConfig armaServerConfig = serverConfigStorage.getServerConfig();
-
         String serverExecToUse = is64Bit() ? "arma3server_x64" : "arma3server";
 
 
@@ -52,16 +50,17 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
                 .map(InstalledModEntity::getModDirectoryName)
                 .collect(Collectors.toSet());
 
-        return ArmaServerParameters.builder()
-                .serverName(armaServerConfig.getHostname())
-                .serverDirectory(aswgConfig.getServerDirectoryPath())
-                .networkConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.NETWORK_CONFIG)
-                .serverConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.SERVER_CONFIG)
-                .executablePath(aswgConfig.getServerDirectoryPath() + File.separator + serverExecToUse)
-                .port(aswgConfig.getServerPort())
-                .mods(modsDirs)
-                .serverMods(serverModsDirs)
-                .build();
+        return Mono.just(ArmaServerParameters.builder())
+                .zipWith(difficultyService.getActiveDifficultyProfile(), ArmaServerParameters.ArmaServerParametersBuilder::profileName)
+                .map(builder -> builder.serverDirectory(aswgConfig.getServerDirectoryPath())
+                    .networkConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.NETWORK_CONFIG)
+                    .serverConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.SERVER_CONFIG)
+                    .executablePath(aswgConfig.getServerDirectoryPath() + File.separator + serverExecToUse)
+                    .port(aswgConfig.getServerPort())
+                    .mods(modsDirs)
+                    .serverMods(serverModsDirs)
+                    .build()
+                );
     }
 
     private boolean is64Bit()

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
 import java.util.List;
 
 @Slf4j
@@ -21,6 +22,12 @@ public class DefaultCfgConfigWriter implements CfgConfigWriter
     public <T> void saveConfig(File file, T instance) throws IOException
     {
         // Go through each field and save it to file
+        if (!file.exists())
+        {
+            Files.createDirectories(file.getParentFile().toPath());
+            Files.createFile(file.toPath());
+        }
+
         try(FileWriter fileWriter = new FileWriter(file, false);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter))
         {

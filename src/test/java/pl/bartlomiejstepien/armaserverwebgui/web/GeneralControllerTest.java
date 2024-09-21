@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -9,6 +10,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.GeneralService;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static pl.bartlomiejstepien.armaserverwebgui.TestUtils.loadJsonIntegrationContractFor;
@@ -20,13 +22,13 @@ class GeneralControllerTest extends BaseIntegrationTest
 
     @MockBean
     private GeneralService generalService;
-    @MockBean
+
+    @Autowired
     private ASWGConfig aswgConfig;
 
     @Test
     void getGeneralPropertiesShouldReturnServerDirectoryFromASWGConfig()
     {
-        given(aswgConfig.getServerDirectoryPath()).willReturn("fake/fakeServerDirectory");
         given(generalService.getGeneralProperties()).willReturn(GeneralProperties.builder()
                 .maxPlayers(MAX_PLAYERS)
                 .build());
@@ -65,7 +67,7 @@ class GeneralControllerTest extends BaseIntegrationTest
                 .expectStatus()
                 .isOk();
 
-        verify(aswgConfig).setServerDirectoryPath("fake/fakeServerDirectory");
+        assertThat(aswgConfig.getServerDirectoryPath()).isEqualTo("fake/fakeServerDirectory");
         verify(generalService).saveGeneralProperties(GeneralProperties.builder()
                 .maxPlayers(MAX_PLAYERS)
                 .build());
