@@ -70,8 +70,10 @@ import {VoteCmdListItemComponent} from "./tabs/security/vote-cmds-list/vote-cmd-
 import {VoteCmdsListComponent} from "./tabs/security/vote-cmds-list/vote-cmds-list.component";
 import {MatCardModule} from "@angular/material/card";
 import {DifficultyComponent} from "./tabs/difficulty/difficulty.component";
-import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {DifficultyPanelComponent} from "./tabs/difficulty/difficulty-panel/difficulty-panel.component";
+import {
+  DifficultyDeleteConfirmDialogComponent
+} from "./tabs/difficulty/difficulty-delete-confirm-dialog/difficulty-delete-confirm-dialog.component";
 
 @NgModule({
   declarations: [
@@ -114,7 +116,8 @@ import {DifficultyPanelComponent} from "./tabs/difficulty/difficulty-panel/diffi
     ModForceUpdateConfirmDialogComponent,
     SettingsComponent,
     DifficultyComponent,
-    DifficultyPanelComponent
+    DifficultyPanelComponent,
+    DifficultyDeleteConfirmDialogComponent
   ],
     imports: [
         BrowserModule,
@@ -144,8 +147,7 @@ import {DifficultyPanelComponent} from "./tabs/difficulty/difficulty-panel/diffi
         MatTooltipModule,
         MatMenuModule,
         MatChipsModule,
-        MatCardModule,
-        MatSlideToggle
+        MatCardModule
     ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}

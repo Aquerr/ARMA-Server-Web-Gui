@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.util.Lazy;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
@@ -15,10 +16,16 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgF
 import pl.bartlomiejstepien.armaserverwebgui.repository.DifficultyProfileRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import static pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgValueHelper.toInt;
 
@@ -33,11 +40,13 @@ public class DifficultyServiceImpl implements DifficultyService
     private final Lazy<Path> windowsProfilesDirectory;
     private final Lazy<Path> linuxProfilesDirectory;
     private final CfgFileHandler cfgFileHandler;
+    private final ASWGConfig aswgConfig;
 
     public DifficultyServiceImpl(ASWGConfig aswgConfig,
                                  CfgFileHandler cfgFileHandler,
                                  DifficultyProfileRepository difficultyProfileRepository)
     {
+        this.aswgConfig = aswgConfig;
         this.cfgFileHandler = cfgFileHandler;
         this.difficultyProfileRepository = difficultyProfileRepository;
 
@@ -57,6 +66,43 @@ public class DifficultyServiceImpl implements DifficultyService
             this.difficultyProfileRepository.save(difficultyProfileEntity).block();
             saveToFile(map(new DifficultyConfig(), difficultyProfileEntity));
         }
+    }
+
+    @Scheduled(fixedDelay = 20, timeUnit = TimeUnit.MINUTES)
+    public void installDeleteDifficulties()
+    {
+        if (!this.aswgConfig.isDifficultyProfileInstallationScannerEnabled())
+        {
+            log.info("Difficulty scanner is disabled. Skipping...");
+        }
+
+        scanDifficultyProfilesDirectoryForNewProfiles()
+                .subscribeOn(Schedulers.boundedElastic())
+                .subscribe();
+    }
+
+    private Mono<Void> scanDifficultyProfilesDirectoryForNewProfiles()
+    {
+        return Mono.just(resolveDifficultyDirectoryPath())
+                .filter(Files::exists)
+                .mapNotNull(path -> path.toFile().list())
+                .filter(Objects::nonNull)
+                .mapNotNull(fileNames -> Stream.of(fileNames).toList())
+                .zipWith(difficultyProfileRepository.findAll().collectList(), (profileFileNames, difficultyProfileEntities) -> {
+                    List<String> existingProfileNames = difficultyProfileEntities.stream()
+                            .map(DifficultyProfileEntity::getName)
+                            .toList();
+
+                    profileFileNames.forEach(profileFileName -> {
+                        if (!existingProfileNames.contains(profileFileName)) {
+                            DifficultyConfig difficultyConfig = readDifficultyFile(profileFileName);
+                            DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, profileFileName, true);
+                            this.difficultyProfileRepository.save(difficultyProfileEntity).block();
+                            saveToFile(map(difficultyConfig, difficultyProfileEntity));
+                        }
+                    });
+                    return profileFileNames;
+                }).then();
     }
 
     @Override
@@ -83,16 +129,24 @@ public class DifficultyServiceImpl implements DifficultyService
     @Override
     public Mono<DifficultyProfileEntity> saveDifficultyProfile(DifficultyProfile difficultyProfile)
     {
-        saveToFile(difficultyProfile);
-
         return Mono.justOrEmpty(difficultyProfile.getId())
                 .flatMap(difficultyProfileRepository::findById)
+                .mapNotNull(profile -> {
+                    if (!profile.getName().equals(difficultyProfile.getName())) {
+                        deleteFile(profile.getName());
+                    }
+                    return profile;
+                })
                 .switchIfEmpty(difficultyProfileRepository.findByName(difficultyProfile.getName()))
                 .switchIfEmpty(Mono.just(new DifficultyProfileEntity()))
                 .map(difficultyProfileEntity -> {
                     difficultyProfileEntity.setName(difficultyProfile.getName());
                     difficultyProfileEntity.setActive(difficultyProfile.isActive());
                     return difficultyProfileEntity;
+                })
+                .map(profile -> {
+                    saveToFile(difficultyProfile);
+                    return profile;
                 })
                 .flatMap(difficultyProfileRepository::save);
     }
@@ -132,6 +186,9 @@ public class DifficultyServiceImpl implements DifficultyService
         }
 
         File[] files = profilesDir.listFiles();
+        if (files == null)
+            return;
+
         for (final File file : files)
         {
             if (file.getName().equals(difficultyName))
@@ -145,21 +202,7 @@ public class DifficultyServiceImpl implements DifficultyService
     private void saveToFile(DifficultyProfile difficultyProfile)
     {
         DifficultyConfig difficultyConfig = map(difficultyProfile);
-        File file;
-        if (SystemUtils.isWindows())
-        {
-            file = windowsProfilesDirectory.get()
-                    .resolve(difficultyProfile.getName())
-                    .resolve(difficultyProfile.getName() + PROFILE_SUFFIX)
-                    .toFile();
-        }
-        else
-        {
-            file = linuxProfilesDirectory.get()
-                    .resolve(difficultyProfile.getName())
-                    .resolve(difficultyProfile.getName() + PROFILE_SUFFIX)
-                    .toFile();
-        }
+        File file = resolveDifficultyPath(difficultyProfile.getName()).toFile();
 
         try
         {
@@ -174,22 +217,7 @@ public class DifficultyServiceImpl implements DifficultyService
 
     private DifficultyConfig readDifficultyFile(String difficultyName)
     {
-        File file;
-        if (SystemUtils.isWindows())
-        {
-            file = windowsProfilesDirectory.get()
-                    .resolve(difficultyName)
-                    .resolve(difficultyName + PROFILE_SUFFIX)
-                    .toFile();
-        }
-        else
-        {
-            file = linuxProfilesDirectory.get()
-                    .resolve(difficultyName)
-                    .resolve(difficultyName + PROFILE_SUFFIX)
-                    .toFile();
-        }
-
+        File file = resolveDifficultyPath(difficultyName).toFile();
         try
         {
             return cfgFileHandler.readConfig(file, DifficultyConfig.class);
@@ -197,6 +225,25 @@ public class DifficultyServiceImpl implements DifficultyService
         catch (Exception exception)
         {
             throw new RuntimeException(exception);
+        }
+    }
+
+    private Path resolveDifficultyPath(String difficultyName)
+    {
+        return resolveDifficultyDirectoryPath()
+                .resolve(difficultyName)
+                .resolve(difficultyName + PROFILE_SUFFIX);
+    }
+
+    private Path resolveDifficultyDirectoryPath()
+    {
+        if (SystemUtils.isWindows())
+        {
+            return windowsProfilesDirectory.get();
+        }
+        else
+        {
+            return linuxProfilesDirectory.get();
         }
     }
 

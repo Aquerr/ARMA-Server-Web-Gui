@@ -3,6 +3,10 @@ import {DifficultyProfile} from "../../../model/difficulty-profile.model";
 import {MaskService} from "../../../service/mask.service";
 import {ServerDifficultyService} from "../../../service/server-difficulty.service";
 import {NotificationService} from "../../../service/notification.service";
+import {MatDialog} from "@angular/material/dialog";
+import {
+  DifficultyDeleteConfirmDialogComponent
+} from "../difficulty-delete-confirm-dialog/difficulty-delete-confirm-dialog.component";
 
 @Component({
   selector: 'app-difficulty-panel',
@@ -19,7 +23,8 @@ export class DifficultyPanelComponent {
 
   constructor(private maskService: MaskService,
               private difficultyService: ServerDifficultyService,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private matDialog: MatDialog) {
   }
 
   toggleActive(event: MouseEvent) {
@@ -41,12 +46,22 @@ export class DifficultyPanelComponent {
   }
 
   deleteDifficulty(difficultyProfile: DifficultyProfile) {
-    let identifier = difficultyProfile.id !== undefined ? difficultyProfile.id : difficultyProfile.name;
-    this.maskService.show();
-    this.difficultyService.deleteDifficulty(identifier).subscribe(response => {
-      this.maskService.hide();
-      this.notificationService.successNotification("Difficulty profile has been deleted");
-      this.deleted.emit(difficultyProfile);
+    const dialogRef = this.matDialog.open(DifficultyDeleteConfirmDialogComponent, {
+      width: '250px',
+      enterAnimationDuration: '200ms',
+      exitAnimationDuration: '200ms'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        let identifier = difficultyProfile.id !== undefined ? difficultyProfile.id : difficultyProfile.name;
+        this.maskService.show();
+        this.difficultyService.deleteDifficulty(identifier).subscribe(response => {
+          this.maskService.hide();
+          this.notificationService.successNotification("Difficulty profile has been deleted");
+          this.deleted.emit(difficultyProfile);
+        });
+      }
     });
   }
 

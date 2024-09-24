@@ -39,6 +39,7 @@ public class ASWGConfig
 
     private static final String FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY = "aswg.job.file-scanner.installation.enabled";
     private static final String FILE_SCANNER_DELETION_ENABLED_PROPERTY = "aswg.job.file-scanner.deletion.enabled";
+    private static final String DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED = "aswg.job.difficulty-scanner.installation.enabled";
 
     @Value("${aswg.username}")
     private String username;
@@ -61,6 +62,9 @@ public class ASWGConfig
     private boolean fileScannerInstallationEnabled;
     @Value("${aswg.job.file-scanner.deletion.enabled:false}")
     private boolean fileScannerDeletionEnabled;
+
+    @Value("${aswg.job.difficulty-scanner.installation.enabled}")
+    private boolean difficultyProfileInstallationScannerEnabled;
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationRead() throws IOException
@@ -120,6 +124,11 @@ public class ASWGConfig
         return fileScannerInstallationEnabled;
     }
 
+    public boolean isDifficultyProfileInstallationScannerEnabled()
+    {
+        return difficultyProfileInstallationScannerEnabled;
+    }
+
     private void saveProperties()
     {
         try(FileWriter fileWriter = new FileWriter(ASWG_CONFIGURATION_FILE_PATH.toFile(), StandardCharsets.UTF_8);
@@ -156,6 +165,7 @@ public class ASWGConfig
         configurationProperties.setProperty(STEAMCMD_PASSWORD, this.steamCmdPassword);
         configurationProperties.setProperty(FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY, String.valueOf(this.fileScannerInstallationEnabled));
         configurationProperties.setProperty(FILE_SCANNER_DELETION_ENABLED_PROPERTY, String.valueOf(this.fileScannerDeletionEnabled));
+        configurationProperties.setProperty(DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED, String.valueOf(this.difficultyProfileInstallationScannerEnabled));
         return configurationProperties;
     }
 }
