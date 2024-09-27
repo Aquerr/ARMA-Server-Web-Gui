@@ -84,7 +84,7 @@ public class MissionRestController
     }
 
     @Value(staticConstructor = "of")
-    private static class GetMissionsResponse
+    public static class GetMissionsResponse
     {
         List<Mission> disabledMissions;
         List<Mission> enabledMissions;
@@ -96,7 +96,7 @@ public class MissionRestController
     }
 
     @Data
-    private static class SaveEnabledMissionListRequest
+    public static class SaveEnabledMissionListRequest
     {
         List<Mission> missions;
     }

@@ -33,7 +33,7 @@ import static pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.c
 @Slf4j
 public class DifficultyServiceImpl implements DifficultyService
 {
-    private static final String DEFAULT_PROFILE_NAME = "player";
+    private static final String DEFAULT_PROFILE_NAME = "Player";
     private static final String PROFILE_SUFFIX = ".Arma3Profile";
 
     private final DifficultyProfileRepository difficultyProfileRepository;
@@ -60,7 +60,8 @@ public class DifficultyServiceImpl implements DifficultyService
     @EventListener(ApplicationReadyEvent.class)
     public void postSetup()
     {
-        if (this.difficultyProfileRepository.findByName(DEFAULT_PROFILE_NAME).block() == null) {
+        if (Long.valueOf(0).equals(this.difficultyProfileRepository.count().block())
+                && this.difficultyProfileRepository.findByName(DEFAULT_PROFILE_NAME).block() == null) {
             log.info("Default profile {} not found. Creating one...", DEFAULT_PROFILE_NAME);
             DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, DEFAULT_PROFILE_NAME, true);
             this.difficultyProfileRepository.save(difficultyProfileEntity).block();
