@@ -8,7 +8,7 @@ import io.github.aquerr.steamwebapiclient.response.WorkShopQueryResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
@@ -36,22 +36,22 @@ public class SteamWebApiService
                 .build());
 
         String nextPageCursor = null;
-        List<ArmaWorkshopMod> armaWorkshopMods = Collections.emptyList();
+        List<WorkshopMod> workshopMods = Collections.emptyList();
         if (workShopQueryResponse != null)
         {
             nextPageCursor = workShopQueryResponse.getResponse().getNextCursor();
-            armaWorkshopMods = workShopQueryResponse.getResponse().getPublishedFileDetails().stream()
+            workshopMods = workShopQueryResponse.getResponse().getPublishedFileDetails().stream()
                     .map(armaWorkshopModConverter::convert)
                     .toList();
         }
 
         return ArmaWorkshopQueryResponse.builder()
                 .nextCursor(nextPageCursor)
-                .mods(armaWorkshopMods)
+                .mods(workshopMods)
                 .build();
     }
 
-    public ArmaWorkshopMod getWorkshopMod(long modId)
+    public WorkshopMod getWorkshopMod(long modId)
     {
         try
         {
@@ -59,7 +59,7 @@ public class SteamWebApiService
                     .map(PublishedFileDetailsResponse::getResponse)
                     .map(PublishedFileDetailsResponse.QueryFilesResponse::getPublishedFileDetails)
                     .filter(list -> !list.isEmpty())
-                    .map(list -> list.getFirst())
+                    .map(List::getFirst)
                     .map(this.armaWorkshopModConverter::convert)
                     .orElse(null);
         }

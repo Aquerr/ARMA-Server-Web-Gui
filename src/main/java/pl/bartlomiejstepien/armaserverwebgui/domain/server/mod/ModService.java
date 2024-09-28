@@ -6,7 +6,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -35,5 +35,5 @@ public interface ModService
 
     Flux<InstalledModEntity> getInstalledMods();
 
-    Flux<ArmaWorkshopMod> getInstalledWorkshopMods();
+    Flux<WorkshopMod> getInstalledWorkshopMods();
 }

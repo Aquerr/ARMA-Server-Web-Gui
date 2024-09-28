@@ -1,0 +1,1 @@
+ALTER TABLE installed_mod ADD COLUMN last_workshop_update TIMESTAMP WITH TIME ZONE;

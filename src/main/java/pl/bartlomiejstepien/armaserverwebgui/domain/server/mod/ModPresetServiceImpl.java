@@ -139,9 +139,11 @@ public class ModPresetServiceImpl implements ModPresetService
                 .flatMap(Flux::collectList)
                 .flatMapMany(entries -> Flux.fromIterable(entries.stream().map(entry -> new WorkshopModInstallationRequest(entry.getModId(), entry.getName())).toList()))
                 .map(request -> {
-                    this.steamService.scheduleWorkshopModDownload(request.getFileId(), request.getTitle());
+                    this.steamService.scheduleWorkshopModDownload(request.getFileId(), request.getTitle(), false);
                     return request;
-                }).then();
+                })
+                .doOnError(throwable -> log.error("Error: {}", throwable))
+                .then();
     }
 
     @Override

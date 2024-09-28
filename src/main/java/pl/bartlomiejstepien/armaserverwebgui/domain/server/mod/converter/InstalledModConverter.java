@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 
 import java.nio.file.Paths;
 
@@ -14,12 +14,12 @@ public class InstalledModConverter
 {
     private final ModWorkshopUrlBuilder workshopUrlBuilder;
 
-    public ArmaWorkshopMod convertToWorkshopMod(InstalledModEntity installedModEntity)
+    public WorkshopMod convertToWorkshopMod(InstalledModEntity installedModEntity)
     {
         if (installedModEntity == null)
             return null;
 
-        return ArmaWorkshopMod.builder()
+        return WorkshopMod.builder()
                 .fileId(installedModEntity.getWorkshopFileId())
                 .title(installedModEntity.getName())
                 .previewUrl(installedModEntity.getPreviewUrl())

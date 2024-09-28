@@ -10,5 +10,5 @@ import java.util.List;
 public class ArmaWorkshopQueryResponse
 {
     private String nextCursor;
-    private List<ArmaWorkshopMod> mods;
+    private List<WorkshopMod> mods;
 }

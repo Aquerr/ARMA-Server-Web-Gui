@@ -19,7 +19,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotUpda
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.RetryableException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamTaskHandleException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.QueuedSteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamCmdAppUpdateParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamCmdWorkshopDownloadParameters;
@@ -179,6 +179,15 @@ public class SteamCmdHandler
     {
         WorkshopModInstallSteamTask task = (WorkshopModInstallSteamTask) steamTask;
 
+        WorkshopMod workshopMod = this.steamWebApiService.getWorkshopMod(task.getFileId());
+        InstalledModEntity installedModEntity = this.installedModRepository.findByWorkshopFileId(task.getFileId()).blockOptional().orElse(null);
+
+        if (!shouldUpdateMod(workshopMod, installedModEntity, task.isForced()))
+        {
+            log.info("Mod {} up to date. No download needed.", task.getTitle());
+            return;
+        }
+
         Path steamCmdModFolderPath = downloadModFromWorkshop(task.getFileId(), task.getTitle());
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 50));
 
@@ -193,8 +202,26 @@ public class SteamCmdHandler
         }
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 75));
 
-        saveModInDatabase(task.getFileId(), task.getTitle(), modDirectoryPath);
+        saveModInDatabase(task.getFileId(), task.getTitle(), modDirectoryPath, workshopMod);
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 100));
+    }
+
+    private boolean shouldUpdateMod(WorkshopMod workshopMod,
+                                    InstalledModEntity installedModEntity,
+                                    boolean forced)
+    {
+        if (forced)
+            return true;
+
+        if (installedModEntity == null)
+            return true;
+
+        if (workshopMod != null
+            && (workshopMod.getLastUpdate().isEqual(installedModEntity.getLastWorkshopUpdate()) || workshopMod.getLastUpdate().isBefore(installedModEntity.getLastWorkshopUpdate())))
+        {
+            return false;
+        }
+        return true;
     }
 
     private void publishMessage(WorkshopModInstallationStatus status)
@@ -240,7 +267,7 @@ public class SteamCmdHandler
         return path;
     }
 
-    private void saveModInDatabase(long workshopFileId, String modName, Path modDirectory)
+    private void saveModInDatabase(long workshopFileId, String modName, Path modDirectory, WorkshopMod workshopMod)
     {
         InstalledModEntity installedModEntity = this.installedModRepository.findByWorkshopFileId(workshopFileId).block();
         MetaCppFile metaCppFile = null;
@@ -263,6 +290,7 @@ public class SteamCmdHandler
         {
             installedModBuilder = InstalledModEntity.builder();
             installedModBuilder.createdDate(OffsetDateTime.now());
+            installedModBuilder.lastWorkshopUpdate(workshopMod.getLastUpdate());
             installedModBuilder.workshopFileId(metaCppFile.getPublishedFileId());
         }
 
@@ -271,10 +299,10 @@ public class SteamCmdHandler
 
         try
         {
-            ArmaWorkshopMod armaWorkshopMod = steamWebApiService.getWorkshopMod(metaCppFile.getPublishedFileId());
-            if (armaWorkshopMod != null)
+            if (workshopMod != null)
             {
-                installedModBuilder.previewUrl(armaWorkshopMod.getPreviewUrl());
+                installedModBuilder.previewUrl(workshopMod.getPreviewUrl());
+                installedModBuilder.lastWorkshopUpdate(workshopMod.getLastUpdate());
             }
         }
         catch (Exception exception)

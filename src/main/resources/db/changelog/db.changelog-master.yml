@@ -1,3 +1,5 @@
 databaseChangeLog:
   - includeAll:
       path: db/changelog/001-init/
+  - includeAll:
+      path: db/changelog/002-installed-mod-last-workshop-update/

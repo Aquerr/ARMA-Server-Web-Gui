@@ -9,7 +9,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdNotInstalled;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.GameUpdateSteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamTask;
@@ -84,18 +84,18 @@ public class SteamServiceImpl implements SteamService
     }
 
     @Override
-    public ArmaWorkshopMod getWorkshopMod(long modId)
+    public WorkshopMod getWorkshopMod(long modId)
     {
         return steamWebApiService.getWorkshopMod(modId);
     }
 
     @Override
-    public UUID scheduleWorkshopModDownload(long fileId, String title)
+    public UUID scheduleWorkshopModDownload(long fileId, String title, boolean forced)
     {
         if (!isSteamCmdInstalled())
             throw new SteamCmdNotInstalled();
 
-        return this.steamCmdHandler.queueSteamTask(new WorkshopModInstallSteamTask(fileId, title));
+        return this.steamCmdHandler.queueSteamTask(new WorkshopModInstallSteamTask(fileId, title, forced));
     }
 
     @Override

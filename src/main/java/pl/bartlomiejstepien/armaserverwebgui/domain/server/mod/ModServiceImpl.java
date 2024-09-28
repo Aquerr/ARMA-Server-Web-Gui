@@ -17,7 +17,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.Installed
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -61,7 +61,7 @@ public class ModServiceImpl implements ModService
     @Override
     public Mono<Void> installModFromWorkshop(long fileId, String modName)
     {
-        steamService.scheduleWorkshopModDownload(fileId, modName);
+        steamService.scheduleWorkshopModDownload(fileId, modName, true);
         return Mono.empty();
     }
 
@@ -135,7 +135,7 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public Flux<ArmaWorkshopMod> getInstalledWorkshopMods()
+    public Flux<WorkshopMod> getInstalledWorkshopMods()
     {
         return this.installedModRepository.findAllByOrderByNameAsc()
                 .map(installedModConverter::convertToWorkshopMod);

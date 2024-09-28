@@ -31,7 +31,7 @@ class SteamTaskRetryPolicyTest
     )
     void shouldReturnIfCanRetry(int currentAttemptCount, boolean expected)
     {
-        QueuedSteamTask queuedSteamTask = new QueuedSteamTask(UUID.randomUUID(), new WorkshopModInstallSteamTask(FILE_ID, FILE_TITLE), currentAttemptCount);
+        QueuedSteamTask queuedSteamTask = new QueuedSteamTask(UUID.randomUUID(), new WorkshopModInstallSteamTask(FILE_ID, FILE_TITLE, false), currentAttemptCount);
 
         boolean canRetry = retryPolicy.canRetry(queuedSteamTask);
 

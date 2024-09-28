@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class ArmaWorkshopModConverterTestDir
+class WorkshopModConverterTestDir
 {
     private static final String TITLE = "Title";
     private static final String DESCRIPTION = "Description";
@@ -24,7 +24,7 @@ class ArmaWorkshopModConverterTestDir
     @Test
     void shouldConvertReturnNullWhenPassedNullPublishedFileDetailsWorkshop()
     {
-        ArmaWorkshopMod workshopMod = converter.convert((WorkShopQueryResponse.QueryFilesResponse.PublishedFileDetails) null);
+        WorkshopMod workshopMod = converter.convert((WorkShopQueryResponse.QueryFilesResponse.PublishedFileDetails) null);
 
         assertThat(workshopMod).isNull();
     }
@@ -32,7 +32,7 @@ class ArmaWorkshopModConverterTestDir
     @Test
     void shouldConvertReturnNullWhenPassedNullPublishedFileDetails()
     {
-        ArmaWorkshopMod workshopMod = converter.convert((PublishedFileDetailsResponse.QueryFilesResponse.PublishedFileDetails) null);
+        WorkshopMod workshopMod = converter.convert((PublishedFileDetailsResponse.QueryFilesResponse.PublishedFileDetails) null);
 
         assertThat(workshopMod).isNull();
     }
@@ -46,11 +46,11 @@ class ArmaWorkshopModConverterTestDir
         publishedFileDetails.setFileDescription(DESCRIPTION);
         publishedFileDetails.setPreviewUrl(PREVIEW_URL);
 
-        ArmaWorkshopMod armaWorkshopMod = converter.convert(publishedFileDetails);
+        WorkshopMod workshopMod = converter.convert(publishedFileDetails);
 
-        assertThat(armaWorkshopMod.getFileId()).isEqualTo(FILE_ID);
-        assertThat(armaWorkshopMod.getTitle()).isEqualTo(TITLE);
-        assertThat(armaWorkshopMod.getDescription()).isEqualTo(DESCRIPTION);
-        assertThat(armaWorkshopMod.getPreviewUrl()).isEqualTo(PREVIEW_URL);
+        assertThat(workshopMod.getFileId()).isEqualTo(FILE_ID);
+        assertThat(workshopMod.getTitle()).isEqualTo(TITLE);
+        assertThat(workshopMod.getDescription()).isEqualTo(DESCRIPTION);
+        assertThat(workshopMod.getPreviewUrl()).isEqualTo(PREVIEW_URL);
     }
 }

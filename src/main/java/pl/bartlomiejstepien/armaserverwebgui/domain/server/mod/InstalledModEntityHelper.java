@@ -7,7 +7,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMo
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.MetaCppFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 
 import java.time.OffsetDateTime;
 
@@ -37,10 +37,10 @@ public class InstalledModEntityHelper
     {
         try
         {
-            ArmaWorkshopMod armaWorkshopMod = steamService.getWorkshopMod(publishedFileId);
-            if (armaWorkshopMod != null)
+            WorkshopMod workshopMod = steamService.getWorkshopMod(publishedFileId);
+            if (workshopMod != null)
             {
-                installedModBuilder.previewUrl(armaWorkshopMod.getPreviewUrl());
+                installedModBuilder.previewUrl(workshopMod.getPreviewUrl());
             }
         }
         catch (Exception exception)

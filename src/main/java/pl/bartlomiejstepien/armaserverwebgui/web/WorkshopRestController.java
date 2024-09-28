@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
@@ -55,7 +55,7 @@ public class WorkshopRestController
                 .thenReturn(new WorkShopModInstallResponse(request.getFileId()));
     }
 
-    private InstalledItemsResponse toInstalledItemsResponse(Tuple2<List<ArmaWorkshopMod>, List<WorkshopModInstallationRequest>> objects)
+    private InstalledItemsResponse toInstalledItemsResponse(Tuple2<List<WorkshopMod>, List<WorkshopModInstallationRequest>> objects)
     {
         return new InstalledItemsResponse(objects.getT1(), toResponse(objects.getT2()));
     }
@@ -95,7 +95,7 @@ public class WorkshopRestController
     @Value
     public static class InstalledItemsResponse
     {
-        List<ArmaWorkshopMod> mods;
+        List<WorkshopMod> mods;
         List<WorkShopModInstallRequest> modsUnderInstallation;
     }
 
