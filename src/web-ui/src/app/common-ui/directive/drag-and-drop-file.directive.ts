@@ -1,4 +1,4 @@
-import {Directive, EventEmitter, HostListener, Output} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, HostListener, Output} from '@angular/core';
 
 @Directive({
   selector: '[appDragAndDropFile]'
@@ -7,7 +7,7 @@ export class DragAndDropFileDirective {
 
   @Output() fileDropped: EventEmitter<File> = new EventEmitter<File>();
 
-  constructor() { }
+  constructor(private hostElement: ElementRef) { }
 
   @HostListener('dragover', ['$event']) onDragOver(event: DragEvent) {
     event.preventDefault();

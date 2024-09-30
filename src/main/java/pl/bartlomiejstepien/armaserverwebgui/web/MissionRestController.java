@@ -52,7 +52,13 @@ public class MissionRestController
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("/template")
+    public Mono<ResponseEntity<?>> addMission(@RequestBody AddMissionRequest addMissionRequest)
+    {
+        return missionService.addMission(addMissionRequest.getTemplate());
+    }
+
+    @PostMapping(value = "/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Mono<ResponseEntity<?>> uploadMissionFile(@RequestPart("file") Mono<FilePart> multipartFile)
     {
         return multipartFile
@@ -62,7 +68,7 @@ public class MissionRestController
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
-    @DeleteMapping(value = "/{missionName}", consumes = MediaType.ALL_VALUE)
+    @DeleteMapping(value = "/name/{missionName}")
     public Mono<ResponseEntity<?>> deleteMission(@PathVariable("missionName") String missionName)
     {
         return Mono.just(this.missionService.deleteMission(missionName))
@@ -98,6 +104,12 @@ public class MissionRestController
     @Data
     public static class SaveEnabledMissionListRequest
     {
-        List<Mission> missions;
+        private List<Mission> missions;
+    }
+
+    @Data
+    public static class AddMissionRequest
+    {
+        private String template;
     }
 }

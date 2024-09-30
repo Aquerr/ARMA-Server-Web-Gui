@@ -13,8 +13,12 @@ export class ServerMissionsService {
 
   constructor(private httpClient: HttpClient) { }
 
+  addTemplateMission(template: string): Observable<any> {
+    return this.httpClient.post(`${this.MISSIONS_URL}/template`, {template: template});
+  }
+
   uploadMission(formData: FormData): Observable<any> {
-    return this.httpClient.post(this.MISSIONS_URL, formData, {
+    return this.httpClient.post(`${this.MISSIONS_URL}/file`, formData, {
       reportProgress: true,
       observe: 'events'
     });
@@ -25,7 +29,7 @@ export class ServerMissionsService {
   }
 
   deleteMission(missionName: string): Observable<any> {
-    return this.httpClient.delete(`${this.MISSIONS_URL}/` + missionName, {body: {}});
+    return this.httpClient.delete(`${this.MISSIONS_URL}/name/` + missionName, {body: {}});
   }
 
   saveEnabledMissions(saveEnabledMissionsRequest: SaveEnabledMissionsRequest): Observable<any> {

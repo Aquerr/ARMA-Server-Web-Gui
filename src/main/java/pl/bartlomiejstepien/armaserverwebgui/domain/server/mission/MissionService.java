@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import reactor.core.publisher.Mono;
 
@@ -16,4 +17,6 @@ public interface MissionService
     void saveEnabledMissionList(List<Mission> missions);
 
     Missions getMissions();
+
+    Mono<ResponseEntity<?>> addMission(String template);
 }

@@ -6,7 +6,10 @@
 </div>
 <div>
   <div *ngFor="let uploadingMission of getUploadingMissions(); index as i">
-    <mat-label>{{uploadingMission.missionName}}</mat-label>
+    <div style="display: flex; flex-direction: column;">
+      <mat-label>{{uploadingMission.missionName}}</mat-label>
+      <mat-label style="filter: brightness(75%)">{{uploadingMission.totalSize | filesize}}</mat-label>
+    </div>
     <mat-progress-bar class="mt-2" mode="buffer" [value]="uploadingMission.progress" [bufferValue]="uploadingMission.totalSize"></mat-progress-bar>
     <hr *ngIf="i < getUploadingMissions().length - 1">
   </div>

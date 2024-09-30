@@ -1,5 +1,11 @@
 <div appDragAndDropFile (fileDropped)="onFileDropped($event)" class="app-missions-tab">
   <h1>Missions</h1>
+  <div class="buttons-section-top">
+    <div>
+      <button mat-flat-button color="primary" (click)="addNewMission()">Add new mission</button>
+    </div>
+  </div>
+  <hr>
   <mat-form-field>
     <mat-label>Search mission...</mat-label>
     <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mission...">
@@ -62,7 +68,7 @@
       </div>
     </div>
   </div>
-  <div class="missions-save-and-upload">
+  <div class="buttons-section-bottom">
     <div>
       <button mat-flat-button color="primary" (click)="save()">Save</button>
     </div>

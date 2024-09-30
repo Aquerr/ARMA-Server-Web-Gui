@@ -15,6 +15,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag
 import {MatSnackBar, MatSnackBarRef} from "@angular/material/snack-bar";
 import {MissionUploadService} from "./service/mission-upload.service";
 import {MissionUploadSnackBarComponent} from "./mission-upload-snack-bar/mission-upload-snack-bar.component";
+import {NewMissionDialogComponent} from "./new-mission-dialog/new-mission-dialog.component";
 
 @Component({
   selector: 'app-missions',
@@ -171,5 +172,29 @@ export class MissionsComponent implements OnInit, OnDestroy {
         event.currentIndex,
       );
     }
+  }
+
+  addNewMission() {
+    const dialogRef = this.matDialog.open(NewMissionDialogComponent, {
+      width: '450px',
+      enterAnimationDuration: '200ms',
+      exitAnimationDuration: '200ms'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log("Dialog closed");
+      console.log(result);
+      if (result.file) {
+        this.onFileDropped(result.file);
+      } else if (result.template) {
+        this.addBuiltInMission(result.template);
+      }
+    });
+  }
+
+  private addBuiltInMission(template: string) {
+    this.missionsService.addTemplateMission(template).subscribe(response => {
+      this.reloadMissions();
+    });
   }
 }

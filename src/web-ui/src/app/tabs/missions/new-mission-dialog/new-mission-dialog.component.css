@@ -1,0 +1,20 @@
+.upload-drop-zone {
+  border: 2px dashed var(--aswg-primary-text-color);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem;
+  cursor: pointer;
+}
+
+.upload-drop-zone:hover {
+  filter: brightness(75%);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

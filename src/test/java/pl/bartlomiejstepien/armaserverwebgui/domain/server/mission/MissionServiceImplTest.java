@@ -96,9 +96,16 @@ class MissionServiceImplTest
     @Test
     void shouldDeleteMission()
     {
+        given(serverConfigStorage.getServerConfig()).willReturn(prepareArmaServerConfig(List.of(MISSION_NAME_1, MISSION_NAME_2)));
+        given(missionStorage.getInstalledMissionNames()).willReturn(List.of(MISSION_NAME_2));
+
         missionService.deleteMission(MISSION_NAME_1);
 
         verify(missionStorage, times(1)).deleteMission(MISSION_NAME_1);
+        verify(serverConfigStorage).saveServerConfig(armaServerConfigArgumentCaptor.capture());
+        assertThat(armaServerConfigArgumentCaptor.getValue().getMissions())
+                .extracting(ArmaServerConfig.Missions.Mission::getTemplate)
+                .containsExactlyElementsOf(List.of(MISSION_NAME_2));
     }
 
     private ArmaServerConfig prepareArmaServerConfig(List<String> missionNames)

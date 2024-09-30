@@ -74,6 +74,8 @@ import {DifficultyPanelComponent} from "./tabs/difficulty/difficulty-panel/diffi
 import {
   DifficultyDeleteConfirmDialogComponent
 } from "./tabs/difficulty/difficulty-delete-confirm-dialog/difficulty-delete-confirm-dialog.component";
+import {NewMissionDialogComponent} from "./tabs/missions/new-mission-dialog/new-mission-dialog.component";
+import {FilesizePipe} from "./util/filesize.pipe";
 
 @NgModule({
   declarations: [
@@ -117,7 +119,9 @@ import {
     SettingsComponent,
     DifficultyComponent,
     DifficultyPanelComponent,
-    DifficultyDeleteConfirmDialogComponent
+    DifficultyDeleteConfirmDialogComponent,
+    NewMissionDialogComponent,
+    FilesizePipe
   ],
     imports: [
         BrowserModule,

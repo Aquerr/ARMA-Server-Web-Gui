@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>Add new mission</h1>
+<div mat-dialog-content>
+  <div class="content">
+    <mat-form-field>
+      <mat-label>Type</mat-label>
+      <mat-select [(ngModel)]="missionType" name="missionType">
+        <mat-option [value]="'BUILT_IN'">BUILT-IN</mat-option>
+        <mat-option [value]="'FILE'">FILE</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    @if (missionType == 'BUILT_IN') {
+      <form [formGroup]="form">
+        <mat-form-field>
+          <mat-label>Template</mat-label>
+          <input matInput formControlName="template">
+        </mat-form-field>
+      </form>
+    }
+
+    @if (missionType == 'FILE') {
+      <div class="upload-drop-zone" appDragAndDropFile (fileDropped)="onFileDropped($event)" (click)="fileInput.click()">
+        <input style="display: none;" type="file" #fileInput (change)="onFileSelected($event)" accept=".pbo">
+        <div>
+          @if (file !== null) {
+            <span>{{file.name}}</span>
+          } @else {
+            <mat-icon>upload</mat-icon>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="add()">Add</button>
+  <button mat-button mat-dialog-close cdkFocusInitial>Close</button>
+</div>
