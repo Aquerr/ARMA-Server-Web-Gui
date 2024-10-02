@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission;
 
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -9,20 +10,40 @@ public class MissionFileNameHelper
 {
     private static final String MISSION_FILE_EXTENSION = ".pbo";
 
-    public String resolveMissionNameFromFile(File file)
+    public String resolveMissionNameFromFilePart(FilePart filePart)
     {
-        return file.getName().substring(0, file.getName().length() - MISSION_FILE_EXTENSION.length());
+        String normalizedFileName = normalizeFileName(filePart.filename());
+        return normalizedFileName.substring(0, normalizedFileName.length() - MISSION_FILE_EXTENSION.length());
     }
 
-    public String resolveFileName(String missionName)
+    public String resolveMissionNameFromFile(File file)
     {
-        if (missionName.endsWith(MISSION_FILE_EXTENSION))
-            return missionName;
-        return missionName + MISSION_FILE_EXTENSION;
+        String normalizedFileName = normalizeFileName(file.getName());
+        return normalizedFileName.substring(0, normalizedFileName.length() - MISSION_FILE_EXTENSION.length());
+    }
+
+    /**
+     * Resolves file name based on the give mission template.
+     * It uses template as is.
+     *
+     * @param missionTemplate the mission template
+     * @return the file name
+     */
+    public String resolveFileName(String missionTemplate)
+    {
+        String fileName = missionTemplate;
+        if (!missionTemplate.endsWith(MISSION_FILE_EXTENSION))
+            fileName = fileName + MISSION_FILE_EXTENSION;
+        return fileName;
     }
 
     public boolean isMissionFile(File file)
     {
         return file.isFile() && file.getName().endsWith(MISSION_FILE_EXTENSION);
+    }
+
+    public String normalizeFileName(String fileName)
+    {
+        return fileName.toLowerCase();
     }
 }

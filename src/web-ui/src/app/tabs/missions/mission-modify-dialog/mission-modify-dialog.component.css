@@ -2,3 +2,8 @@
   margin-left: 0;
   margin-right: auto;
 }
+
+.mission-settings {
+  display: flex;
+  flex-direction: column;
+}

@@ -21,8 +21,10 @@
         [cdkDropListSortingDisabled]="false"
         (cdkDropListDropped)="onMissionItemDropped($event)">
         <div class="list-item-container" *ngFor="let mission of this.filteredDisabledMissions" cdkDrag>
-          <div style="flex: 72%">
-            {{mission.name}}
+          <div style="flex: 72%; display: flex; flex-direction: column;">
+            <span style="font-weight: bold">{{mission.name}}</span>
+            <span>Difficulty: {{mission.difficulty}}</span>
+            <span style="filter: brightness(50%)">Template: {{mission.template}}</span>
           </div>
           <div class="text-center" style="flex: 14%">
             <button mat-icon-button
@@ -34,7 +36,7 @@
           <div class="text-center" style="flex: 14%">
             <button mat-icon-button
                     matTooltip="Delete the mission"
-                    (click)="showMissionDeleteConfirmationDialog(mission.name)">
+                    (click)="showMissionDeleteConfirmationDialog(mission.template)">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -60,7 +62,7 @@
             </button>
           </div>
           <div class="text-center" style="flex: 14%">
-            <button mat-icon-button (click)="showMissionDeleteConfirmationDialog(mission.name)">
+            <button mat-icon-button (click)="showMissionDeleteConfirmationDialog(mission.template)">
               <mat-icon>delete</mat-icon>
             </button>
           </div>

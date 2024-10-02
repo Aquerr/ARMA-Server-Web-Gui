@@ -10,7 +10,11 @@
     </mat-form-field>
 
     @if (missionType == 'BUILT_IN') {
-      <form [formGroup]="form">
+      <form [formGroup]="form" class="content">
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name">
+        </mat-form-field>
         <mat-form-field>
           <mat-label>Template</mat-label>
           <input matInput formControlName="template">

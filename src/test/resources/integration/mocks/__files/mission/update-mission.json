@@ -1,0 +1,7 @@
+{
+  "name": "test",
+  "template": "test_template",
+  "difficulty": "REGULAR",
+  "enabled": "false",
+  "params": []
+}

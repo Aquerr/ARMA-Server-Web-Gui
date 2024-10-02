@@ -13,17 +13,19 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.Mission;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionDoesNotExistException;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.MissionFileValidator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.web.exception.NotAllowedFileTypeException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.Missions;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.MissionService;
 import reactor.core.publisher.Mono;
 
@@ -41,21 +43,26 @@ public class MissionRestController
     @GetMapping
     public Mono<GetMissionsResponse> getMissions()
     {
-        return Mono.just(this.missionService.getMissions())
+        return this.missionService.getMissions()
                 .map(GetMissionsResponse::of);
     }
 
     @PostMapping("/enabled")
     public Mono<ResponseEntity<?>> saveEnabledMissionList(@RequestBody SaveEnabledMissionListRequest saveEnabledMissionListRequest)
     {
-        return Mono.empty().doFirst(() -> this.missionService.saveEnabledMissionList(saveEnabledMissionListRequest.getMissions()))
+        return this.missionService.saveEnabledMissionList(saveEnabledMissionListRequest.getMissions())
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
     @PostMapping("/template")
     public Mono<ResponseEntity<?>> addMission(@RequestBody AddMissionRequest addMissionRequest)
     {
-        return missionService.addMission(addMissionRequest.getTemplate());
+        String template = addMissionRequest.getTemplate();
+        if (template.contains(" "))
+            throw new IllegalArgumentException("Mission template should not contains whitespace!");
+
+        return missionService.addMission(addMissionRequest.getName(), template)
+                .then(Mono.just(ResponseEntity.ok().build()));
     }
 
     @PostMapping(value = "/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -68,11 +75,25 @@ public class MissionRestController
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
-    @DeleteMapping(value = "/name/{missionName}")
-    public Mono<ResponseEntity<?>> deleteMission(@PathVariable("missionName") String missionName)
+    @DeleteMapping(value = "/template/{template}")
+    public Mono<ResponseEntity<?>> deleteMission(@PathVariable("template") String template)
     {
-        return Mono.just(this.missionService.deleteMission(missionName))
+        return this.missionService.deleteMission(template)
                 .thenReturn(ResponseEntity.ok().build());
+    }
+
+    @PutMapping("/id/{id}")
+    public Mono<Void> updateMission(@PathVariable("id") long id,
+                                    @RequestBody Mission mission)
+    {
+        return this.missionService.updateMission(id, mission);
+    }
+
+    @ExceptionHandler(value = MissionDoesNotExistException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public RestErrorResponse onMissionDoesNotExist(MissionDoesNotExistException exception)
+    {
+        return RestErrorResponse.of("Mission does not exist for given id!", HttpStatus.BAD_REQUEST.value());
     }
 
     @ExceptionHandler(value = MissionFileAlreadyExistsException.class)
@@ -110,6 +131,7 @@ public class MissionRestController
     @Data
     public static class AddMissionRequest
     {
+        private String name;
         private String template;
     }
 }

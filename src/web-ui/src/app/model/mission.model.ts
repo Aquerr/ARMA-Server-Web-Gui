@@ -1,5 +1,7 @@
 export interface Mission {
+  id: number;
   name: string;
+  template: string;
   difficulty: MissionDifficulty;
   parameters: MissionParam[];
 }

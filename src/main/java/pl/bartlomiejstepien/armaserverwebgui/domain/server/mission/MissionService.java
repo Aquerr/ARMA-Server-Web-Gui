@@ -1,7 +1,8 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -10,13 +11,13 @@ public interface MissionService
 {
     Mono<Void> save(FilePart multipartFile);
 
-    List<String> getInstalledMissionNames();
+    Mono<Boolean> deleteMission(String template);
 
-    boolean deleteMission(String missionName);
+    Mono<Void> saveEnabledMissionList(List<Mission> missions);
 
-    void saveEnabledMissionList(List<Mission> missions);
+    Mono<Missions> getMissions();
 
-    Missions getMissions();
+    Mono<Void> addMission(String name, String template);
 
-    Mono<ResponseEntity<?>> addMission(String template);
+    Mono<Void> updateMission(long id, Mission mission);
 }

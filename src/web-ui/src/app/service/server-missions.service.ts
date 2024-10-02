@@ -13,8 +13,8 @@ export class ServerMissionsService {
 
   constructor(private httpClient: HttpClient) { }
 
-  addTemplateMission(template: string): Observable<any> {
-    return this.httpClient.post(`${this.MISSIONS_URL}/template`, {template: template});
+  addTemplateMission(name: string, template: string): Observable<any> {
+    return this.httpClient.post(`${this.MISSIONS_URL}/template`, {name: name, template: template});
   }
 
   uploadMission(formData: FormData): Observable<any> {
@@ -28,12 +28,16 @@ export class ServerMissionsService {
     return this.httpClient.get<GetMissionsResponse>(this.MISSIONS_URL);
   }
 
-  deleteMission(missionName: string): Observable<any> {
-    return this.httpClient.delete(`${this.MISSIONS_URL}/name/` + missionName, {body: {}});
+  deleteMission(template: string): Observable<any> {
+    return this.httpClient.delete(`${this.MISSIONS_URL}/template/` + template, {body: {}});
   }
 
   saveEnabledMissions(saveEnabledMissionsRequest: SaveEnabledMissionsRequest): Observable<any> {
     return this.httpClient.post(`${this.MISSIONS_URL}/enabled`, saveEnabledMissionsRequest);
+  }
+
+  updateMission(id: number, mission: Mission) {
+    return this.httpClient.put(`${this.MISSIONS_URL}/id/${id}`, mission);
   }
 }
 

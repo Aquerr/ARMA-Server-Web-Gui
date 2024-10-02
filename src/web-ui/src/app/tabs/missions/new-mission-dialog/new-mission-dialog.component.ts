@@ -15,6 +15,7 @@ export class NewMissionDialogComponent {
   constructor(private dialogRef: MatDialogRef<NewMissionDialogComponent>,
               formBuilder: FormBuilder) {
     this.form = formBuilder.group({
+      name: new FormControl(''),
       template: new FormControl(
         '', [Validators.required, Validators.pattern("^\\S*$")]
       )
@@ -48,6 +49,12 @@ export class NewMissionDialogComponent {
         return;
     }
 
-    this.dialogRef.close({template: this.form.get('template')?.value, file: this.file});
+    this.dialogRef.close(
+      {
+        name: this.form.get('name')?.value,
+        template: this.form.get('template')?.value,
+        file: this.file
+      }
+    );
   }
 }

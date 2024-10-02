@@ -1,40 +1,56 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission;
 
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.converter.MissionConverter;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionDoesNotExistException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionFileAlreadyExistsException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionStorage;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionFileNameHelper;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionFileStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
+import pl.bartlomiejstepien.armaserverwebgui.repository.MissionRepository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
+import reactor.util.function.Tuple2;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class MissionServiceImpl implements MissionService
 {
-    private final MissionStorage missionStorage;
+    private final MissionFileStorage missionFileStorage;
+    private final MissionRepository missionRepository;
     private final ServerConfigStorage serverConfigStorage;
+    private final MissionConverter missionConverter;
+    private final MissionFileNameHelper missionFileNameHelper;
 
     @Override
     public Mono<Void> save(FilePart multipartFile)
     {
-        if (missionStorage.doesMissionExists(multipartFile.filename()))
+        if (missionFileStorage.doesMissionExists(multipartFile.filename()))
             throw new MissionFileAlreadyExistsException();
 
         try
         {
-            return missionStorage.save(multipartFile);
+            String missionTemplate = missionFileNameHelper.resolveMissionNameFromFilePart(multipartFile);
+            return missionFileStorage.save(multipartFile)
+                    .then(addMission(missionTemplate, missionTemplate));
         }
         catch (IOException exception)
         {
@@ -42,92 +58,115 @@ public class MissionServiceImpl implements MissionService
         }
     }
 
-    @Override
-    public List<String> getInstalledMissionNames()
+    @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.MINUTES)
+    public void missionScan()
     {
-        return this.missionStorage.getInstalledMissionNames();
+        log.info("Scanning for new file missions...");
+        List<String> installedMissionTemplates = this.missionFileStorage.getInstalledMissionTemplates();
+
+        Mono.zip(
+                Mono.just(installedMissionTemplates),
+                this.missionRepository.findAll().collectList()
+        )
+        .map(this::findNotInstalledTemplates)
+        .flatMap(notInstalledTemplates -> notInstalledTemplates.isEmpty() ? Mono.empty() : Mono.just(notInstalledTemplates))
+        .doOnNext(notInstalledTemplates -> log.info("Installing new missions: {}", notInstalledTemplates))
+        .flatMapMany(Flux::fromIterable)
+        .flatMap(template -> addMission(template, template))
+        .subscribeOn(Schedulers.boundedElastic())
+        .subscribe();
     }
 
-    @Override
-    public boolean deleteMission(String missionName)
+    private List<String> findNotInstalledTemplates(Tuple2<List<String>, List<MissionEntity>> tuple2)
     {
-        List<Mission> missions = getMissions().getEnabledMissions().stream()
-                .filter(mission -> !mission.getName().equals(missionName))
+        List<String> installedTemplates = tuple2.getT1();
+        List<String> templatesInDB = tuple2.getT2().stream().map(MissionEntity::getTemplate).toList();
+
+        return installedTemplates.stream()
+                .filter(template -> !templatesInDB.contains(template))
                 .toList();
-        saveEnabledMissionList(missions);
-        return this.missionStorage.deleteMission(missionName);
     }
 
     @Override
-    public void saveEnabledMissionList(List<Mission> missions)
+    public Mono<Boolean> deleteMission(String template)
     {
-        ArmaServerConfig armaServerConfig = this.serverConfigStorage.getServerConfig();
-        armaServerConfig.setMissions(new ArrayList<>(missions.stream()
-                .map(this::convertToArmaMissionObject)
-                .toList()));
-        this.serverConfigStorage.saveServerConfig(armaServerConfig);
+        return this.missionRepository.deleteByTemplate(template)
+                .then(syncConfigMissions())
+                .then(Mono.fromCallable(() -> this.missionFileStorage.deleteMission(template)));
     }
 
     @Override
-    public Missions getMissions()
+    public Mono<Void> saveEnabledMissionList(List<Mission> missions)
     {
-        List<String> installedMissionsNames = getInstalledMissionNames();
-        List<Mission> enabledMissions = this.serverConfigStorage.getServerConfig().getMissions().stream()
-                .map(this::convertToDomainMission)
-                .toList();
-        Missions missions = new Missions();
-        missions.setEnabledMissions(enabledMissions);
-        missions.setDisabledMissions(installedMissionsNames.stream()
-                .filter(mission -> enabledMissions.stream().noneMatch(mission1 -> mission1.getName().equals(mission)))
-                .map(missionName -> new Mission(missionName, Mission.Difficulty.REGULAR, Collections.emptySet()))
-                .toList());
-
-        return missions;
+        return this.missionRepository.disableAll()
+                .collectList()
+                .flatMap(v -> Mono.just(missions))
+                .flatMap(missionList -> Mono.just(missionList)
+                        .filter(missionList1 -> !missionList1.isEmpty())
+                        .flatMapMany(missionList2 -> this.missionRepository.updateAllByTemplateSetEnabled(missionList2.stream()
+                                .map(Mission::getTemplate)
+                                .toList()))
+                        .collectList()
+                )
+                .then(syncConfigMissions());
     }
 
     @Override
-    public Mono<ResponseEntity<?>> addMission(String template)
+    public Mono<Missions> getMissions()
     {
-        //TODO: Put template mission in server.cfg.
-
-        List<Mission> enabledMissions = new ArrayList<>(getMissions().getEnabledMissions());
-        enabledMissions.add(new Mission(template, Mission.Difficulty.REGULAR, Collections.emptySet()));
-        saveEnabledMissionList(enabledMissions);
-
-        //TODO: Put template mission in database.
-        return Mono.empty();
+        return this.missionRepository.findAll()
+                .map(this.missionConverter::convertToDomainMission)
+                .collectList()
+                .map(missionsList ->
+                {
+                    Map<Boolean, List<Mission>> groupedMissions = missionsList.stream().collect(Collectors.groupingBy(Mission::isEnabled));
+                    Missions missions = new Missions();
+                    missions.setDisabledMissions(groupedMissions.getOrDefault(false, Collections.emptyList()));
+                    missions.setEnabledMissions(groupedMissions.getOrDefault(true, Collections.emptyList()));
+                    return missions;
+                });
     }
 
-    private Mission convertToDomainMission(ArmaServerConfig.Missions.Mission armaMission)
+    @Override
+    public Mono<Void> addMission(String name, String template)
     {
-        Mission mission = new Mission();
-        mission.setName(armaMission.getTemplate());
-        mission.setDifficulty(Mission.Difficulty.findOrDefault(Optional.ofNullable(armaMission.getDifficulty())
-                .map(String::toUpperCase)
-                .orElse(null)));
-        mission.setParameters(convertToDomainMissionParameters(armaMission.getParams()));
-        return mission;
+        Mission mission = Mission.builder()
+                .name(name)
+                .template(template)
+                .difficulty(Mission.Difficulty.REGULAR)
+                .enabled(false)
+                .parameters(Collections.emptySet())
+                .build();
+
+        return this.missionRepository.save(missionConverter.convertToEntity(mission))
+                .then();
     }
 
-    private Set<Mission.Parameter> convertToDomainMissionParameters(Map<String, String> params)
+    @Override
+    public Mono<Void> updateMission(long id, Mission mission)
     {
-        return params.entrySet().stream()
-                .map(entry -> new Mission.Parameter(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toSet());
+        return this.missionRepository.findById(id)
+                .switchIfEmpty(Mono.error(new MissionDoesNotExistException("Mission not found for id = " + id)))
+                .map(entity -> this.missionConverter.convertToEntity(mission))
+                .flatMap(this.missionRepository::save)
+                .then(syncConfigMissions());
     }
 
-    private ArmaServerConfig.Missions.Mission convertToArmaMissionObject(Mission mission)
+    private Mono<Void> syncConfigMissions()
     {
-        ArmaServerConfig.Missions.Mission armaMission = new ArmaServerConfig.Missions.Mission();
-        armaMission.setTemplate(mission.getName());
-        armaMission.setDifficulty(mission.getDifficulty().name().toLowerCase());
-        armaMission.setParams(convertToArmaMissionParams(mission.getParameters()));
-        return armaMission;
-    }
+        return this.missionRepository.findAll()
+                .map(this.missionConverter::convertToDomainMission)
+                .filter(Mission::isEnabled)
+                .collectList()
+                .map(missions -> {
+                    ArmaServerConfig armaServerConfig = this.serverConfigStorage.getServerConfig();
+                    armaServerConfig.setMissions(new ArrayList<>(missions.stream()
+                            .map(this.missionConverter::convertToArmaMissionObject)
+                            .toList()));
+                    this.serverConfigStorage.saveServerConfig(armaServerConfig);
+                    return true;
+                })
+                .then();
 
-    private Map<String, String> convertToArmaMissionParams(Set<Mission.Parameter> parameters)
-    {
-        Map<String, String> paramsMap = parameters.stream().collect(Collectors.toMap(Mission.Parameter::getName, Mission.Parameter::getValue));
-        return paramsMap;
     }
 }

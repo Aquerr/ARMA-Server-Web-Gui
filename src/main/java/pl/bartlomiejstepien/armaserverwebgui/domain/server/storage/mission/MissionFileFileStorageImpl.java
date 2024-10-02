@@ -18,13 +18,13 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 @Repository
-public class MissionStorageImpl implements MissionStorage
+public class MissionFileFileStorageImpl implements MissionFileStorage
 {
     private final MissionFileNameHelper missionFileNameHelper;
     private final Supplier<Path> missionsDirectory;
 
     @Autowired
-    public MissionStorageImpl(final ASWGConfig aswgConfig, final MissionFileNameHelper missionFileNameHelper)
+    public MissionFileFileStorageImpl(final ASWGConfig aswgConfig, final MissionFileNameHelper missionFileNameHelper)
     {
         this.missionsDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath() + File.separator + "mpmissions");
         this.missionFileNameHelper = missionFileNameHelper;
@@ -34,17 +34,19 @@ public class MissionStorageImpl implements MissionStorage
     public Mono<Void> save(FilePart multipartFile) throws IOException
     {
         Files.createDirectories(missionsDirectory.get());
-        return multipartFile.transferTo(missionsDirectory.get().resolve(multipartFile.filename().toLowerCase()));
+        String normalizedFileName = missionFileNameHelper.normalizeFileName(multipartFile.filename());
+        return multipartFile.transferTo(missionsDirectory.get().resolve(normalizedFileName));
     }
 
     @Override
     public boolean doesMissionExists(String filename)
     {
-        return Files.exists(missionsDirectory.get().resolve(filename.toLowerCase()));
+        String normalizedFileName = missionFileNameHelper.normalizeFileName(filename);
+        return Files.exists(missionsDirectory.get().resolve(normalizedFileName));
     }
 
     @Override
-    public List<String> getInstalledMissionNames()
+    public List<String> getInstalledMissionTemplates()
     {
         return Optional.ofNullable(missionsDirectory.get().toFile().listFiles())
                 .map(files -> Stream.of(files)
@@ -55,14 +57,14 @@ public class MissionStorageImpl implements MissionStorage
     }
 
     @Override
-    public boolean deleteMission(String missionName)
+    public boolean deleteMission(String template)
     {
         final File[] files = this.missionsDirectory.get().toFile().listFiles();
         if (files != null)
         {
             for (final File file : files)
             {
-                if (file.getName().equals(missionFileNameHelper.resolveFileName(missionName)))
+                if (file.getName().equals(missionFileNameHelper.resolveFileName(template)))
                 {
                     return file.delete();
                 }

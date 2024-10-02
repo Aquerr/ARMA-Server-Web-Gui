@@ -97,7 +97,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  showMissionDeleteConfirmationDialog(missionName: string): void {
+  showMissionDeleteConfirmationDialog(missionTemplate: string): void {
     const dialogRef = this.matDialog.open(MissionDeleteConfirmDialogComponent, {
       width: '250px',
       enterAnimationDuration: '200ms',
@@ -106,14 +106,14 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.deleteMission(missionName);
+        this.deleteMission(missionTemplate);
       }
     });
   }
 
-  deleteMission(missionName: string) {
+  deleteMission(missionTemplate: string) {
     this.maskService.show();
-    this.missionsService.deleteMission(missionName).subscribe(response => {
+    this.missionsService.deleteMission(missionTemplate).subscribe(response => {
       this.maskService.hide();
       this.reloadMissionsDataSubject.next(null);
     });
@@ -130,7 +130,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   showMissionModifyDialog(mission: Mission) {
     const dialogRef = this.matDialog.open(MissionModifyDialogComponent, {
-      // width: '250px',
+      minWidth: '500px',
       enterAnimationDuration: '200ms',
       exitAnimationDuration: '200ms',
       data: mission
@@ -138,14 +138,14 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((mission: Mission) => {
       if (mission) {
-        this.save();
+        this.updateMission(mission);
       }
     });
   }
 
   filterMissions(searchPhrase: string) {
-    this.filteredEnabledMissions = this.enabledMissions.filter(mission => mission.name.toLowerCase().includes(searchPhrase.toLowerCase()));
-    this.filteredDisabledMissions = this.disabledMissions.filter(mission => mission.name.toLowerCase().includes(searchPhrase.toLowerCase()));
+    this.filteredEnabledMissions = this.enabledMissions.filter(mission => mission.template.toLowerCase().includes(searchPhrase.toLowerCase()));
+    this.filteredDisabledMissions = this.disabledMissions.filter(mission => mission.template.toLowerCase().includes(searchPhrase.toLowerCase()));
   }
 
   onMissionItemDropped(event: CdkDragDrop<Mission[]>) {
@@ -187,14 +187,24 @@ export class MissionsComponent implements OnInit, OnDestroy {
       if (result.file) {
         this.onFileDropped(result.file);
       } else if (result.template) {
-        this.addBuiltInMission(result.template);
+        this.addBuiltInMission(result.name, result.template);
       }
     });
   }
 
-  private addBuiltInMission(template: string) {
-    this.missionsService.addTemplateMission(template).subscribe(response => {
+  private addBuiltInMission(name: string, template: string) {
+    this.maskService.show();
+    this.missionsService.addTemplateMission(name, template).subscribe(response => {
+      this.maskService.hide();
       this.reloadMissions();
+    });
+  }
+
+  private updateMission(mission: Mission) {
+    this.maskService.show();
+    this.missionsService.updateMission(mission.id, mission).subscribe(response => {
+      this.maskService.hide();
+      this.notificationService.successNotification("Mission updated!");
     });
   }
 }

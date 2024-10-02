@@ -1,4 +1,4 @@
-package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission;
+package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto;
 
 import lombok.Data;
 

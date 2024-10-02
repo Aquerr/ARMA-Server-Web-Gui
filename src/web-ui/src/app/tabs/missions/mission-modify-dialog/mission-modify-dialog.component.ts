@@ -13,6 +13,8 @@ export class MissionModifyDialogComponent implements OnInit {
 
   @ViewChild("viewContainerRef", {read: ViewContainerRef, static: true}) viewContainerRef!: ViewContainerRef;
 
+  name: string = '';
+  template: string = '';
   difficulty: MissionDifficulty = MissionDifficulty.REGULAR;
   parameters: MissionParam[] = [];
 
@@ -27,6 +29,8 @@ export class MissionModifyDialogComponent implements OnInit {
     }
     console.log(this.mission.difficulty);
     this.difficulty = this.mission.difficulty;
+    this.name = this.mission.name;
+    this.template = this.mission.template;
   }
 
   createNewParameter(name: string | null, value: string | null) {
@@ -55,6 +59,8 @@ export class MissionModifyDialogComponent implements OnInit {
   onMissionParamsSave() {
     this.mission.parameters = this.parameters;
     this.mission.difficulty = this.difficulty;
-    this.dialogRef.close(this.parameters);
+    this.mission.name = this.name;
+    this.mission.template = this.template;
+    this.dialogRef.close(this.mission);
   }
 }

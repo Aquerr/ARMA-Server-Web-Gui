@@ -1,6 +1,7 @@
-package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission;
+package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,12 +10,20 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Mission
 {
+    private Long id;
     private String name;
+    private String template;
     private Difficulty difficulty;
+
+    @Builder.Default
+    private boolean enabled = false;
+
+    @Builder.Default
     private Set<Parameter> parameters = new HashSet<>();
 
     @Data
