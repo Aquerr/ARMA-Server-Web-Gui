@@ -152,17 +152,17 @@ export class MissionsComponent implements OnInit, OnDestroy {
     if (event.previousContainer === event.container){
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      let movedMod = event.previousContainer.data[event.previousIndex];
+      let movedMission = event.previousContainer.data[event.previousIndex];
       if (event.previousContainer.id == 'enabled-missions-list') {
         this.enabledMissions.forEach((value, index) => {
-          if (value == movedMod) this.enabledMissions.splice(index, 1);
+          if (value == movedMission) this.enabledMissions.splice(index, 1);
         });
-        this.disabledMissions.push(movedMod);
+        this.disabledMissions.push(movedMission);
       } else {
         this.disabledMissions.forEach((value, index) => {
-          if (value == movedMod) this.disabledMissions.splice(index, 1);
+          if (value == movedMission) this.disabledMissions.splice(index, 1);
         });
-        this.enabledMissions.push(movedMod);
+        this.enabledMissions.push(movedMission);
       }
 
       transferArrayItem(
