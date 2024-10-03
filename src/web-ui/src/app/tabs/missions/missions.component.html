@@ -59,12 +59,16 @@
             <span style="filter: brightness(50%)">Template: {{mission.template}}</span>
           </div>
           <div class="text-center" style="flex: 14%">
-            <button mat-icon-button (click)="showMissionModifyDialog(mission)">
+            <button mat-icon-button
+                    matTooltip="Configure parameters"
+                    (click)="showMissionModifyDialog(mission)">
               <mat-icon>settings</mat-icon>
             </button>
           </div>
           <div class="text-center" style="flex: 14%">
-            <button mat-icon-button (click)="showMissionDeleteConfirmationDialog(mission.template)">
+            <button mat-icon-button
+                    matTooltip="Delete the mission"
+                    (click)="showMissionDeleteConfirmationDialog(mission.template)">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
