@@ -197,6 +197,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
     this.missionsService.addTemplateMission(name, template).subscribe(response => {
       this.maskService.hide();
       this.reloadMissions();
+      this.notificationService.successNotification("Mission added!");
     });
   }
 
@@ -206,5 +207,9 @@ export class MissionsComponent implements OnInit, OnDestroy {
       this.maskService.hide();
       this.notificationService.successNotification("Mission updated!");
     });
+  }
+
+  getMissionNameForDisplay(mission: Mission) {
+    return mission.name || mission.template;
   }
 }
