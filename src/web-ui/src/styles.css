@@ -131,6 +131,7 @@ a {
 
 .mat-mdc-fab.mat-primary, .mat-mdc-mini-fab.mat-primary {
   --mdc-fab-container-color: var(--aswg-primary-color) !important;
+  --mdc-fab-small-container-color: var(--aswg-primary-color) !important;
 }
 
 .mdc-list-item__primary-text {
