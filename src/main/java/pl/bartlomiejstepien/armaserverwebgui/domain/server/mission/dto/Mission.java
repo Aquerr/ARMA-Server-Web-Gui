@@ -18,7 +18,9 @@ public class Mission
     private Long id;
     private String name;
     private String template;
-    private Difficulty difficulty;
+
+    @Builder.Default
+    private Difficulty difficulty = Difficulty.REGULAR;
 
     @Builder.Default
     private boolean enabled = false;

@@ -40,6 +40,7 @@ public class ASWGConfig
     private static final String FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY = "aswg.job.file-scanner.installation.enabled";
     private static final String FILE_SCANNER_DELETION_ENABLED_PROPERTY = "aswg.job.file-scanner.deletion.enabled";
     private static final String DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED = "aswg.job.difficulty-scanner.installation.enabled";
+    private static final String VANILLA_MISSIONS_IMPORTER = "aswg.vanilla-missions-importer.enabled";
 
     @Value("${aswg.username}")
     private String username;
@@ -65,6 +66,9 @@ public class ASWGConfig
 
     @Value("${aswg.job.difficulty-scanner.installation.enabled}")
     private boolean difficultyProfileInstallationScannerEnabled;
+
+    @Value("${aswg.vanilla-missions-importer.enabled}")
+    private boolean vanillaMissionsImporter;
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationRead() throws IOException
@@ -166,6 +170,7 @@ public class ASWGConfig
         configurationProperties.setProperty(FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY, String.valueOf(this.fileScannerInstallationEnabled));
         configurationProperties.setProperty(FILE_SCANNER_DELETION_ENABLED_PROPERTY, String.valueOf(this.fileScannerDeletionEnabled));
         configurationProperties.setProperty(DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED, String.valueOf(this.difficultyProfileInstallationScannerEnabled));
+        configurationProperties.setProperty(VANILLA_MISSIONS_IMPORTER, String.valueOf(this.vanillaMissionsImporter));
         return configurationProperties;
     }
 }

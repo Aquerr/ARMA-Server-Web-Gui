@@ -1,14 +1,26 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
+import pl.bartlomiejstepien.armaserverwebgui.repository.MissionRepository;
 
 import static pl.bartlomiejstepien.armaserverwebgui.TestUtils.loadJsonIntegrationContractFor;
 
 class MissionRestControllerTest extends BaseIntegrationTest
 {
+    @Autowired
+    private MissionRepository missionRepository;
+
+    @BeforeEach
+    public void setUp()
+    {
+        missionRepository.deleteAll().subscribe();
+    }
+
     @Test
     void updateShouldReturnErrorWhenMissionDoesNotExist()
     {
