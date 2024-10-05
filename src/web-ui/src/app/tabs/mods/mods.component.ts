@@ -6,8 +6,6 @@ import {NotificationService} from "../../service/notification.service";
 import {Mod} from "../../model/mod.model";
 import {FormControl} from "@angular/forms";
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
-import {MatSnackBar, MatSnackBarRef} from "@angular/material/snack-bar";
-import {ModUploadSnackBarComponent} from "./mod-upload-snack-bar/mod-upload-snack-bar.component";
 import {ModUploadService} from "./service/mod-upload.service";
 
 @Component({
@@ -28,25 +26,18 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   searchBoxControl!: FormControl;
 
-  modUploadSnackBarRef!: MatSnackBarRef<ModUploadSnackBarComponent> | null;
-
   constructor(private modService: ServerModsService,
               private maskService: MaskService,
               private notificationService: NotificationService,
-              private matSnackBar: MatSnackBar,
               private modUploadService: ModUploadService) {
 
     this.reloadModsDataSubject = new Subject();
     this.reloadModsDataSubscription = this.reloadModsDataSubject.subscribe(() => {
       this.reloadMods();
     });
-    this.modUploadSubscription = this.modUploadService.modUploadedSubject.subscribe((file) => {
+    this.modUploadSubscription = this.modUploadService.fileUploadedSubject.subscribe((file) => {
       if (file) {
         this.reloadModsDataSubject.next(null);
-      }
-      if (!this.modUploadService.getUploadingMods().length) {
-        this.modUploadSnackBarRef?.dismiss();
-        this.modUploadSnackBarRef = null;
       }
     });
   }
@@ -66,16 +57,6 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   onFileDropped(file: File) {
     this.modUploadService.uploadMod(file);
-    this.showUploadProgressSnackBar();
-  }
-
-  showUploadProgressSnackBar() {
-    if (!this.modUploadSnackBarRef) {
-      this.modUploadSnackBarRef = this.matSnackBar.openFromComponent(ModUploadSnackBarComponent);
-      this.modUploadSnackBarRef.afterDismissed().subscribe(() => {
-        this.modUploadSnackBarRef = null;
-      });
-    }
   }
 
   private reloadMods() {

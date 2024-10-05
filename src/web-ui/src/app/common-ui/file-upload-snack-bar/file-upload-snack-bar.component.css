@@ -1,0 +1,16 @@
+.snack-bar-header {
+  border-bottom: 1px solid gray;
+  margin-bottom: 10px;
+  font-size: large;
+}
+
+.file-upload-snackbar-header-label {
+  color: white;
+}
+
+.snack-bar-close-button {
+  top: 5px;
+  right: 5px;
+  position: absolute;
+  cursor: pointer;
+}

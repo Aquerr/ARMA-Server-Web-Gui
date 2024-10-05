@@ -44,11 +44,7 @@ import {MatSelectModule} from "@angular/material/select";
 import { MissionModifyDialogComponent } from './tabs/missions/mission-modify-dialog/mission-modify-dialog.component';
 import { MissionParameterComponent } from './tabs/missions/mission-modify-dialog/mission-parameter/mission-parameter.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
-import { ModUploadSnackBarComponent } from './tabs/mods/mod-upload-snack-bar/mod-upload-snack-bar.component';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
-import {
-  MissionUploadSnackBarComponent
-} from "./tabs/missions/mission-upload-snack-bar/mission-upload-snack-bar.component";
 import {WorkshopComponent} from './tabs/workshop/workshop.component';
 import {NgOptimizedImage} from '@angular/common';
 import {WorkshopItemComponent} from './tabs/workshop/workshop-item/workshop-item.component';
@@ -76,6 +72,7 @@ import {
 } from "./tabs/difficulty/difficulty-delete-confirm-dialog/difficulty-delete-confirm-dialog.component";
 import {NewMissionDialogComponent} from "./tabs/missions/new-mission-dialog/new-mission-dialog.component";
 import {FilesizePipe} from "./util/filesize.pipe";
+import {FileUploadSnackBarComponent} from "./common-ui/file-upload-snack-bar/file-upload-snack-bar.component";
 
 @NgModule({
   declarations: [
@@ -102,8 +99,6 @@ import {FilesizePipe} from "./util/filesize.pipe";
     ModDeleteConfirmDialogComponent,
     MissionModifyDialogComponent,
     MissionParameterComponent,
-    ModUploadSnackBarComponent,
-    MissionUploadSnackBarComponent,
     WorkshopComponent,
     WorkshopItemComponent,
     ModListItemComponent,
@@ -121,6 +116,7 @@ import {FilesizePipe} from "./util/filesize.pipe";
     DifficultyPanelComponent,
     DifficultyDeleteConfirmDialogComponent,
     NewMissionDialogComponent,
+    FileUploadSnackBarComponent,
     FilesizePipe
   ],
     imports: [

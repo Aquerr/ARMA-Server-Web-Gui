@@ -12,9 +12,7 @@ import {MissionModifyDialogComponent} from "./mission-modify-dialog/mission-modi
 import {Mission} from "../../model/mission.model";
 import {FormControl} from "@angular/forms";
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
-import {MatSnackBar, MatSnackBarRef} from "@angular/material/snack-bar";
 import {MissionUploadService} from "./service/mission-upload.service";
-import {MissionUploadSnackBarComponent} from "./mission-upload-snack-bar/mission-upload-snack-bar.component";
 import {NewMissionDialogComponent} from "./new-mission-dialog/new-mission-dialog.component";
 
 @Component({
@@ -36,25 +34,18 @@ export class MissionsComponent implements OnInit, OnDestroy {
   missionUploadSubscription!: Subscription;
   searchBoxControl!: FormControl;
 
-  missionUploadSnackBarRef!: MatSnackBarRef<MissionUploadSnackBarComponent> | null;
-
   constructor(private missionsService: ServerMissionsService,
               private maskService: MaskService,
               private notificationService: NotificationService,
               private matDialog: MatDialog,
-              private matSnackBar: MatSnackBar,
               private missionUploadService: MissionUploadService) {
     this.reloadMissionsDataSubject = new Subject();
     this.reloadMissionDataSubscription = this.reloadMissionsDataSubject.subscribe(() => {
       this.reloadMissions();
     });
-    this.missionUploadSubscription = this.missionUploadService.missionUploadedSubject.subscribe((file) => {
+    this.missionUploadSubscription = this.missionUploadService.fileUploadedSubject.subscribe((file) => {
       if (file) {
         this.reloadMissionsDataSubject.next(null);
-      }
-      if (this.missionUploadService.getUploadingMissions().length == 0) {
-        this.missionUploadSnackBarRef?.dismiss();
-        this.missionUploadSnackBarRef = null;
       }
     });
   }
@@ -74,16 +65,6 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   onFileDropped(file: File) {
     this.missionUploadService.uploadMission(file);
-    this.showUploadProgressSnackBar();
-  }
-
-  showUploadProgressSnackBar() {
-    if (!this.missionUploadSnackBarRef) {
-      this.missionUploadSnackBarRef = this.matSnackBar.openFromComponent(MissionUploadSnackBarComponent);
-      this.missionUploadSnackBarRef.afterDismissed().subscribe(() => {
-        this.missionUploadSnackBarRef = null;
-      });
-    }
   }
 
   private reloadMissions(): void {

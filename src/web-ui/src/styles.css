@@ -229,6 +229,11 @@ input::placeholder {
   --mat-mdc-button-ripple-color: rgba(0, 0, 0, 0.1) !important;
 }
 
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-color: var(--aswg-primary-color) !important;
+  --mdc-linear-progress-track-color: rgba(109, 109, 109, 0.25) !important;
+}
+
 body, html {
   width: 100%;
   height: 100%;
