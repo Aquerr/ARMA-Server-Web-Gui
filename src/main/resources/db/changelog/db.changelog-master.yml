@@ -5,4 +5,6 @@ databaseChangeLog:
       path: db/changelog/002-installed-mod-last-workshop-update/
   - includeAll:
       path: db/changelog/003-mission/
+  - includeAll:
+      path: db/changelog/004-mod-settings/
 
