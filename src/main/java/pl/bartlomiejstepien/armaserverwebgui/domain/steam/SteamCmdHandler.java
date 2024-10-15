@@ -291,6 +291,9 @@ public class SteamCmdHandler
             installedModBuilder = InstalledModEntity.builder();
             installedModBuilder.createdDate(OffsetDateTime.now());
             installedModBuilder.lastWorkshopUpdate(workshopMod.getLastUpdate());
+
+            long publishedFileIdToUse = metaCppFile.getPublishedFileId() == 0 ? workshopFileId : metaCppFile.getPublishedFileId();
+            installedModBuilder.workshopFileId(publishedFileIdToUse);
             installedModBuilder.workshopFileId(metaCppFile.getPublishedFileId());
         }
 
