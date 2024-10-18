@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,10 +28,16 @@ public class ModSettingsRestController
         return modSettingsService.getModSettingsWithoutContents();
     }
 
-    @GetMapping("/{id}/content")
-    public Mono<String> getModSettingsContent(@PathVariable("id") long id)
+    @GetMapping("/{id}")
+    public Mono<ModSettings> getModSettings(@PathVariable("id") long id)
     {
-        return modSettingsService.getModSettingsContent(id);
+        return modSettingsService.getModSettingsWithoutContents(id);
+    }
+
+    @GetMapping("/{id}/content")
+    public Mono<ModSettingsContent> getModSettingsContent(@PathVariable("id") long id)
+    {
+        return modSettingsService.getModSettingsContent(id).map(ModSettingsContent::new);
     }
 
     @PutMapping("/{id}/content")
@@ -42,6 +49,7 @@ public class ModSettingsRestController
     @PutMapping("/{id}")
     public Mono<Void> updateModSettings(@PathVariable("id") long id, @RequestBody ModSettings modSettings)
     {
+        modSettings.setId(id);
         return modSettingsService.saveModSettings(modSettings);
     }
 
@@ -52,6 +60,8 @@ public class ModSettingsRestController
     }
 
     @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static final class ModSettingsContent
     {
         private String content;

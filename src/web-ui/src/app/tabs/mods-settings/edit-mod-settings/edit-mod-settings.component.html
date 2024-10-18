@@ -1,0 +1,24 @@
+<div class="container">
+    <h1>{{getName()}}</h1>
+    <div class="edit-mod-settings-page-content">
+      <form [formGroup]="form" class="fields">
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" type="text">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select formControlName="active">
+            <mat-option [value]="true">True</mat-option>
+            <mat-option [value]="false">False</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field style="width: 100%">
+          <mat-label>Content</mat-label>
+          <textarea formControlName="content" matInput cdkTextareaAutosize></textarea>
+        </mat-form-field>
+      </form>
+    </div>
+  <div class="button-container">
+    <button mat-flat-button color="primary" (click)="save()">Save</button>
+  </div>
+</div>

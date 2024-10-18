@@ -14,9 +14,10 @@ import {WorkshopService} from "./service/workshop.service";
 import {map} from "rxjs";
 import {SettingsComponent} from "./tabs/settings/settings.component";
 import {DifficultyComponent} from "./tabs/difficulty/difficulty.component";
+import {ModsSettingsComponent} from "./tabs/mods-settings/mods-settings.component";
+import {EditModSettingsComponent} from "./tabs/mods-settings/edit-mod-settings/edit-mod-settings.component";
 
 const routes: Routes = [
-  {path: '', redirectTo: '/status', pathMatch: "full"},
   {path: 'status', component: StatusComponent, canActivate: [AuthService]},
   {path: 'general', component: GeneralComponent, canActivate: [AuthService]},
   {path: 'security', component: SecurityComponent, canActivate: [AuthService]},
@@ -24,12 +25,15 @@ const routes: Routes = [
   {path: 'difficulty', component: DifficultyComponent, canActivate: [AuthService]},
   {path: 'missions', component: MissionsComponent, canActivate: [AuthService]},
   {path: 'mods', component: ModsComponent, canActivate: [AuthService]},
+  {path: 'mods-settings/:id', component: EditModSettingsComponent, canActivate: [AuthService], pathMatch: 'full'},
+  {path: 'mods-settings', component: ModsSettingsComponent, canActivate: [AuthService]},
   {path: 'logging', component: LoggingComponent, canActivate: [AuthService]},
   {path: 'workshop', component: WorkshopComponent,
     canMatch: [() => inject(AuthService).isAuthenticated() && inject(WorkshopService).canUseWorkshop().pipe(map(response => response.active))]
   },
   {path: 'settings', component: SettingsComponent, canActivate: [AuthService]},
   {path: 'login', component: LoginComponent},
+  {path: '', redirectTo: '/status', pathMatch: "full"},
   {path: '**', redirectTo: 'status'}
 ];
 

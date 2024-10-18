@@ -1,0 +1,8 @@
+.mod-settings-page-content {
+  margin-bottom: 1rem;
+}
+
+.mod-settings-add-new {
+  border-radius: var(--mdc-outlined-button-container-shape);
+  width: 100%;
+}

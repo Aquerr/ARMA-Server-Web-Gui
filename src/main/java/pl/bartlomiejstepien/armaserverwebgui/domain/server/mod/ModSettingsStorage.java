@@ -1,20 +1,31 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.util.Lazy;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModSettingsEntity;
+import pl.bartlomiejstepien.armaserverwebgui.repository.ModSettingsRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
+import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -24,47 +35,67 @@ public class ModSettingsStorage
 
     private final Lazy<Path> modSettingsDirPath;
     private final ModFolderNameHelper modFolderNameHelper;
+    private final ModSettingsRepository modSettingsRepository;
+    private final ASWGConfig aswgConfig;
 
     public ModSettingsStorage(ASWGConfig aswgConfig,
-                              ModFolderNameHelper modFolderNameHelper)
+                              ModFolderNameHelper modFolderNameHelper,
+                              ModSettingsRepository modSettingsRepository)
     {
+        this.aswgConfig = aswgConfig;
         this.modFolderNameHelper = modFolderNameHelper;
+        this.modSettingsRepository = modSettingsRepository;
         this.modSettingsDirPath = Lazy.of(() -> Paths.get(aswgConfig.getServerDirectoryPath())
                 .resolve("userconfig"));
+    }
+
+    @EventListener
+    public void onApplicationReady(ApplicationReadyEvent event)
+    {
+        try
+        {
+            Files.createDirectories(this.modSettingsDirPath.get());
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Scheduled(fixedDelay = 20, timeUnit = TimeUnit.MINUTES)
+    public void installModSettings()
+    {
+        log.info("Scanning for new mod/addon settings files...");
+        if (!this.aswgConfig.isModSettingsInstallationScannerEnabled())
+        {
+            log.info("Mod/Addon settings scanner is disabled. Skipping...");
+        }
+
+        scanModSettingsForNewSettingsFiles()
+                .subscribeOn(Schedulers.boundedElastic())
+                .subscribe();
+    }
+
+    public Mono<Void> deactivateModSettings(Long id, String name)
+    {
+        String fileName = prepareFileName(name, false);
+
+        try
+        {
+            Files.move(this.modSettingsDirPath.get().resolve(ACTIVE_MOD_SETTINGS_FILE_NAME), this.modSettingsDirPath.get().resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+        return this.modSettingsRepository.deactivate(id);
     }
 
     public Mono<String> readModSettingsFileContent(String name, boolean active)
     {
         String fileName = prepareFileName(name, active);
         log.info("Reading contents of {}", fileName);
-        return Flux.using(
-                () -> Files.newBufferedReader(this.modSettingsDirPath.get().resolve(fileName), StandardCharsets.UTF_8),
-                reader -> Flux.fromStream(reader.lines()),
-                reader ->
-                {
-                    try
-                    {
-                        reader.close();
-                    }
-                    catch (IOException e)
-                    {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .collectList()
-                .map(Collection::stream)
-                .map(stringStream -> stringStream.collect(Collectors.joining(" ")));
-
-//        return Mono.fromCallable(() -> Files.readString(this.modSettingsDirPath.get().resolve(fileName)));
-    }
-
-    private String prepareFileName(String name, boolean active)
-    {
-        if (active) {
-            return ACTIVE_MOD_SETTINGS_FILE_NAME;
-        } else {
-            return modFolderNameHelper.normalize(name) + ".sqf";
-        }
+        return Mono.fromCallable(() -> Files.readString(this.modSettingsDirPath.get().resolve(fileName)));
     }
 
     public Mono<Void> saveModSettingsFileContent(String name, boolean active, String content)
@@ -73,6 +104,15 @@ public class ModSettingsStorage
         try
         {
             Files.createDirectories(this.modSettingsDirPath.get());
+            File modSettingsDir = this.modSettingsDirPath.get().toFile();
+            File fileToUpdate = Arrays.stream(modSettingsDir.listFiles())
+                    .filter(settingsFile -> settingsFile.getName().equals(fileName)).findFirst()
+                    .orElse(new File(this.modSettingsDirPath.get().toString(), fileName));
+            if (!fileToUpdate.exists())
+            {
+                fileToUpdate.createNewFile();
+            }
+
             Files.writeString(this.modSettingsDirPath.get().resolve(fileName), content);
         }
         catch (IOException e)
@@ -101,5 +141,91 @@ public class ModSettingsStorage
         }
 
         return Mono.empty();
+    }
+
+    public Mono<ModSettingsEntity> findByName(String name)
+    {
+        return this.modSettingsRepository.findByName(name);
+    }
+
+    public Mono<ModSettingsEntity> findById(long id)
+    {
+        return this.modSettingsRepository.findById(id);
+    }
+
+    public Mono<Void> disableAll()
+    {
+        return this.modSettingsRepository.disableAll();
+    }
+
+    public Mono<ModSettingsEntity> save(ModSettingsEntity modSettingsEntity)
+    {
+        return this.modSettingsRepository.save(modSettingsEntity);
+    }
+
+    public Flux<ModSettingsEntity> findAll()
+    {
+        return this.modSettingsRepository.findAll();
+    }
+
+    public Mono<Void> delete(ModSettingsEntity modSettingsEntity)
+    {
+        return this.modSettingsRepository.delete(modSettingsEntity);
+    }
+
+    public Mono<ModSettingsEntity> findActive()
+    {
+        return this.modSettingsRepository.findFirstByActiveTrue();
+    }
+
+    private String prepareFileName(String name, boolean active)
+    {
+        if (active) {
+            return ACTIVE_MOD_SETTINGS_FILE_NAME;
+        } else {
+            return modFolderNameHelper.normalize(name) + ".sqf";
+        }
+    }
+
+    private String stripExtension(String fileName)
+    {
+        return fileName.substring(0, fileName.lastIndexOf("."));
+    }
+
+    private Mono<Void> scanModSettingsForNewSettingsFiles()
+    {
+        return Mono.just(this.modSettingsDirPath.get())
+                .filter(Files::exists)
+                .mapNotNull(path -> path.toFile().list())
+                .filter(Objects::nonNull)
+                .mapNotNull(fileNames -> Stream.of(fileNames).toList())
+                .zipWith(modSettingsRepository.findAll().collectList(), (settingsFileNames, settingsEntities) -> {
+                    List<String> existingSettingsNames = settingsEntities.stream()
+                            .map(ModSettingsEntity::getName)
+                            .toList();
+
+                    Set<String> settingsToInstall = settingsFileNames.stream()
+                            .map(this::stripExtension)
+                            .filter(name -> !existingSettingsNames.contains(name))
+                            .collect(Collectors.toSet());
+
+                    if (settingsToInstall.contains("cba_settings")
+                            && settingsEntities.stream().anyMatch(ModSettingsEntity::isActive))
+                    {
+                        settingsToInstall.remove("cba_settings");
+                    }
+                    return settingsToInstall;
+                })
+                .flatMapMany(Flux::fromIterable)
+                .map(settingsName -> {
+                    if (settingsName.equals("cba_settings"))
+                    {
+                        return ModSettingsEntity.builder().name("default").active(true).build();
+                    }
+
+                    return ModSettingsEntity.builder().name(settingsName).active(false).build();
+                })
+                .flatMap(this.modSettingsRepository::save)
+                .then();
     }
 }

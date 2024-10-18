@@ -73,6 +73,9 @@ import {
 import {NewMissionDialogComponent} from "./tabs/missions/new-mission-dialog/new-mission-dialog.component";
 import {FilesizePipe} from "./util/filesize.pipe";
 import {FileUploadSnackBarComponent} from "./common-ui/file-upload-snack-bar/file-upload-snack-bar.component";
+import {ModsSettingsComponent} from "./tabs/mods-settings/mods-settings.component";
+import {EditModSettingsComponent} from "./tabs/mods-settings/edit-mod-settings/edit-mod-settings.component";
+import {ModSettingsPanelComponent} from "./tabs/mods-settings/mod-settings-panel/mod-settings-panel.component";
 
 @NgModule({
   declarations: [
@@ -117,7 +120,10 @@ import {FileUploadSnackBarComponent} from "./common-ui/file-upload-snack-bar/fil
     DifficultyDeleteConfirmDialogComponent,
     NewMissionDialogComponent,
     FileUploadSnackBarComponent,
-    FilesizePipe
+    FilesizePipe,
+    ModsSettingsComponent,
+    EditModSettingsComponent,
+    ModSettingsPanelComponent
   ],
     imports: [
         BrowserModule,

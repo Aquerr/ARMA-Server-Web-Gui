@@ -1,0 +1,18 @@
+<div class="container">
+  <h1>Mod Settings</h1>
+  <div class="mod-settings-page-content">
+    @for (modSettings of modSettingsList; track modSettings.name) {
+      <app-mod-settings-panel [modSettings]="modSettings"></app-mod-settings-panel>
+    }
+    <div>
+      <button class="mod-settings-add-new" mat-stroked-button
+              color="primary"
+              (click)="addNewModSettings()">
+        <mat-icon [fontIcon]="'add_circle'"></mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="button-container">
+    <button mat-flat-button color="primary" (click)="saveAll()">Save</button>
+  </div>
+</div>

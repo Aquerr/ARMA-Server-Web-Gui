@@ -1,0 +1,14 @@
+.edit-mod-settings-page-content {
+  margin-bottom: 1rem;
+}
+
+.edit-mod-settings-add-new {
+  border-radius: var(--mdc-outlined-button-container-shape);
+  width: 100%;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}

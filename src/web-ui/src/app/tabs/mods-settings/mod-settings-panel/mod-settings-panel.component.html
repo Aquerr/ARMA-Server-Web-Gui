@@ -1,0 +1,14 @@
+<mat-accordion>
+  <mat-expansion-panel class="mod-settings-panel" (click)="onClick()">
+    <mat-expansion-panel-header [ngClass]="modSettings.active ? 'mod-settings-active' : ''">
+      <mat-panel-title>
+        {{modSettings.name}}
+      </mat-panel-title>
+      <mat-panel-description>
+<!--        <button mat-stroked-button-->
+<!--                class="active-button"-->
+<!--                (click)="toggleActive($event)">Active: {{difficultyProfile.active}}</button>-->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+</mat-accordion>

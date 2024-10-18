@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgValueHelper.toInt;
@@ -94,16 +95,19 @@ public class DifficultyServiceImpl implements DifficultyService
                             .map(DifficultyProfileEntity::getName)
                             .toList();
 
-                    profileFileNames.forEach(profileFileName -> {
-                        if (!existingProfileNames.contains(profileFileName)) {
-                            DifficultyConfig difficultyConfig = readDifficultyFile(profileFileName);
-                            DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, profileFileName, true);
-                            this.difficultyProfileRepository.save(difficultyProfileEntity).block();
-                            saveToFile(map(difficultyConfig, difficultyProfileEntity));
-                        }
-                    });
-                    return profileFileNames;
-                }).then();
+                    return profileFileNames.stream()
+                            .filter(profileFileName -> !existingProfileNames.contains(profileFileName))
+                            .collect(Collectors.toSet());
+                })
+                .flatMapMany(Flux::fromIterable)
+                .map(profileName -> {
+                    DifficultyConfig difficultyConfig = readDifficultyFile(profileName);
+                    DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, profileName, true);
+                    this.difficultyProfileRepository.save(difficultyProfileEntity).subscribe();
+                    saveToFile(map(difficultyConfig, difficultyProfileEntity));
+                    return profileName;
+                })
+                .then();
     }
 
     @Override
