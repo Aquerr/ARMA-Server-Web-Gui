@@ -4,7 +4,7 @@ import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 @Component({
   selector: 'app-motd-list',
   templateUrl: './motd-list.component.html',
-  styleUrls: ['./motd-list.component.css']
+  styleUrls: ['./motd-list.component.scss']
 })
 export class MotdListComponent implements OnInit {
 

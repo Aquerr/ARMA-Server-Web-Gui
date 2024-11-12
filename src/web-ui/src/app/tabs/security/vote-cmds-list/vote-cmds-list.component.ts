@@ -6,7 +6,7 @@ import {FormGroup} from "@angular/forms";
 @Component({
   selector: 'app-vote-cmds-list',
   templateUrl: './vote-cmds-list.component.html',
-  styleUrl: './vote-cmds-list.component.css'
+  styleUrl: './vote-cmds-list.component.scss'
 })
 export class VoteCmdsListComponent implements OnInit {
   // @Input() voteCommands: VoteCmd[] = [];

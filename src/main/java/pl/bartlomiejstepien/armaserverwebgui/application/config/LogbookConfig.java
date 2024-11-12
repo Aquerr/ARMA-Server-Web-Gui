@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ContainerNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -49,6 +50,7 @@ public class LogbookConfig implements WebFluxConfigurer
                         requestTo("/api/v1/logging/logs-sse"))
                 )
                 .bodyFilter(new FilterJsonAttribute(objectMapper, "publishedFileDetails"))
+                .bodyFilter(new FilterJsonAttribute(objectMapper, "content"))
                 .correlationId(new DefaultCorrelationId())
                 .sink(new DefaultSink(
                         new FastJsonHttpLogFormatter(),
@@ -75,11 +77,15 @@ public class LogbookConfig implements WebFluxConfigurer
             try
             {
                 ObjectNode objectNode = objectMapper.readValue(body, ObjectNode.class);
-                ContainerNode<?> foundJsonNode = (ContainerNode<?>) objectNode.findValue(fieldName);
+
+                JsonNode foundJsonNode = objectNode.findValue(fieldName);
                 if (foundJsonNode == null || foundJsonNode.isEmpty())
                     return body;
 
-                foundJsonNode.removeAll();
+                if (foundJsonNode.isContainerNode()) {
+                    ((ContainerNode<?>)foundJsonNode).removeAll();
+                }
+
                 return objectMapper.writeValueAsString(objectNode);
             }
             catch (JsonProcessingException e)

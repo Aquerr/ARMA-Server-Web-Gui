@@ -8,7 +8,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 @Component({
   selector: 'app-workshop-item',
   templateUrl: './workshop-item.component.html',
-  styleUrls: ['./workshop-item.component.css']
+  styleUrls: ['./workshop-item.component.scss']
 })
 export class WorkshopItemComponent implements OnInit {
   @Input() workshopMod!: WorkshopMod;

@@ -8,7 +8,7 @@ import {FormGroup} from '@angular/forms';
 @Component({
   selector: 'app-network',
   templateUrl: './network.component.html',
-  styleUrls: ['./network.component.css']
+  styleUrls: ['./network.component.scss']
 })
 export class NetworkComponent implements OnInit {
   form: FormGroup;

@@ -5,7 +5,7 @@ import {FileUploadService} from "../../service/file-upload.service";
 @Component({
   selector: 'app-file-upload-snack-bar',
   templateUrl: './file-upload-snack-bar.component.html',
-  styleUrls: ['./file-upload-snack-bar.component.css']
+  styleUrls: ['./file-upload-snack-bar.component.scss']
 })
 export class FileUploadSnackBarComponent implements OnInit {
 

@@ -5,7 +5,7 @@ import {BehaviorSubject} from "rxjs";
 @Component({
   selector: 'app-upload-mission',
   templateUrl: './mission-upload-button.component.html',
-  styleUrls: ['./mission-upload-button.component.css']
+  styleUrls: ['./mission-upload-button.component.scss']
 })
 export class MissionUploadButtonComponent implements OnInit {
 

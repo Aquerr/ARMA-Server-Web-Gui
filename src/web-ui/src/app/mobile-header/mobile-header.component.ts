@@ -3,7 +3,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 @Component({
   selector: 'app-mobile-header',
   templateUrl: './mobile-header.component.html',
-  styleUrls: ['./mobile-header.component.css']
+  styleUrls: ['./mobile-header.component.scss']
 })
 export class MobileHeaderComponent {
 

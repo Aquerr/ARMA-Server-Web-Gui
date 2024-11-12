@@ -73,6 +73,10 @@ import {
 import {NewMissionDialogComponent} from "./tabs/missions/new-mission-dialog/new-mission-dialog.component";
 import {FilesizePipe} from "./util/filesize.pipe";
 import {FileUploadSnackBarComponent} from "./common-ui/file-upload-snack-bar/file-upload-snack-bar.component";
+import {ModsSettingsComponent} from "./tabs/mods-settings/mods-settings.component";
+import {ModSettingsPanelComponent} from "./tabs/mods-settings/mod-settings-panel/mod-settings-panel.component";
+import {NgxCodeJarComponent} from "ngx-codejar";
+import {CommonConfirmDialogComponent} from "./common-ui/common-confirm-dialog/common-confirm-dialog.component";
 
 @NgModule({
   declarations: [
@@ -117,7 +121,11 @@ import {FileUploadSnackBarComponent} from "./common-ui/file-upload-snack-bar/fil
     DifficultyDeleteConfirmDialogComponent,
     NewMissionDialogComponent,
     FileUploadSnackBarComponent,
-    FilesizePipe
+    FilesizePipe,
+    ModsSettingsComponent,
+    ModSettingsPanelComponent,
+    ModSettingsPanelComponent,
+    CommonConfirmDialogComponent
   ],
     imports: [
         BrowserModule,
@@ -147,7 +155,8 @@ import {FileUploadSnackBarComponent} from "./common-ui/file-upload-snack-bar/fil
         MatTooltipModule,
         MatMenuModule,
         MatChipsModule,
-        MatCardModule
+        MatCardModule,
+        NgxCodeJarComponent
     ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}

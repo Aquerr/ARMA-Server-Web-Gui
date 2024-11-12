@@ -1,13 +1,5 @@
-.difficulty-panel. {
+.difficulty-panel {
   border-radius: 0 !important;
-}
-
-.difficulty-active {
-  background-color: var(--aswg-primary-color);
-}
-
-.difficulty-active:not(hover) {
-  background-color: var(--aswg-primary-color) !important;
 }
 
 .difficulty-panel-content-options {
@@ -26,6 +18,14 @@
   display: flex;
   flex-direction: column;
   width: 50%;
+}
+
+.difficulty-active {
+  background-color: var(--aswg-primary-color);
+}
+
+.difficulty-active:not(hover) {
+  background-color: var(--aswg-primary-color) !important;
 }
 
 .active-button {

@@ -8,7 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
+import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordWebhookHandler;
+import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordWebhookMessageParams;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerIsAlreadyRunningException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
@@ -41,6 +42,7 @@ public class ProcessServiceImpl implements ProcessService
 
     private final SteamService steamService;
     private final ArmaServerParametersGenerator serverParametersGenerator;
+    private final DiscordWebhookHandler discordWebhookHandler;
 
     private final ASWGConfig aswgConfig;
 
@@ -92,14 +94,17 @@ public class ProcessServiceImpl implements ProcessService
 
         serverStartScheduled = true;
 
+        Mono<?> flow = Mono.empty();
+
         if (performUpdate)
         {
+            flow = flow.doOnSuccess(t -> discordWebhookHandler.publishMessage(DiscordWebhookMessageParams.builder().title("Updating server").build()).subscribe());
             tryUpdateArmaServer();
         }
 
-        return serverParametersGenerator.generateParameters()
+        return flow.then(serverParametersGenerator.generateParameters()
                 .flatMap(this::startServerProcess)
-                .then();
+                .doOnSuccess(t -> discordWebhookHandler.publishMessage(DiscordWebhookMessageParams.builder().title("Starting server").build()).subscribe()));
     }
 
     private Mono<Void> startServerProcess(ArmaServerParameters serverParameters)

@@ -4,7 +4,7 @@ import {MissionParam} from "../../../../model/mission.model";
 @Component({
   selector: 'app-mission-parameter',
   templateUrl: './mission-parameter.component.html',
-  styleUrls: ['./mission-parameter.component.css']
+  styleUrls: ['./mission-parameter.component.scss']
 })
 export class MissionParameterComponent implements OnInit {
 

@@ -4,7 +4,7 @@ import {CommandListItem} from "./vote-cmd-list-item.model";
 @Component({
   selector: 'app-vote-cmd-list-item',
   templateUrl: './vote-cmd-list-item.component.html',
-  styleUrl: './vote-cmd-list-item.component.css'
+  styleUrl: './vote-cmd-list-item.component.scss'
 })
 export class VoteCmdListItemComponent {
   @Input() item!: CommandListItem;

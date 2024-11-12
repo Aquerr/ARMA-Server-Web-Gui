@@ -7,11 +7,12 @@ import {Mod} from "../../model/mod.model";
 import {FormControl} from "@angular/forms";
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {ModUploadService} from "./service/mod-upload.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-mods',
   templateUrl: './mods.component.html',
-  styleUrls: ['./mods.component.css']
+  styleUrls: ['./mods.component.scss']
 })
 export class ModsComponent implements OnInit, OnDestroy {
 
@@ -29,7 +30,8 @@ export class ModsComponent implements OnInit, OnDestroy {
   constructor(private modService: ServerModsService,
               private maskService: MaskService,
               private notificationService: NotificationService,
-              private modUploadService: ModUploadService) {
+              private modUploadService: ModUploadService,
+              private router: Router) {
 
     this.reloadModsDataSubject = new Subject();
     this.reloadModsDataSubscription = this.reloadModsDataSubject.subscribe(() => {
@@ -148,5 +150,9 @@ export class ModsComponent implements OnInit, OnDestroy {
       this.reloadMods();
       this.notificationService.successNotification('Mods list updated!', 'Success');
     });
+  }
+
+  openModSettings() {
+    this.router.navigate(["/mods-settings"]);
   }
 }

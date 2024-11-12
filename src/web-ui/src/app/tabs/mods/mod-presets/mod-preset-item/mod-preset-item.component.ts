@@ -3,7 +3,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 @Component({
   selector: 'app-mod-preset-item',
   templateUrl: './mod-preset-item.component.html',
-  styleUrls: ['./mod-preset-item.component.css']
+  styleUrls: ['./mod-preset-item.component.scss']
 })
 export class ModPresetItemComponent {
 

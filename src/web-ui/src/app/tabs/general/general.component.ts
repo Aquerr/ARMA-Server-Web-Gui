@@ -7,7 +7,7 @@ import {MotdListComponent} from "./motd-list/motd-list.component";
 @Component({
   selector: 'app-general',
   templateUrl: './general.component.html',
-  styleUrls: ['./general.component.css']
+  styleUrls: ['./general.component.scss']
 })
 export class GeneralComponent implements OnInit {
 

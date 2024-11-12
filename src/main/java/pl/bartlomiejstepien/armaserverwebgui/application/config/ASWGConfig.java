@@ -40,7 +40,11 @@ public class ASWGConfig
     private static final String FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY = "aswg.job.file-scanner.installation.enabled";
     private static final String FILE_SCANNER_DELETION_ENABLED_PROPERTY = "aswg.job.file-scanner.deletion.enabled";
     private static final String DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED = "aswg.job.difficulty-scanner.installation.enabled";
+    private static final String MOD_SETTINGS_INSTLLATION_SCANNER_ENABLED = "aswg.job.mod-settings-scanner.installation.enabled";
     private static final String VANILLA_MISSIONS_IMPORTER = "aswg.vanilla-missions-importer.enabled";
+    private static final String DISCORD_WEBHOOK_ENABLED = "aswg.discord.webhook.enabled";
+    private static final String DISCORD_WEBHOOK_URL = "aswg.discord.webhook.url";
+
 
     @Value("${aswg.username}")
     private String username;
@@ -67,8 +71,17 @@ public class ASWGConfig
     @Value("${aswg.job.difficulty-scanner.installation.enabled}")
     private boolean difficultyProfileInstallationScannerEnabled;
 
+    @Value("${aswg.job.mod-settings-scanner.installation.enabled}")
+    private boolean modSettingsInstallationScannerEnabled;
+
     @Value("${aswg.vanilla-missions-importer.enabled}")
     private boolean vanillaMissionsImporter;
+
+    @Value("${aswg.discord.webhook.enabled}")
+    private boolean discordWebhookEnabled;
+
+    @Value("${aswg.discord.webhook.url}")
+    private String discordWebhookUrl;
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationRead() throws IOException
@@ -133,6 +146,21 @@ public class ASWGConfig
         return difficultyProfileInstallationScannerEnabled;
     }
 
+    public boolean isModSettingsInstallationScannerEnabled()
+    {
+        return this.modSettingsInstallationScannerEnabled;
+    }
+
+    public String getDiscordWebhookUrl()
+    {
+        return this.discordWebhookUrl;
+    }
+
+    public boolean isDiscordWebhookEnabled()
+    {
+        return this.discordWebhookEnabled;
+    }
+
     private void saveProperties()
     {
         try(FileWriter fileWriter = new FileWriter(ASWG_CONFIGURATION_FILE_PATH.toFile(), StandardCharsets.UTF_8);
@@ -170,6 +198,9 @@ public class ASWGConfig
         configurationProperties.setProperty(FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY, String.valueOf(this.fileScannerInstallationEnabled));
         configurationProperties.setProperty(FILE_SCANNER_DELETION_ENABLED_PROPERTY, String.valueOf(this.fileScannerDeletionEnabled));
         configurationProperties.setProperty(DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED, String.valueOf(this.difficultyProfileInstallationScannerEnabled));
+        configurationProperties.setProperty(MOD_SETTINGS_INSTLLATION_SCANNER_ENABLED, String.valueOf(this.modSettingsInstallationScannerEnabled));
+        configurationProperties.setProperty(DISCORD_WEBHOOK_URL, this.discordWebhookUrl);
+        configurationProperties.setProperty(DISCORD_WEBHOOK_ENABLED, String.valueOf(this.discordWebhookEnabled));
         configurationProperties.setProperty(VANILLA_MISSIONS_IMPORTER, String.valueOf(this.vanillaMissionsImporter));
         return configurationProperties;
     }

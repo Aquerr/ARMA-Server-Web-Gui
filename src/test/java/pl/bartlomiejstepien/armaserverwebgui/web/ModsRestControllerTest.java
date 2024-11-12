@@ -45,7 +45,7 @@ class ModsRestControllerTest extends BaseIntegrationTest
                 .map(InstalledModEntity::getName)
                 .flatMap(modService::deleteMod)
                 .collectList()
-                .block();
+                .subscribe();
     }
 
     @Test

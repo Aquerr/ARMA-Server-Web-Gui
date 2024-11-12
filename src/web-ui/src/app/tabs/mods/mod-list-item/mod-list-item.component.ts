@@ -13,7 +13,7 @@ import {NotificationService} from "../../../service/notification.service";
 @Component({
   selector: '[app-mod-list-item]',
   templateUrl: './mod-list-item.component.html',
-  styleUrls: ['./mod-list-item.component.css']
+  styleUrls: ['./mod-list-item.component.scss']
 })
 export class ModListItemComponent {
 

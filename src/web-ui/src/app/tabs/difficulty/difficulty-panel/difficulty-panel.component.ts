@@ -11,7 +11,7 @@ import {
 @Component({
   selector: 'app-difficulty-panel',
   templateUrl: './difficulty-panel.component.html',
-  styleUrl: './difficulty-panel.component.css'
+  styleUrl: './difficulty-panel.component.scss'
 })
 export class DifficultyPanelComponent {
   @Input() difficultyProfile!: DifficultyProfile;

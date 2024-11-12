@@ -7,7 +7,7 @@ import {Subscription} from "rxjs";
 @Component({
   selector: 'app-mission-modify-dialog',
   templateUrl: './mission-modify-dialog.component.html',
-  styleUrls: ['./mission-modify-dialog.component.css']
+  styleUrls: ['./mission-modify-dialog.component.scss']
 })
 export class MissionModifyDialogComponent implements OnInit {
 

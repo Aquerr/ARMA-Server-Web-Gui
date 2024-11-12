@@ -8,7 +8,7 @@ import {MaskService} from "../../service/mask.service";
 @Component({
   selector: 'app-workshop',
   templateUrl: './workshop.component.html',
-  styleUrls: ['./workshop.component.css']
+  styleUrls: ['./workshop.component.scss']
 })
 export class WorkshopComponent implements OnInit, OnDestroy {
   workshopMods: WorkshopMod[] = [];

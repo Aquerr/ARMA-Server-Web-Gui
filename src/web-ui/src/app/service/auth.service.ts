@@ -40,6 +40,7 @@ export class AuthService  {
   }
 
   canActivate(): boolean {
+    console.log("Can activate?");
     if (!this.isAuthenticated()) {
       this.router.navigate(['login']);
       return false;

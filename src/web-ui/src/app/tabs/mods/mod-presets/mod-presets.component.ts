@@ -17,7 +17,7 @@ import {ModPresetParserService} from "./service/mod-preset-parser.service";
 @Component({
   selector: 'app-mod-presets',
   templateUrl: './mod-presets.component.html',
-  styleUrls: ['./mod-presets.component.css']
+  styleUrls: ['./mod-presets.component.scss']
 })
 export class ModPresetsComponent {
 

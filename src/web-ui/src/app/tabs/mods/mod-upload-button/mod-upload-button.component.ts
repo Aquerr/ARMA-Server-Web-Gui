@@ -4,7 +4,7 @@ import {ModUploadService} from "../service/mod-upload.service";
 @Component({
   selector: 'app-upload-mod',
   templateUrl: './mod-upload-button.component.html',
-  styleUrls: ['./mod-upload-button.component.css']
+  styleUrls: ['./mod-upload-button.component.scss']
 })
 export class ModUploadButtonComponent {
 

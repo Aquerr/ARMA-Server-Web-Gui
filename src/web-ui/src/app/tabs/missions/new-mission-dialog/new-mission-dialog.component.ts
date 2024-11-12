@@ -5,7 +5,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 @Component({
   selector: 'app-new-mission-dialog',
   templateUrl: './new-mission-dialog.component.html',
-  styleUrl: './new-mission-dialog.component.css'
+  styleUrl: './new-mission-dialog.component.scss'
 })
 export class NewMissionDialogComponent {
   missionType: 'BUILT_IN' | 'FILE' = 'BUILT_IN';

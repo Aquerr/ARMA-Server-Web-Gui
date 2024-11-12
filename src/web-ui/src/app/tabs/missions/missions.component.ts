@@ -18,7 +18,7 @@ import {NewMissionDialogComponent} from "./new-mission-dialog/new-mission-dialog
 @Component({
   selector: 'app-missions',
   templateUrl: './missions.component.html',
-  styleUrls: ['./missions.component.css']
+  styleUrls: ['./missions.component.scss']
 })
 export class MissionsComponent implements OnInit, OnDestroy {
 

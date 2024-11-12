@@ -11,7 +11,7 @@ import {VoteCmd} from "../../model/vote-cmd.model";
 @Component({
   selector: 'app-security',
   templateUrl: './security.component.html',
-  styleUrls: ['./security.component.css']
+  styleUrls: ['./security.component.scss']
 })
 export class SecurityComponent implements OnInit {
   public form: FormGroup;

@@ -7,7 +7,7 @@ import {DifficultyOptions, DifficultyProfile} from "../../model/difficulty-profi
 @Component({
   selector: 'app-difficulty',
   templateUrl: './difficulty.component.html',
-  styleUrl: './difficulty.component.css'
+  styleUrl: './difficulty.component.scss'
 })
 export class DifficultyComponent implements OnInit {
 

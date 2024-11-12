@@ -5,7 +5,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 @Component({
   selector: 'app-mod-preset-add-dialog',
   templateUrl: './mod-preset-add-dialog.component.html',
-  styleUrls: ['./mod-preset-add-dialog.component.css']
+  styleUrls: ['./mod-preset-add-dialog.component.scss']
 })
 export class ModPresetAddDialogComponent {
 

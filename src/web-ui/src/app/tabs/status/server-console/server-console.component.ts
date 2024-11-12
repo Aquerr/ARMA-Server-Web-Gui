@@ -8,7 +8,7 @@ import {Observable} from "rxjs";
 @Component({
   selector: 'app-server-console',
   templateUrl: './server-console.component.html',
-  styleUrls: ['./server-console.component.css']
+  styleUrls: ['./server-console.component.scss']
 })
 export class ServerConsoleComponent implements OnInit, OnDestroy {
 

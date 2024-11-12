@@ -4,7 +4,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angula
 @Component({
     selector: 'aswg-drag-drop-list',
     templateUrl: './aswg-drag-drop-list.component.html',
-    styleUrls: ['./aswg-drag-drop-list.component.css']
+    styleUrls: ['./aswg-drag-drop-list.component.scss']
 })
 export class AswgDragDropListComponent implements OnInit, OnDestroy {
 
