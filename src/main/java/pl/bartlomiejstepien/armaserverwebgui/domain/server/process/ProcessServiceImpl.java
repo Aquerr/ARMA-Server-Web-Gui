@@ -8,13 +8,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordWebhookHandler;
+import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordIntegration;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordWebhookMessageParams;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerIsAlreadyRunningException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
@@ -29,6 +30,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -42,7 +44,7 @@ public class ProcessServiceImpl implements ProcessService
 
     private final SteamService steamService;
     private final ArmaServerParametersGenerator serverParametersGenerator;
-    private final DiscordWebhookHandler discordWebhookHandler;
+    private final Optional<DiscordIntegration> discordIntegration;
 
     private final ASWGConfig aswgConfig;
 
@@ -95,16 +97,26 @@ public class ProcessServiceImpl implements ProcessService
         serverStartScheduled = true;
 
         Mono<?> flow = Mono.empty();
-
         if (performUpdate)
         {
-            flow = flow.doOnSuccess(t -> discordWebhookHandler.publishMessage(DiscordWebhookMessageParams.builder().title("Updating server").build()).subscribe());
-            tryUpdateArmaServer();
+            flow = flow
+                    .then(trySendDiscordMessage(DiscordWebhookMessageParams.builder().title("Updating server").build()))
+                    .then(Mono.fromRunnable(this::tryUpdateArmaServer));
         }
 
-        return flow.then(serverParametersGenerator.generateParameters()
-                .flatMap(this::startServerProcess)
-                .doOnSuccess(t -> discordWebhookHandler.publishMessage(DiscordWebhookMessageParams.builder().title("Starting server").build()).subscribe()));
+        return flow.thenMany(Flux.merge(
+                trySendDiscordMessage(DiscordWebhookMessageParams.builder().title("Server started").build()),
+                serverParametersGenerator.generateParameters()
+                        .flatMap(this::startServerProcess)
+        )).last();
+    }
+
+    private Mono<Void> trySendDiscordMessage(DiscordWebhookMessageParams params)
+    {
+        return Mono.just(discordIntegration)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .flatMap(di -> di.sendMessage(params));
     }
 
     private Mono<Void> startServerProcess(ArmaServerParameters serverParameters)
@@ -233,7 +245,9 @@ public class ProcessServiceImpl implements ProcessService
         {
             throw new RuntimeException("Could not save server pid.", e);
         }
-        return Mono.empty();
+        return trySendDiscordMessage(DiscordWebhookMessageParams.builder()
+                .title("Server Stopped")
+                .build());
     }
 
     @Override
