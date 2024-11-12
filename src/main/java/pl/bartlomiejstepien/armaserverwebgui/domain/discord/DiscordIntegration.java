@@ -11,7 +11,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordWebhook
 import reactor.core.publisher.Mono;
 
 @Component
-@ConditionalOnProperty(value = "discord.webhook.enabled")
+@ConditionalOnProperty(value = "aswg.discord.webhook.enabled")
 public class DiscordIntegration
 {
     private final ASWGConfig config;

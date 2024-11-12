@@ -3,8 +3,6 @@ package pl.bartlomiejstepien.armaserverwebgui.application.config;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +16,6 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 @Component
-@PropertySources({
-        @PropertySource(value = "classpath:aswg-default-config.properties"),
-        @PropertySource(value = "file:aswg-config.properties", ignoreResourceNotFound = true)
-})
 @Setter
 public class ASWGConfig
 {
@@ -63,6 +57,7 @@ public class ASWGConfig
     private String steamCmdPassword;
     @Value("${aswg.steam.web-api-token:}")
     private String steamApiKey;
+
     @Value("${aswg.job.file-scanner.installation.enabled:true}")
     private boolean fileScannerInstallationEnabled;
     @Value("${aswg.job.file-scanner.deletion.enabled:false}")
@@ -70,21 +65,18 @@ public class ASWGConfig
 
     @Value("${aswg.job.difficulty-scanner.installation.enabled}")
     private boolean difficultyProfileInstallationScannerEnabled;
-
     @Value("${aswg.job.mod-settings-scanner.installation.enabled}")
     private boolean modSettingsInstallationScannerEnabled;
-
     @Value("${aswg.vanilla-missions-importer.enabled}")
     private boolean vanillaMissionsImporter;
 
     @Value("${aswg.discord.webhook.enabled}")
     private boolean discordWebhookEnabled;
-
     @Value("${aswg.discord.webhook.url}")
     private String discordWebhookUrl;
 
     @EventListener(ApplicationReadyEvent.class)
-    public void onApplicationRead() throws IOException
+    public void onEnvironmentPreparedEvent() throws IOException
     {
         // Create configuration file on startup
         createConfigFileIfNotExists();
