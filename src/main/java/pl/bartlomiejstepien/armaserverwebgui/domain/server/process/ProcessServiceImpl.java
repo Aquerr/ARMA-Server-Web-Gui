@@ -108,7 +108,7 @@ public class ProcessServiceImpl implements ProcessService
                 trySendDiscordMessage(DiscordWebhookMessageParams.builder().title("Server started").build()),
                 serverParametersGenerator.generateParameters()
                         .flatMap(this::startServerProcess)
-        )).last();
+        )).then();
     }
 
     private Mono<Void> trySendDiscordMessage(DiscordWebhookMessageParams params)
