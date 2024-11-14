@@ -33,4 +33,9 @@ public class DiscordMessage
             private boolean inline;
         }
     }
+
+    public static DiscordMessage ofSingleEmbed(Embed embed)
+    {
+        return new DiscordMessage(List.of(embed));
+    }
 }

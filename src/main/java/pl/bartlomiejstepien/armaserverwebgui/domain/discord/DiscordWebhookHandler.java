@@ -4,44 +4,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordMessage;
-import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordWebhookMessageParams;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Optional;
-
-class DiscordWebhookHandler
+public class DiscordWebhookHandler
 {
+    private final String webhookUrl;
     private final WebClient webClient;
     private final ObjectMapper objectMapper;
 
-    DiscordWebhookHandler(ObjectMapper objectMapper,
-                              WebClient webClient)
+    public DiscordWebhookHandler(
+            String webhookUrl,
+            ObjectMapper objectMapper,
+            WebClient webClient)
     {
+        this.webhookUrl = webhookUrl;
         this.webClient = webClient;
         this.objectMapper = objectMapper;
     }
 
-    public Mono<Void> sendMessage(String discordWebhookUrl,
-                                  DiscordWebhookMessageParams params)
+    public Mono<Void> sendMessage(DiscordMessage discordMessage)
     {
         String jsonMessage;
         try
         {
-            DiscordMessage discordMessage = new DiscordMessage(List.of(
-                    DiscordMessage.Embed.builder()
-                            .title(params.getTitle())
-                            .description(params.getDescription())
-                            .fields(Optional.ofNullable(params.getFields())
-                                    .map(map -> map.entrySet().stream().map(entry -> DiscordMessage.Embed.Field.builder()
-                                                    .name(entry.getKey())
-                                                    .value(entry.getValue())
-                                                    .build())
-                                            .toList())
-                                    .orElse(null))
-                            .build()
-            ));
-
             jsonMessage = objectMapper.writeValueAsString(discordMessage);
         }
         catch (Exception exception)
@@ -50,7 +35,7 @@ class DiscordWebhookHandler
         }
 
         return webClient.post()
-                .uri(discordWebhookUrl)
+                .uri(this.webhookUrl)
                 .body(BodyInserters.fromValue(jsonMessage))
                 .retrieve()
                 .toBodilessEntity()

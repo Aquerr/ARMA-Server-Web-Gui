@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordIntegration;
-import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordWebhookMessageParams;
+import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerIsAlreadyRunningException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
@@ -100,23 +100,23 @@ public class ProcessServiceImpl implements ProcessService
         if (performUpdate)
         {
             flow = flow
-                    .then(trySendDiscordMessage(DiscordWebhookMessageParams.builder().title("Updating server").build()))
+                    .then(trySendDiscordMessage(MessageKind.SERVER_UPDATED))
                     .then(Mono.fromRunnable(this::tryUpdateArmaServer));
         }
 
         return flow.thenMany(Flux.merge(
-                trySendDiscordMessage(DiscordWebhookMessageParams.builder().title("Server started").build()),
+                trySendDiscordMessage(MessageKind.SERVER_STARTED),
                 serverParametersGenerator.generateParameters()
                         .flatMap(this::startServerProcess)
         )).then();
     }
 
-    private Mono<Void> trySendDiscordMessage(DiscordWebhookMessageParams params)
+    private Mono<Void> trySendDiscordMessage(MessageKind messageKind)
     {
         return Mono.just(discordIntegration)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .flatMap(di -> di.sendMessage(params));
+                .flatMap(di -> di.sendMessage(messageKind));
     }
 
     private Mono<Void> startServerProcess(ArmaServerParameters serverParameters)
@@ -245,9 +245,7 @@ public class ProcessServiceImpl implements ProcessService
         {
             throw new RuntimeException("Could not save server pid.", e);
         }
-        return trySendDiscordMessage(DiscordWebhookMessageParams.builder()
-                .title("Server Stopped")
-                .build());
+        return trySendDiscordMessage(MessageKind.SERVER_STOPPED);
     }
 
     @Override

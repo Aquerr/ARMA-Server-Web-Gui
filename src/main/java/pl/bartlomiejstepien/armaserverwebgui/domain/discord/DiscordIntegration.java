@@ -1,35 +1,26 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.discord;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
-import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordWebhookMessageParams;
+import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.DiscordMessageCreator;
+import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
 import reactor.core.publisher.Mono;
 
-@Component
-@ConditionalOnProperty(value = "aswg.discord.webhook.enabled")
+import java.util.Map;
+
 public class DiscordIntegration
 {
-    private final ASWGConfig config;
+    private final Map<MessageKind, DiscordMessageCreator> discordMessageCreators;
     private final DiscordWebhookHandler discordWebhookHandler;
 
-    public DiscordIntegration(ASWGConfig config,
-                              ObjectMapper objectMapper,
-                              WebClient.Builder webClientBuilder)
+    public DiscordIntegration(DiscordWebhookHandler discordWebhookHandler,
+                              Map<MessageKind, DiscordMessageCreator> discordMessageCreators)
     {
-        this.config = config;
-        WebClient webClient = webClientBuilder
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
-        this.discordWebhookHandler = new DiscordWebhookHandler(objectMapper, webClient);
+        this.discordWebhookHandler = discordWebhookHandler;
+        this.discordMessageCreators = discordMessageCreators;
     }
 
-    public Mono<Void> sendMessage(DiscordWebhookMessageParams params)
+    public Mono<Void> sendMessage(MessageKind messageKind)
     {
-        return this.discordWebhookHandler.sendMessage(this.config.getDiscordWebhookUrl(), params);
+        return this.discordMessageCreators.get(messageKind).create()
+                .flatMap(this.discordWebhookHandler::sendMessage);
     }
 }
