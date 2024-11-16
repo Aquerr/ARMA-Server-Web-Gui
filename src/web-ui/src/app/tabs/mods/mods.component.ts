@@ -74,7 +74,6 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   save() {
     this.maskService.show();
-    console.log(this.enabledMods);
     this.modService.saveEnabledMods({mods: this.enabledMods}).subscribe(response => {
       this.maskService.hide();
       this.notificationService.successNotification('Active mods list saved!', 'Success');
@@ -130,7 +129,6 @@ export class ModsComponent implements OnInit, OnDestroy {
   }
 
   onModPresetSelected(presetName: string) {
-    console.log("Reload mod list...");
     this.reloadModsDataSubject.next(null);
   }
 

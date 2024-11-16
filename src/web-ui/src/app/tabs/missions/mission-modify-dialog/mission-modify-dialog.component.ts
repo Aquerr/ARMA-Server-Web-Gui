@@ -27,7 +27,6 @@ export class MissionModifyDialogComponent implements OnInit {
         this.createNewParameter(parameter.name, parameter.value);
       });
     }
-    console.log(this.mission.difficulty);
     this.difficulty = this.mission.difficulty;
     this.name = this.mission.name;
     this.template = this.mission.template;

@@ -88,11 +88,9 @@ export class FileUploadMonitorService {
 
 
   private removeFileWithName(name: string) {
-    console.log(this.uploadingFiles);
     const uploadingFileIndex = this.uploadingFiles.findIndex(uploadingFile => uploadingFile.fileName === name);
     if (uploadingFileIndex != -1) {
       this.uploadingFiles.splice(uploadingFileIndex, 1);
-      console.log(this.uploadingFiles);
     }
   }
 }

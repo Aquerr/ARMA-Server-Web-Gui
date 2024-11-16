@@ -38,7 +38,6 @@ export class ModPresetsComponent {
 
   modPresetImport(event: Event) {
     this.maskService.show();
-    console.log(event);
 
     const target = (event.target as HTMLInputElement);
 
@@ -85,7 +84,6 @@ export class ModPresetsComponent {
   }
 
   presetImportClick() {
-    console.log(this.fileInputComponent);
     this.fileInputComponent.nativeElement.click();
   }
 
@@ -116,7 +114,6 @@ export class ModPresetsComponent {
     });
 
     dialogRef.afterClosed().subscribe((result: {create: boolean, modPresetName: string}) => {
-      console.log(result);
       if (result.create) {
         this.modsService.savePreset({name: result.modPresetName, modNames: []}).subscribe(response => {
           this.reloadModPresets();
@@ -138,7 +135,6 @@ export class ModPresetsComponent {
     });
 
     dialogRef.afterClosed().subscribe((result: {create: boolean, modPresetName: string}) => {
-      console.log(result);
       if (result) {
         this.modsService.savePreset({name: presetName, modNames: this.enabledMods.map(mod => mod.name)} as ModPresetSaveRequest).subscribe(response => {
           this.reloadModPresets();
@@ -156,7 +152,6 @@ export class ModPresetsComponent {
     });
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
-      console.log(result);
       if (result) {
         this.maskService.show();
         this.modsService.deletePreset(presetName).subscribe(response => {

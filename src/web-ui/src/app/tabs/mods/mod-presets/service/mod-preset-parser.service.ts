@@ -27,7 +27,6 @@ export class ModPresetParserService {
         mods.push({id: modId, name: modTitle});
       }
     }
-    console.log(mods);
     const presetName = html.querySelector('meta[name="arma:PresetName"]')?.getAttribute('content') ?? "custom";
 
     return {name: presetName, entries: mods}

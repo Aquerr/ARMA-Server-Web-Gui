@@ -33,7 +33,6 @@ export class ServerDifficultyService {
 
   saveDifficulties(difficultyProfiles: DifficultyProfile[]): Observable<any> {
     return forkJoin(difficultyProfiles.map(profile => {
-      console.log(profile.id);
       if (profile.id === 0 || profile.id === undefined) {
         return this.createDifficulty(profile);
       } else {

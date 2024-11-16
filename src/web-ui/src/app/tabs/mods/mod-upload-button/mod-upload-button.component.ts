@@ -11,8 +11,6 @@ export class ModUploadButtonComponent {
   constructor(private modUploadService: ModUploadService) { }
 
   onFileSelected(event: Event) {
-    console.log(event);
-
     const target = (event.target as HTMLInputElement);
 
     if (!target.files)

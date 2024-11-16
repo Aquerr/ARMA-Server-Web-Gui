@@ -14,19 +14,16 @@ export class ModPresetItemComponent {
   @Output("presetSaved") presetSavedEmitter = new EventEmitter<string>();
 
   deletePreset($event: MouseEvent) {
-    console.log("Deleting preset: " + this.presetName);
     $event.stopPropagation();
     this.presetDeletedEmitter.emit(this.presetName);
   }
 
   savePreset($event: MouseEvent) {
-    console.log("Saving preset: " + this.presetName);
     $event.stopPropagation();
     this.presetSavedEmitter.emit(this.presetName);
   }
 
   presetSelected() {
-    console.log("Selected preset: " + this.presetName);
     this.presetSelectedEmitter.emit(this.presetName);
   }
 }

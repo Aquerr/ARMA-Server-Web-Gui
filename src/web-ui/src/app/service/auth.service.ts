@@ -21,7 +21,6 @@ export class AuthService  {
         observe: "response"
       })
       .pipe(map(userData => {
-        console.log(userData);
         sessionStorage.setItem("username", username);
         sessionStorage.setItem("auth-token", (userData.body?.value ? userData.body?.value : ''));
         return userData;
@@ -40,7 +39,6 @@ export class AuthService  {
   }
 
   canActivate(): boolean {
-    console.log("Can activate?");
     if (!this.isAuthenticated()) {
       this.router.navigate(['login']);
       return false;

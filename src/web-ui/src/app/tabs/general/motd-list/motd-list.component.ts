@@ -43,7 +43,6 @@ export class MotdListComponent implements OnInit {
   }
 
   onItemUpdate(motdItem: MotdItem) {
-    console.log("Item updated!");
     motdItem.editing = false;
   }
 }

@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
             this.maskService.hide();
           },
           error => {
-            console.log(error);
             if(error.status === 401) {
               this.errorMessage = "Bad username or password!";
             } else {

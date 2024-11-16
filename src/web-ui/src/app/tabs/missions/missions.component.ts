@@ -102,7 +102,6 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   save() {
     this.maskService.show();
-    console.log(this.enabledMissions);
     this.missionsService.saveEnabledMissions({missions: this.enabledMissions}).subscribe(response => {
       this.maskService.hide();
       this.notificationService.successNotification('Active mission list saved!', 'Success');
@@ -163,8 +162,6 @@ export class MissionsComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log("Dialog closed");
-      console.log(result);
       if (result.file) {
         this.onFileDropped(result.file);
       } else if (result.template) {

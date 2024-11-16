@@ -19,11 +19,8 @@ export class ModInstallWebsocketService {
       return;
     }
 
-    console.log("Initializing websocket...");
-
     this.websocket = new WebSocket(API_WS_BASE_URL + "/workshop-mod-install-progress");
     this.websocket.onopen = (event) => {
-      console.log("Connected to websocket!");
       this.isConnected = true;
     };
 
@@ -39,7 +36,6 @@ export class ModInstallWebsocketService {
 
     this.websocket.onclose = (event) => {
       console.log(event);
-      console.log("Websocket closed!");
       this.isConnected = false;
     };
 

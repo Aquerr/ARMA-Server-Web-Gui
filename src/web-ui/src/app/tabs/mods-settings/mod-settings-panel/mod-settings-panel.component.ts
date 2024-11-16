@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ModSettings} from "../../../model/mod-settings.model";
 import {ModSettingsService} from "../../../service/mod-settings.service";
 import {FormGroup} from "@angular/forms";
@@ -12,7 +12,7 @@ import hljs from 'highlight.js';
   templateUrl: './mod-settings-panel.component.html',
   styleUrl: './mod-settings-panel.component.scss'
 })
-export class ModSettingsPanelComponent implements OnInit, OnChanges {
+export class ModSettingsPanelComponent implements OnInit {
 
   @Input({required: true}) modSettings!: ModSettings;
   @Output("deleted") modSettingsDeleted = new EventEmitter<number>();
@@ -98,9 +98,5 @@ export class ModSettingsPanelComponent implements OnInit, OnChanges {
 
   onCodeChange(code: string) {
     this.formService.setContentControl(this.form, code);
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
   }
 }

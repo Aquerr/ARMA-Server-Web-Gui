@@ -73,7 +73,6 @@ export class WorkshopItemComponent implements OnInit {
 
   showSpinner(value: boolean) {
     setTimeout(() => {
-      console.log("Setting spinnerVisible to = " + value);
       if (value) {
         this.ngxSpinner.show(this.workshopMod.title);
       } else {

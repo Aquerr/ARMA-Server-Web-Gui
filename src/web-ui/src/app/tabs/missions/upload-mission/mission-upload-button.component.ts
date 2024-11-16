@@ -19,8 +19,6 @@ export class MissionUploadButtonComponent implements OnInit {
   }
 
   onFileSelected(event: Event) {
-    console.log(event);
-
     const target = (event.target as HTMLInputElement);
 
     if (!target.files)

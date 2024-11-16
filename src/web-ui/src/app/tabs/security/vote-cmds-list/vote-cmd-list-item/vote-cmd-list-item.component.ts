@@ -12,7 +12,6 @@ export class VoteCmdListItemComponent {
   @Output() onDelete: EventEmitter<any> = new EventEmitter<any>();
 
   deleteClick() {
-    console.log("Deleted: " + this.item);
     this.onDelete.emit();
   }
 

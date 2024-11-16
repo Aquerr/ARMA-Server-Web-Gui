@@ -48,11 +48,7 @@ export abstract class FileUploadService {
         }
       },
       error: (error) => {
-        console.log(error);
         this.fileUploadedSubject.next(null);
-      },
-      complete: () => {
-        this.fileUploadedSubject.next(file);
       }
     });
   }
@@ -60,7 +56,6 @@ export abstract class FileUploadService {
   private isFileAllowed(file: File): boolean {
     const fileName = file.name.toLowerCase();
     const fileExtension = fileName.substring(fileName.lastIndexOf("."));
-    console.log(`File type: ${file.type} | File extension: ${fileExtension}`);
     if (!this.allowedFileExtensions.includes("*")
       && !this.allowedFileExtensions.includes(fileExtension)) {
       return false;
