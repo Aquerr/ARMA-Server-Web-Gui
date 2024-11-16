@@ -11,5 +11,7 @@ aswg-config.properties
 
 # Compile / Build
 /target
+/logs
 *.tmp
 *.db
+/aswg_profiles
