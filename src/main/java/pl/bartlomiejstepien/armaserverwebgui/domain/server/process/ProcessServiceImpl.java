@@ -281,7 +281,6 @@ public class ProcessServiceImpl implements ProcessService
                         new InputStreamReader(process.getInputStream()));
                 String line = null;
                 while ((line = reader.readLine()) != null) {
-                    log.info(line);
                     SERVER_LOGGER.info(line);
                     serverLogSink.tryEmitNext(line);
                 }
@@ -299,7 +298,6 @@ public class ProcessServiceImpl implements ProcessService
                         new InputStreamReader(process.getErrorStream()));
                 String line = null;
                 while ((line = reader.readLine()) != null) {
-                    log.info(line);
                     SERVER_LOGGER.info(line);
                     serverLogSink.tryEmitNext(line);
                 }

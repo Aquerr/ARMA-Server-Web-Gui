@@ -16,9 +16,10 @@
         <file>logs/aswg.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/aswg.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
-            <cleanHistoryOnStart>false</cleanHistoryOnStart>
-            <maxFileSize>10MB</maxFileSize>
-            <maxHistory>3</maxHistory>
+            <maxFileSize>4MB</maxFileSize>
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>50MB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
     </appender>
     <appender name="SERVER_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -29,9 +30,9 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/arma-server-%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
-            <maxFileSize>10MB</maxFileSize>
-            <maxHistory>3</maxHistory>
-            <totalSizeCap>10MB</totalSizeCap>
+            <maxFileSize>4MB</maxFileSize>
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>50MB</totalSizeCap>
             <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
     </appender>
