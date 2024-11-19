@@ -47,7 +47,7 @@ public class ModStorageImpl implements ModStorage
                           InstalledModRepository installedModRepository,
                           ModFolderNameHelper modFolderNameHelper)
     {
-        this.modDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath());
+        this.modDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath()).resolve(aswgConfig.getModsDirectoryPath());
         this.installedModRepository = installedModRepository;
         this.modFolderNameHelper = modFolderNameHelper;
     }
@@ -143,10 +143,10 @@ public class ModStorageImpl implements ModStorage
     }
 
     @Override
-    public Path copyModFolderFromSteamCmd(Path steamCmdModFolderPath, Path armaServerDir, String modName)
+    public Path copyModFolderFromSteamCmd(Path steamCmdModFolderPath, Path serverModsDir, String modName)
     {
         String normalizedModDirectoryName = modFolderNameHelper.buildFor(modName);
-        Path modDirectoryPath = armaServerDir.resolve(normalizedModDirectoryName);
+        Path modDirectoryPath = serverModsDir.resolve(normalizedModDirectoryName);
         try
         {
             Files.createDirectories(modDirectoryPath);
@@ -162,10 +162,10 @@ public class ModStorageImpl implements ModStorage
     }
 
     @Override
-    public Path linkModFolderToSteamCmdModFolder(Path steamCmdModFolderPath, Path armaServerDir, String modName)
+    public Path linkModFolderToSteamCmdModFolder(Path steamCmdModFolderPath, Path serverModsDir, String modName)
     {
         String normalizedModDirectoryName = modFolderNameHelper.buildFor(modName);
-        Path modDirectoryPath = armaServerDir.resolve(normalizedModDirectoryName);
+        Path modDirectoryPath = serverModsDir.resolve(normalizedModDirectoryName);
         try
         {
             if (Files.notExists(modDirectoryPath)

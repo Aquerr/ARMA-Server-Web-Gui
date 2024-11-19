@@ -2,32 +2,58 @@
   <h1>General</h1>
   <div class="general-properties">
     <div class="fields">
-      <mat-form-field class="server-directory-field">
+      <mat-form-field class="width-35">
         <mat-label>Server directory</mat-label>
-        <input name="server-directory" [(ngModel)]="serverDirectory" matInput type="text">
+        <input name="server-directory"
+               [(ngModel)]="serverDirectory"
+               matInput
+               type="text">
       </mat-form-field>
-      <mat-form-field class="hostname-field">
+      <mat-form-field class="width-35">
+        <mat-label>Mods directory</mat-label>
+        <input name="mods-directory"
+               [(ngModel)]="modsDirectory"
+               matInput
+               type="text"
+               matTooltip="Optional option. Specifies mods directory relative to server directory.
+               When empty (default), then mod folders will be located inside server root directory"
+               matTooltipPosition="right">
+      </mat-form-field>
+      <mat-form-field class="width-50">
         <mat-label>Hostname</mat-label>
-        <input name="hostname" [(ngModel)]="hostname" matInput type="text">
+        <input name="hostname"
+               [(ngModel)]="hostname"
+               matInput
+               type="text"
+               matTooltip="Also determines the configuration profile used by the game"
+               matTooltipPosition="right">
       </mat-form-field>
       <mat-form-field>
         <mat-label>Port</mat-label>
-        <input name="port" [(ngModel)]="port" matInput type="number" min="0">
+        <input name="port"
+               [(ngModel)]="port"
+               matInput
+               type="number"
+               min="0">
       </mat-form-field>
       <mat-form-field class="max-players-field">
         <mat-label>Max players</mat-label>
-        <input name="max-players" [(ngModel)]="maxPlayers" matInput type="number" min="0">
+        <input name="max-players"
+               [(ngModel)]="maxPlayers"
+               matInput
+               type="number"
+               min="0">
       </mat-form-field>
       <mat-form-field>
         <mat-label>Persistent</mat-label>
-        <mat-select [(ngModel)]="persistent" name="persistent">
+        <mat-select [(ngModel)]="persistent" name="persistent" matTooltip="If yes then mission keeps running even when all players disconnect">
           <mat-option [value]="true">Yes</mat-option>
           <mat-option [value]="false">No</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Drawing in map </mat-label>
-        <mat-select [(ngModel)]="drawingInMap" name="drawing-in-map">
+        <mat-label>Drawing in map</mat-label>
+        <mat-select [(ngModel)]="drawingInMap" name="drawing-in-map" matTooltip="Enabled the ability to place markers and draw lines on map">
           <mat-option [value]="true">Yes</mat-option>
           <mat-option [value]="false">No</mat-option>
         </mat-select>

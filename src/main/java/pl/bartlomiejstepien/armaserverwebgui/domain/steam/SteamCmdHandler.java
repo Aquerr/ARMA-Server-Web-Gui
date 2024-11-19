@@ -194,11 +194,11 @@ public class SteamCmdHandler
         Path modDirectoryPath = null;
         if (SystemUtils.isWindows())
         {
-            modDirectoryPath = this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()), task.getTitle());
+            modDirectoryPath = this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()).resolve(this.aswgConfig.getModsDirectoryPath()), task.getTitle());
         }
         else
         {
-            modDirectoryPath = this.modStorage.linkModFolderToSteamCmdModFolder(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()), task.getTitle());
+            modDirectoryPath = this.modStorage.linkModFolderToSteamCmdModFolder(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()).resolve(this.aswgConfig.getModsDirectoryPath()), task.getTitle());
         }
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 75));
 

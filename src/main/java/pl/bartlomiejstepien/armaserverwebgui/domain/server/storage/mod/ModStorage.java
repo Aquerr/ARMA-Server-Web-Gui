@@ -25,7 +25,7 @@ public interface ModStorage {
 
     Mono<InstalledModEntity> getInstalledMod(String modName);
 
-    Path copyModFolderFromSteamCmd(Path steamCmdModFolderPath, Path armaServerDir, String modName);
+    Path copyModFolderFromSteamCmd(Path steamCmdModFolderPath, Path serverModsDir, String modName);
 
-    Path linkModFolderToSteamCmdModFolder(Path steamCmdModFolderPath, Path armaServerDir, String modName);
+    Path linkModFolderToSteamCmdModFolder(Path steamCmdModFolderPath, Path serverModsDir, String modName);
 }

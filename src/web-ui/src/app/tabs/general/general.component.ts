@@ -15,6 +15,7 @@ export class GeneralComponent implements OnInit {
 
   commandLineParams: string = "";
   serverDirectory: string = "";
+  modsDirectory: string = "";
   hostname: string = "";
   port: number = 2302;
   maxPlayers: number = 64;
@@ -31,6 +32,7 @@ export class GeneralComponent implements OnInit {
     this.serverGeneralService.getGeneralProperties().subscribe(response => {
       this.commandLineParams = response.commandLineParams;
       this.serverDirectory = response.serverDirectory;
+      this.modsDirectory = response.modsDirectory;
       this.port = response.port;
       this.hostname = response.hostname;
       this.maxPlayers = response.maxPlayers;
@@ -47,6 +49,7 @@ export class GeneralComponent implements OnInit {
 
     const saveGeneralProperties = {
       serverDirectory: this.serverDirectory,
+      modsDirectory: this.modsDirectory,
       hostname: this.hostname,
       port: this.port,
       maxPlayers: this.maxPlayers,

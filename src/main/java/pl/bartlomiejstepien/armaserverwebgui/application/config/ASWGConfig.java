@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -17,11 +18,14 @@ import java.util.Properties;
 
 @Component
 @Setter
+@Getter
 public class ASWGConfig
 {
     private static final Path ASWG_CONFIGURATION_FILE_PATH = Paths.get("aswg-config.properties");
 
     private static final String SERVER_DIRECTORY_PATH_PROPERTY = "aswg.server-directory-path";
+    private static final String MODS_DIRECTORY_PATH_PROPERTY = "aswg.mods-directory-path";
+
     private static final String USERNAME_PROPERTY = "aswg.username";
     private static final String PASSWORD_PROPERTY = "aswg.password";
     private static final String STEAMCMD_PATH = "aswg.steamcmd.path";
@@ -48,6 +52,8 @@ public class ASWGConfig
     private int serverPort;
     @Value("${aswg.server-directory-path:}")
     private String serverDirectoryPath;
+    @Value("${aswg.mods-directory-path:}")
+    private String modsDirectoryPath;
 
     @Value("${aswg.steamcmd.path}")
     private String steamCmdPath;
@@ -82,78 +88,7 @@ public class ASWGConfig
         createConfigFileIfNotExists();
     }
 
-    public String getUsername()
-    {
-        return username;
-    }
-
-    public String getPassword()
-    {
-        return password;
-    }
-
-    public String getServerDirectoryPath()
-    {
-        return serverDirectoryPath;
-    }
-
-    public String getSteamCmdPath()
-    {
-        return this.steamCmdPath;
-    }
-
-    public String getSteamCmdUsername()
-    {
-        return steamCmdUsername;
-    }
-
-    public String getSteamCmdPassword()
-    {
-        return steamCmdPassword;
-    }
-
-    public void setServerDirectoryPath(String serverDirectoryPath)
-    {
-        this.serverDirectoryPath = serverDirectoryPath;
-        saveProperties();
-    }
-
-    public int getServerPort()
-    {
-        return this.serverPort;
-    }
-
-    public boolean isFileScannerDeletionEnabled()
-    {
-        return fileScannerDeletionEnabled;
-    }
-
-    public boolean isFileScannerInstallationEnabled()
-    {
-        return fileScannerInstallationEnabled;
-    }
-
-    public boolean isDifficultyProfileInstallationScannerEnabled()
-    {
-        return difficultyProfileInstallationScannerEnabled;
-    }
-
-    public boolean isModSettingsInstallationScannerEnabled()
-    {
-        return this.modSettingsInstallationScannerEnabled;
-    }
-
-    public String getDiscordWebhookUrl()
-    {
-        return this.discordWebhookUrl;
-    }
-
-    public boolean isDiscordWebhookEnabled()
-    {
-        return this.discordWebhookEnabled;
-    }
-
-    private void saveProperties()
+    public void saveProperties()
     {
         try(FileWriter fileWriter = new FileWriter(ASWG_CONFIGURATION_FILE_PATH.toFile(), StandardCharsets.UTF_8);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter))

@@ -33,20 +33,20 @@ export class LoginComponent implements OnInit {
     const formData = this.form.value;
     if (formData.username && formData.password) {
       this.authService.authenticate(formData.username, formData.password)
-        .subscribe(
-          response => {
+        .subscribe({
+          next: () => {
             this.router.navigateByUrl('/general');
             this.maskService.hide();
           },
-          error => {
-            if(error.status === 401) {
+          error: err => {
+            if(err.status === 401) {
               this.errorMessage = "Bad username or password!";
             } else {
               this.errorMessage = "Could not log in because of server error."
             }
             this.maskService.hide();
           }
-        );
+        });
     }
   }
 

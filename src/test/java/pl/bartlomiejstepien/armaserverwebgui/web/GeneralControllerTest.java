@@ -56,7 +56,7 @@ class GeneralControllerTest extends BaseIntegrationTest
     }
 
     @Test
-    void saveGeneralPropertiesShouldUpdateServerDirectoryInASWGConfig()
+    void saveGeneralPropertiesShouldUpdateServerAndModsDirectoryInASWGConfig()
     {
         webTestClient.post()
                 .uri(API_GENERAL_PROPERTIES_URL)
@@ -68,6 +68,7 @@ class GeneralControllerTest extends BaseIntegrationTest
                 .isOk();
 
         assertThat(aswgConfig.getServerDirectoryPath()).isEqualTo("fake/fakeServerDirectory");
+        assertThat(aswgConfig.getModsDirectoryPath()).isEqualTo("anotherModsDirectory");
         verify(generalService).saveGeneralProperties(GeneralProperties.builder()
                 .maxPlayers(MAX_PLAYERS)
                 .build());

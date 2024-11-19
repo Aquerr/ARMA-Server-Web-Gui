@@ -24,7 +24,12 @@ export class DialogService {
 
     const dialogConfig= this.prepareDialogConfig(config, data);
 
-    this.matDialog.open(dialogComponent, dialogConfig).afterClosed().subscribe(closeCallback);
+    const subscription = this.matDialog.open(dialogComponent, dialogConfig).afterClosed().subscribe({
+      next: data => {
+        closeCallback(data);
+        subscription.unsubscribe();
+      }
+    });
   }
 
   private prepareDialogConfig(initialConfig?: MatDialogConfig, data?: any) {

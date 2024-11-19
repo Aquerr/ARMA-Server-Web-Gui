@@ -1,4 +1,5 @@
 {
   "serverDirectory": "fake/fakeServerDirectory",
+  "modsDirectory": "anotherModsDirectory",
   "maxPlayers": 10
 }

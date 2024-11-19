@@ -41,6 +41,7 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
                 .filter(InstalledModEntity::isEnabled)
                 .filter(installedModEntity -> !installedModEntity.isServerMod())
                 .map(InstalledModEntity::getModDirectoryName)
+                .map(modDirName -> this.aswgConfig.getModsDirectoryPath() + File.separator + modDirName)
                 .collect(Collectors.toSet());
 
         Set<String> serverModsDirs = installedMods.stream()
