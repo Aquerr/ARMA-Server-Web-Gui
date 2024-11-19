@@ -1,0 +1,12 @@
+[
+  {
+    "id": {mod_settings_id_1},
+    "name": "testsettings",
+    "active": false
+  },
+  {
+    "id": {mod_settings_id_2},
+    "name": "testsettingsactive",
+    "active": true
+  }
+]

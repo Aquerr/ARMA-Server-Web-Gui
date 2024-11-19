@@ -68,10 +68,10 @@ public class ModSettingsService
         return mono
                 .then(Mono.defer(() -> this.modSettingsStorage.saveModSettingsFileContent(modSettings.getName(), modSettings.isActive(), modSettings.getContent())))
                 .then(this.modSettingsStorage.save(entity))
-                .map(this::toDomain);
+                .map(ModSettingsService::toDomain);
     }
 
-    private void validateModSettingsName(ModSettings modSettings)
+    private static void validateModSettingsName(ModSettings modSettings)
     {
         Stream<String> charactersStream = Arrays.stream(DISALLOWED_MOD_SETTINGS_NAME_CHARACTERS);
         String illegalCharacter = charactersStream.filter(character -> modSettings.getName().contains(character))
@@ -84,7 +84,7 @@ public class ModSettingsService
         throw new IllegalArgumentException(format("Mod settings name '%s' contains illegal character '%s'.", modSettings.getName(), illegalCharacter));
     }
 
-    private ModSettingsEntity toEntity(ModSettingsHeader modSettingsHeader)
+    private static ModSettingsEntity toEntity(ModSettingsHeader modSettingsHeader)
     {
         return ModSettingsEntity.builder()
                 .id(modSettingsHeader.getId())
@@ -96,16 +96,16 @@ public class ModSettingsService
     public Mono<ModSettingsHeader> getModSettingsWithoutContents(long id)
     {
         return this.modSettingsStorage.findById(id)
-                .map(this::toDomain);
+                .map(ModSettingsService::toDomain);
     }
 
     public Flux<ModSettingsHeader> getModSettingsWithoutContents()
     {
         return this.modSettingsStorage.findAll()
-                .map(this::toDomain);
+                .map(ModSettingsService::toDomain);
     }
 
-    private ModSettingsHeader toDomain(ModSettingsEntity entity)
+    private static ModSettingsHeader toDomain(ModSettingsEntity entity)
     {
         return ModSettingsHeader.builder()
                 .id(entity.getId())
