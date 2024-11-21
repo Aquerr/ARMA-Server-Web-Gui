@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.process;
 import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.DifficultyService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
@@ -41,7 +42,7 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
                 .filter(InstalledModEntity::isEnabled)
                 .filter(installedModEntity -> !installedModEntity.isServerMod())
                 .map(InstalledModEntity::getModDirectoryName)
-                .map(modDirName -> this.aswgConfig.getModsDirectoryPath() + File.separator + modDirName)
+                .map(modDirName -> StringUtils.hasText(this.aswgConfig.getModsDirectoryPath()) ? this.aswgConfig.getModsDirectoryPath() + File.separator + modDirName : modDirName)
                 .collect(Collectors.toSet());
 
         Set<String> serverModsDirs = installedMods.stream()
