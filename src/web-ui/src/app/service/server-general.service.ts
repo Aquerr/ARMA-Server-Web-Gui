@@ -29,6 +29,7 @@ export interface SaveGeneralProperties {
   motdInterval: number;
   persistent: boolean;
   drawingInMap: boolean;
+  headlessClients: string[];
 }
 
 export interface GeneralProperties {
@@ -42,4 +43,5 @@ export interface GeneralProperties {
   motdInterval: number;
   persistent: boolean;
   drawingInMap: boolean;
+  headlessClients: string[];
 }

@@ -3,6 +3,8 @@ import {MaskService} from "../../service/mask.service";
 import {SaveGeneralProperties, ServerGeneralService} from "../../service/server-general.service";
 import {NotificationService} from "../../service/notification.service";
 import {MotdListComponent} from "./motd-list/motd-list.component";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {MatChipEditedEvent, MatChipInputEvent} from "@angular/material/chips";
 
 @Component({
   selector: 'app-general',
@@ -21,6 +23,7 @@ export class GeneralComponent implements OnInit {
   maxPlayers: number = 64;
   persistent: boolean = false;
   drawingInMap: boolean = true;
+  headlessClients: string[] = [];
 
   constructor(private maskService: MaskService,
               private serverGeneralService: ServerGeneralService,
@@ -40,6 +43,7 @@ export class GeneralComponent implements OnInit {
       this.motdListComponent.motdInterval = response.motdInterval;
       this.persistent = response.persistent;
       this.drawingInMap = response.drawingInMap;
+      this.headlessClients = response.headlessClients;
       this.maskService.hide();
     });
   }
@@ -56,12 +60,47 @@ export class GeneralComponent implements OnInit {
       motd: this.motdListComponent.getMotdMessages(),
       motdInterval: this.motdListComponent.motdInterval,
       persistent: this.persistent,
-      drawingInMap: this.drawingInMap
+      drawingInMap: this.drawingInMap,
+      headlessClients: this.headlessClients
     } as SaveGeneralProperties;
 
     this.serverGeneralService.saveGeneralProperties(saveGeneralProperties).subscribe(response => {
       this.maskService.hide();
       this.notificationService.successNotification('General settings have been updated!', 'Success');
     });
+  }
+
+    protected readonly COMMA = COMMA;
+    protected readonly ENTER = ENTER;
+
+  editHeadlessClient(adminUUID: string, event: MatChipEditedEvent) {
+    const value = event.value.trim();
+
+    if (!value) {
+      this.removeHeadlessClient(value);
+      return;
+    }
+
+    const index = this.headlessClients.indexOf(adminUUID);
+    if (index >= 0) {
+      this.headlessClients[index] = value;
+    }
+  }
+
+  removeHeadlessClient(headlessClient: string) {
+    const index = this.headlessClients.indexOf(headlessClient);
+    if (index >= 0) {
+      this.headlessClients.splice(index, 1);
+    }
+  }
+
+  addNewHeadlessClient(event: MatChipInputEvent) {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      this.headlessClients.push(value);
+    }
+
+    event.chipInput.clear();
   }
 }

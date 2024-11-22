@@ -25,6 +25,7 @@ public class GeneralServiceImpl implements GeneralService
                 .motdInterval(armaServerConfig.getMotdInterval())
                 .persistent(armaServerConfig.getPersistent() == 1)
                 .drawingInMap(Boolean.parseBoolean(armaServerConfig.getDrawingInMap()))
+                .headlessClients(Arrays.stream(armaServerConfig.getHeadlessClients()).toList())
                 .build();
     }
 
@@ -38,6 +39,7 @@ public class GeneralServiceImpl implements GeneralService
         armaServerConfig.setMotdInterval(generalProperties.getMotdInterval());
         armaServerConfig.setPersistent(generalProperties.isPersistent() ? 1 : 0);
         armaServerConfig.setDrawingInMap(String.valueOf(generalProperties.isDrawingInMap()));
+        armaServerConfig.setHeadlessClients(generalProperties.getHeadlessClients().toArray(new String[0]));
         serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 }

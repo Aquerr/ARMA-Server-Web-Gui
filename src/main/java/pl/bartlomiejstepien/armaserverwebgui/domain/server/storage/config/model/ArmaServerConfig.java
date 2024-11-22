@@ -77,6 +77,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "drawingInMap", type = PropertyType.RAW_STRING)
     private String drawingInMap = "true";
 
+    @CfgProperty(name = "headlessClients[]", type = PropertyType.ARRAY_OF_STRINGS)
+    private String[] headlessClients = {};
+
     @CfgProperty(name = "allowedLoadFileExtensions[]", type = PropertyType.ARRAY_OF_STRINGS)
     private String[] allowedLoadFileExtensions = {"hpp","sqs","sqf","fsm","cpp","paa","txt","xml","inc","ext","sqm","ods","fxy","lip","csv","kb","bik","bikb","html","htm","biedi"};
 
@@ -84,7 +87,7 @@ public class ArmaServerConfig
     private String[] admins = {};
 
     @CfgProperty(name = "allowedVoteCmds[]", type = PropertyType.ARRAY_OF_NO_FIELDS_OBJECT)
-    private VoteCmd[] allowedVoteCmds;
+    private VoteCmd[] allowedVoteCmds = {};
 
     @CfgProperty(name = "Missions", type = PropertyType.CLASS, isClass = true)
     @ClassList

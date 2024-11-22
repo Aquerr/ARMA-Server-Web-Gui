@@ -15,4 +15,5 @@ public class GeneralProperties
     private int motdInterval;
     private boolean persistent;
     private boolean drawingInMap;
+    List<String> headlessClients;
 }

@@ -81,6 +81,7 @@ class GeneralServiceImplTest
         expectedArmaServerConfig.setMotd(new String[]{"testmod"});
         expectedArmaServerConfig.setPersistent(1);
         expectedArmaServerConfig.setDrawingInMap("true");
+        expectedArmaServerConfig.setHeadlessClients(new String[]{"123.123.123.123"});
         assertThat(armaServerConfigArgumentCaptor.getValue()).isEqualTo(expectedArmaServerConfig);
     }
 
@@ -93,6 +94,7 @@ class GeneralServiceImplTest
                 .persistent(true)
                 .motdInterval(5)
                 .drawingInMap(true)
+                .headlessClients(List.of("123.123.123.123"))
                 .build();
     }
 }

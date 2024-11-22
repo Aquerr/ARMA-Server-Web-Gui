@@ -62,6 +62,7 @@ public class GeneralController
                             .motdInterval(properties.getMotdInterval())
                             .persistent(properties.isPersistent())
                             .drawingInMap(properties.isDrawingInMap())
+                            .headlessClients(properties.getHeadlessClients())
                             .build());
                     return Mono.empty();
                 })
@@ -83,6 +84,7 @@ public class GeneralController
         int motdInterval;
         boolean persistent;
         boolean drawingInMap;
+        List<String> headlessClients;
 
         static GeneralPropertiesResponse of(String serverDirectory,
                                             String modsDirectory,
@@ -101,6 +103,7 @@ public class GeneralController
                     .motdInterval(generalProperties.getMotdInterval())
                     .persistent(generalProperties.isPersistent())
                     .drawingInMap(generalProperties.isDrawingInMap())
+                    .headlessClients(generalProperties.getHeadlessClients())
                     .build();
         }
     }
@@ -117,5 +120,6 @@ public class GeneralController
         private int motdInterval;
         private boolean persistent;
         private boolean drawingInMap;
+        private List<String> headlessClients;
     }
 }
