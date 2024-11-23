@@ -66,7 +66,7 @@ public class GeneralController
                             .build());
                     return Mono.empty();
                 })
-                .then(Mono.fromRunnable(this.aswgConfig::saveProperties))
+                .then(Mono.fromRunnable(this.aswgConfig::saveToFile))
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 

@@ -58,6 +58,9 @@ class GeneralControllerTest extends BaseIntegrationTest
     @Test
     void saveGeneralPropertiesShouldUpdateServerAndModsDirectoryInASWGConfig()
     {
+        String initialServerDirectory = aswgConfig.getServerDirectoryPath();
+        String initialModsDirectory = aswgConfig.getModsDirectoryPath();
+
         webTestClient.post()
                 .uri(API_GENERAL_PROPERTIES_URL)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtService.createJwt("test_user"))
@@ -72,6 +75,10 @@ class GeneralControllerTest extends BaseIntegrationTest
         verify(generalService).saveGeneralProperties(GeneralProperties.builder()
                 .maxPlayers(MAX_PLAYERS)
                 .build());
+
+        aswgConfig.setServerDirectoryPath(initialServerDirectory);
+        aswgConfig.setModsDirectoryPath(initialModsDirectory);
+        aswgConfig.saveToFile();
     }
 
     @Test

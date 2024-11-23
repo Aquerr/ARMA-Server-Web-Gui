@@ -88,7 +88,7 @@ public class ASWGConfig
         createConfigFileIfNotExists();
     }
 
-    public void saveProperties()
+    public void saveToFile()
     {
         try(FileWriter fileWriter = new FileWriter(ASWG_CONFIGURATION_FILE_PATH.toFile(), StandardCharsets.UTF_8);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter))
@@ -107,7 +107,7 @@ public class ASWGConfig
         if (Files.notExists(ASWG_CONFIGURATION_FILE_PATH))
         {
             Files.createFile(ASWG_CONFIGURATION_FILE_PATH);
-            saveProperties();
+            saveToFile();
         }
     }
 
