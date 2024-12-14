@@ -11,7 +11,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.WorkshopModInstal
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class WebSocketConfig
 {
     @Bean

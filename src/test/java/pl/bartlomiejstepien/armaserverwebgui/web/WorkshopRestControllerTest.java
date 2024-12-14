@@ -1,34 +1,17 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.aquerr.steamwebapiclient.SteamPublishedFileWebApiClient;
-import io.github.aquerr.steamwebapiclient.SteamWebApiClient;
-import io.github.aquerr.steamwebapiclient.request.WorkShopQueryFilesRequest;
-import io.github.aquerr.steamwebapiclient.response.WorkShopQueryResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.BodyInserters;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.TestUtils;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamUtils;
 
-import static org.mockito.BDDMockito.given;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
 
 class WorkshopRestControllerTest extends BaseIntegrationTest
 {
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    private SteamPublishedFileWebApiClient publishedFileWebApiClient;
-    @MockBean
-    private SteamWebApiClient steamWebApiClient;
-
     @BeforeEach
     void setUp()
     {
@@ -36,41 +19,16 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
     }
 
     @Test
-    void queryShouldReturnWorkshopMods() throws JsonProcessingException
+    void queryShouldReturnWorkshopMods()
     {
         // given
         String authToken = jwtService.createJwt("test_user");
 
-        WorkShopQueryResponse workShopQueryResponse = objectMapper.readValue(
-                TestUtils.loadJsonIntegrationContractFor("workshop/workshop_query_steam_response.json"),
-                WorkShopQueryResponse.class);
-
-        given(steamWebApiClient.getSteamPublishedFileWebApiClient()).willReturn(publishedFileWebApiClient);
-        given(publishedFileWebApiClient.queryFiles(ArgumentMatchers.refEq(WorkShopQueryFilesRequest.builder()
-                    .appId(SteamUtils.ARMA_APP_ID)
-                    .cursor("*")
-                    .numPerPage(10)
-                    .searchText("search_phrase")
-                    .returnPreviews(true)
-                    .queryType(WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TOTAL_UNIQUE_SUBSCRIPTIONS)
-                    .fileType(WorkShopQueryFilesRequest.PublishedFileInfoMatchingFileType.ITEMS)
-                .build())))
-                .willReturn(workShopQueryResponse);
-
         //TOOD: Enable when steam-web-api-client will allow to accept base-url
-//        wireMockServer.stubFor(get("https://api.steampowered.com/IPublishedFileService/QueryFiles/v1")
-//                .withQueryParams(Map.of(
-//                        "key", equalTo("ABC123MYTOKEN"),
-//                        "search_text", equalTo("search_phrase"),
-//                        "appId", equalTo(String.valueOf(SteamUtils.ARMA_APP_ID)),
-//                        "cursor", equalTo("*"),
-//                        "return_previews", equalTo("true"),
-//                        "numPerPage", equalTo("10"),
-//                        "fileType", equalTo("0"),
-//                        "queryType", equalTo("9")
-//                )).willReturn(aResponse()
-//                        .withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_query_steam_response.json"))
-//                        .withStatus(200)));
+        wireMockServer.stubFor(get("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=false&required_flags=&excludedtags=&return_vote_data=false&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=9&return_kv_tags=false&appid=107410&days=0&include_recent_votes_only=false&page=&return_previews=true&search_text=search_phrase")
+                .willReturn(aResponse()
+                        .withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_query_steam_response.json"))
+                        .withStatus(200)));
 
         // when
         // then

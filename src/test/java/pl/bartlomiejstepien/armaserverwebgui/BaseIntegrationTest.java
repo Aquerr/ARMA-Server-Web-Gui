@@ -9,9 +9,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.security.JwtService;
+import pl.bartlomiejstepien.armaserverwebgui.config.AswgTestConfiguration;
 
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = AswgTestConfiguration.class)
 @ContextConfiguration(loader = TestSpringContextLoader.class)
 @AutoConfigureWireMock(port = 0)
 public abstract class BaseIntegrationTest

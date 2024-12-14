@@ -28,7 +28,7 @@ import static org.zalando.logbook.core.Conditions.contentType;
 import static org.zalando.logbook.core.Conditions.exclude;
 import static org.zalando.logbook.core.Conditions.requestTo;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class LogbookConfig implements WebFluxConfigurer
 {
     private static final String[] IGNORED_FILE_CONTENT = new String[]{"text/html", "text/css", "text/javascript", "application/javascript", "image/*"};
