@@ -73,7 +73,7 @@ public class MissionConverter
     public ArmaServerConfig.Missions.Mission convertToArmaMissionObject(Mission mission)
     {
         ArmaServerConfig.Missions.Mission armaMission = new ArmaServerConfig.Missions.Mission();
-        armaMission.setTemplate(mission.getName());
+        armaMission.setTemplate(mission.getTemplate());
         armaMission.setDifficulty(mission.getDifficulty().name().toLowerCase());
         armaMission.setParams(convertToArmaMissionParams(mission.getParameters()));
         return armaMission;

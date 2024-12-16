@@ -6,11 +6,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModFolderNameHelper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.WorkshopModInstallProgressWebsocketHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.MetaCppFile;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
@@ -37,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -65,6 +66,7 @@ public class SteamCmdHandler
     private final SteamWebApiService steamWebApiService;
     private final SteamTaskRetryPolicy steamTaskRetryPolicy;
     private final WorkshopModInstallProgressWebsocketHandler workshopModInstallProgressWebsocketHandler;
+    private final ModFolderNameHelper modFolderNameHelper;
 
     private Thread steamCmdThread;
     private Thread steamCmdErrorThread;
@@ -183,7 +185,9 @@ public class SteamCmdHandler
         WorkshopMod workshopMod = this.steamWebApiService.getWorkshopMod(task.getFileId());
         InstalledModEntity installedModEntity = this.installedModRepository.findByWorkshopFileId(task.getFileId()).blockOptional().orElse(null);
 
-        if (!shouldUpdateMod(workshopMod, installedModEntity, task.isForced()))
+        ModDirectory modDirectory = ModDirectory.from(buildModDirectoryPath(task.getTitle()));
+
+        if (!shouldUpdateMod(modDirectory, workshopMod, installedModEntity, task.isForced()))
         {
             log.info("Mod {} up to date. No download needed.", task.getTitle());
             return;
@@ -195,11 +199,11 @@ public class SteamCmdHandler
         Path modDirectoryPath = null;
         if (SystemUtils.isWindows())
         {
-            modDirectoryPath = this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()).resolve(this.aswgConfig.getModsDirectoryPath()), task.getTitle());
+            modDirectoryPath = this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, modDirectory);
         }
         else
         {
-            modDirectoryPath = this.modStorage.linkModFolderToSteamCmdModFolder(steamCmdModFolderPath, Paths.get(this.aswgConfig.getServerDirectoryPath()).resolve(this.aswgConfig.getModsDirectoryPath()), task.getTitle());
+            modDirectoryPath = this.modStorage.linkModFolderToSteamCmdModFolder(steamCmdModFolderPath, modDirectory);
         }
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 75));
 
@@ -207,7 +211,13 @@ public class SteamCmdHandler
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 100));
     }
 
-    private boolean shouldUpdateMod(WorkshopMod workshopMod,
+    private Path buildModDirectoryPath(String modName)
+    {
+        return Paths.get(this.aswgConfig.getServerDirectoryPath()).resolve(this.aswgConfig.getModsDirectoryPath()).resolve(modFolderNameHelper.buildFor(modName));
+    }
+
+    private boolean shouldUpdateMod(ModDirectory modDirectory,
+                                    WorkshopMod workshopMod,
                                     InstalledModEntity installedModEntity,
                                     boolean forced)
     {
@@ -217,15 +227,21 @@ public class SteamCmdHandler
         if (installedModEntity == null)
             return true;
 
+        if (Files.notExists(modDirectory.getPath()))
+            return true;
+
         if (installedModEntity.getLastWorkshopUpdate() == null)
             return true;
 
-        if (workshopMod != null
-            && (workshopMod.getLastUpdate().isEqual(installedModEntity.getLastWorkshopUpdate()) || workshopMod.getLastUpdate().isBefore(installedModEntity.getLastWorkshopUpdate())))
-        {
-            return false;
-        }
-        return true;
+        // If there is no way to determine if the mod is up to date. TODO: Use timestamp from meta.cpp
+        if (workshopMod == null)
+            return true;
+
+        // If we have equal or newer update time in db
+        if (workshopMod.getLastUpdate().isEqual(installedModEntity.getLastWorkshopUpdate()) || workshopMod.getLastUpdate().isBefore(installedModEntity.getLastWorkshopUpdate()))
+            return true;
+
+        return false;
     }
 
     private void publishMessage(WorkshopModInstallationStatus status)

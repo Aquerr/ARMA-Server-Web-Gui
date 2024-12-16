@@ -143,44 +143,40 @@ public class ModStorageImpl implements ModStorage
     }
 
     @Override
-    public Path copyModFolderFromSteamCmd(Path steamCmdModFolderPath, Path serverModsDir, String modName)
+    public Path copyModFolderFromSteamCmd(Path steamCmdModFolderPath, ModDirectory modDirectory)
     {
-        String normalizedModDirectoryName = modFolderNameHelper.buildFor(modName);
-        Path modDirectoryPath = serverModsDir.resolve(normalizedModDirectoryName);
         try
         {
-            Files.createDirectories(modDirectoryPath);
-            FileSystemUtils.copyRecursively(steamCmdModFolderPath, modDirectoryPath);
-            normalizeEachFileNameInFolderRecursively(modDirectoryPath);
+            Files.createDirectories(modDirectory.getPath());
+            FileSystemUtils.copyRecursively(steamCmdModFolderPath, modDirectory.getPath());
+            normalizeEachFileNameInFolderRecursively(modDirectory.getPath());
             FileSystemUtils.deleteRecursively(steamCmdModFolderPath);
         }
         catch (IOException e)
         {
             throw new CouldNotInstallWorkshopModException(e.getMessage(), e);
         }
-        return modDirectoryPath;
+        return modDirectory.getPath();
     }
 
     @Override
-    public Path linkModFolderToSteamCmdModFolder(Path steamCmdModFolderPath, Path serverModsDir, String modName)
+    public Path linkModFolderToSteamCmdModFolder(Path steamCmdModFolderPath, ModDirectory modDirectory)
     {
-        String normalizedModDirectoryName = modFolderNameHelper.buildFor(modName);
-        Path modDirectoryPath = serverModsDir.resolve(normalizedModDirectoryName);
         try
         {
-            if (Files.notExists(modDirectoryPath)
-                    || (Files.isSymbolicLink(modDirectoryPath) && !Files.readSymbolicLink(modDirectoryPath).equals(steamCmdModFolderPath)))
+            if (Files.notExists(modDirectory.getPath())
+                    || (Files.isSymbolicLink(modDirectory.getPath()) && !Files.readSymbolicLink(modDirectory.getPath()).equals(steamCmdModFolderPath)))
             {
-                Files.deleteIfExists(modDirectoryPath);
-                Files.createSymbolicLink(modDirectoryPath, steamCmdModFolderPath);
+                Files.deleteIfExists(modDirectory.getPath());
+                Files.createSymbolicLink(modDirectory.getPath(), steamCmdModFolderPath);
             }
-            normalizeEachFileNameInFolderRecursively(modDirectoryPath);
+            normalizeEachFileNameInFolderRecursively(modDirectory.getPath());
         }
         catch (IOException e)
         {
             throw new CouldNotInstallWorkshopModException(e.getMessage(), e);
         }
-        return modDirectoryPath;
+        return modDirectory.getPath();
     }
 
     private void normalizeEachFileNameInFolderRecursively(Path filePath)
