@@ -46,6 +46,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
 
 @Component
 @Slf4j
@@ -216,6 +217,9 @@ public class SteamCmdHandler
         if (installedModEntity == null)
             return true;
 
+        if (installedModEntity.getLastWorkshopUpdate() == null)
+            return true;
+
         if (workshopMod != null
             && (workshopMod.getLastUpdate().isEqual(installedModEntity.getLastWorkshopUpdate()) || workshopMod.getLastUpdate().isBefore(installedModEntity.getLastWorkshopUpdate())))
         {
@@ -270,7 +274,7 @@ public class SteamCmdHandler
     private void saveModInDatabase(long workshopFileId, String modName, Path modDirectory, WorkshopMod workshopMod)
     {
         InstalledModEntity installedModEntity = this.installedModRepository.findByWorkshopFileId(workshopFileId).block();
-        MetaCppFile metaCppFile = null;
+        MetaCppFile metaCppFile;
         try
         {
             metaCppFile = modStorage.readModMetaFile(modDirectory);
@@ -290,28 +294,16 @@ public class SteamCmdHandler
         {
             installedModBuilder = InstalledModEntity.builder();
             installedModBuilder.createdDate(OffsetDateTime.now());
-            installedModBuilder.lastWorkshopUpdate(workshopMod.getLastUpdate());
 
             long publishedFileIdToUse = metaCppFile.getPublishedFileId() == 0 ? workshopFileId : metaCppFile.getPublishedFileId();
             installedModBuilder.workshopFileId(publishedFileIdToUse);
             installedModBuilder.workshopFileId(metaCppFile.getPublishedFileId());
         }
 
-        installedModBuilder.name(Optional.ofNullable(metaCppFile.getName()).orElse(modName));
+        installedModBuilder.name(ofNullable(metaCppFile.getName()).orElse(modName));
         installedModBuilder.directoryPath(modDirectory.toAbsolutePath().toString());
-
-        try
-        {
-            if (workshopMod != null)
-            {
-                installedModBuilder.previewUrl(workshopMod.getPreviewUrl());
-                installedModBuilder.lastWorkshopUpdate(workshopMod.getLastUpdate());
-            }
-        }
-        catch (Exception exception)
-        {
-            log.warn("Could not fetch mod preview url. Mod = {}", modName, exception);
-        }
+        installedModBuilder.previewUrl(ofNullable(workshopMod).map(WorkshopMod::getPreviewUrl).orElse(null));
+        installedModBuilder.lastWorkshopUpdate(ofNullable(workshopMod).map(WorkshopMod::getLastUpdate).orElse(OffsetDateTime.now()));
 
         installedModRepository.save(installedModBuilder.build()).subscribe();
     }
