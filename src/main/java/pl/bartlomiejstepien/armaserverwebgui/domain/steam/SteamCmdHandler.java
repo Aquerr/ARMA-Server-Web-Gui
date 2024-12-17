@@ -186,6 +186,7 @@ public class SteamCmdHandler
         InstalledModEntity installedModEntity = this.installedModRepository.findByWorkshopFileId(task.getFileId()).blockOptional().orElse(null);
 
         ModDirectory modDirectory = ModDirectory.from(buildModDirectoryPath(task.getTitle()));
+        log.info("Prepared mod directory: {}", modDirectory.getPath());
 
         if (!shouldUpdateMod(modDirectory, workshopMod, installedModEntity, task.isForced()))
         {
@@ -212,7 +213,7 @@ public class SteamCmdHandler
 
     private Path buildModDirectoryPath(String modName)
     {
-        return Paths.get(this.aswgConfig.getServerDirectoryPath()).resolve(this.aswgConfig.getModsDirectoryPath()).resolve(modFolderNameHelper.buildFor(modName));
+        return Paths.get(this.aswgConfig.getServerDirectoryPath()).resolve(this.aswgConfig.getModsDirectoryPath()).resolve(modFolderNameHelper.buildFor(modName)).normalize();
     }
 
     private boolean shouldUpdateMod(ModDirectory modDirectory,
@@ -314,6 +315,7 @@ public class SteamCmdHandler
         installedModBuilder.lastWorkshopUpdate(ofNullable(workshopMod).map(WorkshopMod::getLastUpdate).orElse(OffsetDateTime.now()));
 
         installedModRepository.save(installedModBuilder.build()).subscribe();
+        log.info("Mod: {} saved in DB", modName);
     }
 
     private CompletableFuture<Path> downloadModThroughSteamCmd(SteamCmdWorkshopDownloadParameters parameters)
