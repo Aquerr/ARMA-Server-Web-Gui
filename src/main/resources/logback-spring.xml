@@ -6,6 +6,7 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
+    <springProperty name="ASWG_LOGS_LOCATION" scope="context" source="aswg.logs.location"></springProperty>
     <springProperty name="SERVER_LOG_FILE_NAME" scope="context" source="server.log.file.name"></springProperty>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -13,9 +14,9 @@
             <pattern>${FILE_LOG_PATTERN}</pattern>
             <charset>${FILE_LOG_CHARSET}</charset>
         </encoder>
-        <file>logs/aswg.log</file>
+        <file>${ASWG_LOGS_LOCATION}/aswg.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/aswg.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <fileNamePattern>${ASWG_LOGS_LOCATION}/aswg.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <maxFileSize>4MB</maxFileSize>
             <maxHistory>10</maxHistory>
             <totalSizeCap>50MB</totalSizeCap>
@@ -23,13 +24,13 @@
         </rollingPolicy>
     </appender>
     <appender name="SERVER_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/${SERVER_LOG_FILE_NAME}</file>
+        <file>${ASWG_LOGS_LOCATION}/${SERVER_LOG_FILE_NAME}</file>
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
             <charset>${FILE_LOG_CHARSET}</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/arma-server-%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <fileNamePattern>${ASWG_LOGS_LOCATION}/arma-server-%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <maxFileSize>4MB</maxFileSize>
             <maxHistory>10</maxHistory>
             <totalSizeCap>50MB</totalSizeCap>

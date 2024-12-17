@@ -196,18 +196,17 @@ public class SteamCmdHandler
         Path steamCmdModFolderPath = downloadModFromWorkshop(task.getFileId(), task.getTitle());
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 50));
 
-        Path modDirectoryPath = null;
         if (SystemUtils.isWindows())
         {
-            modDirectoryPath = this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, modDirectory);
+            this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, modDirectory);
         }
         else
         {
-            modDirectoryPath = this.modStorage.linkModFolderToSteamCmdModFolder(steamCmdModFolderPath, modDirectory);
+            this.modStorage.linkModFolderToSteamCmdModFolder(steamCmdModFolderPath, modDirectory);
         }
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 75));
 
-        saveModInDatabase(task.getFileId(), task.getTitle(), modDirectoryPath, workshopMod);
+        saveModInDatabase(task.getFileId(), task.getTitle(), modDirectory, workshopMod);
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 100));
     }
 
@@ -287,18 +286,9 @@ public class SteamCmdHandler
         return path;
     }
 
-    private void saveModInDatabase(long workshopFileId, String modName, Path modDirectory, WorkshopMod workshopMod)
+    private void saveModInDatabase(long workshopFileId, String modName, ModDirectory modDirectory, WorkshopMod workshopMod)
     {
         InstalledModEntity installedModEntity = this.installedModRepository.findByWorkshopFileId(workshopFileId).block();
-        MetaCppFile metaCppFile;
-        try
-        {
-            metaCppFile = modStorage.readModMetaFile(modDirectory);
-        }
-        catch (CouldNotReadModMetaFile e)
-        {
-            throw new CouldNotInstallWorkshopModException(e.getMessage(), e);
-        }
 
         InstalledModEntity.InstalledModEntityBuilder installedModBuilder;
         if (installedModEntity != null) // Update
@@ -311,13 +301,15 @@ public class SteamCmdHandler
             installedModBuilder = InstalledModEntity.builder();
             installedModBuilder.createdDate(OffsetDateTime.now());
 
-            long publishedFileIdToUse = metaCppFile.getPublishedFileId() == 0 ? workshopFileId : metaCppFile.getPublishedFileId();
+            long publishedFileIdToUse = ofNullable(modDirectory.getMetaCppFile())
+                    .map(metaCppFile -> metaCppFile.getPublishedFileId() == 0 ? workshopFileId : metaCppFile.getPublishedFileId())
+                    .orElseThrow(() -> new CouldNotInstallWorkshopModException("PublishedFileId cannot be 0"));
+
             installedModBuilder.workshopFileId(publishedFileIdToUse);
-            installedModBuilder.workshopFileId(metaCppFile.getPublishedFileId());
         }
 
-        installedModBuilder.name(ofNullable(metaCppFile.getName()).orElse(modName));
-        installedModBuilder.directoryPath(modDirectory.toAbsolutePath().toString());
+        installedModBuilder.name(ofNullable(modDirectory.getMetaCppFile()).map(MetaCppFile::getName).orElse(modName));
+        installedModBuilder.directoryPath(modDirectory.getPath().toAbsolutePath().toString());
         installedModBuilder.previewUrl(ofNullable(workshopMod).map(WorkshopMod::getPreviewUrl).orElse(null));
         installedModBuilder.lastWorkshopUpdate(ofNullable(workshopMod).map(WorkshopMod::getLastUpdate).orElse(OffsetDateTime.now()));
 
