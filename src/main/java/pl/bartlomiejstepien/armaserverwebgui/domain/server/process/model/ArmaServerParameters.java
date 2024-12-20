@@ -57,6 +57,7 @@ public class ArmaServerParameters
     private List<String> getArmaServerArgs()
     {
         List<String> args = new ArrayList<>();
+        args.add("-filePatching");
         args.add("-port=" + port);
         args.add("\"-cfg= " + networkConfigPath + "\"");
         args.add("\"-config=" + serverConfigPath + "\"");
