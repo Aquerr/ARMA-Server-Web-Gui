@@ -16,4 +16,5 @@ public class GeneralProperties
     private boolean persistent;
     private boolean drawingInMap;
     List<String> headlessClients;
+    List<String> localClients;
 }

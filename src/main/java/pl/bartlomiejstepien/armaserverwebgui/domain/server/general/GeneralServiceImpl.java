@@ -26,6 +26,7 @@ public class GeneralServiceImpl implements GeneralService
                 .persistent(armaServerConfig.getPersistent() == 1)
                 .drawingInMap(Boolean.parseBoolean(armaServerConfig.getDrawingInMap()))
                 .headlessClients(Arrays.stream(armaServerConfig.getHeadlessClients()).toList())
+                .localClients(Arrays.stream(armaServerConfig.getLocalClients()).toList())
                 .build();
     }
 
@@ -40,6 +41,7 @@ public class GeneralServiceImpl implements GeneralService
         armaServerConfig.setPersistent(generalProperties.isPersistent() ? 1 : 0);
         armaServerConfig.setDrawingInMap(String.valueOf(generalProperties.isDrawingInMap()));
         armaServerConfig.setHeadlessClients(generalProperties.getHeadlessClients().toArray(new String[0]));
+        armaServerConfig.setLocalClients(generalProperties.getLocalClients().toArray(new String[0]));
         serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 }

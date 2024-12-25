@@ -80,6 +80,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "headlessClients[]", type = PropertyType.ARRAY_OF_STRINGS)
     private String[] headlessClients = {};
 
+    @CfgProperty(name = "localClient[]", type = PropertyType.ARRAY_OF_STRINGS)
+    private String[] localClients = {};
+
     @CfgProperty(name = "allowedLoadFileExtensions[]", type = PropertyType.ARRAY_OF_STRINGS)
     private String[] allowedLoadFileExtensions = {"hpp","sqs","sqf","fsm","cpp","paa","txt","xml","inc","ext","sqm","ods","fxy","lip","csv","kb","bik","bikb","html","htm","biedi"};
 

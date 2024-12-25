@@ -82,6 +82,7 @@ class GeneralServiceImplTest
         expectedArmaServerConfig.setPersistent(1);
         expectedArmaServerConfig.setDrawingInMap("true");
         expectedArmaServerConfig.setHeadlessClients(new String[]{"123.123.123.123"});
+        expectedArmaServerConfig.setLocalClients(new String[]{"123.123.254.254"});
         assertThat(armaServerConfigArgumentCaptor.getValue()).isEqualTo(expectedArmaServerConfig);
     }
 
@@ -95,6 +96,7 @@ class GeneralServiceImplTest
                 .motdInterval(5)
                 .drawingInMap(true)
                 .headlessClients(List.of("123.123.123.123"))
+                .localClients(List.of("123.123.254.254"))
                 .build();
     }
 }

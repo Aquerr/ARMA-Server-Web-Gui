@@ -1,9 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,10 +12,10 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.GeneralServic
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ArmaServerParametersGenerator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
+import pl.bartlomiejstepien.armaserverwebgui.web.request.SaveGeneralProperties;
+import pl.bartlomiejstepien.armaserverwebgui.web.response.GeneralPropertiesResponse;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple5;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/general")
@@ -63,63 +60,11 @@ public class GeneralController
                             .persistent(properties.isPersistent())
                             .drawingInMap(properties.isDrawingInMap())
                             .headlessClients(properties.getHeadlessClients())
+                            .localClients(properties.getLocalClients())
                             .build());
                     return Mono.empty();
                 })
                 .then(Mono.fromRunnable(this.aswgConfig::saveToFile))
                 .then(Mono.just(ResponseEntity.ok().build()));
-    }
-
-    @Value(staticConstructor = "of")
-    @Builder
-    private static class GeneralPropertiesResponse
-    {
-        String serverDirectory;
-        String modsDirectory;
-        String commandLineParams;
-        String hostname;
-        int port;
-        int maxPlayers;
-        List<String> motd;
-        int motdInterval;
-        boolean persistent;
-        boolean drawingInMap;
-        List<String> headlessClients;
-
-        static GeneralPropertiesResponse of(String serverDirectory,
-                                            String modsDirectory,
-                                            Integer port,
-                                            ArmaServerParameters armaServerParameters,
-                                            GeneralProperties generalProperties)
-        {
-            return GeneralPropertiesResponse.builder()
-                    .serverDirectory(serverDirectory)
-                    .modsDirectory(modsDirectory)
-                    .commandLineParams(armaServerParameters.asString())
-                    .port(port)
-                    .hostname(generalProperties.getHostname())
-                    .maxPlayers(generalProperties.getMaxPlayers())
-                    .motd(generalProperties.getMotd())
-                    .motdInterval(generalProperties.getMotdInterval())
-                    .persistent(generalProperties.isPersistent())
-                    .drawingInMap(generalProperties.isDrawingInMap())
-                    .headlessClients(generalProperties.getHeadlessClients())
-                    .build();
-        }
-    }
-
-    @Data
-    private static class SaveGeneralProperties
-    {
-        private String hostname;
-        private String serverDirectory;
-        private String modsDirectory;
-        private int port;
-        private int maxPlayers;
-        private List<String> motd;
-        private int motdInterval;
-        private boolean persistent;
-        private boolean drawingInMap;
-        private List<String> headlessClients;
     }
 }

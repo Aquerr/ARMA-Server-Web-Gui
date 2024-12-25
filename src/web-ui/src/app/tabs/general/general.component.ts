@@ -24,6 +24,7 @@ export class GeneralComponent implements OnInit {
   persistent: boolean = false;
   drawingInMap: boolean = true;
   headlessClients: string[] = [];
+  localClients: string[] = [];
 
   constructor(private maskService: MaskService,
               private serverGeneralService: ServerGeneralService,
@@ -44,6 +45,7 @@ export class GeneralComponent implements OnInit {
       this.persistent = response.persistent;
       this.drawingInMap = response.drawingInMap;
       this.headlessClients = response.headlessClients;
+      this.localClients = response.localClients;
       this.maskService.hide();
     });
   }
@@ -61,7 +63,8 @@ export class GeneralComponent implements OnInit {
       motdInterval: this.motdListComponent.motdInterval,
       persistent: this.persistent,
       drawingInMap: this.drawingInMap,
-      headlessClients: this.headlessClients
+      headlessClients: this.headlessClients,
+      localClients: this.localClients
     } as SaveGeneralProperties;
 
     this.serverGeneralService.saveGeneralProperties(saveGeneralProperties).subscribe(response => {
@@ -73,7 +76,7 @@ export class GeneralComponent implements OnInit {
     protected readonly COMMA = COMMA;
     protected readonly ENTER = ENTER;
 
-  editHeadlessClient(adminUUID: string, event: MatChipEditedEvent) {
+  editHeadlessClient(headlessClient: string, event: MatChipEditedEvent) {
     const value = event.value.trim();
 
     if (!value) {
@@ -81,7 +84,7 @@ export class GeneralComponent implements OnInit {
       return;
     }
 
-    const index = this.headlessClients.indexOf(adminUUID);
+    const index = this.headlessClients.indexOf(headlessClient);
     if (index >= 0) {
       this.headlessClients[index] = value;
     }
@@ -99,6 +102,37 @@ export class GeneralComponent implements OnInit {
 
     if (value) {
       this.headlessClients.push(value);
+    }
+
+    event.chipInput.clear();
+  }
+
+  editLocalClient(localClientIp: string, event: MatChipEditedEvent) {
+    const value = event.value.trim();
+
+    if (!value) {
+      this.removeLocalClient(value);
+      return;
+    }
+
+    const index = this.localClients.indexOf(localClientIp);
+    if (index >= 0) {
+      this.localClients[index] = value;
+    }
+  }
+
+  removeLocalClient(localClientIp: string) {
+    const index = this.localClients.indexOf(localClientIp);
+    if (index >= 0) {
+      this.localClients.splice(index, 1);
+    }
+  }
+
+  addNewLocalClient(event: MatChipInputEvent) {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      this.localClients.push(value);
     }
 
     event.chipInput.clear();

@@ -30,6 +30,7 @@ export interface SaveGeneralProperties {
   persistent: boolean;
   drawingInMap: boolean;
   headlessClients: string[];
+  localClients: string[];
 }
 
 export interface GeneralProperties {
@@ -44,4 +45,5 @@ export interface GeneralProperties {
   persistent: boolean;
   drawingInMap: boolean;
   headlessClients: string[];
+  localClients: string[];
 }

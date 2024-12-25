@@ -80,6 +80,28 @@
           />
         </mat-chip-grid>
       </mat-form-field>
+      <mat-form-field style="width: 100%;" matTooltip="Indicates clients with unlimited bandwidth and nearly no latency." matTooltipPosition="right">
+        <mat-label>Local Clients (IPs)</mat-label>
+        <mat-chip-grid #localClientsGrid aria-label="LocalClients">
+          <mat-chip-row *ngFor="let localClient of localClients"
+                        [editable]="true"
+                        (edited)="editLocalClient(localClient, $event)"
+                        (removed)="removeLocalClient(localClient)"
+                        [aria-description]="'press enter to edit ' + localClient"
+          >
+            {{localClient}}
+            <button matChipRemove [attr.aria-label]="'remove ' + localClient">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          <input placeholder="New Local client..."
+                 [matChipInputFor]="localClientsGrid"
+                 [matChipInputSeparatorKeyCodes]="[ENTER, COMMA]"
+                 [matChipInputAddOnBlur]="true"
+                 (matChipInputTokenEnd)="addNewLocalClient($event)"
+          />
+        </mat-chip-grid>
+      </mat-form-field>
     </div>
     <section class="motd-section">
       <app-motd-list #motdListComponent></app-motd-list>
