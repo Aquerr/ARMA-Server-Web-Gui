@@ -3,8 +3,6 @@ import {MaskService} from "../../service/mask.service";
 import {SaveGeneralProperties, ServerGeneralService} from "../../service/server-general.service";
 import {NotificationService} from "../../service/notification.service";
 import {MotdListComponent} from "./motd-list/motd-list.component";
-import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import {MatChipEditedEvent, MatChipInputEvent} from "@angular/material/chips";
 
 @Component({
   selector: 'app-general',
@@ -26,9 +24,9 @@ export class GeneralComponent implements OnInit {
   headlessClients: string[] = [];
   localClients: string[] = [];
 
-  constructor(private maskService: MaskService,
-              private serverGeneralService: ServerGeneralService,
-              private notificationService: NotificationService) {
+  constructor(private readonly maskService: MaskService,
+              private readonly serverGeneralService: ServerGeneralService,
+              private readonly notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
@@ -71,70 +69,5 @@ export class GeneralComponent implements OnInit {
       this.maskService.hide();
       this.notificationService.successNotification('General settings have been updated!', 'Success');
     });
-  }
-
-    protected readonly COMMA = COMMA;
-    protected readonly ENTER = ENTER;
-
-  editHeadlessClient(headlessClient: string, event: MatChipEditedEvent) {
-    const value = event.value.trim();
-
-    if (!value) {
-      this.removeHeadlessClient(value);
-      return;
-    }
-
-    const index = this.headlessClients.indexOf(headlessClient);
-    if (index >= 0) {
-      this.headlessClients[index] = value;
-    }
-  }
-
-  removeHeadlessClient(headlessClient: string) {
-    const index = this.headlessClients.indexOf(headlessClient);
-    if (index >= 0) {
-      this.headlessClients.splice(index, 1);
-    }
-  }
-
-  addNewHeadlessClient(event: MatChipInputEvent) {
-    const value = (event.value || '').trim();
-
-    if (value) {
-      this.headlessClients.push(value);
-    }
-
-    event.chipInput.clear();
-  }
-
-  editLocalClient(localClientIp: string, event: MatChipEditedEvent) {
-    const value = event.value.trim();
-
-    if (!value) {
-      this.removeLocalClient(value);
-      return;
-    }
-
-    const index = this.localClients.indexOf(localClientIp);
-    if (index >= 0) {
-      this.localClients[index] = value;
-    }
-  }
-
-  removeLocalClient(localClientIp: string) {
-    const index = this.localClients.indexOf(localClientIp);
-    if (index >= 0) {
-      this.localClients.splice(index, 1);
-    }
-  }
-
-  addNewLocalClient(event: MatChipInputEvent) {
-    const value = (event.value || '').trim();
-
-    if (value) {
-      this.localClients.push(value);
-    }
-
-    event.chipInput.clear();
   }
 }

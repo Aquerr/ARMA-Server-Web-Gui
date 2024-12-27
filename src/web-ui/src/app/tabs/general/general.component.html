@@ -58,50 +58,16 @@
           <mat-option [value]="false">No</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field style="width: 100%;" matTooltip="IP addresses of headless clients. Used to offload AI calculations from the server." matTooltipPosition="right">
-        <mat-label>Headless Clients (IPs)</mat-label>
-        <mat-chip-grid #headlessClientsGrid aria-label="HeadlessClients">
-          <mat-chip-row *ngFor="let headlessClient of headlessClients"
-                        [editable]="true"
-                        (edited)="editHeadlessClient(headlessClient, $event)"
-                        (removed)="removeHeadlessClient(headlessClient)"
-                        [aria-description]="'press enter to edit ' + headlessClient"
-          >
-            {{headlessClient}}
-            <button matChipRemove [attr.aria-label]="'remove ' + headlessClient">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip-row>
-          <input placeholder="New Headless client..."
-                 [matChipInputFor]="headlessClientsGrid"
-                 [matChipInputSeparatorKeyCodes]="[ENTER, COMMA]"
-                 [matChipInputAddOnBlur]="true"
-                 (matChipInputTokenEnd)="addNewHeadlessClient($event)"
-          />
-        </mat-chip-grid>
-      </mat-form-field>
-      <mat-form-field style="width: 100%;" matTooltip="Indicates clients with unlimited bandwidth and nearly no latency." matTooltipPosition="right">
-        <mat-label>Local Clients (IPs)</mat-label>
-        <mat-chip-grid #localClientsGrid aria-label="LocalClients">
-          <mat-chip-row *ngFor="let localClient of localClients"
-                        [editable]="true"
-                        (edited)="editLocalClient(localClient, $event)"
-                        (removed)="removeLocalClient(localClient)"
-                        [aria-description]="'press enter to edit ' + localClient"
-          >
-            {{localClient}}
-            <button matChipRemove [attr.aria-label]="'remove ' + localClient">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip-row>
-          <input placeholder="New Local client..."
-                 [matChipInputFor]="localClientsGrid"
-                 [matChipInputSeparatorKeyCodes]="[ENTER, COMMA]"
-                 [matChipInputAddOnBlur]="true"
-                 (matChipInputTokenEnd)="addNewLocalClient($event)"
-          />
-        </mat-chip-grid>
-      </mat-form-field>
+      <aswg-chip-input
+        labelText="Headless Clients (IPs)"
+        toolTipText="IP addresses of headless clients. Used to offload AI calculations from the server."
+        [data]="headlessClients"
+      ></aswg-chip-input>
+      <aswg-chip-input
+        labelText="Local Clients (IPs)"
+        toolTipText="Indicates clients with unlimited bandwidth and nearly no latency."
+        [data]="localClients"
+      ></aswg-chip-input>
     </div>
     <section class="motd-section">
       <app-motd-list #motdListComponent></app-motd-list>

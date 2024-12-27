@@ -22,6 +22,7 @@ public class GeneralPropertiesResponse
     boolean persistent;
     boolean drawingInMap;
     List<String> headlessClients;
+    List<String> localClients;
 
     public static GeneralPropertiesResponse of(String serverDirectory,
                                                           String modsDirectory,
@@ -41,6 +42,7 @@ public class GeneralPropertiesResponse
                 .persistent(generalProperties.isPersistent())
                 .drawingInMap(generalProperties.isDrawingInMap())
                 .headlessClients(generalProperties.getHeadlessClients())
+                .localClients(generalProperties.getLocalClients())
                 .build();
     }
 }

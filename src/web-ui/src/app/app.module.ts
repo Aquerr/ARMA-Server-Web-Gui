@@ -77,6 +77,7 @@ import {ModsSettingsComponent} from "./tabs/mods-settings/mods-settings.componen
 import {ModSettingsPanelComponent} from "./tabs/mods-settings/mod-settings-panel/mod-settings-panel.component";
 import {NgxCodeJarComponent} from "ngx-codejar";
 import {CommonConfirmDialogComponent} from "./common-ui/common-confirm-dialog/common-confirm-dialog.component";
+import {AswgChipInputComponent} from "./common-ui/aswg-chip-input/aswg-chip-input.component";
 
 @NgModule({
   declarations: [
@@ -156,7 +157,8 @@ import {CommonConfirmDialogComponent} from "./common-ui/common-confirm-dialog/co
         MatMenuModule,
         MatChipsModule,
         MatCardModule,
-        NgxCodeJarComponent
+        NgxCodeJarComponent,
+        AswgChipInputComponent
     ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}
