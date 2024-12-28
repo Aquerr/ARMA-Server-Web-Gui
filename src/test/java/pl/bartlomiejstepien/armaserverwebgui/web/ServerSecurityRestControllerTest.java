@@ -63,6 +63,7 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
         armaServerConfig.setBattleEye(1);
         armaServerConfig.setVerifySignatures(2);
         armaServerConfig.setAllowedFilePatching(1);
+        armaServerConfig.setFilePatchingExceptions(new String[]{"312312312312321"});
         armaServerConfig.setAllowedLoadFileExtensions(new String[]{"SQF"});
         armaServerConfig.setAdmins(new String[]{"12341235421321"});
         armaServerConfig.setAllowedVoteCmds(null);

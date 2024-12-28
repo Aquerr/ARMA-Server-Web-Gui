@@ -11,7 +11,7 @@ export class ServerSecurityService {
 
   private readonly SECURITY_URL = `${API_BASE_URL}/security`;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   getServerSecurity(): Observable<GetServerSecurityResponse> {
     return this.httpClient.get<GetServerSecurityResponse>(this.SECURITY_URL);
@@ -29,6 +29,7 @@ export interface SaveServerSecurityRequest {
   battleEye: boolean;
   verifySignatures: boolean;
   allowedFilePatching: number;
+  filePatchingIgnoredClients: string[];
   allowedLoadFileExtensions: string[];
   adminUUIDs: string[];
   allowedVoteCmds: VoteCmd[];
@@ -41,6 +42,7 @@ export interface GetServerSecurityResponse {
   battleEye: boolean;
   verifySignatures: boolean;
   allowedFilePatching: number;
+  filePatchingIgnoredClients: string[];
   allowedLoadFileExtensions: string[];
   adminUUIDs: string[];
   allowedVoteCmds: VoteCmd[];

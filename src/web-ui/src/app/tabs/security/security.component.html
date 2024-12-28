@@ -17,28 +17,13 @@
         <input formControlName="serverCommandPassword" matInput type="text">
         <mat-error *ngIf="hasFormError('serverCommandPassword', 'required')">This field is required</mat-error>
       </mat-form-field>
-      <mat-form-field style="width: 100%;" matTooltip="Only these user ids can authenticate via #login command" matTooltipPosition="right">
-        <mat-label>Admins (steamID64)</mat-label>
-        <mat-chip-grid #adminUUIDsGrid aria-label="Admins" formControlName="adminUUIDs">
-          <mat-chip-row *ngFor="let adminUUID of formService.getAdminUUIDs(form).value"
-                        [editable]="true"
-                        (edited)="editAdminUUID(adminUUID, $event)"
-                        (removed)="removeAdminUUID(adminUUID)"
-                        [aria-description]="'press enter to edit ' + adminUUID"
-          >
-            {{adminUUID}}
-            <button matChipRemove [attr.aria-label]="'remove ' + adminUUID">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip-row>
-          <input placeholder="New admin..."
-                 [matChipInputFor]="adminUUIDsGrid"
-                 [matChipInputSeparatorKeyCodes]="[ENTER, COMMA]"
-                 [matChipInputAddOnBlur]="true"
-                 (matChipInputTokenEnd)="addNewAdminUUID($event)"
-          />
-        </mat-chip-grid>
-      </mat-form-field>
+      <aswg-chip-form-input
+        style="width: 100%"
+        labelText="Admins (steamID64)"
+        toolTipText="Only these user ids can authenticate via #login command"
+        [control]="formService.getAdminUUIDs(form)"
+        [parent]="form"
+      ></aswg-chip-form-input>
       <mat-form-field matTooltip="Enables/Disable BattlEye anti-cheat engine. Requires installed BattlEye on server and clients." matTooltipPosition="right">
         <mat-label>BattleEye</mat-label>
         <mat-select formControlName="battleEye">
@@ -64,28 +49,20 @@
         </mat-select>
         <mat-error *ngIf="hasFormError('allowedFilePatching', 'required')">This field is required</mat-error>
       </mat-form-field>
-      <mat-form-field style="width: 100%;">
-        <mat-label>Allowed Load File Extensions</mat-label>
-        <mat-chip-grid #allowedLoadFileExtensionsGrid aria-label="Allowed Load File Extensions" formControlName="allowedLoadFileExtensions">
-          <mat-chip-row *ngFor="let fileExtension of formService.getAllowedLoadFileExtensions(form).value"
-                        [editable]="true"
-                        (edited)="editAllowedFileExtension(fileExtension, $event)"
-                        (removed)="removeAllowedFileExtension(fileExtension)"
-                        [aria-description]="'press enter to edit ' + fileExtension"
-          >
-            {{fileExtension}}
-            <button matChipRemove [attr.aria-label]="'remove ' + fileExtension">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip-row>
-          <input placeholder="New extension..."
-                 [matChipInputFor]="allowedLoadFileExtensionsGrid"
-                 [matChipInputSeparatorKeyCodes]="[ENTER, COMMA]"
-                 [matChipInputAddOnBlur]="true"
-                 (matChipInputTokenEnd)="addNewAllowedFileExtension($event)"
-          />
-        </mat-chip-grid>
-      </mat-form-field>
+      <aswg-chip-form-input
+        style="width: 100%;"
+        labelText="Allowed Load File Extensions"
+        toolTipText="Only allow files with listed extensions to be loaded via loadFile command. Not listing any extension means everything is allowed. Defining the setting as empty arrays means nothing is allowed."
+        [control]="formService.getAllowedLoadFileExtensions(form)"
+        [parent]="form"
+      ></aswg-chip-form-input>
+      <aswg-chip-form-input
+        style="width: 100%;"
+        labelText="File Patching Ignored Clients (steamID64)"
+        toolTipText="Whitelisted clients ignore the rules defined by allowedFilePatching and verifySignatures, allowing them to join the server with any mods of their choice. Signature errors are still logged by the server upon connection."
+        [control]="formService.getFilePatchingIgnoredClients(form)"
+        [parent]="form"
+      ></aswg-chip-form-input>
       <div>
         <mat-label matTooltip="Players can use this commands to vote for e.g. mission change" matTooltipPosition="right">Allowed Vote Commands</mat-label>
         <app-vote-cmds-list [formGroup]="form" (listChanged)="setVoteCmds($event)"></app-vote-cmds-list>

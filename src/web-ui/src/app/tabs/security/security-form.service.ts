@@ -10,7 +10,7 @@ import {
   providedIn: 'root'
 })
 export class SecurityFormService {
-  constructor(private fb: FormBuilder) {
+  constructor(private readonly fb: FormBuilder) {
   }
 
   getForm(): FormGroup {
@@ -21,6 +21,7 @@ export class SecurityFormService {
       battleEye: [true, [Validators.required]],
       verifySignatures: [true, [Validators.required]],
       allowedFilePatching: [AllowedFilePatching.NOT_ALLOWED, [Validators.required]],
+      filePatchingIgnoredClients: [[]],
       allowedLoadFileExtensions: [[]],
       adminUUIDs: [[]],
       allowedVoteCmds: [[]]
@@ -34,6 +35,7 @@ export class SecurityFormService {
     this.getBattleEyeControl(form).setValue(data.battleEye);
     this.getVerifySignaturesControl(form).setValue(data.verifySignatures);
     this.getAllowedFilePatchingControl(form).setValue(data.allowedFilePatching);
+    this.getFilePatchingIgnoredClients(form).setValue(data.filePatchingIgnoredClients);
     this.getAllowedLoadFileExtensions(form).setValue(data.allowedLoadFileExtensions);
     this.getAdminUUIDs(form).setValue(data.adminUUIDs);
     this.getAllowedVoteCmds(form).setValue(data.allowedVoteCmds);
@@ -47,6 +49,7 @@ export class SecurityFormService {
       battleEye: this.getBattleEyeControl(form).value,
       verifySignatures: this.getVerifySignaturesControl(form).value,
       allowedFilePatching: this.getAllowedFilePatchingControl(form).value,
+      filePatchingIgnoredClients: this.getFilePatchingIgnoredClients(form).value,
       allowedLoadFileExtensions: this.getAllowedLoadFileExtensions(form).value,
       adminUUIDs: this.getAdminUUIDs(form).value,
       allowedVoteCmds: this.getAllowedVoteCmds(form).value
@@ -75,6 +78,10 @@ export class SecurityFormService {
 
   getAllowedFilePatchingControl(form: FormGroup) {
     return form.get('allowedFilePatching') as AbstractControl;
+  }
+
+  getFilePatchingIgnoredClients(form: FormGroup) {
+    return form.get('filePatchingIgnoredClients') as AbstractControl;
   }
 
   getAllowedLoadFileExtensions(form: FormGroup) {

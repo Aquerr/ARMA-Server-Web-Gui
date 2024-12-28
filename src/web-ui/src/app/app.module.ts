@@ -78,6 +78,7 @@ import {ModSettingsPanelComponent} from "./tabs/mods-settings/mod-settings-panel
 import {NgxCodeJarComponent} from "ngx-codejar";
 import {CommonConfirmDialogComponent} from "./common-ui/common-confirm-dialog/common-confirm-dialog.component";
 import {AswgChipInputComponent} from "./common-ui/aswg-chip-input/aswg-chip-input.component";
+import {AswgChipFormInputComponent} from "./common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
 
 @NgModule({
   declarations: [
@@ -126,7 +127,9 @@ import {AswgChipInputComponent} from "./common-ui/aswg-chip-input/aswg-chip-inpu
     ModsSettingsComponent,
     ModSettingsPanelComponent,
     ModSettingsPanelComponent,
-    CommonConfirmDialogComponent
+    CommonConfirmDialogComponent,
+    AswgChipInputComponent,
+    AswgChipFormInputComponent
   ],
     imports: [
         BrowserModule,
@@ -157,8 +160,7 @@ import {AswgChipInputComponent} from "./common-ui/aswg-chip-input/aswg-chip-inpu
         MatMenuModule,
         MatChipsModule,
         MatCardModule,
-        NgxCodeJarComponent,
-        AswgChipInputComponent
+        NgxCodeJarComponent
     ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}

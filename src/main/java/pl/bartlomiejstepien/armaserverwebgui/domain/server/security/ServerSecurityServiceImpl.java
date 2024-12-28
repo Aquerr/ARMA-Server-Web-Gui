@@ -29,6 +29,7 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
                 .verifySignatures(armaServerConfig.getVerifySignatures() == 2)
                 .allowedFilePatching(Optional.ofNullable(ServerSecurityProperties.AllowedFilePatching.findByConfigValue(armaServerConfig.getAllowedFilePatching()))
                         .orElseThrow(() -> new RuntimeException("Could not find AllowedFilePatching for config value = " + armaServerConfig.getAllowedFilePatching())))
+                .filePatchingIgnoredClients(Arrays.stream(armaServerConfig.getFilePatchingExceptions()).toList())
                 .allowedLoadFileExtensions(Arrays.asList(armaServerConfig.getAllowedLoadFileExtensions()))
                 .adminUUIDs(Arrays.asList(armaServerConfig.getAdmins()))
                 .voteCommands(Optional.ofNullable(armaServerConfig.getAllowedVoteCmds())
@@ -55,6 +56,7 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
         armaServerConfig.setBattleEye(serverSecurityProperties.isBattleEye() ? 1 : 0);
         armaServerConfig.setVerifySignatures(serverSecurityProperties.isVerifySignatures() ? 2 : 0);
         armaServerConfig.setAllowedFilePatching(serverSecurityProperties.getAllowedFilePatching().getConfigValue());
+        armaServerConfig.setFilePatchingExceptions(serverSecurityProperties.getFilePatchingIgnoredClients().toArray(new String[0]));
         armaServerConfig.setAllowedLoadFileExtensions(serverSecurityProperties.getAllowedLoadFileExtensions().toArray(new String[0]));
         armaServerConfig.setAdmins(serverSecurityProperties.getAdminUUIDs().toArray(new String[0]));
         armaServerConfig.setAllowedVoteCmds(Optional.ofNullable(serverSecurityProperties.getVoteCommands())

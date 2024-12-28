@@ -5,6 +5,9 @@
   "battleEye": true,
   "verifySignatures": true,
   "allowedFilePatching": "ALLOWED_FOR_HEADLESS_CLIENTS",
+  "filePatchingIgnoredClients": [
+    "312312312312321"
+  ],
   "allowedLoadFileExtensions": [
     "SQF"
   ],

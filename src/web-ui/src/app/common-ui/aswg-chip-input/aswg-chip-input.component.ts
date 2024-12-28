@@ -2,31 +2,11 @@ import {Component, Input} from '@angular/core';
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {
   MatChipEditedEvent,
-  MatChipGrid,
-  MatChipInput,
-  MatChipInputEvent,
-  MatChipRemove,
-  MatChipRow
+  MatChipInputEvent
 } from "@angular/material/chips";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatIcon} from "@angular/material/icon";
-import {MatTooltip} from "@angular/material/tooltip";
-import {NgForOf} from "@angular/common";
 
 @Component({
   selector: 'aswg-chip-input',
-  standalone: true,
-    imports: [
-        MatChipGrid,
-        MatChipInput,
-        MatChipRemove,
-        MatChipRow,
-        MatFormField,
-        MatIcon,
-        MatLabel,
-        MatTooltip,
-        NgForOf
-    ],
   templateUrl: './aswg-chip-input.component.html',
   styleUrl: './aswg-chip-input.component.scss'
 })

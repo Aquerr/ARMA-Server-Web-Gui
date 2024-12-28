@@ -18,6 +18,7 @@ public class ServerSecurityProperties
     private boolean battleEye;
     private boolean verifySignatures;
     private AllowedFilePatching allowedFilePatching;
+    private List<String> filePatchingIgnoredClients;
     private List<String> allowedLoadFileExtensions;
     private List<String> adminUUIDs;
     private List<VoteCommand> voteCommands;
