@@ -11,18 +11,18 @@ export class ServerNetworkService {
   private readonly NETWORK_URL = `${API_BASE_URL}/network`;
   private readonly NETWORK_PROPERTIES_URL = `${this.NETWORK_URL}/properties`
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
-  getServerNetworkProperties(): Observable<GetServerNetworkProperties> {
-    return this.httpClient.get<GetServerNetworkProperties>(this.NETWORK_PROPERTIES_URL);
+  getServerNetworkProperties(): Observable<ServerNetworkProperties> {
+    return this.httpClient.get<ServerNetworkProperties>(this.NETWORK_PROPERTIES_URL);
   }
 
-  saveServerNetworkProperties(saveServerNetworkPropertiesRequest: SaveServerNetworkProperties): Observable<any> {
+  saveServerNetworkProperties(saveServerNetworkPropertiesRequest: ServerNetworkProperties): Observable<any> {
     return this.httpClient.post(this.NETWORK_PROPERTIES_URL, saveServerNetworkPropertiesRequest);
   }
 }
 
-export interface SaveServerNetworkProperties {
+export interface ServerNetworkProperties {
   upnp: boolean;
   maxPing: number;
   loopback: boolean;
@@ -40,24 +40,12 @@ export interface SaveServerNetworkProperties {
   minErrorToSendNear: number;
   maxCustomFileSize: number;
   maxPacketSize: number;
+  kickTimeouts: KickTimeouts;
 }
 
-export interface GetServerNetworkProperties {
-  upnp: boolean;
-  maxPing: number;
-  loopback: boolean;
-  disconnectTimeout: number;
-  maxDesync: number;
-  maxPacketLoss: number;
-  enablePlayerDiag: boolean;
-  steamProtocolMaxDataSize: number;
-  minBandwidth: number;
-  maxBandwidth: number;
-  maxMsgSend: number;
-  maxSizeGuaranteed: number;
-  maxSizeNonGuaranteed: number;
-  minErrorToSend: number;
-  minErrorToSendNear: number;
-  maxCustomFileSize: number;
-  maxPacketSize: number;
+export interface KickTimeouts {
+  manualKickTimeoutSeconds: number;
+  connectivityKickTimeoutSeconds: number;
+  battlEyeKickTimeoutSeconds: number;
+  harmlessKickTimeoutSeconds: number;
 }

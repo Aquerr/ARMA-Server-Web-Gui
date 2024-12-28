@@ -95,6 +95,14 @@ public class ArmaServerConfig
     @CfgProperty(name = "allowedVoteCmds[]", type = PropertyType.ARRAY_OF_NO_FIELDS_OBJECT)
     private VoteCmd[] allowedVoteCmds = {};
 
+    @CfgProperty(name = "kickTimeout[]", type = PropertyType.ARRAY_OF_NO_FIELDS_OBJECT)
+    private KickTimeout[] kickTimeouts = {
+            KickTimeout.builder().kickId(0).timeout(60).build(),
+            KickTimeout.builder().kickId(1).timeout(60).build(),
+            KickTimeout.builder().kickId(2).timeout(60).build(),
+            KickTimeout.builder().kickId(3).timeout(60).build()
+    };
+
     @CfgProperty(name = "Missions", type = PropertyType.CLASS, isClass = true)
     @ClassList
     private List<Missions.Mission> missions = new ArrayList<>();

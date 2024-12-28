@@ -1,8 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.NetworkProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.ServerNetworkService;
+import pl.bartlomiejstepien.armaserverwebgui.web.request.NetworkPropertiesRequest;
+import pl.bartlomiejstepien.armaserverwebgui.web.response.NetworkPropertiesResponse;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -24,7 +24,7 @@ public class ServerNetworkRestController
     public Mono<NetworkPropertiesResponse> getNetworkProperties()
     {
         return Mono.just(this.networkService.getNetworkProperties())
-                .map(this::toViewResponse);
+                .map(this::toResponseModel);
     }
     
     @PostMapping("/properties")
@@ -34,30 +34,31 @@ public class ServerNetworkRestController
         return Mono.just(ResponseEntity.ok().build());
     }
 
-    private NetworkProperties toDomainModel(NetworkPropertiesRequest networkPropertiesRequest)
+    private NetworkProperties toDomainModel(NetworkPropertiesRequest request)
     {
         return NetworkProperties.builder()
-                .upnp(networkPropertiesRequest.isUpnp())
-                .maxPing(networkPropertiesRequest.getMaxPing())
-                .loopback(networkPropertiesRequest.isLoopback())
-                .disconnectTimeout(networkPropertiesRequest.getDisconnectTimeout())
-                .maxDesync(networkPropertiesRequest.getMaxDesync())
-                .maxPacketLoss(networkPropertiesRequest.getMaxPacketLoss())
-                .enablePlayerDiag(networkPropertiesRequest.isEnablePlayerDiag())
-                .steamProtocolMaxDataSize(networkPropertiesRequest.getSteamProtocolMaxDataSize())
-                .minBandwidth(networkPropertiesRequest.getMinBandwidth())
-                .maxBandwidth(networkPropertiesRequest.getMaxBandwidth())
-                .maxMsgSend(networkPropertiesRequest.getMaxMsgSend())
-                .maxSizeGuaranteed(networkPropertiesRequest.getMaxSizeGuaranteed())
-                .maxSizeNonGuaranteed(networkPropertiesRequest.getMaxSizeNonGuaranteed())
-                .minErrorToSend(networkPropertiesRequest.getMinErrorToSend())
-                .minErrorToSendNear(networkPropertiesRequest.getMinErrorToSendNear())
-                .maxCustomFileSize(networkPropertiesRequest.getMaxCustomFileSize())
-                .maxPacketSize(networkPropertiesRequest.getMaxPacketSize())
+                .upnp(request.isUpnp())
+                .maxPing(request.getMaxPing())
+                .loopback(request.isLoopback())
+                .disconnectTimeout(request.getDisconnectTimeout())
+                .maxDesync(request.getMaxDesync())
+                .maxPacketLoss(request.getMaxPacketLoss())
+                .enablePlayerDiag(request.isEnablePlayerDiag())
+                .steamProtocolMaxDataSize(request.getSteamProtocolMaxDataSize())
+                .minBandwidth(request.getMinBandwidth())
+                .maxBandwidth(request.getMaxBandwidth())
+                .maxMsgSend(request.getMaxMsgSend())
+                .maxSizeGuaranteed(request.getMaxSizeGuaranteed())
+                .maxSizeNonGuaranteed(request.getMaxSizeNonGuaranteed())
+                .minErrorToSend(request.getMinErrorToSend())
+                .minErrorToSendNear(request.getMinErrorToSendNear())
+                .maxCustomFileSize(request.getMaxCustomFileSize())
+                .maxPacketSize(request.getMaxPacketSize())
+                .kickTimeouts(request.getKickTimeouts())
                 .build();
     }
 
-    private NetworkPropertiesResponse toViewResponse(NetworkProperties networkProperties)
+    private NetworkPropertiesResponse toResponseModel(NetworkProperties networkProperties)
     {
         return NetworkPropertiesResponse.builder()
                 .upnp(networkProperties.isUpnp())
@@ -77,56 +78,7 @@ public class ServerNetworkRestController
                 .minErrorToSendNear(networkProperties.getMinErrorToSendNear())
                 .maxCustomFileSize(networkProperties.getMaxCustomFileSize())
                 .maxPacketSize(networkProperties.getMaxPacketSize())
+                .kickTimeouts(networkProperties.getKickTimeouts())
                 .build();
-    }
-
-    @Builder
-    @Data
-    private static class NetworkPropertiesRequest
-    {
-        private boolean upnp;
-        private int maxPing;
-        private boolean loopback;
-        private int disconnectTimeout;
-        private int maxDesync;
-        private int maxPacketLoss;
-        private boolean enablePlayerDiag;
-        private int steamProtocolMaxDataSize;
-
-        // Performance properties
-        private long minBandwidth;
-        private long maxBandwidth;
-        private int maxMsgSend;
-        private int maxSizeGuaranteed;
-        private int maxSizeNonGuaranteed;
-        private String minErrorToSend;
-        private String minErrorToSendNear;
-        private int maxCustomFileSize;
-        private int maxPacketSize;
-    }
-
-    @Builder
-    @Data
-    private static class NetworkPropertiesResponse
-    {
-        private boolean upnp;
-        private int maxPing;
-        private boolean loopback;
-        private int disconnectTimeout;
-        private int maxDesync;
-        private int maxPacketLoss;
-        private boolean enablePlayerDiag;
-        private int steamProtocolMaxDataSize;
-
-        // Performance properties
-        private long minBandwidth;
-        private long maxBandwidth;
-        private int maxMsgSend;
-        private int maxSizeGuaranteed;
-        private int maxSizeNonGuaranteed;
-        private String minErrorToSend;
-        private String minErrorToSendNear;
-        private int maxCustomFileSize;
-        private int maxPacketSize;
     }
 }

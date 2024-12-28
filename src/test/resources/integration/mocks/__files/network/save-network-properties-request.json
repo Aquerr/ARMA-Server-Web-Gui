@@ -15,5 +15,11 @@
   "minErrorToSend": "0.67",
   "minErrorToSendNear": "0.123",
   "maxCustomFileSize": 1000,
-  "maxPacketSize": 13000
+  "maxPacketSize": 13000,
+  "kickTimeouts": {
+    "manualKickTimeoutSeconds": 30,
+    "connectivityKickTimeoutSeconds": 20,
+    "battlEyeKickTimeoutSeconds": 10,
+    "harmlessKickTimeoutSeconds": -2
+  }
 }

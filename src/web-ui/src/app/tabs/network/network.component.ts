@@ -13,10 +13,10 @@ import {FormGroup} from '@angular/forms';
 export class NetworkComponent implements OnInit {
   form: FormGroup;
 
-  constructor(private maskService: MaskService,
-              private notificationService: NotificationService,
-              private serverNetworkService: ServerNetworkService,
-              private formService: NetworkFormService) {
+  constructor(private readonly maskService: MaskService,
+              private readonly notificationService: NotificationService,
+              private readonly serverNetworkService: ServerNetworkService,
+              private readonly formService: NetworkFormService) {
     this.form = this.formService.getForm();
   }
 

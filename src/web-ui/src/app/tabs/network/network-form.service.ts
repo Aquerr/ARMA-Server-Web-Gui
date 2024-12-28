@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {GetServerNetworkProperties, SaveServerNetworkProperties} from '../../service/server-network.service';
+import {ServerNetworkProperties} from "../../service/server-network.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class NetworkFormService {
-  constructor(private fb: FormBuilder) {
+  constructor(private readonly fb: FormBuilder) {
   }
 
   getForm(): FormGroup {
@@ -27,11 +27,15 @@ export class NetworkFormService {
       minErrorToSend: ['0.001', [Validators.required, Validators.pattern("[0-9]+(.[0-9]+)?")]],
       minErrorToSendNear: ['0.01', [Validators.required, Validators.pattern("[0-9]+(.[0-9]+)?")]],
       maxCustomFileSize: [0, Validators.required],
-      maxPacketSize: [1400, Validators.required]
+      maxPacketSize: [1400, Validators.required],
+      manualKickTimeout: [60, [Validators.required, Validators.min(-2)]],
+      connectivityKickTimeout: [60, [Validators.required, Validators.min(-2)]],
+      battlEyeKickTimeout: [60, [Validators.required, Validators.min(-2)]],
+      harmlessKickTimeout: [60, [Validators.required, Validators.min(-2)]],
     });
   }
 
-  setForm(form: FormGroup, data: GetServerNetworkProperties) {
+  setForm(form: FormGroup, data: ServerNetworkProperties) {
     this.getUpnpControl(form).setValue(data.upnp);
     this.getMaxPingControl(form).setValue(data.maxPing);
     this.getLoopbackControl(form).setValue(data.loopback);
@@ -49,6 +53,10 @@ export class NetworkFormService {
     this.getMinErrorToSendNear(form).setValue(data.minErrorToSendNear);
     this.getMaxCustomFileSize(form).setValue(data.maxCustomFileSize);
     this.getMaxPacketSize(form).setValue(data.maxPacketSize);
+    this.getManualKickTimeout(form).setValue(data.kickTimeouts.manualKickTimeoutSeconds);
+    this.getConnectivityKickTimeout(form).setValue(data.kickTimeouts.connectivityKickTimeoutSeconds);
+    this.getBattlEyeKickTimeout(form).setValue(data.kickTimeouts.battlEyeKickTimeoutSeconds);
+    this.getHarmlessKickTimeout(form).setValue(data.kickTimeouts.harmlessKickTimeoutSeconds);
   }
 
   get(form: FormGroup) {
@@ -69,8 +77,14 @@ export class NetworkFormService {
       minErrorToSend: this.getMinErrorToSend(form).value,
       minErrorToSendNear: this.getMinErrorToSendNear(form).value,
       maxCustomFileSize: this.getMaxCustomFileSize(form).value,
-      maxPacketSize: this.getMaxPacketSize(form).value
-    } as SaveServerNetworkProperties;
+      maxPacketSize: this.getMaxPacketSize(form).value,
+      kickTimeouts: {
+        manualKickTimeoutSeconds: this.getManualKickTimeout(form).value,
+        connectivityKickTimeoutSeconds: this.getConnectivityKickTimeout(form).value,
+        battlEyeKickTimeoutSeconds: this.getBattlEyeKickTimeout(form).value,
+        harmlessKickTimeoutSeconds: this.getHarmlessKickTimeout(form).value,
+      }
+    } as ServerNetworkProperties;
   }
 
   getUpnpControl(form: FormGroup) {
@@ -139,5 +153,21 @@ export class NetworkFormService {
 
   getMaxPacketSize(form: FormGroup) {
     return form.get('maxPacketSize') as AbstractControl;
+  }
+
+  getManualKickTimeout(form: FormGroup) {
+    return form.get('manualKickTimeout') as AbstractControl;
+  }
+
+  getConnectivityKickTimeout(form: FormGroup) {
+    return form.get('connectivityKickTimeout') as AbstractControl;
+  }
+
+  getBattlEyeKickTimeout(form: FormGroup) {
+    return form.get('battlEyeKickTimeout') as AbstractControl;
+  }
+
+  getHarmlessKickTimeout(form: FormGroup) {
+    return form.get('harmlessKickTimeout') as AbstractControl;
   }
 }

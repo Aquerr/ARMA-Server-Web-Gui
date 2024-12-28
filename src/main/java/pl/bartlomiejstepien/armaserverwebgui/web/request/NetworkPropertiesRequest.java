@@ -1,11 +1,12 @@
-package pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model;
+package pl.bartlomiejstepien.armaserverwebgui.web.request;
 
 import lombok.Builder;
 import lombok.Data;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.NetworkProperties;
 
 @Builder
 @Data
-public class NetworkProperties
+public class NetworkPropertiesRequest
 {
     private boolean upnp;
     private int maxPing;
@@ -15,7 +16,7 @@ public class NetworkProperties
     private int maxPacketLoss;
     private boolean enablePlayerDiag;
     private int steamProtocolMaxDataSize;
-    private KickTimeouts kickTimeouts;
+    private NetworkProperties.KickTimeouts kickTimeouts;
 
     // Performance properties
     private long minBandwidth;
@@ -27,14 +28,4 @@ public class NetworkProperties
     private String minErrorToSendNear;
     private int maxCustomFileSize;
     private int maxPacketSize;
-
-    @Data
-    @Builder
-    public static class KickTimeouts
-    {
-        private int manualKickTimeoutSeconds;
-        private int connectivityKickTimeoutSeconds;
-        private int battlEyeKickTimeoutSeconds;
-        private int harmlessKickTimeoutSeconds;
-    }
 }

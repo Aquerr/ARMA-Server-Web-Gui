@@ -109,6 +109,36 @@
         </mat-form-field>
       </div>
     </div>
+    <div class="network-properties">
+      <hr>
+      <h1 matTooltip="Determines how long until kicked player can return to game in seconds">Kick Timeouts</h1>
+      <div class="properties-flex">
+        <mat-form-field matTooltip="For vote kick, admin kick, bruteforce detection etc. -1 = unitl mission end, -2 = unitl server restart">
+          <mat-label>Manual kick timeout</mat-label>
+          <input name="manualKickTimeout" formControlName="manualKickTimeout" matInput type="number" min="-2" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('manualKickTimeout', 'min')">Minimum value is -2</mat-error>
+          <mat-error *ngIf="hasFormError('manualKickTimeout', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="For ping, timeout, packetloss, desync. -1 = unitl mission end, -2 = unitl server restart">
+          <mat-label>Connectivity kick timeout</mat-label>
+          <input name="connectivityKickTimeout" formControlName="connectivityKickTimeout" matInput type="number" min="-2" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('connectivityKickTimeout', 'min')">Minimum value is -2</mat-error>
+          <mat-error *ngIf="hasFormError('connectivityKickTimeout', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="For BattlEye kick. -1 = unitl mission end, -2 = unitl server restart">
+          <mat-label>BattlEye kick timeout</mat-label>
+          <input name="battlEyeKickTimeout" formControlName="battlEyeKickTimeout" matInput type="number" min="-2" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('battlEyeKickTimeout', 'min')">Minimum value is -2</mat-error>
+          <mat-error *ngIf="hasFormError('battlEyeKickTimeout', 'required')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field matTooltip="For wrong addons, steam timeout or checks, singatures, content etc. -1 = unitl mission end, -2 = unitl server restart">
+          <mat-label>Harmless kick timeout</mat-label>
+          <input name="harmlessKickTimeout" formControlName="harmlessKickTimeout" matInput type="number" min="-2" (keydown)="allowDigits($event)">
+          <mat-error *ngIf="hasFormError('harmlessKickTimeout', 'min')">Minimum value is -2</mat-error>
+          <mat-error *ngIf="hasFormError('harmlessKickTimeout', 'required')">This field is required</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
   </div>
   <div>
     <button mat-flat-button color="primary" (click)="save()">Save</button>
