@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.user;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
@@ -11,6 +12,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.model.UserProfile;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService
@@ -19,8 +21,9 @@ public class UserServiceImpl implements UserService
     private final JwtService jwtService;
 
     @Override
-    public String authenticate(String username, String password)
+    public String authenticate(String username, String password, String ipAddress)
     {
+        log.info("Login attempt for {} from {}", username, ipAddress);
         AppUser user = getUsers().stream().filter(appUser -> appUser.getUsername().equals(username))
                 .findFirst()
                 .filter(appUser -> appUser.getPassword().equals(password))

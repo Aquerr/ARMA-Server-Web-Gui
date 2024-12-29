@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +24,14 @@ public class AuthRestController
     private final UserService userService;
 
     @PostMapping
-    public Mono<ResponseEntity<JwtTokenResponse>> authenticate(@RequestBody UserCredentials userCredentials)
+    public Mono<ResponseEntity<JwtTokenResponse>> authenticate(@RequestBody UserCredentials userCredentials, ServerHttpRequest request)
     {
-        return Mono.fromCallable(() -> userService.authenticate(userCredentials.getUsername(), userCredentials.getPassword()))
+        return Mono.fromCallable(() -> userService.authenticate(
+                        userCredentials.getUsername(),
+                        userCredentials.getPassword(),
+                        request.getRemoteAddress().getAddress().getHostAddress()))
                 .onErrorResume(throwable -> Mono.empty())
-                .map(jwt -> {
-                    return ResponseEntity.ok()
-                            .body(JwtTokenResponse.of(jwt));
-                })
+                .map(jwt -> ResponseEntity.ok().body(JwtTokenResponse.of(jwt)))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
     }
 
