@@ -79,6 +79,7 @@ import {NgxCodeJarComponent} from "ngx-codejar";
 import {CommonConfirmDialogComponent} from "./common-ui/common-confirm-dialog/common-confirm-dialog.component";
 import {AswgChipInputComponent} from "./common-ui/aswg-chip-input/aswg-chip-input.component";
 import {AswgChipFormInputComponent} from "./common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
+import {MatPaginator} from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -160,7 +161,8 @@ import {AswgChipFormInputComponent} from "./common-ui/aswg-chip-form-input/aswg-
         MatMenuModule,
         MatChipsModule,
         MatCardModule,
-        NgxCodeJarComponent
+        NgxCodeJarComponent,
+        MatPaginator
     ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}

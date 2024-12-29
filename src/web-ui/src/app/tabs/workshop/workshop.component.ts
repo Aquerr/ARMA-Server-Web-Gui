@@ -1,9 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, signal} from '@angular/core';
 import {WorkshopMod} from '../../model/workshop.model';
 import {WorkshopService} from '../../service/workshop.service';
 import {FormControl} from '@angular/forms';
 import {ModInstallWebsocketService} from "./mod-install-websocket/mod-install-websocket.service";
 import {MaskService} from "../../service/mask.service";
+import {PageEvent} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-workshop',
@@ -14,14 +15,17 @@ export class WorkshopComponent implements OnInit, OnDestroy {
   workshopMods: WorkshopMod[] = [];
   installedWorkshopMods: WorkshopMod[] = [];
   modsUnderInstallation: WorkshopMod[] = [];
-
   nextCursor: string = "";
   searchBoxControl!: FormControl;
   private lastSearchText: string = "";
 
-  constructor(private workshopService: WorkshopService,
-              private maskService: MaskService,
-              private modInstallWebsocketService: ModInstallWebsocketService) {
+  // Paginator
+  totalInstalledMods = signal(0);
+  installedWorkshopModsToShow: WorkshopMod[] = [];
+
+  constructor(private readonly workshopService: WorkshopService,
+              private readonly maskService: MaskService,
+              private readonly modInstallWebsocketService: ModInstallWebsocketService) {
     this.searchBoxControl = new FormControl<string>('');
     this.modInstallWebsocketService.workShopModInstallStatus.subscribe(modInstallStatus => {
       const workshopMod = this.workshopMods.find(mod => mod.fileId === modInstallStatus.fileId);
@@ -84,6 +88,19 @@ export class WorkshopComponent implements OnInit, OnDestroy {
       });
 
       this.installedWorkshopMods.push(...this.modsUnderInstallation);
+      this.showInstalledWorkshopsModsPage(1);
+      this.totalInstalledMods.set(this.installedWorkshopMods.length);
     });
+  }
+
+  private showInstalledWorkshopsModsPage(pageIndex: number) {
+    const startIndex = pageIndex * 10;
+    const endIndex = pageIndex * 10 + 10;
+
+    this.installedWorkshopModsToShow = this.installedWorkshopMods.slice(startIndex, endIndex);
+  }
+
+  changePage(event: PageEvent) {
+    this.showInstalledWorkshopsModsPage(event.pageIndex);
   }
 }

@@ -24,7 +24,7 @@
   <div class="installed-mods">
     <h2>Installed mods</h2>
     <div class="installed-mods-list">
-      <app-workshop-item *ngFor="let installedWorkshopMod of installedWorkshopMods"
+      <app-workshop-item *ngFor="let installedWorkshopMod of installedWorkshopModsToShow"
                          [workshopMod]="installedWorkshopMod"
                          [canInstall]="false"
                          (onModInstallDelete)="onModInstallDelete($event)"
@@ -32,6 +32,13 @@
       </app-workshop-item>
       <div *ngIf="installedWorkshopMods.length == 0">
         <span>No workshop items are installed. :(</span>
+      </div>
+      <div *ngIf="installedWorkshopMods.length > 0">
+        <mat-paginator
+          (page)="changePage($event)"
+          [length]="totalInstalledMods()"
+          [pageSize]="10"
+          aria-label="Select page"></mat-paginator>
       </div>
     </div>
   </div>

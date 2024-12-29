@@ -20,7 +20,7 @@ export class WorkshopService {
   private readonly API_INSTALL_MOD = `${API_BASE_URL}/workshop/install`;
   private readonly API_WORKSHOP_ACTIVE = `${API_BASE_URL}/workshop/active`;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private readonly httpClient: HttpClient) { }
 
   queryWorkshop(workshopQueryRequest: WorkshopQueryRequest): Observable<WorkshopQueryResponse> {
     return this.httpClient.post<WorkshopQueryResponse>(this.API_QUERY_WORKSHOP, workshopQueryRequest);
