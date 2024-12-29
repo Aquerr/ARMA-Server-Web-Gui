@@ -16,6 +16,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopModInstallSteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
+import javax.annotation.Nullable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -83,6 +84,7 @@ public class SteamServiceImpl implements SteamService
         return this.steamCmdHandler.queueSteamTask(new GameUpdateSteamTask());
     }
 
+    @Nullable
     @Override
     public WorkshopMod getWorkshopMod(long modId)
     {

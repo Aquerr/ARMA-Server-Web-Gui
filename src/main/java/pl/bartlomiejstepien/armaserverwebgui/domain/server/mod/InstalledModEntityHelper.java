@@ -5,11 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.MetaCppFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 @Slf4j
 @AllArgsConstructor
@@ -20,32 +19,21 @@ public class InstalledModEntityHelper
 
     public InstalledModEntity toEntity(InstalledFileSystemMod fileSystemMod)
     {
-        MetaCppFile metaCppFile = fileSystemMod.getModMetaFile().orElseThrow();
         InstalledModEntity.InstalledModEntityBuilder installedModBuilder = InstalledModEntity.builder();
-        installedModBuilder.workshopFileId(metaCppFile.getPublishedFileId());
-        installedModBuilder.name(metaCppFile.getName());
+        installedModBuilder.workshopFileId(fileSystemMod.getWorkshopFileId());
+        installedModBuilder.name(fileSystemMod.getName());
         installedModBuilder.directoryPath(fileSystemMod.getModDirectory().getPath().toAbsolutePath().toString());
         installedModBuilder.createdDate(OffsetDateTime.now());
+        installedModBuilder.lastWorkshopUpdate(fileSystemMod.getLastUpdated());
 
-        tryPopulateModPreviewUrl(metaCppFile.getPublishedFileId(), metaCppFile.getName(), installedModBuilder);
+        tryPopulateModPreviewUrl(fileSystemMod.getWorkshopFileId(), installedModBuilder);
         return installedModBuilder.build();
     }
 
     private void tryPopulateModPreviewUrl(long publishedFileId,
-                                          String modName,
                                           InstalledModEntity.InstalledModEntityBuilder installedModBuilder)
     {
-        try
-        {
-            WorkshopMod workshopMod = steamService.getWorkshopMod(publishedFileId);
-            if (workshopMod != null)
-            {
-                installedModBuilder.previewUrl(workshopMod.getPreviewUrl());
-            }
-        }
-        catch (Exception exception)
-        {
-            log.warn("Could not fetch mod preview url. Mod = {}", modName, exception);
-        }
+        Optional.ofNullable(steamService.getWorkshopMod(publishedFileId))
+                .ifPresent(workshopMod -> installedModBuilder.previewUrl(workshopMod.getPreviewUrl()));
     }
 }

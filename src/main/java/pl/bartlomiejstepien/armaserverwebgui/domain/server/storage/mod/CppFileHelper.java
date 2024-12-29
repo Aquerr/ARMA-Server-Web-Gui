@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 
 @Slf4j
-public class CppFileHelper
+public final class CppFileHelper
 {
     public static final String META_CPP = "meta.cpp";
     public static final String MOD_CPP = "mod.cpp";
@@ -34,5 +34,10 @@ public class CppFileHelper
             log.warn("Could not read mod file: {}", filePath, e);
         }
         return instance;
+    }
+
+    private CppFileHelper()
+    {
+        throw new IllegalAccessError("Utility class");
     }
 }

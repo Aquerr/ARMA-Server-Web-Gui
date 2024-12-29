@@ -11,4 +11,6 @@ public final class MetaCppFile implements CppFile
     private long publishedFileId;
     @CfgProperty(name = "name", type = PropertyType.QUOTED_STRING)
     private String name;
+    @CfgProperty(name = "timestamp", type = PropertyType.LONG)
+    private long timestamp;
 }

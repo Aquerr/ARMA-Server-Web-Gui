@@ -6,16 +6,19 @@ import io.github.aquerr.steamwebapiclient.request.WorkShopQueryFilesRequest;
 import io.github.aquerr.steamwebapiclient.response.PublishedFileDetailsResponse;
 import io.github.aquerr.steamwebapiclient.response.WorkShopQueryResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class SteamWebApiService
@@ -51,6 +54,7 @@ public class SteamWebApiService
                 .build();
     }
 
+    @Nullable
     public WorkshopMod getWorkshopMod(long modId)
     {
         try
@@ -65,7 +69,7 @@ public class SteamWebApiService
         }
         catch (Exception exception)
         {
-            exception.printStackTrace();
+            log.warn("Could not fetch mod info from workshop. Reason: {}", exception.getMessage());
             return null;
         }
     }

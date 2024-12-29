@@ -8,11 +8,9 @@ import java.nio.file.Path;
 
 public class ModDirectory
 {
-    Path path;
-
-    Lazy<MetaCppFile> metaCppFile = Lazy.of(() -> CppFileHelper.readFile(path.resolve(CppFileHelper.META_CPP), MetaCppFile.class));
-
-    Lazy<ModCppFile> modCppFile = Lazy.of(() -> CppFileHelper.readFile(path.resolve(CppFileHelper.MOD_CPP), ModCppFile.class));
+    private final Path path;
+    private final Lazy<MetaCppFile> metaCppFile;
+    private final Lazy<ModCppFile> modCppFile;
 
     public static ModDirectory from(Path modDirectory)
     {
@@ -22,6 +20,8 @@ public class ModDirectory
     private ModDirectory(Path modDirectory)
     {
         this.path = modDirectory;
+        this.metaCppFile = Lazy.of(() -> CppFileHelper.readFile(path.resolve(CppFileHelper.META_CPP), MetaCppFile.class));
+        this.modCppFile = Lazy.of(() -> CppFileHelper.readFile(path.resolve(CppFileHelper.MOD_CPP), ModCppFile.class));
     }
 
     public boolean hasModMetaFile()

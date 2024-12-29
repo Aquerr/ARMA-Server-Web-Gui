@@ -26,9 +26,4 @@ public class InstalledModConverter
                 .modWorkshopUrl(workshopUrlBuilder.buildUrlForFileId(installedModEntity.getWorkshopFileId()))
             .build();
     }
-
-    public InstalledFileSystemMod toFileSystemMod(InstalledModEntity installedModEntity)
-    {
-        return InstalledFileSystemMod.from(Paths.get(installedModEntity.getDirectoryPath()));
-    }
 }

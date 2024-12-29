@@ -124,7 +124,7 @@ public class ModStorageImpl implements ModStorage
             {
                 if (file.getName().equals(installedModEntity.getModDirectoryName()))
                 {
-                    log.info("Deleting mod directory {}", installedModEntity.getModDirectoryName());
+                    log.info("Deleting mod directory {}", installedModEntity.getDirectoryPath());
                     FileUtils.deleteFilesRecursively(file.toPath(), true);
                     break;
                 }
