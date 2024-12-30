@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.model.UserProfile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
+import pl.bartlomiejstepien.armaserverwebgui.web.util.HttpUtils;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
@@ -24,12 +25,14 @@ public class AuthRestController
     private final UserService userService;
 
     @PostMapping
-    public Mono<ResponseEntity<JwtTokenResponse>> authenticate(@RequestBody UserCredentials userCredentials, ServerHttpRequest request)
+    public Mono<ResponseEntity<JwtTokenResponse>> authenticate(
+            @RequestBody UserCredentials userCredentials,
+            ServerHttpRequest request)
     {
         return Mono.fromCallable(() -> userService.authenticate(
                         userCredentials.getUsername(),
                         userCredentials.getPassword(),
-                        request.getRemoteAddress().getAddress().getHostAddress()))
+                        HttpUtils.retriveIpAddress(request)))
                 .onErrorResume(throwable -> Mono.empty())
                 .map(jwt -> ResponseEntity.ok().body(JwtTokenResponse.of(jwt)))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
