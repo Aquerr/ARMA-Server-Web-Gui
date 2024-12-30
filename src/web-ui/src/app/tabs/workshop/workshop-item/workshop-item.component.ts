@@ -6,9 +6,10 @@ import {MaskService} from "../../../service/mask.service";
 import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
-  selector: 'app-workshop-item',
-  templateUrl: './workshop-item.component.html',
-  styleUrls: ['./workshop-item.component.scss']
+    selector: 'app-workshop-item',
+    templateUrl: './workshop-item.component.html',
+    styleUrls: ['./workshop-item.component.scss'],
+    standalone: false
 })
 export class WorkshopItemComponent implements OnInit {
   @Input() workshopMod!: WorkshopMod;

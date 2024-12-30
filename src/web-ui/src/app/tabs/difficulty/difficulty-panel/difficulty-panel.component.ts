@@ -9,9 +9,10 @@ import {
 } from "../difficulty-delete-confirm-dialog/difficulty-delete-confirm-dialog.component";
 
 @Component({
-  selector: 'app-difficulty-panel',
-  templateUrl: './difficulty-panel.component.html',
-  styleUrl: './difficulty-panel.component.scss'
+    selector: 'app-difficulty-panel',
+    templateUrl: './difficulty-panel.component.html',
+    styleUrl: './difficulty-panel.component.scss',
+    standalone: false
 })
 export class DifficultyPanelComponent {
   @Input() difficultyProfile!: DifficultyProfile;

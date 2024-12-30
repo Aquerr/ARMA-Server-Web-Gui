@@ -5,9 +5,10 @@ import {ServerDifficultyService} from "../../service/server-difficulty.service";
 import {DifficultyOptions, DifficultyProfile} from "../../model/difficulty-profile.model";
 
 @Component({
-  selector: 'app-difficulty',
-  templateUrl: './difficulty.component.html',
-  styleUrl: './difficulty.component.scss'
+    selector: 'app-difficulty',
+    templateUrl: './difficulty.component.html',
+    styleUrl: './difficulty.component.scss',
+    standalone: false
 })
 export class DifficultyComponent implements OnInit {
 

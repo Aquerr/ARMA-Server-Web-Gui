@@ -1,9 +1,10 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
-  selector: 'app-mod-preset-item',
-  templateUrl: './mod-preset-item.component.html',
-  styleUrls: ['./mod-preset-item.component.scss']
+    selector: 'app-mod-preset-item',
+    templateUrl: './mod-preset-item.component.html',
+    styleUrls: ['./mod-preset-item.component.scss'],
+    standalone: false
 })
 export class ModPresetItemComponent {
 

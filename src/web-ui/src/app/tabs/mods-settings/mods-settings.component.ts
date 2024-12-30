@@ -7,9 +7,10 @@ import {DialogService} from "../../service/dialog.service";
 import {ModSettingsPanelComponent} from "./mod-settings-panel/mod-settings-panel.component";
 
 @Component({
-  selector: 'app-mods-settings',
-  templateUrl: './mods-settings.component.html',
-  styleUrl: './mods-settings.component.scss'
+    selector: 'app-mods-settings',
+    templateUrl: './mods-settings.component.html',
+    styleUrl: './mods-settings.component.scss',
+    standalone: false
 })
 export class ModsSettingsComponent {
 

@@ -3,9 +3,10 @@ import {MAT_SNACK_BAR_DATA, MatSnackBarRef} from "@angular/material/snack-bar";
 import {FileUploadService} from "../../service/file-upload.service";
 
 @Component({
-  selector: 'app-file-upload-snack-bar',
-  templateUrl: './file-upload-snack-bar.component.html',
-  styleUrls: ['./file-upload-snack-bar.component.scss']
+    selector: 'app-file-upload-snack-bar',
+    templateUrl: './file-upload-snack-bar.component.html',
+    styleUrls: ['./file-upload-snack-bar.component.scss'],
+    standalone: false
 })
 export class FileUploadSnackBarComponent implements OnInit {
 

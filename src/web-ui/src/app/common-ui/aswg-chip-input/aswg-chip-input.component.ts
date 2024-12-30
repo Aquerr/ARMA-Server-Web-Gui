@@ -6,9 +6,10 @@ import {
 } from "@angular/material/chips";
 
 @Component({
-  selector: 'aswg-chip-input',
-  templateUrl: './aswg-chip-input.component.html',
-  styleUrl: './aswg-chip-input.component.scss'
+    selector: 'aswg-chip-input',
+    templateUrl: './aswg-chip-input.component.html',
+    styleUrl: './aswg-chip-input.component.scss',
+    standalone: false
 })
 export class AswgChipInputComponent {
 

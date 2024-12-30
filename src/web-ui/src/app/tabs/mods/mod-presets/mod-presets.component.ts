@@ -15,9 +15,10 @@ import {ModPresetDeleteDialogComponent} from "./mod-preset-delete-dialog/mod-pre
 import {ModPresetParserService} from "./service/mod-preset-parser.service";
 
 @Component({
-  selector: 'app-mod-presets',
-  templateUrl: './mod-presets.component.html',
-  styleUrls: ['./mod-presets.component.scss']
+    selector: 'app-mod-presets',
+    templateUrl: './mod-presets.component.html',
+    styleUrls: ['./mod-presets.component.scss'],
+    standalone: false
 })
 export class ModPresetsComponent {
 

@@ -5,9 +5,10 @@ import {NotificationService} from "../../service/notification.service";
 import {MotdListComponent} from "./motd-list/motd-list.component";
 
 @Component({
-  selector: 'app-general',
-  templateUrl: './general.component.html',
-  styleUrls: ['./general.component.scss']
+    selector: 'app-general',
+    templateUrl: './general.component.html',
+    styleUrls: ['./general.component.scss'],
+    standalone: false
 })
 export class GeneralComponent implements OnInit {
 

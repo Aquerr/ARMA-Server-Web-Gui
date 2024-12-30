@@ -7,9 +7,10 @@ import {MaskService} from "../../service/mask.service";
 import {PageEvent} from "@angular/material/paginator";
 
 @Component({
-  selector: 'app-workshop',
-  templateUrl: './workshop.component.html',
-  styleUrls: ['./workshop.component.scss']
+    selector: 'app-workshop',
+    templateUrl: './workshop.component.html',
+    styleUrls: ['./workshop.component.scss'],
+    standalone: false
 })
 export class WorkshopComponent implements OnInit, OnDestroy {
   workshopMods: WorkshopMod[] = [];

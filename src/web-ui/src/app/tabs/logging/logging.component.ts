@@ -4,9 +4,10 @@ import {NotificationService} from "../../service/notification.service";
 import {ServerLoggingService} from "../../service/server-logging.service";
 
 @Component({
-  selector: 'app-logging',
-  templateUrl: './logging.component.html',
-  styleUrls: ['./logging.component.scss']
+    selector: 'app-logging',
+    templateUrl: './logging.component.html',
+    styleUrls: ['./logging.component.scss'],
+    standalone: false
 })
 export class LoggingComponent implements OnInit {
 

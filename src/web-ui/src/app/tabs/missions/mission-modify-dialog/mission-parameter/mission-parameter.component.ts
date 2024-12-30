@@ -2,9 +2,10 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MissionParam} from "../../../../model/mission.model";
 
 @Component({
-  selector: 'app-mission-parameter',
-  templateUrl: './mission-parameter.component.html',
-  styleUrls: ['./mission-parameter.component.scss']
+    selector: 'app-mission-parameter',
+    templateUrl: './mission-parameter.component.html',
+    styleUrls: ['./mission-parameter.component.scss'],
+    standalone: false
 })
 export class MissionParameterComponent implements OnInit {
 

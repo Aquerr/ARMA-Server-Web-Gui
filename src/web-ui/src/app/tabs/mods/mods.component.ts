@@ -10,9 +10,10 @@ import {ModUploadService} from "./service/mod-upload.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-mods',
-  templateUrl: './mods.component.html',
-  styleUrls: ['./mods.component.scss']
+    selector: 'app-mods',
+    templateUrl: './mods.component.html',
+    styleUrls: ['./mods.component.scss'],
+    standalone: false
 })
 export class ModsComponent implements OnInit, OnDestroy {
 

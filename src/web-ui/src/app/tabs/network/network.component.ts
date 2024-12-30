@@ -6,9 +6,10 @@ import {NetworkFormService} from './network-form.service';
 import {FormGroup} from '@angular/forms';
 
 @Component({
-  selector: 'app-network',
-  templateUrl: './network.component.html',
-  styleUrls: ['./network.component.scss']
+    selector: 'app-network',
+    templateUrl: './network.component.html',
+    styleUrls: ['./network.component.scss'],
+    standalone: false
 })
 export class NetworkComponent implements OnInit {
   form: FormGroup;

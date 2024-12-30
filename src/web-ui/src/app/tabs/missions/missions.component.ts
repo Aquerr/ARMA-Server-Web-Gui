@@ -16,9 +16,10 @@ import {MissionUploadService} from "./service/mission-upload.service";
 import {NewMissionDialogComponent} from "./new-mission-dialog/new-mission-dialog.component";
 
 @Component({
-  selector: 'app-missions',
-  templateUrl: './missions.component.html',
-  styleUrls: ['./missions.component.scss']
+    selector: 'app-missions',
+    templateUrl: './missions.component.html',
+    styleUrls: ['./missions.component.scss'],
+    standalone: false
 })
 export class MissionsComponent implements OnInit, OnDestroy {
 

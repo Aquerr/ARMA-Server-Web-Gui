@@ -3,9 +3,10 @@ import {MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
-  selector: 'app-new-mission-dialog',
-  templateUrl: './new-mission-dialog.component.html',
-  styleUrl: './new-mission-dialog.component.scss'
+    selector: 'app-new-mission-dialog',
+    templateUrl: './new-mission-dialog.component.html',
+    styleUrl: './new-mission-dialog.component.scss',
+    standalone: false
 })
 export class NewMissionDialogComponent {
   missionType: 'BUILT_IN' | 'FILE' = 'BUILT_IN';

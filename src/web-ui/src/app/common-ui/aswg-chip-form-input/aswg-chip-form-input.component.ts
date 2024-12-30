@@ -7,9 +7,10 @@ import {
 import {AbstractControl, FormGroup} from "@angular/forms";
 
 @Component({
-  selector: 'aswg-chip-form-input',
-  templateUrl: './aswg-chip-form-input.component.html',
-  styleUrl: './aswg-chip-form-input.component.scss'
+    selector: 'aswg-chip-form-input',
+    templateUrl: './aswg-chip-form-input.component.html',
+    styleUrl: './aswg-chip-form-input.component.scss',
+    standalone: false
 })
 export class AswgChipFormInputComponent {
 

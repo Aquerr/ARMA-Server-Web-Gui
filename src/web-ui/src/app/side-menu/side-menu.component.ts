@@ -7,9 +7,10 @@ import {map, Observable, of, tap} from "rxjs";
 import {MaskService} from "../service/mask.service";
 
 @Component({
-  selector: 'app-side-menu',
-  templateUrl: './side-menu.component.html',
-  styleUrls: ['./side-menu.component.scss']
+    selector: 'app-side-menu',
+    templateUrl: './side-menu.component.html',
+    styleUrls: ['./side-menu.component.scss'],
+    standalone: false
 })
 export class SideMenuComponent implements OnInit {
   @Input()

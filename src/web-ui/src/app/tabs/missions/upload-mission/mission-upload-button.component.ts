@@ -3,9 +3,10 @@ import {MissionUploadService} from "../service/mission-upload.service";
 import {BehaviorSubject} from "rxjs";
 
 @Component({
-  selector: 'app-upload-mission',
-  templateUrl: './mission-upload-button.component.html',
-  styleUrls: ['./mission-upload-button.component.scss']
+    selector: 'app-upload-mission',
+    templateUrl: './mission-upload-button.component.html',
+    styleUrls: ['./mission-upload-button.component.scss'],
+    standalone: false
 })
 export class MissionUploadButtonComponent implements OnInit {
 

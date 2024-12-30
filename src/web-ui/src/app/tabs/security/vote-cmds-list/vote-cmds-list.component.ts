@@ -4,9 +4,10 @@ import {CommandListItem} from "./vote-cmd-list-item/vote-cmd-list-item.model";
 import {FormGroup} from "@angular/forms";
 
 @Component({
-  selector: 'app-vote-cmds-list',
-  templateUrl: './vote-cmds-list.component.html',
-  styleUrl: './vote-cmds-list.component.scss'
+    selector: 'app-vote-cmds-list',
+    templateUrl: './vote-cmds-list.component.html',
+    styleUrl: './vote-cmds-list.component.scss',
+    standalone: false
 })
 export class VoteCmdsListComponent implements OnInit {
   // @Input() voteCommands: VoteCmd[] = [];

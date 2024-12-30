@@ -6,9 +6,10 @@ import {AuthService} from "../../../service/auth.service";
 import {Observable} from "rxjs";
 
 @Component({
-  selector: 'app-server-console',
-  templateUrl: './server-console.component.html',
-  styleUrls: ['./server-console.component.scss']
+    selector: 'app-server-console',
+    templateUrl: './server-console.component.html',
+    styleUrls: ['./server-console.component.scss'],
+    standalone: false
 })
 export class ServerConsoleComponent implements OnInit, OnDestroy {
 

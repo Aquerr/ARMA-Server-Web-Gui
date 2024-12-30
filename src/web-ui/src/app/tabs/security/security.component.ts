@@ -7,9 +7,10 @@ import {FormGroup} from '@angular/forms';
 import {VoteCmd} from "../../model/vote-cmd.model";
 
 @Component({
-  selector: 'app-security',
-  templateUrl: './security.component.html',
-  styleUrls: ['./security.component.scss']
+    selector: 'app-security',
+    templateUrl: './security.component.html',
+    styleUrls: ['./security.component.scss'],
+    standalone: false
 })
 export class SecurityComponent implements OnInit {
   public form: FormGroup;

@@ -8,9 +8,10 @@ import {CodeJarContainer} from "ngx-codejar";
 import hljs from 'highlight.js';
 
 @Component({
-  selector: 'app-mod-settings-panel',
-  templateUrl: './mod-settings-panel.component.html',
-  styleUrl: './mod-settings-panel.component.scss'
+    selector: 'app-mod-settings-panel',
+    templateUrl: './mod-settings-panel.component.html',
+    styleUrl: './mod-settings-panel.component.scss',
+    standalone: false
 })
 export class ModSettingsPanelComponent implements OnInit {
 

@@ -11,9 +11,10 @@ import {WorkshopService} from "../../../service/workshop.service";
 import {NotificationService} from "../../../service/notification.service";
 
 @Component({
-  selector: '[app-mod-list-item]',
-  templateUrl: './mod-list-item.component.html',
-  styleUrls: ['./mod-list-item.component.scss']
+    selector: '[app-mod-list-item]',
+    templateUrl: './mod-list-item.component.html',
+    styleUrls: ['./mod-list-item.component.scss'],
+    standalone: false
 })
 export class ModListItemComponent {
 

@@ -3,9 +3,10 @@ import {ThemeService} from './service/util/theme.service';
 import {ApplicationService} from "./service/application.service";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: false
 })
 export class AppComponent implements OnInit {
   title = 'arma-web-gui';
