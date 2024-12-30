@@ -38,6 +38,6 @@ public final class CppFileHelper
 
     private CppFileHelper()
     {
-        throw new IllegalAccessError("Utility class");
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 }

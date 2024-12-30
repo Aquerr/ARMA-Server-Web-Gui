@@ -1,7 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -30,11 +29,11 @@ public class AuthRestController
             ServerHttpRequest request)
     {
         return Mono.fromCallable(() -> userService.authenticate(
-                        userCredentials.getUsername(),
-                        userCredentials.getPassword(),
+                        userCredentials.username(),
+                        userCredentials.password(),
                         HttpUtils.retriveIpAddress(request)))
                 .onErrorResume(throwable -> Mono.empty())
-                .map(jwt -> ResponseEntity.ok().body(JwtTokenResponse.of(jwt)))
+                .map(jwt -> ResponseEntity.ok().body(new JwtTokenResponse(jwt)))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
     }
 
@@ -46,16 +45,7 @@ public class AuthRestController
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
     }
 
-    @Value
-    static class UserCredentials
-    {
-        String username;
-        String password;
-    }
+    public record UserCredentials(String username, String password) { }
 
-    @Value(staticConstructor = "of")
-    private static class JwtTokenResponse
-    {
-        String value;
-    }
+    public record JwtTokenResponse(String value) {}
 }

@@ -7,7 +7,6 @@
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
-  min-height: 30rem;
 }
 
 .mission-list{
@@ -17,7 +16,7 @@
 
 .list {
   border: solid 1px #444c56;
-  min-height: 100%;
+  min-height: 20rem;
   border-radius: 4px;
   overflow: hidden;
   display: block;
@@ -63,11 +62,23 @@
 }
 
 .buttons-section-bottom {
-  margin-top: 4rem;
+  margin-top: 1rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  position: fixed;
+  bottom: 20px;
+  right: calc(50px + 2vw);
+  gap: 20px;
+  justify-items: center;
+  align-items: center;
 }
+
+//.buttons-section-bottom {
+//  margin-top: 4rem;
+//  display: flex;
+//  flex-direction: row;
+//  justify-content: space-between;
+//}
 
 @media (max-width: 800px) {
   .app-missions-tab {

@@ -88,19 +88,19 @@ export class WorkshopComponent implements OnInit, OnDestroy {
       });
 
       this.installedWorkshopMods.push(...this.modsUnderInstallation);
-      this.showInstalledWorkshopsModsPage(1);
+      this.showInstalledWorkshopsModsPage(0, 10);
       this.totalInstalledMods.set(this.installedWorkshopMods.length);
     });
   }
 
-  private showInstalledWorkshopsModsPage(pageIndex: number) {
-    const startIndex = pageIndex * 10;
-    const endIndex = pageIndex * 10 + 10;
+  private showInstalledWorkshopsModsPage(pageIndex: number, pageSize: number) {
+    const startIndex = pageIndex * pageSize;
+    const endIndex = pageIndex * pageSize + pageSize;
 
     this.installedWorkshopModsToShow = this.installedWorkshopMods.slice(startIndex, endIndex);
   }
 
   changePage(event: PageEvent) {
-    this.showInstalledWorkshopsModsPage(event.pageIndex);
+    this.showInstalledWorkshopsModsPage(event.pageIndex, event.pageSize);
   }
 }

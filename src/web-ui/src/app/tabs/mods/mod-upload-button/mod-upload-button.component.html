@@ -1,7 +1,7 @@
-<div class="container">
+<div class="container" (click)="fileInput.click()" matTooltip="Zip file is required to have a single entry folder called @modname">
   <input style="display: none;" type="file" #fileInput (change)="onFileSelected($event)" accept=".zip">
   <div>Upload (zipped) mod file</div>
-  <button mat-mini-fab color="primary" (click)="fileInput.click()">
+  <button mat-mini-fab color="primary">
     <mat-icon>upload</mat-icon>
   </button>
 </div>

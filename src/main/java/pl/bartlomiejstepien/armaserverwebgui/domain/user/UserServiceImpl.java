@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService
                 .findFirst()
                 .filter(appUser -> appUser.getPassword().equals(password))
                 .orElse(null);
+
         if (user == null)
             throw new BadCredentialsException("Provided credentials does not match any account!");
 

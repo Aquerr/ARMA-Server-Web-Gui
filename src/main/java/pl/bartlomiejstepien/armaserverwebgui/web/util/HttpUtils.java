@@ -16,13 +16,16 @@ public final class HttpUtils
             return null;
 
         String xForwardedForHeader = request.getHeaders().getFirst("X-Forwarded-For");
-
-        log.info("X-Forwarded-For: {}", xForwardedForHeader);
         if (xForwardedForHeader != null)
             return xForwardedForHeader;
 
         return Optional.ofNullable(request.getRemoteAddress()).map(InetSocketAddress::getAddress)
                 .map(InetAddress::getHostAddress)
                 .orElse(null);
+    }
+
+    private HttpUtils()
+    {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 }

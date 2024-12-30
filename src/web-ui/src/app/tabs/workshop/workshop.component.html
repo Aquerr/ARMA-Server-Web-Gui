@@ -38,6 +38,7 @@
           (page)="changePage($event)"
           [length]="totalInstalledMods()"
           [pageSize]="10"
+          [pageSizeOptions]="[10, 20, 30, 40, 50, totalInstalledMods()]"
           aria-label="Select page"></mat-paginator>
       </div>
     </div>

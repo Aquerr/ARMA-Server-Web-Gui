@@ -3,11 +3,14 @@ mat-icon {
 }
 
 .container {
+  border: 1px solid var(--aswg-primary-color);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: .5rem 1rem;
+  cursor: pointer;
 }
-
 
 @media (max-width: 800px) {
   .container {
