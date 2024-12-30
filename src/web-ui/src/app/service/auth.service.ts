@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from "@angular/router";
 import {map, Observable} from "rxjs";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {API_BASE_URL} from "../../environments/environment";
 import {JwtTokenResponse} from "../model/jwt.model";
 

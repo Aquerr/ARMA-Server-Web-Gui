@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {Observable, Subject, tap} from "rxjs";
 import {NotificationService} from "./notification.service";
 import {FileUploadMonitorService} from "./file-upload-monitor.service";
-import {HttpEventType} from "@angular/common/http";
+import { HttpEventType } from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'

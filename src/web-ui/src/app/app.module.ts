@@ -17,7 +17,7 @@ import {MatListModule} from "@angular/material/list";
 import {MatRippleModule} from "@angular/material/core";
 import { AswgSpinnerComponent } from './aswg-spinner/aswg-spinner.component';
 import {NgxSpinnerModule} from "ngx-spinner";
-import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import {AswgHttpInterceptor} from "./interceptors/aswg-http.interceptor";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -81,59 +81,57 @@ import {AswgChipInputComponent} from "./common-ui/aswg-chip-input/aswg-chip-inpu
 import {AswgChipFormInputComponent} from "./common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
 import {MatPaginator} from "@angular/material/paginator";
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    MobileHeaderComponent,
-    GeneralComponent,
-    NetworkComponent,
-    ModsComponent,
-    MissionsComponent,
-    LoggingComponent,
-    SideMenuComponent,
-    LoginComponent,
-    AswgSpinnerComponent,
-    MissionUploadButtonComponent,
-    DragAndDropFileDirective,
-    SecurityComponent,
-    VoteCmdListItemComponent,
-    VoteCmdsListComponent,
-    MissionDeleteConfirmDialogComponent,
-    MotdListComponent,
-    StatusComponent,
-    AswgDragDropListComponent,
-    ModUploadButtonComponent,
-    ModDeleteConfirmDialogComponent,
-    MissionModifyDialogComponent,
-    MissionParameterComponent,
-    WorkshopComponent,
-    WorkshopItemComponent,
-    ModListItemComponent,
-    PlayerListComponent,
-    PlayerListComponent,
-    ServerConsoleComponent,
-    ModPresetsComponent,
-    ModPresetItemComponent,
-    ModPresetAddDialogComponent,
-    ModPresetSaveDialogComponent,
-    ModPresetDeleteDialogComponent,
-    ModForceUpdateConfirmDialogComponent,
-    SettingsComponent,
-    DifficultyComponent,
-    DifficultyPanelComponent,
-    DifficultyDeleteConfirmDialogComponent,
-    NewMissionDialogComponent,
-    FileUploadSnackBarComponent,
-    FilesizePipe,
-    ModsSettingsComponent,
-    ModSettingsPanelComponent,
-    ModSettingsPanelComponent,
-    CommonConfirmDialogComponent,
-    AswgChipInputComponent,
-    AswgChipFormInputComponent
-  ],
-    imports: [
-        BrowserModule,
+@NgModule({ declarations: [
+        AppComponent,
+        MobileHeaderComponent,
+        GeneralComponent,
+        NetworkComponent,
+        ModsComponent,
+        MissionsComponent,
+        LoggingComponent,
+        SideMenuComponent,
+        LoginComponent,
+        AswgSpinnerComponent,
+        MissionUploadButtonComponent,
+        DragAndDropFileDirective,
+        SecurityComponent,
+        VoteCmdListItemComponent,
+        VoteCmdsListComponent,
+        MissionDeleteConfirmDialogComponent,
+        MotdListComponent,
+        StatusComponent,
+        AswgDragDropListComponent,
+        ModUploadButtonComponent,
+        ModDeleteConfirmDialogComponent,
+        MissionModifyDialogComponent,
+        MissionParameterComponent,
+        WorkshopComponent,
+        WorkshopItemComponent,
+        ModListItemComponent,
+        PlayerListComponent,
+        PlayerListComponent,
+        ServerConsoleComponent,
+        ModPresetsComponent,
+        ModPresetItemComponent,
+        ModPresetAddDialogComponent,
+        ModPresetSaveDialogComponent,
+        ModPresetDeleteDialogComponent,
+        ModForceUpdateConfirmDialogComponent,
+        SettingsComponent,
+        DifficultyComponent,
+        DifficultyPanelComponent,
+        DifficultyDeleteConfirmDialogComponent,
+        NewMissionDialogComponent,
+        FileUploadSnackBarComponent,
+        FilesizePipe,
+        ModsSettingsComponent,
+        ModSettingsPanelComponent,
+        ModSettingsPanelComponent,
+        CommonConfirmDialogComponent,
+        AswgChipInputComponent,
+        AswgChipFormInputComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,
         RouterModule,
         BrowserAnimationsModule,
@@ -147,7 +145,6 @@ import {MatPaginator} from "@angular/material/paginator";
         MatCheckboxModule,
         MatDialogModule,
         NgxSpinnerModule,
-        HttpClientModule,
         ReactiveFormsModule,
         FormsModule,
         DragDropModule,
@@ -162,11 +159,8 @@ import {MatPaginator} from "@angular/material/paginator";
         MatChipsModule,
         MatCardModule,
         NgxCodeJarComponent,
-        MatPaginator
-    ],
-  providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true}
-  ],
-  bootstrap: [AppComponent]
-})
+        MatPaginator], providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }

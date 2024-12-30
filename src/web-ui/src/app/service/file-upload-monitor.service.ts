@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {MatSnackBar, MatSnackBarRef} from "@angular/material/snack-bar";
 import {UploadingFile} from "./file-upload.service";
 import {FileUploadSnackBarComponent} from "../common-ui/file-upload-snack-bar/file-upload-snack-bar.component";
-import {HttpEventType} from "@angular/common/http";
+import { HttpEventType } from "@angular/common/http";
 import {Observer, Subject, Subscription} from "rxjs";
 import {NotificationService} from "./notification.service";
 
