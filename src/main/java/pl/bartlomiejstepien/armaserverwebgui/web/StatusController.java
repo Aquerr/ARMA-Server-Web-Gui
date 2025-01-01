@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionServerStartStop;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerIsAlreadyRunningException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
@@ -33,6 +34,7 @@ public class StatusController
         return Mono.just(new StatusResponse(processService.getServerStatus(), processService.getServerPlayers()));
     }
 
+    @HasPermissionServerStartStop
     @PostMapping("/toggle")
     public Mono<Void> toggleServerStatus(@RequestBody() ToggleStatusRequest toggleStatusRequest)
     {
@@ -55,14 +57,14 @@ public class StatusController
     }
 
     @Data
-    private static class ToggleStatusRequest
+    public static class ToggleStatusRequest
     {
         ServerStatus.Status requestedStatus;
         boolean performUpdate;
     }
 
     @Value
-    private static class StatusResponse
+    public static class StatusResponse
     {
         ServerStatus status;
         List<ArmaServerPlayer> playerList;

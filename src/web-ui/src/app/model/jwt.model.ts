@@ -1,3 +1,4 @@
 export interface JwtTokenResponse {
-  value: string;
+  jwt: string;
+  authorities: string[];
 }

@@ -6,7 +6,7 @@ import {ModSettings} from "../../../model/mod-settings.model";
   providedIn: "root"
 })
 export class EditModsSettingsFormService {
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private readonly formBuilder: FormBuilder) {
   }
 
   getForm(): FormGroup {

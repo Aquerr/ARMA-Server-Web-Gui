@@ -18,10 +18,10 @@ export class ModsSettingsComponent {
 
   @ViewChildren("modSettingPanels") modSettingPanels!: QueryList<ModSettingsPanelComponent>;
 
-  constructor(private modSettingsService: ModSettingsService,
-              private maskService: MaskService,
-              private notificationService: NotificationService,
-              private dialogService: DialogService) {
+  constructor(private readonly modSettingsService: ModSettingsService,
+              private readonly maskService: MaskService,
+              private readonly notificationService: NotificationService,
+              private readonly dialogService: DialogService) {
     this.reloadModSettings();
   }
 

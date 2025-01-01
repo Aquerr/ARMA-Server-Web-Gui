@@ -7,7 +7,7 @@ import org.springframework.context.event.EventListener;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.converter.MissionConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
-import pl.bartlomiejstepien.armaserverwebgui.repository.MissionRepository;
+import pl.bartlomiejstepien.armaserverwebgui.interfaces.repository.MissionRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionWorkshopInstall;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
@@ -33,12 +34,14 @@ public class WorkshopRestController
         return Mono.just(new WorkshopActiveResponse(steamService.canUseWorkshop()));
     }
 
+    @HasPermissionWorkshopInstall
     @PostMapping("/query")
     public Mono<ArmaWorkshopQueryResponse> queryWorkshop(@RequestBody WorkshopQueryRequest request)
     {
         return Mono.just(steamService.queryWorkshopMods(toWorkshopQueryParams(request)));
     }
 
+    @HasPermissionWorkshopInstall
     @GetMapping("/installed-items")
     public Mono<InstalledItemsResponse> getInstalledItems()
     {
@@ -48,6 +51,7 @@ public class WorkshopRestController
         ).map(this::toInstalledItemsResponse);
     }
 
+    @HasPermissionWorkshopInstall
     @PostMapping("/install")
     public Mono<WorkShopModInstallResponse> installMod(@RequestBody WorkShopModInstallRequest request)
     {

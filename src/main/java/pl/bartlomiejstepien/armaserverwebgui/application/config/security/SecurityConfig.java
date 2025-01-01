@@ -5,25 +5,29 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.HttpStatusServerEntryPoint;
 import org.springframework.security.web.server.authentication.ServerAuthenticationEntryPointFailureHandler;
+import org.springframework.security.web.server.authorization.HttpStatusServerAccessDeniedHandler;
+import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import reactor.core.publisher.Mono;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 
 import java.util.List;
 
+@EnableReactiveMethodSecurity
 @Configuration
 public class SecurityConfig
 {
@@ -37,11 +41,13 @@ public class SecurityConfig
                                                   JwtServerAuthenticationConverter jwtServerAuthenticationConverter)
         {
             AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(jwtAuthenticationManager);
+            authenticationWebFilter.setRequiresAuthenticationMatcher(new PathPatternParserServerWebExchangeMatcher("/api/**"));
             authenticationWebFilter.setServerAuthenticationConverter(jwtServerAuthenticationConverter);
             authenticationWebFilter.setAuthenticationFailureHandler(new ServerAuthenticationEntryPointFailureHandler(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED)));
 
             http.authorizeExchange(auths -> {
                         auths.pathMatchers("/api/v1/auth").permitAll();
+                        auths.pathMatchers("/api/v1/auth/logout").permitAll();
                         auths.pathMatchers("/api/v1/ws/**").permitAll();
                         auths.pathMatchers("/api/v1/actuator/info").permitAll();
                         auths.pathMatchers("/api/v1/actuator/health").permitAll();
@@ -59,6 +65,7 @@ public class SecurityConfig
                     .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                     .authenticationManager(jwtAuthenticationManager)
                     .exceptionHandling(exceptionHandlingSpec -> {
+                        exceptionHandlingSpec.accessDeniedHandler(new HttpStatusServerAccessDeniedHandler(HttpStatus.FORBIDDEN));
                         exceptionHandlingSpec.authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED));
                     })
                     .cors(Customizer.withDefaults())
@@ -67,17 +74,10 @@ public class SecurityConfig
         }
 
         @Bean
-        public ReactiveAuthenticationManager jwtAuthenticationManager(JwtService jwtService)
+        public ReactiveAuthenticationManager jwtAuthenticationManager(UserService userService,
+                                                                      JwtService jwtService)
         {
-            return authentication -> Mono.just(authentication)
-                    .map(authentication1 -> jwtService.validateJwt(String.valueOf(authentication1.getCredentials())))
-                    .onErrorResume(Exception.class, err -> Mono.error(new BadCredentialsException("Bad auth token!")))
-                    .mapNotNull(jws -> {
-                        return new UsernamePasswordAuthenticationToken(
-                                jws.getPayload().getSubject(),
-                                String.valueOf(authentication.getCredentials()),
-                                List.of(new SimpleGrantedAuthority("USER"))); // Needed to make user authenticated!
-                    });
+            return new JwtReactiveAuthenticationManager(userService, jwtService);
         }
 
         @Bean
@@ -90,6 +90,12 @@ public class SecurityConfig
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             source.registerCorsConfiguration("/**", corsConfiguration);
             return source;
+        }
+
+        @Bean
+        public PasswordEncoder passwordEncoder()
+        {
+            return new BCryptPasswordEncoder();
         }
     }
 
@@ -121,6 +127,12 @@ public class SecurityConfig
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             source.registerCorsConfiguration("/**", corsConfiguration);
             return source;
+        }
+
+        @Bean
+        public PasswordEncoder passwordEncoder()
+        {
+            return NoOpPasswordEncoder.getInstance();
         }
     }
 }

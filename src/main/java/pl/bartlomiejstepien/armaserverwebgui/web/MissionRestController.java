@@ -19,6 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionAdd;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionDelete;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionUpdate;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionUpload;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionDoesNotExistException;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
@@ -40,6 +45,7 @@ public class MissionRestController
     private final MissionService missionService;
     private final MissionFileValidator missionFileValidator;
 
+    @HasPermissionMissionView
     @GetMapping
     public Mono<GetMissionsResponse> getMissions()
     {
@@ -47,6 +53,7 @@ public class MissionRestController
                 .map(GetMissionsResponse::of);
     }
 
+    @HasPermissionMissionUpdate
     @PostMapping("/enabled")
     public Mono<ResponseEntity<?>> saveEnabledMissionList(@RequestBody SaveEnabledMissionListRequest saveEnabledMissionListRequest)
     {
@@ -54,6 +61,7 @@ public class MissionRestController
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
+    @HasPermissionMissionAdd
     @PostMapping("/template")
     public Mono<ResponseEntity<?>> addMission(@RequestBody AddMissionRequest addMissionRequest)
     {
@@ -65,6 +73,7 @@ public class MissionRestController
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
+    @HasPermissionMissionUpload
     @PostMapping(value = "/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Mono<ResponseEntity<?>> uploadMissionFile(@RequestPart("file") Mono<FilePart> multipartFile)
     {
@@ -75,6 +84,7 @@ public class MissionRestController
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
+    @HasPermissionMissionDelete
     @DeleteMapping(value = "/template/{template}")
     public Mono<ResponseEntity<?>> deleteMission(@PathVariable("template") String template)
     {
@@ -82,6 +92,7 @@ public class MissionRestController
                 .thenReturn(ResponseEntity.ok().build());
     }
 
+    @HasPermissionMissionUpdate
     @PutMapping("/id/{id}")
     public Mono<Void> updateMission(@PathVariable("id") long id,
                                     @RequestBody Mission mission)

@@ -26,7 +26,7 @@ class ServerNetworkRestControllerTest extends BaseIntegrationTest
 
         webTestClient.post()
                 .uri(NETWORK_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtService.createJwt("test_user"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(loadJsonIntegrationContractFor("network/save-network-properties-request.json"))
                 .exchange()
@@ -35,7 +35,7 @@ class ServerNetworkRestControllerTest extends BaseIntegrationTest
 
         webTestClient.get()
                 .uri(NETWORK_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtService.createJwt("test_user"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
                 .exchange()
                 .expectStatus()
                 .isOk()

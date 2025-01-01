@@ -21,9 +21,9 @@ export class ModSettingsPanelComponent implements OnInit {
 
   public form!: FormGroup;
 
-  constructor(private modSettingsService: ModSettingsService,
-              public formService: EditModsSettingsFormService,
-              private maskService: MaskService) {
+  constructor(private readonly modSettingsService: ModSettingsService,
+              public readonly formService: EditModsSettingsFormService,
+              private readonly maskService: MaskService) {
 
   }
 

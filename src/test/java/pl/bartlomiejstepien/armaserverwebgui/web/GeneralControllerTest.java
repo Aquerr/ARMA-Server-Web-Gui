@@ -2,9 +2,9 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
@@ -20,7 +20,7 @@ class GeneralControllerTest extends BaseIntegrationTest
     private static final int MAX_PLAYERS = 10;
     private static final String API_GENERAL_PROPERTIES_URL = "/api/v1/general/properties";
 
-    @MockBean
+    @MockitoBean
     private GeneralService generalService;
 
     @Autowired
@@ -35,7 +35,7 @@ class GeneralControllerTest extends BaseIntegrationTest
 
         webTestClient.get()
                 .uri(API_GENERAL_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtService.createJwt("test_user"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
                 .exchange()
                 .expectStatus()
                     .isOk()
@@ -63,7 +63,7 @@ class GeneralControllerTest extends BaseIntegrationTest
 
         webTestClient.post()
                 .uri(API_GENERAL_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtService.createJwt("test_user"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(loadJsonIntegrationContractFor("general/save-general-properties-request.json"))
                 .exchange()

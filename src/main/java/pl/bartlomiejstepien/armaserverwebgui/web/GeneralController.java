@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionGeneralSettingsSave;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionGeneralSettingsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.GeneralService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ArmaServerParametersGenerator;
@@ -24,9 +26,9 @@ public class GeneralController
 {
     private final ASWGConfig aswgConfig;
     private final GeneralService generalService;
-
     private final ArmaServerParametersGenerator armaServerParametersGenerator;
 
+    @HasPermissionGeneralSettingsView
     @GetMapping("/properties")
     public Mono<GeneralPropertiesResponse> getGeneralProperties()
     {
@@ -39,11 +41,7 @@ public class GeneralController
         ).map(this::mapToResponse);
     }
 
-    private GeneralPropertiesResponse mapToResponse(Tuple5<String, String, Integer, ArmaServerParameters, GeneralProperties> tuple)
-    {
-        return GeneralPropertiesResponse.of(tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4(), tuple.getT5());
-    }
-
+    @HasPermissionGeneralSettingsSave
     @PostMapping("/properties")
     public Mono<ResponseEntity<Void>> saveGeneralProperties(@RequestBody SaveGeneralProperties saveGeneralProperties)
     {
@@ -66,5 +64,10 @@ public class GeneralController
                 })
                 .then(Mono.fromRunnable(this.aswgConfig::saveToFile))
                 .then(Mono.just(ResponseEntity.ok().build()));
+    }
+
+    private GeneralPropertiesResponse mapToResponse(Tuple5<String, String, Integer, ArmaServerParameters, GeneralProperties> tuple)
+    {
+        return GeneralPropertiesResponse.of(tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4(), tuple.getT5());
     }
 }

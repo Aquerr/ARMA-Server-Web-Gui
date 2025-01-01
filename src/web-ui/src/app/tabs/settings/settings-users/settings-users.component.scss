@@ -1,0 +1,10 @@
+.properties {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.user-add-new {
+  border-radius: var(--mdc-outlined-button-container-shape);
+  width: 100%;
+}

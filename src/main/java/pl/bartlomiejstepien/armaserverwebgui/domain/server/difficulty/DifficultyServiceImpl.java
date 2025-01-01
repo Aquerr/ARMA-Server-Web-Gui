@@ -13,7 +13,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.Diff
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.DifficultyConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
-import pl.bartlomiejstepien.armaserverwebgui.repository.DifficultyProfileRepository;
+import pl.bartlomiejstepien.armaserverwebgui.interfaces.repository.DifficultyProfileRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;

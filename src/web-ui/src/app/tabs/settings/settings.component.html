@@ -1,10 +1,25 @@
 <form class="container">
   <h1>Settings</h1>
   <div class="settings-properties">
-  </div>
-  <div>
-    <p>Nothing here yet! :)</p>
-
-    <p>But soon, you will be able to edit application settings from here. :)</p>
+    <div class="nav-list">
+      <div class="nav-list-item" routerLink="/settings/users">
+        <div class="nav-list-icon-container">
+          <mat-icon fontIcon="person"></mat-icon>
+        </div>
+        <div>
+          <div class="nav-list-title">Users</div>
+          <div class="nav-list-description">Manage user accounts and permissions</div>
+        </div>
+      </div>
+      <div class="nav-list-item" routerLink="/settings/discord">
+        <div class="nav-list-icon-container">
+          <mat-icon fontIcon="discord"></mat-icon>
+        </div>
+        <div>
+          <div class="nav-list-title">Discord</div>
+          <div class="nav-list-description">Manage Discord integration settings</div>
+        </div>
+      </div>
+    </div>
   </div>
 </form>

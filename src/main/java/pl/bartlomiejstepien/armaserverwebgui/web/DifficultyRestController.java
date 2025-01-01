@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionDifficultyAdd;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionDifficultyDelete;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionDifficultyUpdate;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionDifficultyView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.DifficultyService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.DifficultyProfile;
 import pl.bartlomiejstepien.armaserverwebgui.web.model.DifficultyProfileApiModel;
@@ -23,6 +27,7 @@ public class DifficultyRestController
 {
     private final DifficultyService difficultyService;
 
+    @HasPermissionDifficultyView
     @GetMapping
     public Flux<DifficultyProfileApiModel> getDifficulties()
     {
@@ -30,6 +35,7 @@ public class DifficultyRestController
                 .map(this::toApiModel);
     }
 
+    @HasPermissionDifficultyAdd
     @PostMapping
     public Mono<Void> saveDifficulty(@RequestBody DifficultyProfileApiModel difficultyProfileApiModel)
     {
@@ -37,6 +43,7 @@ public class DifficultyRestController
                 .then();
     }
 
+    @HasPermissionDifficultyUpdate
     @PutMapping("/{id}")
     public Mono<Void> updateDifficulty(@PathVariable("id") String identifier,
                                        @RequestBody DifficultyProfileApiModel difficultyProfileApiModel)
@@ -45,12 +52,14 @@ public class DifficultyRestController
                 .then();
     }
 
+    @HasPermissionDifficultyDelete
     @DeleteMapping("/{id}")
     public Mono<Void> deleteDifficulty(@PathVariable("id") int id)
     {
         return difficultyService.deleteDifficultyProfile(id);
     }
 
+    @HasPermissionDifficultyDelete
     @DeleteMapping
     public Mono<Void> deleteDifficulty(@RequestParam("name") String name)
     {

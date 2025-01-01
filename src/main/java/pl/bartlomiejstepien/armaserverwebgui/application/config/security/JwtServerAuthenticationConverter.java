@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
@@ -10,18 +11,17 @@ import reactor.core.publisher.Mono;
 import java.util.Objects;
 
 @Component
+@RequiredArgsConstructor
 public class JwtServerAuthenticationConverter implements ServerAuthenticationConverter
 {
-    private static final String BEARER = "Bearer ";
+    private final JwtService jwtService;
 
     @Override
     public Mono<Authentication> convert(ServerWebExchange exchange)
     {
         return Mono.justOrEmpty(exchange)
-                .flatMap(serverWebExchange -> Mono.justOrEmpty(serverWebExchange.getRequest().getHeaders().getFirst("Authorization")))
+                .mapNotNull(jwtService::extractJwt)
                 .filter(Objects::nonNull)
-                .filter(jwt -> jwt.startsWith(BEARER))
-                .map(jwt -> jwt.substring(BEARER.length()))
-                .map(jwt -> new UsernamePasswordAuthenticationToken(jwt, jwt));
+                .map(jwt -> UsernamePasswordAuthenticationToken.unauthenticated(jwt, jwt));
     }
 }

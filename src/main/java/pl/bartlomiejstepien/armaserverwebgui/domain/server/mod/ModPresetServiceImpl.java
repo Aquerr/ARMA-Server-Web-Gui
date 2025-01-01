@@ -12,8 +12,8 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetEn
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSaveParams;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
-import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetEntryRepository;
-import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetRepository;
+import pl.bartlomiejstepien.armaserverwebgui.interfaces.repository.ModPresetEntryRepository;
+import pl.bartlomiejstepien.armaserverwebgui.interfaces.repository.ModPresetRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;

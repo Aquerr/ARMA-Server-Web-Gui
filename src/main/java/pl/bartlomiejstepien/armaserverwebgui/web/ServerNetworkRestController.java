@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionNetworkSettingsSave;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionNetworkSettingsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.NetworkProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.ServerNetworkService;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.NetworkPropertiesRequest;
@@ -20,13 +22,15 @@ public class ServerNetworkRestController
 {
     private final ServerNetworkService networkService;
 
+    @HasPermissionNetworkSettingsView
     @GetMapping("/properties")
     public Mono<NetworkPropertiesResponse> getNetworkProperties()
     {
         return Mono.just(this.networkService.getNetworkProperties())
                 .map(this::toResponseModel);
     }
-    
+
+    @HasPermissionNetworkSettingsSave
     @PostMapping("/properties")
     public Mono<ResponseEntity<?>> saveServerSecurity(@RequestBody NetworkPropertiesRequest saveNetworkPropertiesRequest)
     {

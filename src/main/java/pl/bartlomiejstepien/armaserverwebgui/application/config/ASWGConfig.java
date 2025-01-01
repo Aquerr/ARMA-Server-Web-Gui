@@ -26,8 +26,9 @@ public class ASWGConfig
     private static final String SERVER_DIRECTORY_PATH_PROPERTY = "aswg.server-directory-path";
     private static final String MODS_DIRECTORY_PATH_PROPERTY = "aswg.mods-directory-path";
 
-    private static final String USERNAME_PROPERTY = "aswg.username";
-    private static final String PASSWORD_PROPERTY = "aswg.password";
+    private static final String USERNAME_PROPERTY = "aswg.default-user.username";
+    private static final String PASSWORD_PROPERTY = "aswg.default-user.password";
+    private static final String RESET_DEFAULT_USER = "aswg.default-user.reset";
     private static final String STEAMCMD_PATH = "aswg.steamcmd.path";
     private static final String STEAMCMD_USERNAME = "aswg.steamcmd.username";
     private static final String STEAMCMD_PASSWORD = "aswg.steamcmd.password";
@@ -44,10 +45,12 @@ public class ASWGConfig
     private static final String DISCORD_WEBHOOK_URL = "aswg.discord.webhook.url";
 
 
-    @Value("${aswg.username}")
+    @Value("${aswg.default-user.username}")
     private String username;
-    @Value("${aswg.password}")
+    @Value("${aswg.default-user.password}")
     private String password;
+    @Value("${aswg.default-user.reset}")
+    private boolean resetDefaultUser;
     @Value("${aswg.server-port}")
     private int serverPort;
     @Value("${aswg.server-directory-path:}")
@@ -115,8 +118,10 @@ public class ASWGConfig
     {
         Properties configurationProperties = new Properties();
         configurationProperties.setProperty(SERVER_DIRECTORY_PATH_PROPERTY, this.serverDirectoryPath);
+        configurationProperties.setProperty(MODS_DIRECTORY_PATH_PROPERTY, this.modsDirectoryPath);
         configurationProperties.setProperty(USERNAME_PROPERTY, this.username);
         configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
+        configurationProperties.setProperty(RESET_DEFAULT_USER, String.valueOf(this.resetDefaultUser));
         configurationProperties.setProperty(STEAMCMD_PATH, this.steamCmdPath);
         configurationProperties.setProperty(SERVER_PORT, String.valueOf(this.serverPort));
         configurationProperties.setProperty(STEAM_API_KEY, this.steamApiKey);

@@ -1,0 +1,45 @@
+<mat-accordion>
+  <mat-expansion-panel class="user-panel">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon>person</mat-icon>{{user.username}}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="container">
+      <div class="edit-user-panel">
+        <form [formGroup]="form" class="fields">
+          <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" type="text">
+          </mat-form-field>
+
+          <!-- TODO: Add password change checkbox -->
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="password" placeholder="<hidden>">
+          </mat-form-field>
+          <aswg-chip-form-input
+            style="width: 100%"
+            labelText="Authorities"
+            [control]="formService.getAuthoritiesControl(form)"
+            [parent]="form"
+            [autocompleteList]="prepareAuthorities()"
+          >
+          </aswg-chip-form-input>
+          <mat-form-field>
+            <mat-label>Locked</mat-label>
+            <mat-select formControlName="locked">
+              <mat-option [value]="true">True</mat-option>
+              <mat-option [value]="false">False</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+      </div>
+      <div class="panel-bottom-buttons">
+        <button mat-icon-button (click)="save()"><mat-icon [fontIcon]="'save'"></mat-icon></button>
+        <button mat-icon-button (click)="delete()"><mat-icon [fontIcon]="'delete'"></mat-icon></button>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

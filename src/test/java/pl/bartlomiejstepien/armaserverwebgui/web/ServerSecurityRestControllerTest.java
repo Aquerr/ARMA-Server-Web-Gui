@@ -1,9 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
@@ -16,7 +16,7 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
 {
     private static final String SECURITY_PROPERTIES_URL = "/api/v1/security";
 
-    @MockBean
+    @MockitoBean
     private ServerConfigStorage serverConfigStorage;
 
     @Test
@@ -26,7 +26,7 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
 
         webTestClient.get()
                 .uri(SECURITY_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtService.createJwt("test_user"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -43,7 +43,7 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
 
         webTestClient.post()
                 .uri(SECURITY_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtService.createJwt("test_user"))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(loadJsonIntegrationContractFor("security/save-security-properties-request.json"))
                 .exchange()

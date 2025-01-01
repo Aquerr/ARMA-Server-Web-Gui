@@ -80,8 +80,15 @@ import {CommonConfirmDialogComponent} from "./common-ui/common-confirm-dialog/co
 import {AswgChipInputComponent} from "./common-ui/aswg-chip-input/aswg-chip-input.component";
 import {AswgChipFormInputComponent} from "./common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
 import {MatPaginator} from "@angular/material/paginator";
+import {
+  SettingsUserPanelComponent
+} from "./tabs/settings/settings-users/settings-user-panel/settings-user-panel.component";
+import {SettingsUsersComponent} from "./tabs/settings/settings-users/settings-users.component";
+import {SettingsDiscordComponent} from "./tabs/settings/settings-discord/settings-discord.component";
+import {MatAutocomplete, MatAutocompleteTrigger} from "@angular/material/autocomplete";
 
-@NgModule({ declarations: [
+@NgModule({
+    declarations: [
         AppComponent,
         MobileHeaderComponent,
         GeneralComponent,
@@ -129,38 +136,43 @@ import {MatPaginator} from "@angular/material/paginator";
         ModSettingsPanelComponent,
         CommonConfirmDialogComponent,
         AswgChipInputComponent,
-        AswgChipFormInputComponent
+        AswgChipFormInputComponent,
+      SettingsUsersComponent,
+      SettingsUserPanelComponent,
+      SettingsDiscordComponent
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
-        AppRoutingModule,
-        RouterModule,
-        BrowserAnimationsModule,
-        MatListModule,
-        MatRippleModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatTableModule,
-        MatCheckboxModule,
-        MatDialogModule,
-        NgxSpinnerModule,
-        ReactiveFormsModule,
-        FormsModule,
-        DragDropModule,
-        ToastrModule.forRoot(),
-        MatSelectModule,
-        MatProgressBarModule,
-        MatSnackBarModule,
-        NgOptimizedImage,
-        MatExpansionModule,
-        MatTooltipModule,
-        MatMenuModule,
-        MatChipsModule,
-        MatCardModule,
-        NgxCodeJarComponent,
-        MatPaginator], providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true },
+    AppRoutingModule,
+    RouterModule,
+    BrowserAnimationsModule,
+    MatListModule,
+    MatRippleModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    NgxSpinnerModule,
+    ReactiveFormsModule,
+    FormsModule,
+    DragDropModule,
+    ToastrModule.forRoot(),
+    MatSelectModule,
+    MatProgressBarModule,
+    MatSnackBarModule,
+    NgOptimizedImage,
+    MatExpansionModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatChipsModule,
+    MatCardModule,
+    NgxCodeJarComponent,
+    MatPaginator, MatAutocomplete, MatAutocompleteTrigger],
+    providers: [
+        {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true},
         provideHttpClient(withInterceptorsFromDi())
-    ] })
+    ]
+})
 export class AppModule { }

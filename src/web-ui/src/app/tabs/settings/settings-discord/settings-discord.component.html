@@ -1,0 +1,26 @@
+<form class="container">
+  <h1>Discord Settings</h1>
+  <div>
+    <form [formGroup]="form" class="fields">
+      <mat-form-field>
+        <mat-label>Enable Discord Integration</mat-label>
+        <mat-select formControlName="enabled">
+          <mat-option [value]="true">Yes</mat-option>
+          <mat-option [value]="false">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Server start message</mat-label>
+        <input name="serverStartMessage" formControlName="serverStartMessage" matInput type="text">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Server stop message</mat-label>
+        <input name="serverStopMessage" formControlName="serverStopMessage" matInput type="text">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Server update message</mat-label>
+        <input name="serverUpdateMessage" formControlName="serverUpdateMessage" matInput type="text">
+      </mat-form-field>
+    </form>
+  </div>
+</form>

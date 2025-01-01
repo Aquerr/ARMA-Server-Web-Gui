@@ -7,4 +7,8 @@ databaseChangeLog:
       path: db/changelog/003-mission/
   - includeAll:
       path: db/changelog/004-mod-settings/
+  - includeAll:
+      path: db/changelog/005-invalid-jwt-token/
+  - includeAll:
+      path: db/changelog/006-aswg-user/
 

@@ -12,11 +12,17 @@
         <mat-icon>cancel</mat-icon>
       </button>
     </mat-chip-row>
-    <input placeholder="New entry..."
-           [matChipInputFor]="chipGrid"
-           [matChipInputSeparatorKeyCodes]="[ENTER, COMMA]"
-           [matChipInputAddOnBlur]="true"
-           (matChipInputTokenEnd)="addEntry($event)"
-    />
   </mat-chip-grid>
+  <input placeholder="New entry..."
+         [matChipInputFor]="chipGrid"
+         [matChipInputSeparatorKeyCodes]="[ENTER, COMMA]"
+         [matChipInputAddOnBlur]="true"
+         [matAutocomplete]="auto"
+         (matChipInputTokenEnd)="addEntry($event)"
+  />
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    @for (text of autocompleteFilteredList; track text) {
+      <mat-option [value]="text">{{text}}</mat-option>
+    }
+  </mat-autocomplete>
 </mat-form-field>

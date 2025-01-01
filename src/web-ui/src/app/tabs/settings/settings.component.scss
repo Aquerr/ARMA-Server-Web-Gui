@@ -1,0 +1,40 @@
+.settings-properties {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.nav-list-item {
+  border: 1px solid #384149;
+  border-radius: var(--mdc-outlined-button-container-shape);
+  display: flex;
+  flex-direction: row;
+  padding: 1rem;
+  cursor: pointer;
+
+  .nav-list-icon-container {
+    display: flex;
+    align-items: center;
+    width: 2rem;
+  }
+
+  .nav-list-title {
+
+  }
+
+  .nav-list-description {
+    filter: brightness(60%);
+  }
+
+  mat-icon {
+    color: var(--aswg-primary-text-color);
+  }
+}
+
+.nav-list-item:hover {
+  filter: brightness(85%);
+}
+
+.nav-list-item:not(:first-of-type) {
+  margin-top: 1rem;
+}

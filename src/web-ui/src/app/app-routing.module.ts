@@ -6,7 +6,6 @@ import {MissionsComponent} from "./tabs/missions/missions.component";
 import {ModsComponent} from "./tabs/mods/mods.component";
 import {LoggingComponent} from "./tabs/logging/logging.component";
 import {LoginComponent} from "./login/login.component";
-import {AuthService} from "./service/auth.service";
 import {SecurityComponent} from "./tabs/security/security.component";
 import {StatusComponent} from "./tabs/status/status.component";
 import {WorkshopComponent} from './tabs/workshop/workshop.component';
@@ -15,21 +14,27 @@ import {map} from "rxjs";
 import {SettingsComponent} from "./tabs/settings/settings.component";
 import {DifficultyComponent} from "./tabs/difficulty/difficulty.component";
 import {ModsSettingsComponent} from "./tabs/mods-settings/mods-settings.component";
+import {hasAllAuthorities, isAuthenticated} from "./service/permission.service";
+import {AswgAuthority} from "./model/authority.model";
+import {SettingsUsersComponent} from "./tabs/settings/settings-users/settings-users.component";
+import {SettingsDiscordComponent} from "./tabs/settings/settings-discord/settings-discord.component";
 
 const routes: Routes = [
-  {path: 'status', component: StatusComponent, canActivate: [AuthService]},
-  {path: 'general', component: GeneralComponent, canActivate: [AuthService]},
-  {path: 'security', component: SecurityComponent, canActivate: [AuthService]},
-  {path: 'network', component: NetworkComponent, canActivate: [AuthService]},
-  {path: 'difficulty', component: DifficultyComponent, canActivate: [AuthService]},
-  {path: 'missions', component: MissionsComponent, canActivate: [AuthService]},
-  {path: 'mods', component: ModsComponent, canActivate: [AuthService]},
-  {path: 'mods-settings', component: ModsSettingsComponent, canActivate: [AuthService]},
-  {path: 'logging', component: LoggingComponent, canActivate: [AuthService]},
+  {path: 'status', component: StatusComponent, canActivate: [isAuthenticated]},
+  {path: 'general', component: GeneralComponent, canActivate: [hasAllAuthorities([AswgAuthority.GENERAL_SETTINGS_VIEW])]},
+  {path: 'security', component: SecurityComponent, canActivate: [hasAllAuthorities([AswgAuthority.SECURITY_SETTINGS_VIEW])]},
+  {path: 'network', component: NetworkComponent, canActivate: [hasAllAuthorities([AswgAuthority.NETWORK_SETTINGS_VIEW])]},
+  {path: 'difficulty', component: DifficultyComponent, canActivate: [hasAllAuthorities([AswgAuthority.DIFFICULTY_VIEW])]},
+  {path: 'missions', component: MissionsComponent, canActivate: [hasAllAuthorities([AswgAuthority.MISSIONS_VIEW])]},
+  {path: 'mods', component: ModsComponent, canActivate: [hasAllAuthorities([AswgAuthority.MODS_VIEW])]},
+  {path: 'mods-settings', component: ModsSettingsComponent, canActivate: [hasAllAuthorities([AswgAuthority.MOD_SETTINGS_VIEW])]},
+  {path: 'logging', component: LoggingComponent, canActivate: [isAuthenticated]},
   {path: 'workshop', component: WorkshopComponent,
-    canMatch: [() => inject(AuthService).isAuthenticated() && inject(WorkshopService).canUseWorkshop().pipe(map(response => response.active))]
+    canMatch: [() => hasAllAuthorities([AswgAuthority.WORKSHOP_INSTALL]) && inject(WorkshopService).canUseWorkshop().pipe(map(response => response.active))]
   },
-  {path: 'settings', component: SettingsComponent, canActivate: [AuthService]},
+  {path: 'settings', component: SettingsComponent, canActivate: [isAuthenticated]},
+  {path: 'settings/users', component: SettingsUsersComponent, canActivate: [hasAllAuthorities([AswgAuthority.USERS_VIEW])]},
+  {path: 'settings/discord', component: SettingsDiscordComponent, canActivate: [isAuthenticated]},
   {path: 'login', component: LoginComponent},
   {path: '', redirectTo: '/status', pathMatch: "full"},
   {path: '**', redirectTo: 'status'}

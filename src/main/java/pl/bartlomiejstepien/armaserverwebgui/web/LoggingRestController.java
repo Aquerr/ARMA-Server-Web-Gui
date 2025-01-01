@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionLogsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.LoggingService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ProcessService;
 import reactor.core.publisher.Flux;
@@ -42,12 +43,14 @@ public class LoggingRestController
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
+    @HasPermissionLogsView
     @GetMapping("/latest-logs")
     public Mono<LatestServerLogsResponse> getLatestLogs()
     {
         return Mono.just(LatestServerLogsResponse.of(this.processService.getLatestServerLogs()));
     }
 
+    @HasPermissionLogsView
     @GetMapping(value = "/logs-sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> subscribeToLogPublisher()
     {

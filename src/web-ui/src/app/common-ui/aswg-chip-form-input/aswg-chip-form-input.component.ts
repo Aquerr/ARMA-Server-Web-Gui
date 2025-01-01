@@ -1,10 +1,11 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {
   MatChipEditedEvent,
   MatChipInputEvent,
 } from "@angular/material/chips";
 import {AbstractControl, FormGroup} from "@angular/forms";
+import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 
 @Component({
     selector: 'aswg-chip-form-input',
@@ -12,7 +13,7 @@ import {AbstractControl, FormGroup} from "@angular/forms";
     styleUrl: './aswg-chip-form-input.component.scss',
     standalone: false
 })
-export class AswgChipFormInputComponent {
+export class AswgChipFormInputComponent implements OnInit {
 
   protected readonly ENTER = ENTER;
   protected readonly COMMA = COMMA;
@@ -27,6 +28,15 @@ export class AswgChipFormInputComponent {
   @Input()
   toolTipText: string = "";
 
+  @Input()
+  autocompleteList: string[] = [];
+
+  autocompleteFilteredList: string[] = [];
+
+  ngOnInit(): void {
+    this.filterAutocompleteList();
+  }
+
   getEntries(): string[] {
     return this.control.value;
   }
@@ -35,36 +45,58 @@ export class AswgChipFormInputComponent {
     const value = (event.value || '').trim();
 
     if (value) {
-      this.control.value.push(value);
+      this.addValue(value);
     }
-    this.control.updateValueAndValidity();
-
     event.chipInput.clear();
   }
 
-  editEntry(fileExtension: string, event: MatChipEditedEvent) {
-    const value = event.value.trim();
-
-    if (!value) {
-      this.removeEntry(value);
-      return;
-    }
-
-    const index = this.control.value.indexOf(fileExtension);
-    if (index >= 0) {
-      let list = this.control.value as string[];
-      list[index] = value;
-      this.control.setValue(list);
-    }
+  addValue(value: string) {
+    this.control.updateValueAndValidity();
+    this.control.value.push(value);
+    this.filterAutocompleteList();
   }
 
-  removeEntry(fileExtension: string) {
-    const index = this.control.value.indexOf(fileExtension);
+  removeValue(value: string) {
+    const index = this.control.value.indexOf(value);
     if (index >= 0) {
       let list = this.control.value as string[];
       list.splice(index, 1);
       this.control.setValue(list);
       this.control.updateValueAndValidity();
+      this.filterAutocompleteList();
     }
+    this.filterAutocompleteList();
+  }
+
+  editEntry(oldValue: string, event: MatChipEditedEvent) {
+    const value = event.value.trim();
+
+    if (!value) {
+      this.removeValue(value);
+      return;
+    }
+
+    const index = this.control.value.indexOf(oldValue);
+    if (index >= 0) {
+      let list = this.control.value as string[];
+      list[index] = value;
+      this.control.setValue(list);
+      this.filterAutocompleteList();
+    }
+  }
+
+  removeEntry(value: string) {
+    this.removeValue(value);
+  }
+
+  selected(event: MatAutocompleteSelectedEvent) {
+    this.addValue(event.option.viewValue);
+    event.option.deselect();
+  }
+
+  private filterAutocompleteList() {
+    this.autocompleteFilteredList = this.autocompleteList.filter((item) => {
+      return !this.control.value.includes(item);
+    });
   }
 }

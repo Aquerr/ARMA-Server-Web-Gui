@@ -20,6 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModPresetsAdd;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModPresetsDelete;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModPresetsSelect;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModPresetsView;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModsDelete;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModsUpdate;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModsUpload;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
@@ -50,12 +58,14 @@ public class ModsRestController
     private final ModPresetService modPresetService;
     private final ModFileValidator modFileValidator;
 
+    @HasPermissionModsView
     @GetMapping
     public Mono<GetModsResponse> getMods()
     {
         return this.modService.getModsView().map(GetModsResponse::of);
     }
 
+    @HasPermissionModsUpdate
     @PostMapping("/enabled")
     public Mono<ResponseEntity<?>> saveEnabledModsList(@RequestBody SaveEnabledModsListRequest request)
     {
@@ -63,6 +73,7 @@ public class ModsRestController
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
+    @HasPermissionModsUpload
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Mono<ResponseEntity<?>> uploadModFile(@RequestPart("file") Flux<FilePart> multipartFile)
     {
@@ -73,6 +84,7 @@ public class ModsRestController
                 .then(Mono.just(ResponseEntity.ok().build()));
     }
 
+    @HasPermissionModsDelete
     @DeleteMapping(value = "/{modName}")
     public Mono<ResponseEntity<Object>> deleteMod(@PathVariable("modName") String modName)
     {
@@ -81,18 +93,21 @@ public class ModsRestController
                 .onErrorReturn(ResponseEntity.internalServerError().build());
     }
 
+    @HasPermissionModPresetsView
     @GetMapping("/presets-names")
     public Mono<ModPresetNamesResponse> getModPresetsNames()
     {
         return this.modPresetService.getModPresetsNames().collectList().map(ModPresetNamesResponse::of);
     }
 
+    @HasPermissionModPresetsView
     @GetMapping("/presets/{id}")
     public Mono<ModPreset> getModPreset(@PathVariable("id") Long id)
     {
         return this.modPresetService.getModPreset(id);
     }
 
+    @HasPermissionModPresetsAdd
     @PutMapping("/presets/{name}")
     public Mono<PresetSaveResponse> savePreset(@PathVariable("name") String name, @RequestBody PresetSaveRequest request)
     {
@@ -100,6 +115,7 @@ public class ModsRestController
                 .then(Mono.just(new PresetSaveResponse(true)));
     }
 
+    @HasPermissionModPresetsDelete
     @DeleteMapping("/presets/{name}")
     public Mono<PresetDeleteResponse> deletePreset(@PathVariable("name") String presetName)
     {
@@ -107,6 +123,7 @@ public class ModsRestController
                 .thenReturn(new PresetDeleteResponse(true));
     }
 
+    @HasPermissionModPresetsAdd
     @PostMapping("/presets/import")
     public Mono<Void> importPreset(@RequestBody PresetImportRequest request)
     {
@@ -114,6 +131,7 @@ public class ModsRestController
                 .map(param -> PresetImportParams.ModParam.of(param.getTitle(), param.getId())).toList()));
     }
 
+    @HasPermissionModPresetsSelect
     @PostMapping("/presets/select")
     public Mono<Void> selectPreset(@RequestBody PresetSelectRequest request)
     {
