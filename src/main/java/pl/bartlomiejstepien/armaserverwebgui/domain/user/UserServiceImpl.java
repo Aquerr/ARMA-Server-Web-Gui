@@ -45,14 +45,9 @@ public class UserServiceImpl implements UserService
         // TODO: where user will be able to set up such first account.
         userRepository.findByUsername(aswgConfig.getUsername())
                 .flatMap(this::resetDefaultAswgUserIfNeeded)
-                .switchIfEmpty(Mono.defer(this::insertDefaultAswgUser))
+                .switchIfEmpty(Mono.defer(this::insertDefaultAswgUser)
+                        .then(Mono.empty()))
                 .subscribe();
-
-        if (aswgConfig.isResetDefaultUser())
-        {
-            Mono.defer(this::insertDefaultAswgUser)
-                    .subscribe();
-        }
     }
 
     @Override
@@ -158,7 +153,7 @@ public class UserServiceImpl implements UserService
     {
         return AswgUserWithPassword.builder()
                 .username(this.aswgConfig.getUsername())
-                .password(this.passwordEncoder.encode(this.aswgConfig.getPassword()))
+                .password(this.aswgConfig.getPassword())
                 .createdDate(OffsetDateTime.now())
                 .authorities(EnumSet.allOf(AswgAuthority.class))
                 .build();
@@ -200,6 +195,7 @@ public class UserServiceImpl implements UserService
         if (!aswgConfig.isResetDefaultUser())
             return Mono.just(entity);
 
+        log.info("Resetting default user...");
         entity.setUsername(aswgConfig.getUsername());
         entity.setPassword(passwordEncoder.encode(aswgConfig.getPassword()));
         entity.setLocked(false);
@@ -212,15 +208,11 @@ public class UserServiceImpl implements UserService
                 .then(Mono.just(entity));
     }
 
-    private Mono<? extends AswgUserEntity> insertDefaultAswgUser()
+    private Mono<Void> insertDefaultAswgUser()
     {
+        log.info("Inserting default user...");
         AswgUserWithPassword aswgUser = prepareDefaultAswgUser();
-        return userRepository.save(toEntity(aswgUser))
-                .flatMap(savedUser -> userAuthorityRepository.saveUserAuthorities(savedUser.getId(), aswgUser.getAuthorities()
-                                .stream()
-                                .map(AswgAuthority::getCode)
-                                .collect(Collectors.toSet()))
-                        .then(Mono.just(savedUser)));
+        return addNewUser(aswgUser);
     }
 
     private AswgUserWithPassword toDomainWithPassword(AswgUserEntity entity)
