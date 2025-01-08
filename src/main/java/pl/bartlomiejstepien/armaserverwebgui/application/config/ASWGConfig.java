@@ -44,6 +44,8 @@ public class ASWGConfig
     private static final String DISCORD_WEBHOOK_ENABLED = "aswg.discord.webhook.enabled";
     private static final String DISCORD_WEBHOOK_URL = "aswg.discord.webhook.url";
 
+    private static final String SERVER_BRANCH = "aswg.server.branch";
+
 
     @Value("${aswg.default-user.username}")
     private String username;
@@ -83,6 +85,9 @@ public class ASWGConfig
     private boolean discordWebhookEnabled;
     @Value("${aswg.discord.webhook.url}")
     private String discordWebhookUrl;
+
+    @Value("${aswg.server.branch:public}")
+    private String serverBranch;
 
     @EventListener(ApplicationReadyEvent.class)
     public void onEnvironmentPreparedEvent() throws IOException
@@ -134,6 +139,7 @@ public class ASWGConfig
         configurationProperties.setProperty(DISCORD_WEBHOOK_URL, this.discordWebhookUrl);
         configurationProperties.setProperty(DISCORD_WEBHOOK_ENABLED, String.valueOf(this.discordWebhookEnabled));
         configurationProperties.setProperty(VANILLA_MISSIONS_IMPORTER, String.valueOf(this.vanillaMissionsImporter));
+        configurationProperties.setProperty(SERVER_BRANCH, String.valueOf(this.serverBranch));
         return configurationProperties;
     }
 }

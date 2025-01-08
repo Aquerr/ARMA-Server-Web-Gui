@@ -9,7 +9,9 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.Difficulty
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerExecutable;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ServerFiles;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamUtils;
 import reactor.core.publisher.Mono;
 
 import java.io.File;
@@ -28,10 +30,11 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
     @Resource
     private final DifficultyService difficultyService;
 
+
     @Override
     public Mono<ArmaServerParameters> generateParameters()
     {
-        String serverExecToUse = is64Bit() ? "arma3server_x64" : "arma3server";
+        String serverExecToUse = calculateServerExecutable(aswgConfig.getServerBranch());
 
         List<InstalledModEntity> installedMods = modService.getInstalledMods()
                 .collectList()
@@ -67,5 +70,14 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
     private boolean is64Bit()
     {
         return System.getProperty("os.arch").contains("64");
+    }
+
+    private String calculateServerExecutable(String serverBranch)
+    {
+        if (SteamUtils.ARMA_BRANCH_PROFILING.equals(serverBranch))
+        {
+            return is64Bit() ? ServerExecutable.PROFILING_BRANCH.getGetServerExecutable64bit() : ServerExecutable.PROFILING_BRANCH.getServerExecutable();
+        }
+        return is64Bit() ? ServerExecutable.MAIN_BRANCH.getGetServerExecutable64bit() : ServerExecutable.MAIN_BRANCH.getServerExecutable();
     }
 }

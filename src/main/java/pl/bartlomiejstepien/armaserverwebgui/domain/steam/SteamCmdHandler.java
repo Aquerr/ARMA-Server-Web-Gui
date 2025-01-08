@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -165,6 +166,8 @@ public class SteamCmdHandler
         {
             performArmaUpdate(SteamCmdAppUpdateParameters.builder()
                     .appId(SteamUtils.ARMA_SERVER_APP_ID)
+                    .branch(Optional.ofNullable(aswgConfig.getServerBranch()).filter(branch -> !SteamUtils.ARMA_BRANCH_PUBLIC.equals(branch))
+                            .orElse(null))
                     .serverDirectoryPath(this.aswgConfig.getServerDirectoryPath())
                     .steamCmdPath(steamCmdPath)
                     .steamUsername(this.aswgConfig.getSteamCmdUsername())
