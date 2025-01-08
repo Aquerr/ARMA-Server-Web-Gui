@@ -48,7 +48,7 @@ public class SteamCmdAppUpdateParameters
     {
         return "SteamCmdAppUpdateParameters{" +
                 "appId=" + appId +
-                "branch=" + branch +
+                ", branch=" + branch +
                 ", serverDirectoryPath='" + serverDirectoryPath + '\'' +
                 ", steamCmdPath='" + steamCmdPath + '\'' +
                 ", steamUsername='" + steamUsername + '\'' +
