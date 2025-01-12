@@ -1,14 +1,15 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
+import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
 
 @Component
+@RequiredArgsConstructor
 public class ModFolderNameHelper
 {
-    private static final String[] CHARACTERS_TO_REPLACE = {" ", "\\", "/", ":", "*", "?", "\"", "<", ">", "|"};
-    private static final String REPLACEMENT = "_";
-
+    private final AswgFileNameNormalizer fileNameNormalizer;
 
     public String buildForWithoutExtension(FilePart filePart)
     {
@@ -23,7 +24,7 @@ public class ModFolderNameHelper
         {
             modName = "@" + modName;
         }
-        return normalize(modName);
+        return this.fileNameNormalizer.normalize(modName);
     }
 
     public String buildFor(String modName)
@@ -32,21 +33,6 @@ public class ModFolderNameHelper
         {
             modName = "@" + modName;
         }
-        return normalize(modName);
-    }
-
-    public String normalize(String modName)
-    {
-        return toLowerCaseWithUnderscores(modName);
-    }
-
-    private String toLowerCaseWithUnderscores(String modName)
-    {
-        modName = modName.toLowerCase();
-        for (final String characterToReplace : CHARACTERS_TO_REPLACE)
-        {
-            modName = modName.replace(characterToReplace, REPLACEMENT);
-        }
-        return modName;
+        return this.fileNameNormalizer.normalize(modName);
     }
 }

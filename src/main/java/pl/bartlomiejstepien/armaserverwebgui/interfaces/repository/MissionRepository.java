@@ -14,6 +14,8 @@ import java.util.List;
 @Repository
 public interface MissionRepository extends ReactiveCrudRepository<MissionEntity, Long>
 {
+    Flux<MissionEntity> findByTemplate(String template);
+
     @Modifying
     Mono<Void> deleteByTemplate(String template);
 

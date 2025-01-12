@@ -29,7 +29,7 @@ export class ServerMissionsService {
   }
 
   deleteMission(template: string): Observable<any> {
-    return this.httpClient.delete(`${this.MISSIONS_URL}/template/` + template, {body: {}});
+    return this.httpClient.delete(`${this.MISSIONS_URL}/template/` + encodeURIComponent(template), {body: {}});
   }
 
   saveEnabledMissions(saveEnabledMissionsRequest: SaveEnabledMissionsRequest): Observable<any> {

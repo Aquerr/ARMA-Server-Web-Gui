@@ -41,10 +41,8 @@ class ModsRestControllerTest extends BaseIntegrationTest
                         .build());
 
         Flux.fromIterable(modEntities)
-                .flatMap(modService::saveToDB)
                 .map(InstalledModEntity::getName)
                 .flatMap(modService::deleteMod)
-                .collectList()
                 .subscribe();
     }
 

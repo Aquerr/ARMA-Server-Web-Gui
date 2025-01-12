@@ -30,9 +30,9 @@ public class InstallDeleteModsFromFilesystemJob
     @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.MINUTES)
     public void scanModDirectories()
     {
-        if (!this.aswgConfig.isFileScannerDeletionEnabled() && !this.aswgConfig.isFileScannerInstallationEnabled())
+        if (!this.aswgConfig.isModsScannerDeletionEnabled() && !this.aswgConfig.isModsScannerInstallationEnabled())
         {
-            log.info("File scanner job is disabled. Skipping...");
+            log.info("Mods file scanner job is disabled. Skipping...");
             return;
         }
 
@@ -53,7 +53,7 @@ public class InstallDeleteModsFromFilesystemJob
 
     private Flux<Void> deleteOldMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
     {
-        if (!aswgConfig.isFileScannerDeletionEnabled())
+        if (!aswgConfig.isModsScannerDeletionEnabled())
         {
             log.info("File scanner deletion job is disabled. Skipping...");
             return Flux.empty();
@@ -66,7 +66,7 @@ public class InstallDeleteModsFromFilesystemJob
 
     private Flux<Void> installNewMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
     {
-        if (!aswgConfig.isFileScannerInstallationEnabled())
+        if (!aswgConfig.isModsScannerInstallationEnabled())
         {
             log.info("File scanner installation job is disabled. Skipping...");
             return Flux.empty();

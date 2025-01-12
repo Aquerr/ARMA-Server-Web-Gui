@@ -6,6 +6,7 @@ import {EditModsSettingsFormService} from "./edit-mods-settings-form.service";
 import {MaskService} from "../../../service/mask.service";
 import {CodeJarContainer} from "ngx-codejar";
 import hljs from 'highlight.js';
+import {NotificationService} from "../../../service/notification.service";
 
 @Component({
     selector: 'app-mod-settings-panel',
@@ -23,7 +24,8 @@ export class ModSettingsPanelComponent implements OnInit {
 
   constructor(private readonly modSettingsService: ModSettingsService,
               public readonly formService: EditModsSettingsFormService,
-              private readonly maskService: MaskService) {
+              private readonly maskService: MaskService,
+              private readonly notificationService: NotificationService) {
 
   }
 
@@ -49,6 +51,7 @@ export class ModSettingsPanelComponent implements OnInit {
       if (this.getId()) {
         this.modSettingsService.updateModSettings(this.getId(), this.formService.asModSettings(this.form)).subscribe(response => {
           this.maskService.hide();
+          this.notificationService.successNotification("Settings have been updated!");
         });
       } else {
         this.modSettingsService.createNewModSettings(this.formService.asModSettings(this.form)).subscribe(response => {
@@ -57,6 +60,7 @@ export class ModSettingsPanelComponent implements OnInit {
             id: response.id
           }
           this.maskService.hide();
+          this.notificationService.successNotification("Settings have been added!");
         });
       }
     }

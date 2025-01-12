@@ -34,6 +34,8 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.MissionService;
 import reactor.core.publisher.Mono;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -88,7 +90,7 @@ public class MissionRestController
     @DeleteMapping(value = "/template/{template}")
     public Mono<ResponseEntity<?>> deleteMission(@PathVariable("template") String template)
     {
-        return this.missionService.deleteMission(template)
+        return this.missionService.deleteMission(URLDecoder.decode(template, StandardCharsets.UTF_8))
                 .thenReturn(ResponseEntity.ok().build());
     }
 
@@ -104,7 +106,7 @@ public class MissionRestController
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public RestErrorResponse onMissionDoesNotExist(MissionDoesNotExistException exception)
     {
-        return RestErrorResponse.of("Mission does not exist for given id!", HttpStatus.BAD_REQUEST.value());
+        return RestErrorResponse.of(exception.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
     @ExceptionHandler(value = MissionFileAlreadyExistsException.class)

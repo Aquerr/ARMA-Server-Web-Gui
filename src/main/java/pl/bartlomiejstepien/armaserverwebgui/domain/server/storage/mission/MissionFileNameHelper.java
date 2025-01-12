@@ -1,14 +1,18 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
+import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
 
 import java.io.File;
 
 @Component
+@RequiredArgsConstructor
 public class MissionFileNameHelper
 {
     private static final String MISSION_FILE_EXTENSION = ".pbo";
+    private final AswgFileNameNormalizer fileNameNormalizer;
 
     public String resolveMissionNameFromFilePart(FilePart filePart)
     {
@@ -24,14 +28,13 @@ public class MissionFileNameHelper
 
     /**
      * Resolves file name based on the give mission template.
-     * It uses template as is.
      *
      * @param missionTemplate the mission template
      * @return the file name
      */
     public String resolveFileName(String missionTemplate)
     {
-        String fileName = missionTemplate;
+        String fileName = this.fileNameNormalizer.normalize(missionTemplate);
         if (!missionTemplate.endsWith(MISSION_FILE_EXTENSION))
             fileName = fileName + MISSION_FILE_EXTENSION;
         return fileName;
@@ -44,6 +47,6 @@ public class MissionFileNameHelper
 
     public String normalizeFileName(String fileName)
     {
-        return fileName.toLowerCase();
+        return this.fileNameNormalizer.normalize(fileName);
     }
 }

@@ -36,8 +36,8 @@ public class ASWGConfig
 
     private static final String SERVER_PORT = "aswg.server-port";
 
-    private static final String FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY = "aswg.job.file-scanner.installation.enabled";
-    private static final String FILE_SCANNER_DELETION_ENABLED_PROPERTY = "aswg.job.file-scanner.deletion.enabled";
+    private static final String FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY = "aswg.job.mods-scanner.installation.enabled";
+    private static final String FILE_SCANNER_DELETION_ENABLED_PROPERTY = "aswg.job.mods-scanner.deletion.enabled";
     private static final String DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED = "aswg.job.difficulty-scanner.installation.enabled";
     private static final String MOD_SETTINGS_INSTLLATION_SCANNER_ENABLED = "aswg.job.mod-settings-scanner.installation.enabled";
     private static final String VANILLA_MISSIONS_IMPORTER = "aswg.vanilla-missions-importer.enabled";
@@ -69,10 +69,10 @@ public class ASWGConfig
     @Value("${aswg.steam.web-api-token:}")
     private String steamApiKey;
 
-    @Value("${aswg.job.file-scanner.installation.enabled:true}")
-    private boolean fileScannerInstallationEnabled;
-    @Value("${aswg.job.file-scanner.deletion.enabled:false}")
-    private boolean fileScannerDeletionEnabled;
+    @Value("${aswg.job.mods-scanner.installation.enabled:true}")
+    private boolean modsScannerInstallationEnabled;
+    @Value("${aswg.job.mods-scanner.installation.enabled:false}")
+    private boolean modsScannerDeletionEnabled;
 
     @Value("${aswg.job.difficulty-scanner.installation.enabled}")
     private boolean difficultyProfileInstallationScannerEnabled;
@@ -132,8 +132,8 @@ public class ASWGConfig
         configurationProperties.setProperty(STEAM_API_KEY, this.steamApiKey);
         configurationProperties.setProperty(STEAMCMD_USERNAME, this.steamCmdUsername);
         configurationProperties.setProperty(STEAMCMD_PASSWORD, this.steamCmdPassword);
-        configurationProperties.setProperty(FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY, String.valueOf(this.fileScannerInstallationEnabled));
-        configurationProperties.setProperty(FILE_SCANNER_DELETION_ENABLED_PROPERTY, String.valueOf(this.fileScannerDeletionEnabled));
+        configurationProperties.setProperty(FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY, String.valueOf(this.modsScannerInstallationEnabled));
+        configurationProperties.setProperty(FILE_SCANNER_DELETION_ENABLED_PROPERTY, String.valueOf(this.modsScannerDeletionEnabled));
         configurationProperties.setProperty(DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED, String.valueOf(this.difficultyProfileInstallationScannerEnabled));
         configurationProperties.setProperty(MOD_SETTINGS_INSTLLATION_SCANNER_ENABLED, String.valueOf(this.modSettingsInstallationScannerEnabled));
         configurationProperties.setProperty(DISCORD_WEBHOOK_URL, this.discordWebhookUrl);

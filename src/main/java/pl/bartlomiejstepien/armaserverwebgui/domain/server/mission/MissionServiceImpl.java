@@ -90,8 +90,10 @@ public class MissionServiceImpl implements MissionService
     @Override
     public Mono<Boolean> deleteMission(String template)
     {
-        return this.missionRepository.deleteByTemplate(template)
-                .then(syncConfigMissions())
+        return this.missionRepository.findByTemplate(template)
+                .switchIfEmpty(Mono.error(() -> new MissionDoesNotExistException("No mission exist for template: " + template)))
+                .collectList()
+                .flatMap(t -> this.missionRepository.deleteByTemplate(template))
                 .then(Mono.fromCallable(() -> this.missionFileStorage.deleteMission(template)));
     }
 

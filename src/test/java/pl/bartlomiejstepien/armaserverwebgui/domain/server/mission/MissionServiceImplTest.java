@@ -136,20 +136,12 @@ class MissionServiceImplTest
     void shouldDeleteMission()
     {
         MissionEntity missionEntity1 = prepareMissionEntity(MISSION_NAME_2);
-        Mission mission1 = prepareMission(MISSION_NAME_2);
+        given(missionRepository.findByTemplate(MISSION_TEMPLATE_1)).willReturn(Flux.just(missionEntity1));
         given(missionRepository.deleteByTemplate(MISSION_TEMPLATE_1)).willReturn(Mono.empty());
-        given(missionRepository.findAll()).willReturn(Flux.just(missionEntity1));
-        given(missionConverter.convertToDomainMission(missionEntity1)).willReturn(mission1);
-        given(missionConverter.convertToArmaMissionObject(mission1)).willReturn(prepareConfigMission(MISSION_NAME_2));
-        given(serverConfigStorage.getServerConfig()).willReturn(prepareArmaServerConfig(List.of(MISSION_NAME_1, MISSION_NAME_2)));
 
         missionService.deleteMission(MISSION_TEMPLATE_1).block();
 
         verify(missionFileStorage, times(1)).deleteMission(MISSION_TEMPLATE_1);
-        verify(serverConfigStorage).saveServerConfig(armaServerConfigArgumentCaptor.capture());
-        assertThat(armaServerConfigArgumentCaptor.getValue().getMissions())
-                .extracting(ArmaServerConfig.Missions.Mission::getTemplate)
-                .containsExactlyElementsOf(List.of(MISSION_NAME_2));
     }
 
     private Mission prepareMission(String missionTemplate)

@@ -7,6 +7,7 @@ import org.springframework.data.util.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModSettingsEntity;
 import pl.bartlomiejstepien.armaserverwebgui.interfaces.repository.ModSettingsRepository;
 import reactor.core.publisher.Flux;
@@ -36,16 +37,16 @@ public class ModSettingsStorage
     private static final String DEFAULT_MOD_SETTINGS_NAME = "default";
 
     private final Lazy<Path> modSettingsDirPath;
-    private final ModFolderNameHelper modFolderNameHelper;
+    private final AswgFileNameNormalizer fileNameNormalizer;
     private final ModSettingsRepository modSettingsRepository;
     private final ASWGConfig aswgConfig;
 
     public ModSettingsStorage(ASWGConfig aswgConfig,
-                              ModFolderNameHelper modFolderNameHelper,
+                              AswgFileNameNormalizer fileNameNormalizer,
                               ModSettingsRepository modSettingsRepository)
     {
         this.aswgConfig = aswgConfig;
-        this.modFolderNameHelper = modFolderNameHelper;
+        this.fileNameNormalizer = fileNameNormalizer;
         this.modSettingsRepository = modSettingsRepository;
         this.modSettingsDirPath = Lazy.of(() -> Paths.get(aswgConfig.getServerDirectoryPath())
                 .resolve("userconfig"));
@@ -189,7 +190,7 @@ public class ModSettingsStorage
         if (active) {
             return ACTIVE_MOD_SETTINGS_FILE_NAME;
         } else {
-            return modFolderNameHelper.normalize(name) + ".sqf";
+            return fileNameNormalizer.normalize(name) + ".sqf";
         }
     }
 

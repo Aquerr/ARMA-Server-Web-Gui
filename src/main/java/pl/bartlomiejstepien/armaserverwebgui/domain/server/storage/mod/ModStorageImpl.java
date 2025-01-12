@@ -6,6 +6,7 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.FileSystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModFolderNameHelper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
@@ -42,14 +43,17 @@ public class ModStorageImpl implements ModStorage
     private final InstalledModRepository installedModRepository;
 
     private final ModFolderNameHelper modFolderNameHelper;
+    private final AswgFileNameNormalizer fileNameNormalizer;
 
     public ModStorageImpl(ASWGConfig aswgConfig,
                           InstalledModRepository installedModRepository,
-                          ModFolderNameHelper modFolderNameHelper)
+                          ModFolderNameHelper modFolderNameHelper,
+                          AswgFileNameNormalizer fileNameNormalizer)
     {
         this.modDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath()).resolve(aswgConfig.getModsDirectoryPath());
         this.installedModRepository = installedModRepository;
         this.modFolderNameHelper = modFolderNameHelper;
+        this.fileNameNormalizer = fileNameNormalizer;
     }
 
     @Override
@@ -188,7 +192,7 @@ public class ModStorageImpl implements ModStorage
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
                 {
-                    Path newFilePath = file.resolveSibling(modFolderNameHelper.normalize(file.getFileName().toString()));
+                    Path newFilePath = file.resolveSibling(fileNameNormalizer.normalize(file.getFileName().toString()));
                     log.info(format("Renaming %s to %s", file.getFileName().toString(), newFilePath.getFileName().toString()));
                     file.toFile().renameTo(newFilePath.toAbsolutePath().toFile());
                     return FileVisitResult.CONTINUE;
@@ -197,7 +201,7 @@ public class ModStorageImpl implements ModStorage
                 @Override
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
                 {
-                    Path newFilePath = dir.resolveSibling(modFolderNameHelper.normalize(dir.getFileName().toString()));
+                    Path newFilePath = dir.resolveSibling(fileNameNormalizer.normalize(dir.getFileName().toString()));
                     log.info(format("Renaming %s to %s", dir.getFileName().toString(), newFilePath.getFileName().toString()));
                     dir.toFile().renameTo(newFilePath.toAbsolutePath().toFile());
                     return FileVisitResult.CONTINUE;
@@ -213,7 +217,7 @@ public class ModStorageImpl implements ModStorage
     private Path renameModFolderToLowerCaseWithUnderscores(Path modFolderPath)
     {
         File modFolder = modFolderPath.getParent().resolve(modFolderPath.getFileName()).toFile();
-        Path newModFolderPath = modFolder.toPath().resolveSibling(modFolderNameHelper.normalize(modFolder.getName()));
+        Path newModFolderPath = modFolder.toPath().resolveSibling(fileNameNormalizer.normalize(modFolder.getName()));
         modFolder.renameTo(newModFolderPath.toFile());
         return newModFolderPath;
     }

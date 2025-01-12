@@ -210,7 +210,7 @@ public class UserServiceImpl implements UserService
 
     private Mono<Void> insertDefaultAswgUser()
     {
-        log.info("Inserting default user...");
+        log.info("Creating default aswg user: {}", aswgConfig.getUsername());
         AswgUserWithPassword aswgUser = prepareDefaultAswgUser();
         return addNewUser(aswgUser);
     }
