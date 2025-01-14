@@ -90,6 +90,7 @@ public class MissionServiceImpl implements MissionService
     @Override
     public Mono<Boolean> deleteMission(String template)
     {
+        log.info("Deleting mission by template: {}", template);
         return this.missionRepository.findByTemplate(template)
                 .switchIfEmpty(Mono.error(() -> new MissionDoesNotExistException("No mission exist for template: " + template)))
                 .collectList()

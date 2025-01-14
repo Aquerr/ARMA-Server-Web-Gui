@@ -26,7 +26,8 @@ public class SteamCmdAppUpdateParameters
                 "+login",
                 steamUsername,
                 steamPassword,
-                "+app_update"
+                "+app_update",
+                String.valueOf(appId)
         ));
 
         if (branch != null)
@@ -35,7 +36,6 @@ public class SteamCmdAppUpdateParameters
         }
 
         params.addAll(List.of(
-                String.valueOf(appId),
                 "validate",
                 "+quit"
         ));

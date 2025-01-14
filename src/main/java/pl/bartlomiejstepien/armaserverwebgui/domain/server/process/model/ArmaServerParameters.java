@@ -29,6 +29,8 @@ public class ArmaServerParameters
     @Builder.Default
     private final Set<String> serverMods = new HashSet<>();
 
+    private final boolean customModSettings;
+
     private final String serverDirectory;
 
     public String asString()
@@ -57,7 +59,12 @@ public class ArmaServerParameters
     private List<String> getArmaServerArgs()
     {
         List<String> args = new ArrayList<>();
-        args.add("-filePatching");
+
+        if (customModSettings)
+        {
+            args.add("-filePatching");
+        }
+
         args.add("-port=" + port);
         args.add("\"-cfg= " + networkConfigPath + "\"");
         args.add("\"-config=" + serverConfigPath + "\"");

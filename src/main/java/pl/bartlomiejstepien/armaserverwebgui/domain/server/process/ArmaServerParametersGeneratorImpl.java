@@ -7,6 +7,8 @@ import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.DifficultyService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModSettingsService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettingsHeader;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerExecutable;
@@ -29,6 +31,8 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
     private final ModService modService;
     @Resource
     private final DifficultyService difficultyService;
+    @Resource
+    private final ModSettingsService modSettingsService;
 
 
     @Override
@@ -56,6 +60,7 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
 
         return Mono.just(ArmaServerParameters.builder())
                 .zipWith(difficultyService.getActiveDifficultyProfile(), ArmaServerParameters.ArmaServerParametersBuilder::profileName)
+                .zipWith(modSettingsService.getModSettingsWithoutContents().any(ModSettingsHeader::isActive), (builder, header) -> builder.customModSettings(true))
                 .map(builder -> builder.serverDirectory(aswgConfig.getServerDirectoryPath())
                     .networkConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.NETWORK_CONFIG)
                     .serverConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.SERVER_CONFIG)
