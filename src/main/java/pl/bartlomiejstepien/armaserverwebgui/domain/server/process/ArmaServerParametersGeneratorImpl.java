@@ -60,7 +60,7 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
 
         return Mono.just(ArmaServerParameters.builder())
                 .zipWith(difficultyService.getActiveDifficultyProfile(), ArmaServerParameters.ArmaServerParametersBuilder::profileName)
-                .zipWith(modSettingsService.getModSettingsWithoutContents().any(ModSettingsHeader::isActive), (builder, header) -> builder.customModSettings(true))
+                .zipWith(modSettingsService.getModSettingsWithoutContents().any(ModSettingsHeader::isActive), ArmaServerParameters.ArmaServerParametersBuilder::customModSettings)
                 .map(builder -> builder.serverDirectory(aswgConfig.getServerDirectoryPath())
                     .networkConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.NETWORK_CONFIG)
                     .serverConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.SERVER_CONFIG)

@@ -26,13 +26,16 @@ public class SteamCmdAppUpdateParameters
                 "+login",
                 steamUsername,
                 steamPassword,
-                "+app_update",
-                String.valueOf(appId)
+                "+app_update"
         ));
 
         if (branch != null)
         {
-            params.add("-beta " + branch);
+            params.add("\"" + appId + " -beta " + branch + "\"");
+        }
+        else
+        {
+            String.valueOf(appId);
         }
 
         params.addAll(List.of(
