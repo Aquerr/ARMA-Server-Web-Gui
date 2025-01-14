@@ -29,13 +29,13 @@ public class SteamCmdAppUpdateParameters
                 "+app_update"
         ));
 
-        if (branch != null)
+        if (branch != null && !branch.equals("public"))
         {
             params.add("\"" + appId + " -beta " + branch + "\"");
         }
         else
         {
-            String.valueOf(appId);
+            params.add(String.valueOf(appId));
         }
 
         params.addAll(List.of(
