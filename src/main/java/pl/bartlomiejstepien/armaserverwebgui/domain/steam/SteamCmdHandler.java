@@ -223,8 +223,6 @@ public class SteamCmdHandler
                                     InstalledModEntity installedModEntity,
                                     boolean forced)
     {
-        log.info("Should update mod. dir: {}, workshop: {}, installed: {}, forced: {}", modDirectory, workshopMod, installedModEntity, forced);
-
         if (forced)
             return true;
 
@@ -244,10 +242,7 @@ public class SteamCmdHandler
         log.info("WorkshopLastUpdate: {} | DB last update: {}", workshopMod.getLastUpdate(), installedModEntity.getLastWorkshopUpdate());
 
         // If we have equal or newer update time in db
-        if (workshopMod.getLastUpdate().isEqual(installedModEntity.getLastWorkshopUpdate()) || workshopMod.getLastUpdate().isBefore(installedModEntity.getLastWorkshopUpdate()))
-            return true;
-
-        return false;
+        return workshopMod.getLastUpdate().isAfter(installedModEntity.getLastWorkshopUpdate());
     }
 
     private void publishMessage(WorkshopModInstallationStatus status)
