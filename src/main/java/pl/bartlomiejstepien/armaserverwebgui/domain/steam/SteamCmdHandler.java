@@ -14,6 +14,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.MetaCppFi
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.dotnet.DotnetDateTimeUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotUpdateArmaServerException;
@@ -313,7 +314,11 @@ public class SteamCmdHandler
         installedModBuilder.name(ofNullable(modDirectory.getMetaCppFile()).map(MetaCppFile::getName).orElse(modName));
         installedModBuilder.directoryPath(modDirectory.getPath().toAbsolutePath().toString());
         installedModBuilder.previewUrl(ofNullable(workshopMod).map(WorkshopMod::getPreviewUrl).orElse(null));
-        installedModBuilder.lastWorkshopUpdate(ofNullable(workshopMod).map(WorkshopMod::getLastUpdate).orElse(OffsetDateTime.now()));
+        installedModBuilder.lastWorkshopUpdate(ofNullable(workshopMod).map(WorkshopMod::getLastUpdate)
+                .orElse(ofNullable(modDirectory.getMetaCppFile())
+                        .map(MetaCppFile::getTimestamp)
+                        .map(DotnetDateTimeUtils::dotnetTicksToOffsetDateTime)
+                        .orElse(OffsetDateTime.now())));
 
         installedModRepository.save(installedModBuilder.build()).subscribe();
         log.info("Mod: {} saved in DB", modName);
