@@ -164,6 +164,7 @@ public class ModServiceImpl implements ModService
                                 .previewUrl(modEntity.getPreviewUrl())
                                 .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(modEntity.getWorkshopFileId()))
                                 .fileExists(fileSystemMods.stream().anyMatch(mod -> mod.getWorkshopFileId() == modEntity.getWorkshopFileId()))
+                                .lastUpdateDateTime(modEntity.getLastWorkshopUpdate())
                                 .build())
                 .collect(Collectors.toSet());
 
@@ -176,6 +177,7 @@ public class ModServiceImpl implements ModService
                         .previewUrl(modEntity.getPreviewUrl())
                         .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(modEntity.getWorkshopFileId()))
                         .fileExists(fileSystemMods.stream().anyMatch(mod -> mod.getWorkshopFileId() == modEntity.getWorkshopFileId()))
+                        .lastUpdateDateTime(modEntity.getLastWorkshopUpdate())
                         .build())
                 .collect(Collectors.toSet());
 

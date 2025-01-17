@@ -5,6 +5,7 @@ export interface Mod {
   previewUrl: string;
   workshopUrl: string;
   fileExists: boolean;
+  lastUpdateDateTime: string;
 }
 
 export interface ModPresetEntry {

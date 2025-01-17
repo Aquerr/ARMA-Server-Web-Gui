@@ -6,7 +6,14 @@
                                 [ngStyle]="expanded ? {'background-color': 'var(--aswg-input-bg-color)'} : null"
     >
       <mat-panel-title>
-        {{mod.name}}
+        <div>
+          <div>
+            {{mod.name}}
+          </div>
+          <div>
+            <span style="filter: brightness(50%)">Last update: {{mod.lastUpdateDateTime}}</span>
+          </div>
+        </div>
       </mat-panel-title>
       <mat-panel-description *ngIf="!mod.fileExists" class="mod-list-item-expansion-panel-header-description">
         <mat-icon

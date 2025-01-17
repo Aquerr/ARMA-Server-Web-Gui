@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService
         if (!aswgConfig.isResetDefaultUser())
             return Mono.just(entity);
 
-        log.info("Resetting default user...");
+        log.info("Resetting default user: {}", aswgConfig.getUsername());
         entity.setUsername(aswgConfig.getUsername());
         entity.setPassword(passwordEncoder.encode(aswgConfig.getPassword()));
         entity.setLocked(false);
