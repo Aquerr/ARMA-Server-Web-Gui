@@ -2,9 +2,11 @@ package pl.bartlomiejstepien.armaserverwebgui;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.PropertySourcesConfigurer;
 
+@EnableCaching
 @EnableScheduling
 @SpringBootApplication
 public class ArmaServerWebGuiApplication

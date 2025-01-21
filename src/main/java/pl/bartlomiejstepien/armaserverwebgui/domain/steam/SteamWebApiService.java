@@ -7,6 +7,7 @@ import io.github.aquerr.steamwebapiclient.response.PublishedFileDetailsResponse;
 import io.github.aquerr.steamwebapiclient.response.WorkShopQueryResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
@@ -26,6 +27,7 @@ public class SteamWebApiService
     private final SteamWebApiClient steamWebApiClient;
     private final ArmaWorkshopModConverter armaWorkshopModConverter;
 
+    @Cacheable(cacheNames = "workshop-query")
     public ArmaWorkshopQueryResponse queryWorkshopMods(WorkshopQueryParams params)
     {
         WorkShopQueryResponse workShopQueryResponse = steamWebApiClient.getSteamPublishedFileWebApiClient().queryFiles(WorkShopQueryFilesRequest.builder()
@@ -54,6 +56,7 @@ public class SteamWebApiService
                 .build();
     }
 
+    @Cacheable("workshop-get-mod")
     @Nullable
     public WorkshopMod getWorkshopMod(long modId)
     {

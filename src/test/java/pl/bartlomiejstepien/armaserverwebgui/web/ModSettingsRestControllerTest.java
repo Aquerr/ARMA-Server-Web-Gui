@@ -53,7 +53,7 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
 
         WebTestClient.ResponseSpec responseSpec = webTestClient.get()
                 .uri("/api/v1/mods/settings")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .exchange();
 
         responseSpec.expectStatus().isOk();
@@ -74,7 +74,7 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
 
         WebTestClient.ResponseSpec responseSpec = webTestClient.get()
                 .uri("/api/v1/mods/settings/" + ids.getFirst())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .exchange();
 
         responseSpec.expectStatus().isOk();
@@ -93,7 +93,7 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
 
         WebTestClient.ResponseSpec responseSpec = webTestClient.get()
                 .uri("/api/v1/mods/settings/" + ids.getFirst())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .exchange();
 
         responseSpec.expectStatus().isOk();
@@ -112,7 +112,7 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
 
         WebTestClient.ResponseSpec responseSpec1 = webTestClient.put()
                 .uri("/api/v1/mods/settings/" + ids.getFirst())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(BodyInserters.fromValue(ModSettings.builder()
                         .id(ids.getFirst())
@@ -128,7 +128,7 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
 
         WebTestClient.ResponseSpec responseSpec2 = webTestClient.get()
                 .uri("/api/v1/mods/settings/" + ids.getFirst() + "/content")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .exchange();
 
         responseSpec2.expectStatus().isOk();
@@ -146,7 +146,7 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
 
         WebTestClient.ResponseSpec responseSpec = webTestClient.get()
                 .uri("/api/v1/mods/settings")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .exchange();
 
         responseSpec.expectStatus().isOk();
@@ -164,14 +164,14 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
 
         WebTestClient.ResponseSpec responseSpec = webTestClient.delete()
                 .uri("/api/v1/mods/settings/" + ids.getFirst())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .exchange();
 
         responseSpec.expectStatus().isOk();
 
         WebTestClient.ResponseSpec responseSpec2 = webTestClient.get()
                 .uri("/api/v1/mods/settings")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .exchange();
 
         responseSpec2.expectStatus().isOk();

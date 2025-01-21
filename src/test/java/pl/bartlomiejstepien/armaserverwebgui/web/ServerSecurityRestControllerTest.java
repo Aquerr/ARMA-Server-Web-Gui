@@ -26,7 +26,7 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
 
         webTestClient.get()
                 .uri(SECURITY_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -43,7 +43,7 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
 
         webTestClient.post()
                 .uri(SECURITY_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(loadJsonIntegrationContractFor("security/save-security-properties-request.json"))
                 .exchange()

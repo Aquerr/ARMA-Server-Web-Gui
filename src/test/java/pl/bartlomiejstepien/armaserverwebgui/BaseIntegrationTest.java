@@ -59,7 +59,7 @@ public abstract class BaseIntegrationTest
         userService.addNewUser(TEST_USER).block();
     }
 
-    protected String createUserAndJwt()
+    protected String createJwtForTestUser()
     {
         return jwtService.createJwt(TEST_USER);
     }

@@ -60,7 +60,7 @@ class ModsRestControllerTest extends BaseIntegrationTest
         WebTestClient.ResponseSpec responseSpec = webTestClient.mutate().responseTimeout(Duration.ofDays(1)).build().post()
                 .uri("/api/v1/mods")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .body(BodyInserters.fromMultipartData(multipartBodyBuilder.build()))
                 .exchange();
 

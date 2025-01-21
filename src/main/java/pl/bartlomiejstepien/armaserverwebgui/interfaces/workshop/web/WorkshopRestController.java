@@ -1,4 +1,4 @@
-package pl.bartlomiejstepien.armaserverwebgui.web;
+package pl.bartlomiejstepien.armaserverwebgui.interfaces.workshop.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +15,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
+import pl.bartlomiejstepien.armaserverwebgui.interfaces.workshop.web.request.WorkshopQueryRequest;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
@@ -101,13 +102,6 @@ public class WorkshopRestController
     {
         List<WorkshopMod> mods;
         List<WorkShopModInstallRequest> modsUnderInstallation;
-    }
-
-    @Data
-    public static class WorkshopQueryRequest
-    {
-        private String cursor;
-        private String searchText;
     }
 
     @Value

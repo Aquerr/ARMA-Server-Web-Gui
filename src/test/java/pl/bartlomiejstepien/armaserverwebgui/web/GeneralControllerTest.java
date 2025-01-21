@@ -35,7 +35,7 @@ class GeneralControllerTest extends BaseIntegrationTest
 
         webTestClient.get()
                 .uri(API_GENERAL_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .exchange()
                 .expectStatus()
                     .isOk()
@@ -63,7 +63,7 @@ class GeneralControllerTest extends BaseIntegrationTest
 
         webTestClient.post()
                 .uri(API_GENERAL_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(loadJsonIntegrationContractFor("general/save-general-properties-request.json"))
                 .exchange()

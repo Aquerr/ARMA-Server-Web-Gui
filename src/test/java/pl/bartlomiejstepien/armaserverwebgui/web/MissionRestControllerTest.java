@@ -27,7 +27,7 @@ class MissionRestControllerTest extends BaseIntegrationTest
     {
         webTestClient.put()
                 .uri("/api/v1/missions/id/1")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(loadJsonIntegrationContractFor("mission/update-mission.json"))
                 .exchange()
@@ -38,7 +38,7 @@ class MissionRestControllerTest extends BaseIntegrationTest
     void shouldDeleteMissionReturnErrorWhenMissionNotFound() {
         webTestClient.delete()
                 .uri("/api/v1/missions/template/test")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -48,7 +48,7 @@ class MissionRestControllerTest extends BaseIntegrationTest
         String missionTemplate = "1-operacja 1604.sehreno";
         missionRepository.save(new MissionEntity(null, "1604", missionTemplate, "custom", true, null)).block();
 
-        String jwt = createUserAndJwt();
+        String jwt = createJwtForTestUser();
 
         webTestClient.delete()
                 .uri("/api/v1/missions/template/" + missionTemplate)

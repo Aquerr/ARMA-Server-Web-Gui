@@ -27,7 +27,7 @@ class LoggingRestControllerTest extends BaseIntegrationTest
 
         webTestClient.get()
                 .uri(LOGGING_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -52,7 +52,7 @@ class LoggingRestControllerTest extends BaseIntegrationTest
     {
         webTestClient.post()
                 .uri(LOGGING_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createUserAndJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(loadJsonIntegrationContractFor("logging/save-logging-properties.json"))
                 .exchange()
