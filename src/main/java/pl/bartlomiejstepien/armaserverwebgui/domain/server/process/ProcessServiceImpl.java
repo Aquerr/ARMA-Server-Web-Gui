@@ -73,6 +73,7 @@ public class ProcessServiceImpl implements ProcessService
     @Override
     public ServerStatus getServerStatus()
     {
+        log.info("Fetching server status...");
         if (isUpdating)
             return ServerStatus.of(ServerStatus.Status.UPDATING, "Updating");
         else if (serverStartScheduled)
@@ -255,6 +256,7 @@ public class ProcessServiceImpl implements ProcessService
     @Override
     public List<ArmaServerPlayer> getServerPlayers()
     {
+        log.info("Fetching server players...");
         return this.steamService.getServerPlayers();
     }
 

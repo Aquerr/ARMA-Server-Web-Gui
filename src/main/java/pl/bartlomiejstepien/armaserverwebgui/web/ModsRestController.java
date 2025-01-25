@@ -5,12 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModPresetsAdd;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModPresetsDelete;
@@ -35,10 +32,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModPresetService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModPreset;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.PresetImportParams;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSaveParams;
-import pl.bartlomiejstepien.armaserverwebgui.web.exception.NotAllowedFileTypeException;
-import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.ModFileValidator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -136,20 +130,6 @@ public class ModsRestController
     public Mono<Void> selectPreset(@RequestBody PresetSelectRequest request)
     {
         return this.modPresetService.selectPreset(request.getName());
-    }
-
-    @ExceptionHandler(value = ModFileAlreadyExistsException.class)
-    @ResponseStatus(value = HttpStatus.CONFLICT)
-    public RestErrorResponse onModsFileAlreadyExistsException(ModFileAlreadyExistsException exception)
-    {
-        return RestErrorResponse.of("Mod file already exists!", HttpStatus.BAD_REQUEST.value());
-    }
-
-    @ExceptionHandler(value = NotAllowedFileTypeException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public RestErrorResponse onNotAllowedFileTypeException(NotAllowedFileTypeException exception)
-    {
-            return RestErrorResponse.of(exception.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
     @Value(staticConstructor = "of")

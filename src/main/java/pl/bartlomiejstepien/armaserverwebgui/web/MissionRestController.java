@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionAdd;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionDelete;
@@ -25,11 +22,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionUpload;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionDoesNotExistException;
-import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.MissionFileValidator;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionFileAlreadyExistsException;
-import pl.bartlomiejstepien.armaserverwebgui.web.exception.NotAllowedFileTypeException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.MissionService;
 import reactor.core.publisher.Mono;
@@ -100,27 +93,6 @@ public class MissionRestController
                                     @RequestBody Mission mission)
     {
         return this.missionService.updateMission(id, mission);
-    }
-
-    @ExceptionHandler(value = MissionDoesNotExistException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public RestErrorResponse onMissionDoesNotExist(MissionDoesNotExistException exception)
-    {
-        return RestErrorResponse.of(exception.getMessage(), HttpStatus.BAD_REQUEST.value());
-    }
-
-    @ExceptionHandler(value = MissionFileAlreadyExistsException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public RestErrorResponse onMissionFileAlreadyExistsException(MissionFileAlreadyExistsException exception)
-    {
-        return RestErrorResponse.of("Mission file already exists!", HttpStatus.BAD_REQUEST.value());
-    }
-
-    @ExceptionHandler(value = NotAllowedFileTypeException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public RestErrorResponse onNotAllowedFileTypeException(NotAllowedFileTypeException exception)
-    {
-        return RestErrorResponse.of(exception.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
     @Value(staticConstructor = "of")

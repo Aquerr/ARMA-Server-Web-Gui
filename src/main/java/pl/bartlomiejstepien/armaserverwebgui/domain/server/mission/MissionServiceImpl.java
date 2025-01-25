@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.converter.MissionConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionDoesNotExistException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionNotFoundException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
@@ -92,7 +92,7 @@ public class MissionServiceImpl implements MissionService
     {
         log.info("Deleting mission by template: {}", template);
         return this.missionRepository.findByTemplate(template)
-                .switchIfEmpty(Mono.error(() -> new MissionDoesNotExistException("No mission exist for template: " + template)))
+                .switchIfEmpty(Mono.error(() -> new MissionNotFoundException("No mission exist for template: " + template)))
                 .collectList()
                 .flatMap(t -> this.missionRepository.deleteByTemplate(template))
                 .then(Mono.fromCallable(() -> this.missionFileStorage.deleteMission(template)));
@@ -149,7 +149,7 @@ public class MissionServiceImpl implements MissionService
     public Mono<Void> updateMission(long id, Mission mission)
     {
         return this.missionRepository.findById(id)
-                .switchIfEmpty(Mono.error(new MissionDoesNotExistException("Mission not found for id = " + id)))
+                .switchIfEmpty(Mono.error(new MissionNotFoundException("Mission not found for id = " + id)))
                 .map(entity -> this.missionConverter.convertToEntity(mission))
                 .flatMap(this.missionRepository::save)
                 .then(syncConfigMissions());
