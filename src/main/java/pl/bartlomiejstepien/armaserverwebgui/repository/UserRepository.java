@@ -1,8 +1,8 @@
-package pl.bartlomiejstepien.armaserverwebgui.interfaces.user.repository;
+package pl.bartlomiejstepien.armaserverwebgui.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.user.model.AswgUserEntity;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.AswgUserEntity;
 import reactor.core.publisher.Mono;
 
 @Repository

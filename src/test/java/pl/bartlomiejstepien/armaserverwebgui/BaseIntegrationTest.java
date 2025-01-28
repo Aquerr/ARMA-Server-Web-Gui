@@ -14,8 +14,8 @@ import pl.bartlomiejstepien.armaserverwebgui.config.AswgTestConfiguration;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthority;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.user.repository.UserAuthorityRepository;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.user.repository.UserRepository;
+import pl.bartlomiejstepien.armaserverwebgui.repository.UserAuthorityRepository;
+import pl.bartlomiejstepien.armaserverwebgui.repository.UserRepository;
 
 import java.time.OffsetDateTime;
 import java.util.EnumSet;

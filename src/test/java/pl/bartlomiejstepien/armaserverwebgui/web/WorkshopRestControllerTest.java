@@ -8,7 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.BodyInserters;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.TestUtils;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.workshop.web.request.WorkshopQueryRequest;
+import pl.bartlomiejstepien.armaserverwebgui.web.request.WorkshopQueryRequest;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;

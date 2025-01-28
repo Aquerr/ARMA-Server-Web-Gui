@@ -12,6 +12,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.Installed
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -60,6 +61,7 @@ public class InstallDeleteModsFromFilesystemJob
         }
 
         List<InstalledModEntity> modsToDeleteInDB = findModsToDeleteFromDB(installedModsInDB, installedFileSystemMods);
+        log.info("Mods to delete: {}", Arrays.toString(modsToDeleteInDB.toArray()));
         return Flux.fromIterable(modsToDeleteInDB)
                 .flatMapSequential(mod -> modService.deleteFromDB(mod.getId()));
     }
@@ -73,6 +75,7 @@ public class InstallDeleteModsFromFilesystemJob
         }
 
         List<InstalledModEntity> modsToAddToDB = findModsToAddToDB(installedModsInDB, installedFileSystemMods);
+        log.info("Mods to add: {}", Arrays.toString(modsToAddToDB.toArray()));
         return Flux.fromIterable(modsToAddToDB)
                 .flatMapSequential(this::saveToDB);
     }

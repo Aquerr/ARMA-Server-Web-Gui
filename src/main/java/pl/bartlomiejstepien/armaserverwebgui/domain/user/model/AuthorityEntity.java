@@ -1,4 +1,4 @@
-package pl.bartlomiejstepien.armaserverwebgui.interfaces.user.model;
+package pl.bartlomiejstepien.armaserverwebgui.domain.user.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

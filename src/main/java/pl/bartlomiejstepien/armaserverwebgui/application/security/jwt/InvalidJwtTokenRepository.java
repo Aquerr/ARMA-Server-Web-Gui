@@ -1,4 +1,4 @@
-package pl.bartlomiejstepien.armaserverwebgui.interfaces.jwt;
+package pl.bartlomiejstepien.armaserverwebgui.application.security.jwt;
 
 import org.springframework.data.r2dbc.repository.Modifying;
 import org.springframework.data.r2dbc.repository.Query;

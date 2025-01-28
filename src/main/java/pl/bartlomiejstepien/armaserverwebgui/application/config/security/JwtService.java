@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ServerWebExchange;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.model.InvalidJwtTokenEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.jwt.InvalidJwtTokenRepository;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.InvalidJwtTokenRepository;
 import reactor.core.publisher.Mono;
 
 import javax.crypto.SecretKey;
@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;

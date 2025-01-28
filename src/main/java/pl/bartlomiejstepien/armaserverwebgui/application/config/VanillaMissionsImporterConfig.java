@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.VanillaMissionsImporter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.converter.MissionConverter;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.repository.MissionRepository;
+import pl.bartlomiejstepien.armaserverwebgui.repository.MissionRepository;
 
 @Configuration(proxyBeanMethods = false)
 public class VanillaMissionsImporterConfig

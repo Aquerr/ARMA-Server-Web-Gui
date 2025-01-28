@@ -1,4 +1,4 @@
-package pl.bartlomiejstepien.armaserverwebgui.interfaces.workshop.web;
+package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.workshop.web.request.WorkshopQueryRequest;
+import pl.bartlomiejstepien.armaserverwebgui.web.request.WorkshopQueryRequest;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 

@@ -1,4 +1,4 @@
-package pl.bartlomiejstepien.armaserverwebgui.interfaces.user.controller;
+package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,7 +40,7 @@ public class AuthRestController
         return authService.authenticate(
                         userCredentials.username(),
                         userCredentials.password(),
-                        HttpUtils.retriveIpAddress(request))
+                        HttpUtils.retrieveIpAddress(request))
                 .map(jwt -> ResponseEntity.ok().body(new JwtTokenResponse(jwt.jwt(), jwt.authorities())))
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()));
     }

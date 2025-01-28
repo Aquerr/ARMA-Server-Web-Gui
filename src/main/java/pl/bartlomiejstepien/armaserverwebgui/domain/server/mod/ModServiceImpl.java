@@ -18,7 +18,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirect
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.repository.InstalledModRepository;
+import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

@@ -1,12 +1,12 @@
-package pl.bartlomiejstepien.armaserverwebgui.interfaces.user.repository;
+package pl.bartlomiejstepien.armaserverwebgui.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Repository;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.user.model.AuthorityEntity;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.user.model.UserAuthorityEntity;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.AuthorityEntity;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.UserAuthorityEntity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

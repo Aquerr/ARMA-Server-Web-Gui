@@ -1,4 +1,4 @@
-package pl.bartlomiejstepien.armaserverwebgui.interfaces.repository;
+package pl.bartlomiejstepien.armaserverwebgui.repository;
 
 import org.springframework.data.r2dbc.repository.Modifying;
 import org.springframework.data.r2dbc.repository.Query;

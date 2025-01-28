@@ -17,7 +17,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.Mis
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionFileNameHelper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionFileStorage;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.repository.MissionRepository;
+import pl.bartlomiejstepien.armaserverwebgui.repository.MissionRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

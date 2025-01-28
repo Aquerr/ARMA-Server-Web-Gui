@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.jwt.InvalidJwtTokenRepository;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.InvalidJwtTokenRepository;
 
 import java.util.concurrent.TimeUnit;
 

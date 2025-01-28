@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModSettingsEntity;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.repository.ModSettingsRepository;
+import pl.bartlomiejstepien.armaserverwebgui.repository.ModSettingsRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;

@@ -27,7 +27,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamCmdAppUpdat
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamCmdWorkshopDownloadParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopModInstallSteamTask;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.repository.InstalledModRepository;
+import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

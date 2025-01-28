@@ -1,4 +1,4 @@
-package pl.bartlomiejstepien.armaserverwebgui.interfaces.workshop.web.request;
+package pl.bartlomiejstepien.armaserverwebgui.web.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

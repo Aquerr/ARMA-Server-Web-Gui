@@ -7,7 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
-import pl.bartlomiejstepien.armaserverwebgui.interfaces.repository.MissionRepository;
+import pl.bartlomiejstepien.armaserverwebgui.repository.MissionRepository;
 
 import static pl.bartlomiejstepien.armaserverwebgui.TestUtils.loadJsonIntegrationContractFor;
 

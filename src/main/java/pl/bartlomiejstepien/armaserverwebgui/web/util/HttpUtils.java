@@ -10,7 +10,7 @@ import java.util.Optional;
 @Slf4j
 public final class HttpUtils
 {
-    public static String retriveIpAddress(final ServerHttpRequest request)
+    public static String retrieveIpAddress(final ServerHttpRequest request)
     {
         if (request == null)
             return null;
