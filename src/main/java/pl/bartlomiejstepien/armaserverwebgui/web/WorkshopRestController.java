@@ -16,8 +16,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQuer
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.WorkshopQueryRequest;
-import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
 import java.util.List;
 
@@ -30,39 +28,37 @@ public class WorkshopRestController
     private final ModService modService;
 
     @GetMapping("/active")
-    public Mono<WorkshopActiveResponse> canUseWorkshop()
+    public WorkshopActiveResponse canUseWorkshop()
     {
-        return Mono.just(new WorkshopActiveResponse(steamService.canUseWorkshop()));
+        return new WorkshopActiveResponse(steamService.canUseWorkshop());
     }
 
     @HasPermissionWorkshopInstall
     @PostMapping("/query")
-    public Mono<ArmaWorkshopQueryResponse> queryWorkshop(@RequestBody WorkshopQueryRequest request)
+    public ArmaWorkshopQueryResponse queryWorkshop(@RequestBody WorkshopQueryRequest request)
     {
-        return Mono.just(steamService.queryWorkshopMods(toWorkshopQueryParams(request)));
+        return steamService.queryWorkshopMods(toWorkshopQueryParams(request));
     }
 
     @HasPermissionWorkshopInstall
     @GetMapping("/installed-items")
-    public Mono<InstalledItemsResponse> getInstalledItems()
+    public InstalledItemsResponse getInstalledItems()
     {
-        return Mono.zip(
-                this.modService.getInstalledWorkshopMods().collectList(),
-                Mono.just(this.modService.getWorkShopModInstallRequests())
-        ).map(this::toInstalledItemsResponse);
+        return toInstalledItemsResponse(this.modService.getInstalledWorkshopMods(), this.modService.getWorkShopModInstallRequests());
     }
 
     @HasPermissionWorkshopInstall
     @PostMapping("/install")
-    public Mono<WorkShopModInstallResponse> installMod(@RequestBody WorkShopModInstallRequest request)
+    public WorkShopModInstallResponse installMod(@RequestBody WorkShopModInstallRequest request)
     {
-        return this.modService.installModFromWorkshop(request.getFileId(), request.getModName())
-                .thenReturn(new WorkShopModInstallResponse(request.getFileId()));
+        this.modService.installModFromWorkshop(request.getFileId(), request.getModName());
+        return new WorkShopModInstallResponse(request.getFileId());
     }
 
-    private InstalledItemsResponse toInstalledItemsResponse(Tuple2<List<WorkshopMod>, List<WorkshopModInstallationRequest>> objects)
+    private InstalledItemsResponse toInstalledItemsResponse(List<WorkshopMod> installedWorkshopMods,
+                                                            List<WorkshopModInstallationRequest> installationRequests)
     {
-        return new InstalledItemsResponse(objects.getT1(), toResponse(objects.getT2()));
+        return new InstalledItemsResponse(installedWorkshopMods, toResponse(installationRequests));
     }
 
     private List<WorkShopModInstallRequest> toResponse(List<WorkshopModInstallationRequest> requests)

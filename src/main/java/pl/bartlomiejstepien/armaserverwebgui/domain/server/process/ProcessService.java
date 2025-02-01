@@ -1,21 +1,20 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.process;
 
-import org.reactivestreams.Publisher;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface ProcessService
 {
-    Publisher<String> getServerLogPublisher();
+    SseEmitter getServerLogPublisher();
 
     ServerStatus getServerStatus();
 
-    Mono<Void> startServer(boolean performUpdate);
+    void startServer(boolean performUpdate);
 
-    Mono<Void> stopServer();
+    void stopServer();
 
     List<ArmaServerPlayer> getServerPlayers();
 

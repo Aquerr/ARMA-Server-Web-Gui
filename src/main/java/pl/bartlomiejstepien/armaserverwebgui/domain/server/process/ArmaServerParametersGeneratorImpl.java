@@ -14,7 +14,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaSer
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerExecutable;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ServerFiles;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamUtils;
-import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.util.List;
@@ -36,14 +35,11 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
 
 
     @Override
-    public Mono<ArmaServerParameters> generateParameters()
+    public ArmaServerParameters generateParameters()
     {
         String serverExecToUse = calculateServerExecutable(aswgConfig.getServerBranch());
 
-        List<InstalledModEntity> installedMods = modService.getInstalledMods()
-                .collectList()
-                .toFuture()
-                .join();
+        List<InstalledModEntity> installedMods = modService.getInstalledMods();
 
         Set<String> modsDirs = installedMods.stream()
                 .filter(InstalledModEntity::isEnabled)
@@ -58,18 +54,17 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
                 .map(InstalledModEntity::getModDirectoryName)
                 .collect(Collectors.toSet());
 
-        return Mono.just(ArmaServerParameters.builder())
-                .zipWith(difficultyService.getActiveDifficultyProfile(), ArmaServerParameters.ArmaServerParametersBuilder::profileName)
-                .zipWith(modSettingsService.getModSettingsWithoutContents().any(ModSettingsHeader::isActive), ArmaServerParameters.ArmaServerParametersBuilder::customModSettings)
-                .map(builder -> builder.serverDirectory(aswgConfig.getServerDirectoryPath())
-                    .networkConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.NETWORK_CONFIG)
-                    .serverConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.SERVER_CONFIG)
-                    .executablePath(aswgConfig.getServerDirectoryPath() + File.separator + serverExecToUse)
-                    .port(aswgConfig.getServerPort())
-                    .mods(modsDirs)
-                    .serverMods(serverModsDirs)
-                    .build()
-                );
+        return ArmaServerParameters.builder()
+                .profileName(difficultyService.getActiveDifficultyProfile())
+                .customModSettings(modSettingsService.getModSettingsWithoutContents().stream().anyMatch(ModSettingsHeader::isActive))
+                .serverDirectory(aswgConfig.getServerDirectoryPath())
+                .networkConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.NETWORK_CONFIG)
+                .serverConfigPath(aswgConfig.getServerDirectoryPath() + File.separator + ServerFiles.SERVER_CONFIG)
+                .executablePath(aswgConfig.getServerDirectoryPath() + File.separator + serverExecToUse)
+                .port(aswgConfig.getServerPort())
+                .mods(modsDirs)
+                .serverMods(serverModsDirs)
+                .build();
     }
 
     private boolean is64Bit()

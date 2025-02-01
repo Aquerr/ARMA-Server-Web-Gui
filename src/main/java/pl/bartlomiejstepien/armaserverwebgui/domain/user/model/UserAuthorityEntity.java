@@ -1,21 +1,30 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.user.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.NoArgsConstructor;
 
 /**
  * A mapping between user and authority
  */
 @Data
-@Table("user_authority")
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "user_authority")
 @Builder
+@Entity
 public class UserAuthorityEntity
 {
-    @Column("user_id")
+    @Id
+    @Column(name = "user_id")
     private Integer userId;
 
-    @Column("authority_id")
+    @Id
+    @Column(name = "authority_id")
     private Integer authorityId;
 }

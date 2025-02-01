@@ -1,14 +1,21 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
+import org.json.JSONException;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.http.HttpMethod;
+import org.springframework.util.MultiValueMap;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.TestUtils;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.WorkshopQueryRequest;
+
+import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -19,7 +26,7 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
     private CacheManager cacheManager;
 
     @Test
-    void queryShouldReturnWorkshopModsFromCache()
+    void queryShouldReturnWorkshopModsFromCache() throws JSONException
     {
         wireMockServer.resetAll();
         cacheManager.getCache("workshop-query").clear();
@@ -40,7 +47,7 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
     }
 
     @Test
-    void queryShouldReturnWorkshopModsNoCache()
+    void queryShouldReturnWorkshopModsNoCache() throws JSONException
     {
         wireMockServer.resetAll();
         cacheManager.getCache("workshop-query").clear();
@@ -69,15 +76,19 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
         return new WorkshopQueryRequest("*", searchPhrase);
     }
 
-    private void executeQueryWorkshop(WorkshopQueryRequest request, String exptectedResponseJsonFile)
+    private void executeQueryWorkshop(WorkshopQueryRequest request, String exptectedResponseJsonFile) throws JSONException
     {
-        webTestClient.post()
-                .uri("http://localhost:" + serverPort + "/api/v1/workshop/query")
-                .body(BodyInserters.fromValue(request))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .exchange()
-                .expectBody()
-                .json(TestUtils.loadJsonIntegrationContractFor(exptectedResponseJsonFile));
+        var response = testRestTemplate.exchange(
+                "http://localhost:" + serverPort + "/api/v1/workshop/query",
+                HttpMethod.POST,
+                new HttpEntity<>(request, MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser()
+                ))), String.class);
 
+        JSONAssert.assertEquals(
+                TestUtils.loadJsonIntegrationContractFor(exptectedResponseJsonFile),
+                response.getBody(),
+                JSONCompareMode.LENIENT
+        );
     }
 }

@@ -1,21 +1,25 @@
 package pl.bartlomiejstepien.armaserverwebgui.web.validator;
 
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.web.exception.NotAllowedFileTypeException;
 
+import java.util.Optional;
+
 @Component
-public class MissionFileValidator implements Validator<FilePart>
+public class MissionFileValidator implements Validator<MultipartFile>
 {
     @Override
-    public void validate(FilePart filePart)
+    public void validate(MultipartFile filePart)
     {
         if (!hasCorrectFileType(filePart))
             throw new NotAllowedFileTypeException("Wrong file type! Only .pbo files are supported!");
     }
 
-    private boolean hasCorrectFileType(FilePart filePart)
+    private boolean hasCorrectFileType(MultipartFile multipartFile)
     {
-        return filePart.filename().endsWith(".pbo");
+        return Optional.ofNullable(multipartFile.getOriginalFilename())
+                .orElse("unknown")
+                .endsWith(".pbo");
     }
 }

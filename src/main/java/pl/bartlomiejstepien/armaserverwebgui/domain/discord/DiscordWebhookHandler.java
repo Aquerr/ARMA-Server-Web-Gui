@@ -1,28 +1,29 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.discord;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordMessage;
-import reactor.core.publisher.Mono;
+
+import java.net.http.HttpRequest;
+import java.nio.charset.StandardCharsets;
 
 public class DiscordWebhookHandler
 {
     private final String webhookUrl;
-    private final WebClient webClient;
+    private final RestClient restClient;
     private final ObjectMapper objectMapper;
 
     public DiscordWebhookHandler(
             String webhookUrl,
             ObjectMapper objectMapper,
-            WebClient webClient)
+            RestClient restClient)
     {
         this.webhookUrl = webhookUrl;
-        this.webClient = webClient;
+        this.restClient = restClient;
         this.objectMapper = objectMapper;
     }
 
-    public Mono<Void> sendMessage(DiscordMessage discordMessage)
+    public void sendMessage(DiscordMessage discordMessage)
     {
         String jsonMessage;
         try
@@ -34,11 +35,10 @@ public class DiscordWebhookHandler
             throw new RuntimeException(exception);
         }
 
-        return webClient.post()
+        restClient.post()
                 .uri(this.webhookUrl)
-                .body(BodyInserters.fromValue(jsonMessage))
+                .body(HttpRequest.BodyPublishers.ofByteArray(jsonMessage.getBytes(StandardCharsets.UTF_8)))
                 .retrieve()
-                .toBodilessEntity()
-                .then();
+                .toBodilessEntity();
     }
 }

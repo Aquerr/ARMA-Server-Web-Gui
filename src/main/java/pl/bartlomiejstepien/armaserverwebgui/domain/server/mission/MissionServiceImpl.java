@@ -2,9 +2,10 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.converter.MissionConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
@@ -16,10 +17,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.Missi
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionFileStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.repository.MissionRepository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
-import reactor.util.function.Tuple2;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,17 +37,32 @@ public class MissionServiceImpl implements MissionService
     private final MissionConverter missionConverter;
     private final MissionFileNameHelper missionFileNameHelper;
 
-    @Override
-    public Mono<Void> save(FilePart multipartFile)
+    @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.MINUTES)
+    public void missionScan()
     {
-        if (missionFileStorage.doesMissionExists(multipartFile.filename()))
+        log.info("Scanning for new file missions...");
+        List<String> installedMissionTemplates = this.missionFileStorage.getInstalledMissionTemplates();
+        List<String> notInstalledTemplates = this.findNotInstalledTemplates(installedMissionTemplates, this.missionRepository.findAll());
+
+        log.info("Installing new missions: {}", notInstalledTemplates);
+        for (String templateName : notInstalledTemplates)
+        {
+            addMission(templateName, templateName);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void save(MultipartFile multipartFile)
+    {
+        if (missionFileStorage.doesMissionExists(multipartFile.getOriginalFilename()))
             throw new MissionFileAlreadyExistsException();
 
         try
         {
             String missionTemplate = missionFileNameHelper.resolveMissionNameFromFilePart(multipartFile);
-            return missionFileStorage.save(multipartFile)
-                    .then(addMission(missionTemplate, missionTemplate));
+            missionFileStorage.save(multipartFile);
+            addMission(missionTemplate, missionTemplate);
         }
         catch (IOException exception)
         {
@@ -58,80 +70,56 @@ public class MissionServiceImpl implements MissionService
         }
     }
 
-    @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.MINUTES)
-    public void missionScan()
+    private List<String> findNotInstalledTemplates(List<String> installedTemplates, List<MissionEntity> entities)
     {
-        log.info("Scanning for new file missions...");
-        List<String> installedMissionTemplates = this.missionFileStorage.getInstalledMissionTemplates();
-
-        Mono.zip(
-                Mono.just(installedMissionTemplates),
-                this.missionRepository.findAll().collectList()
-        )
-        .map(this::findNotInstalledTemplates)
-        .flatMap(notInstalledTemplates -> notInstalledTemplates.isEmpty() ? Mono.empty() : Mono.just(notInstalledTemplates))
-        .doOnNext(notInstalledTemplates -> log.info("Installing new missions: {}", notInstalledTemplates))
-        .flatMapMany(Flux::fromIterable)
-        .flatMap(template -> addMission(template, template))
-        .subscribeOn(Schedulers.boundedElastic())
-        .subscribe();
-    }
-
-    private List<String> findNotInstalledTemplates(Tuple2<List<String>, List<MissionEntity>> tuple2)
-    {
-        List<String> installedTemplates = tuple2.getT1();
-        List<String> templatesInDB = tuple2.getT2().stream().map(MissionEntity::getTemplate).toList();
+        List<String> templatesInDB = entities.stream().map(MissionEntity::getTemplate).toList();
 
         return installedTemplates.stream()
                 .filter(template -> !templatesInDB.contains(template))
                 .toList();
     }
 
+    @Transactional
     @Override
-    public Mono<Boolean> deleteMission(String template)
+    public boolean deleteMission(String template)
     {
         log.info("Deleting mission by template: {}", template);
-        return this.missionRepository.findByTemplate(template)
-                .switchIfEmpty(Mono.error(() -> new MissionNotFoundException("No mission exist for template: " + template)))
-                .collectList()
-                .flatMap(t -> this.missionRepository.deleteByTemplate(template))
-                .then(Mono.fromCallable(() -> this.missionFileStorage.deleteMission(template)));
+        if (this.missionRepository.findByTemplate(template).isEmpty())
+            throw new MissionNotFoundException("No mission exist for template: " + template);
+
+        this.missionRepository.deleteByTemplate(template);
+        return this.missionFileStorage.deleteMission(template);
     }
 
+    @Transactional
     @Override
-    public Mono<Void> saveEnabledMissionList(List<Mission> missions)
+    public void saveEnabledMissionList(List<Mission> missions)
     {
-        return this.missionRepository.disableAll()
-                .collectList()
-                .flatMap(v -> Mono.just(missions))
-                .flatMap(missionList -> Mono.just(missionList)
-                        .filter(missionList1 -> !missionList1.isEmpty())
-                        .flatMapMany(missionList2 -> this.missionRepository.updateAllByTemplateSetEnabled(missionList2.stream()
-                                .map(Mission::getTemplate)
-                                .toList()))
-                        .collectList()
-                )
-                .then(syncConfigMissions());
+        this.missionRepository.disableAll();
+        if (missions.isEmpty())
+            return;
+
+        this.missionRepository.updateAllByTemplateSetEnabled(missions.stream().map(Mission::getTemplate).toList());
+        syncConfigMissions();
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Mono<Missions> getMissions()
+    public Missions getMissions()
     {
-        return this.missionRepository.findAll()
+        Map<Boolean, List<Mission>> groupedMissions = this.missionRepository.findAll().stream()
                 .map(this.missionConverter::convertToDomainMission)
-                .collectList()
-                .map(missionsList ->
-                {
-                    Map<Boolean, List<Mission>> groupedMissions = missionsList.stream().collect(Collectors.groupingBy(Mission::isEnabled));
-                    Missions missions = new Missions();
-                    missions.setDisabledMissions(groupedMissions.getOrDefault(false, Collections.emptyList()));
-                    missions.setEnabledMissions(groupedMissions.getOrDefault(true, Collections.emptyList()));
-                    return missions;
-                });
+                .collect(Collectors.groupingBy(Mission::isEnabled));
+
+        Missions missions = new Missions();
+        missions.setDisabledMissions(groupedMissions.getOrDefault(false, Collections.emptyList()));
+        missions.setEnabledMissions(groupedMissions.getOrDefault(true, Collections.emptyList()));
+        return missions;
     }
 
+    @Transactional
     @Override
-    public Mono<Void> addMission(String name, String template)
+    public void addMission(String name, String template)
     {
         Mission mission = Mission.builder()
                 .name(name)
@@ -141,35 +129,30 @@ public class MissionServiceImpl implements MissionService
                 .parameters(Collections.emptySet())
                 .build();
 
-        return this.missionRepository.save(missionConverter.convertToEntity(mission))
-                .then();
+        this.missionRepository.save(missionConverter.convertToEntity(mission));
     }
 
+    @Transactional
     @Override
-    public Mono<Void> updateMission(long id, Mission mission)
+    public void updateMission(long id, Mission mission)
     {
-        return this.missionRepository.findById(id)
-                .switchIfEmpty(Mono.error(new MissionNotFoundException("Mission not found for id = " + id)))
-                .map(entity -> this.missionConverter.convertToEntity(mission))
-                .flatMap(this.missionRepository::save)
-                .then(syncConfigMissions());
+        this.missionRepository.findById(id).orElseThrow(() -> new MissionNotFoundException("Mission not found for id = " + id));
+        missionRepository.save(missionConverter.convertToEntity(mission));
+        syncConfigMissions();
     }
 
-    private Mono<Void> syncConfigMissions()
+    private void syncConfigMissions()
     {
-        return this.missionRepository.findAll()
+        List<Mission> missions = this.missionRepository.findAll().stream()
                 .map(this.missionConverter::convertToDomainMission)
                 .filter(Mission::isEnabled)
-                .collectList()
-                .map(missions -> {
-                    ArmaServerConfig armaServerConfig = this.serverConfigStorage.getServerConfig();
-                    armaServerConfig.setMissions(new ArrayList<>(missions.stream()
-                            .map(this.missionConverter::convertToArmaMissionObject)
-                            .toList()));
-                    this.serverConfigStorage.saveServerConfig(armaServerConfig);
-                    return true;
-                })
-                .then();
+                .toList();
 
+        ArmaServerConfig armaServerConfig = this.serverConfigStorage.getServerConfig();
+        armaServerConfig.setMissions(new ArrayList<>(missions.stream()
+                .map(this.missionConverter::convertToArmaMissionObject)
+                .toList()));
+
+        this.serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 }

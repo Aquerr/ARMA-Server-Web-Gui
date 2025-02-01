@@ -17,8 +17,8 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModSettingsServic
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettingsContent;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettingsHeader;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettings;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/mods/settings")
@@ -29,28 +29,28 @@ public class ModSettingsRestController
 
     @HasPermissionModSettingsView
     @GetMapping
-    public Flux<ModSettingsHeader> getModSettings()
+    public List<ModSettingsHeader> getModSettings()
     {
         return modSettingsService.getModSettingsWithoutContents();
     }
 
     @HasPermissionModSettingsView
     @GetMapping("/{id}")
-    public Mono<ModSettingsHeader> getModSettings(@PathVariable("id") long id)
+    public ModSettingsHeader getModSettings(@PathVariable("id") long id)
     {
         return modSettingsService.getModSettingsWithoutContents(id);
     }
 
     @HasPermissionModSettingsView
     @GetMapping("/{id}/content")
-    public Mono<ModSettingsContent> getModSettingsContent(@PathVariable("id") long id)
+    public ModSettingsContent getModSettingsContent(@PathVariable("id") long id)
     {
-        return modSettingsService.getModSettingsContent(id).map(ModSettingsContent::new);
+        return new ModSettingsContent(modSettingsService.getModSettingsContent(id));
     }
 
     @HasPermissionModSettingsUpdate
     @PutMapping("/{id}")
-    public Mono<ModSettingsHeader> updateModSettings(@PathVariable("id") long id,
+    public ModSettingsHeader updateModSettings(@PathVariable("id") long id,
                                         @RequestBody ModSettings modSettings)
     {
         modSettings.setId(id);
@@ -59,15 +59,15 @@ public class ModSettingsRestController
 
     @HasPermissionModSettingsAdd
     @PostMapping
-    public Mono<ModSettingsHeader> createNewModSettings(@RequestBody ModSettings modSettings)
+    public ModSettingsHeader createNewModSettings(@RequestBody ModSettings modSettings)
     {
         return modSettingsService.saveModSettings(modSettings);
     }
 
     @HasPermissionModSettingsDelete
     @DeleteMapping("/{id}")
-    public Mono<Void> deleteModSettings(@PathVariable("id") long id)
+    public void deleteModSettings(@PathVariable("id") long id)
     {
-        return modSettingsService.deleteModSettings(id);
+        modSettingsService.deleteModSettings(id);
     }
 }

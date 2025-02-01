@@ -4,11 +4,13 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+//import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.wiremock.spring.EnableWireMock;
+import org.wiremock.spring.InjectWireMock;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.security.JwtService;
 import pl.bartlomiejstepien.armaserverwebgui.config.AswgTestConfiguration;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthority;
@@ -23,7 +25,8 @@ import java.util.EnumSet;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = AswgTestConfiguration.class)
 @ContextConfiguration(loader = TestSpringContextLoader.class)
-@AutoConfigureWireMock(port = 0)
+@EnableWireMock
+//@AutoConfigureWireMock(port = 0)
 public abstract class BaseIntegrationTest
 {
     protected static final String TEST_USER_NAME = "test_user";
@@ -38,12 +41,13 @@ public abstract class BaseIntegrationTest
     @LocalServerPort
     protected int serverPort;
 
-    @Autowired
+    @InjectWireMock
+//    @Autowired
     protected WireMockServer wireMockServer;
     @Autowired
     protected JwtService jwtService;
     @Autowired
-    protected WebTestClient webTestClient;
+    protected TestRestTemplate testRestTemplate;
     @Autowired
     protected UserService userService;
     @Autowired
@@ -54,9 +58,9 @@ public abstract class BaseIntegrationTest
     @BeforeEach
     public void setUpTestUser()
     {
-        userAuthorityRepository.deleteAll().block();
-        userRepository.deleteAll().block();
-        userService.addNewUser(TEST_USER).block();
+        userAuthorityRepository.deleteAll();
+        userRepository.deleteAll();
+        userService.addNewUser(TEST_USER);
     }
 
     protected String createJwtForTestUser()

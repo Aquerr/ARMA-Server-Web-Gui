@@ -1,16 +1,15 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.discord.message;
 
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordMessage;
-import reactor.core.publisher.Mono;
 
 public class ServerStartingMessageCreator implements DiscordMessageCreator
 {
 
     @Override
-    public Mono<DiscordMessage> create()
+    public DiscordMessage create()
     {
-        return Mono.just(DiscordMessage.ofSingleEmbed(DiscordMessage.Embed.builder()
+        return DiscordMessage.ofSingleEmbed(DiscordMessage.Embed.builder()
                 .title("Server starting...")
-                .build()));
+                .build());
     }
 }

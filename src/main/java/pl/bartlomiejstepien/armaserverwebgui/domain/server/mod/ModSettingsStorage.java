@@ -10,9 +10,6 @@ import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModSettingsEntity;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModSettingsRepository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,11 +19,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -74,12 +69,10 @@ public class ModSettingsStorage
             log.info("Mod/Addon settings scanner is disabled. Skipping...");
         }
 
-        scanModSettingsForNewSettingsFiles()
-                .subscribeOn(Schedulers.boundedElastic())
-                .subscribe();
+        scanModSettingsForNewSettingsFiles();
     }
 
-    public Mono<Void> deactivateModSettingsFile(String name)
+    public void deactivateModSettingsFile(String name)
     {
         String fileName = prepareFileName(name, false);
 
@@ -91,20 +84,29 @@ public class ModSettingsStorage
         {
             throw new RuntimeException(e);
         }
-        return Mono.empty();
     }
 
-    public Mono<String> readModSettingsFileContent(String name, boolean active)
+    public String readModSettingsFileContent(String name, boolean active)
     {
         String fileName = prepareFileName(name, active);
         log.info("Reading contents of {}", fileName);
-        return Mono.just(this.modSettingsDirPath.get().resolve(fileName))
-                .filter(Files::exists)
-                .flatMap(filePath -> Mono.fromCallable(() -> Files.readString(filePath)))
-                .switchIfEmpty(Mono.just(""));
+
+        Path settingsFilePath = this.modSettingsDirPath.get().resolve(fileName);
+        if (!Files.exists(settingsFilePath))
+            return "";
+
+        try
+        {
+            return Files.readString(settingsFilePath);
+        }
+        catch (IOException exception)
+        {
+            log.error("Could not read mod settings file.", exception);
+            return "";
+        }
     }
 
-    public Mono<Void> saveModSettingsFileContent(String name, boolean active, String content)
+    public void saveModSettingsFileContent(String name, boolean active, String content)
     {
         String fileName = prepareFileName(name, active);
         try
@@ -126,11 +128,9 @@ public class ModSettingsStorage
         {
             throw new RuntimeException(e);
         }
-
-        return Mono.empty();
     }
 
-    public Mono<Void> deleteModSettingsFile(String name, boolean active)
+    public void deleteModSettingsFile(String name, boolean active)
     {
         String fileName = prepareFileName(name, active);
         File[] files = this.modSettingsDirPath.get().toFile().listFiles();
@@ -146,43 +146,41 @@ public class ModSettingsStorage
                 }
             }
         }
-
-        return Mono.empty();
     }
 
-    public Mono<ModSettingsEntity> findByName(String name)
+    public ModSettingsEntity findByName(String name)
     {
-        return this.modSettingsRepository.findByName(name);
+        return this.modSettingsRepository.findByName(name).orElse(null);
     }
 
-    public Mono<ModSettingsEntity> findById(long id)
+    public ModSettingsEntity findById(long id)
     {
-        return this.modSettingsRepository.findById(id);
+        return this.modSettingsRepository.findById(id).orElse(null);
     }
 
-    public Mono<Void> deactivateAll()
+    public void deactivateAll()
     {
-        return this.modSettingsRepository.disableAll();
+        this.modSettingsRepository.disableAll();
     }
 
-    public Mono<ModSettingsEntity> save(ModSettingsEntity modSettingsEntity)
+    public ModSettingsEntity save(ModSettingsEntity modSettingsEntity)
     {
         return this.modSettingsRepository.save(modSettingsEntity);
     }
 
-    public Flux<ModSettingsEntity> findAll()
+    public List<ModSettingsEntity> findAll()
     {
         return this.modSettingsRepository.findAll();
     }
 
-    public Mono<Void> delete(ModSettingsEntity modSettingsEntity)
+    public void delete(ModSettingsEntity modSettingsEntity)
     {
-        return this.modSettingsRepository.delete(modSettingsEntity);
+        this.modSettingsRepository.delete(modSettingsEntity);
     }
 
-    public Mono<ModSettingsEntity> findActive()
+    public ModSettingsEntity findActive()
     {
-        return this.modSettingsRepository.findFirstByActiveTrue();
+        return this.modSettingsRepository.findFirstByActiveTrue().orElse(null);
     }
 
     private String prepareFileName(String name, boolean active)
@@ -199,46 +197,52 @@ public class ModSettingsStorage
         return fileName.substring(0, fileName.lastIndexOf("."));
     }
 
-    private Mono<Void> scanModSettingsForNewSettingsFiles()
+    private void scanModSettingsForNewSettingsFiles()
     {
-        return Mono.just(this.modSettingsDirPath.get())
-                .filter(Files::exists)
-                .mapNotNull(path -> path.toFile().list())
-                .filter(Objects::nonNull)
-                .mapNotNull(fileNames -> Stream.of(fileNames).toList())
-                .zipWith(modSettingsRepository.findAll().collectList(), (settingsFileNames, settingsEntities) -> {
-                    List<String> existingSettingsNames = settingsEntities.stream()
-                            .map(ModSettingsEntity::getName)
-                            .toList();
+        Path modSettingsDirPath = this.modSettingsDirPath.get();
+        if (Files.notExists(modSettingsDirPath))
+            return;
 
-                    Set<String> settingsToInstall = settingsFileNames.stream()
-                            .map(this::stripExtension)
-                            .filter(name -> !existingSettingsNames.contains(name))
-                            .collect(Collectors.toSet());
+        List<ModSettingsEntity> existingModSettings = this.modSettingsRepository.findAll().stream()
+                .toList();
+        List<String> existingSettingsNames = existingModSettings.stream()
+                .map(ModSettingsEntity::getName)
+                .toList();
 
-                    if (settingsToInstall.contains(ACTIVE_MOD_SETTINGS_NAME)
-                            && settingsEntities.stream().anyMatch(ModSettingsEntity::isActive))
-                    {
-                        settingsToInstall.remove(ACTIVE_MOD_SETTINGS_NAME);
-                    }
-                    return settingsToInstall;
-                })
-                .flatMapMany(Flux::fromIterable)
-                .map(settingsName -> {
-                    if (settingsName.equals(ACTIVE_MOD_SETTINGS_NAME))
-                    {
-                        return ModSettingsEntity.builder()
-                                .name(DEFAULT_MOD_SETTINGS_NAME)
-                                .active(true)
-                                .build();
-                    }
 
-                    return ModSettingsEntity.builder()
-                            .name(settingsName)
-                            .active(false)
-                            .build();
-                })
-                .flatMap(this.modSettingsRepository::save)
-                .then();
+        List<String> settingsFileNames = Arrays.stream(modSettingsDirPath.toFile().list()).toList();
+
+        Set<String> settingsToInstall = settingsFileNames.stream()
+                .map(this::stripExtension)
+                .filter(name -> !existingSettingsNames.contains(name))
+                .collect(Collectors.toSet());
+
+        if (settingsToInstall.contains(ACTIVE_MOD_SETTINGS_NAME)
+                && existingModSettings.stream().anyMatch(ModSettingsEntity::isActive))
+        {
+            settingsToInstall.remove(ACTIVE_MOD_SETTINGS_NAME);
+        }
+
+        for (String settingsName : settingsToInstall)
+        {
+            ModSettingsEntity modSettingsEntity;
+
+            if (settingsName.equals(ACTIVE_MOD_SETTINGS_NAME))
+            {
+                modSettingsEntity = ModSettingsEntity.builder()
+                        .name(DEFAULT_MOD_SETTINGS_NAME)
+                        .active(true)
+                        .build();
+            }
+            else
+            {
+                modSettingsEntity = ModSettingsEntity.builder()
+                        .name(settingsName)
+                        .active(false)
+                        .build();
+            }
+
+            this.modSettingsRepository.save(modSettingsEntity);
+        }
     }
 }

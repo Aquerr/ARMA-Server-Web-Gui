@@ -9,12 +9,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.DiscordMessageCreator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordMessage;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.util.Map;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class DiscordIntegrationTest
@@ -40,16 +39,17 @@ class DiscordIntegrationTest
     @Test
     void shouldSendMessage()
     {
+        // given
         DiscordMessage discordMessage = DiscordMessage.ofSingleEmbed(DiscordMessage.Embed.builder()
                         .title("Test")
                 .build());
 
-        given(messageCreator.create()).willReturn(Mono.just(discordMessage));
-        given(discordWebhookHandler.sendMessage(discordMessage)).willReturn(Mono.empty());
+        given(messageCreator.create()).willReturn(discordMessage);
 
-        Mono<Void> result = discordIntegration.sendMessage(MessageKind.SERVER_STARTED);
+        // when
+        discordIntegration.sendMessage(MessageKind.SERVER_STARTED);
 
-        StepVerifier.create(result)
-                .verifyComplete();
+        // then
+        verify(discordWebhookHandler).sendMessage(discordMessage);
     }
 }

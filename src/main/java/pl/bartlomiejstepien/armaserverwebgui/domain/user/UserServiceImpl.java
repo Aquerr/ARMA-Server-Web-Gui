@@ -6,6 +6,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthority;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
@@ -15,14 +16,10 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.AswgUserEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.AuthorityEntity;
 import pl.bartlomiejstepien.armaserverwebgui.repository.UserAuthorityRepository;
 import pl.bartlomiejstepien.armaserverwebgui.repository.UserRepository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuples;
 
 import java.time.OffsetDateTime;
 import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,7 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService
 {
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserAuthorityRepository userAuthorityRepository;
     private final ASWGConfig aswgConfig;
@@ -43,97 +40,113 @@ public class UserServiceImpl implements UserService
         // Insert default user to db
         // TODO: Later we will implement first login screen in ASWG,
         // TODO: where user will be able to set up such first account.
-        userRepository.findByUsername(aswgConfig.getUsername())
-                .flatMap(this::resetDefaultAswgUserIfNeeded)
-                .switchIfEmpty(Mono.defer(this::insertDefaultAswgUser)
-                        .then(Mono.empty()))
-                .subscribe();
+
+        AswgUserEntity userEntity = userRepository.findByUsername(aswgConfig.getUsername()).orElse(null);
+
+        if (userEntity == null)
+        {
+            insertDefaultAswgUser();
+        }
+        else
+        {
+            resetDefaultAswgUserIfNeeded(userEntity);
+        }
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Mono<AswgUser> getUser(String username)
+    public AswgUser getUser(String username)
     {
-        return userRepository.findByUsername(username)
-                .zipWhen(this::fetchAuthorities)
-                .map(this::toAswgUser);
+        AswgUserEntity userEntity = userRepository.findByUsername(username).orElse(null);
+        if (userEntity == null)
+            return null;
+        Set<AuthorityEntity> authorityEntities = fetchAuthorities(userEntity);
+        return toAswgUser(userEntity, authorityEntities);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Mono<AswgUserWithPassword> getUserWithPassword(String username)
+    public AswgUserWithPassword getUserWithPassword(String username)
     {
-        return userRepository.findByUsername(username)
-                .zipWhen(this::fetchAuthorities)
-                .map(this::toAswgUserWithPassword);
+        AswgUserEntity userEntity = userRepository.findByUsername(username).orElse(null);
+        if (userEntity == null)
+            return null;
+        Set<AuthorityEntity> authorityEntities = fetchAuthorities(userEntity);
+        return toAswgUserWithPassword(userEntity, authorityEntities);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Flux<AswgUser> getUsers()
+    public List<AswgUser> getUsers()
     {
-        return userRepository.findAll()
-                .flatMap(entity -> fetchAuthorities(entity)
-                        .map(authorities -> toAswgUser(Tuples.of(entity, authorities))));
+        return userRepository.findAll().stream()
+                .map(entity -> toAswgUser(entity, fetchAuthorities(entity)))
+                .toList();
     }
 
+    @Transactional
     @Override
-    public Mono<Void> deleteUser(int userId)
+    public void deleteUser(int userId)
     {
-        return this.userRepository.deleteById(userId)
-                .then(this.userAuthorityRepository.deleteByUserId(userId));
+        this.userRepository.deleteById(userId);
+        this.userAuthorityRepository.deleteByUserId(userId);
     }
 
+    @Transactional
     @Override
-    public Mono<Void> deleteUser(String username)
+    public void deleteUser(String username)
     {
-        return this.userRepository.findByUsername(username)
-                .switchIfEmpty(Mono.error(new IllegalArgumentException("Username does not exist")))
-                .flatMap(entity -> this.userAuthorityRepository.deleteByUserId(entity.getId())
-                        .then(this.userRepository.deleteById(entity.getId())));
+        AswgUserEntity userEntity = this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Username does not exist"));
+        userAuthorityRepository.deleteByUserId(userEntity.getId());
+        userRepository.deleteById(userEntity.getId());
     }
 
+    @Transactional
     @Override
-    public Mono<Void> addNewUser(AswgUserWithPassword user)
+    public void addNewUser(AswgUserWithPassword user)
     {
-        return this.userRepository.findByUsername(user.getUsername())
-                .flatMap(entity -> Mono.error(new UsernameAlreadyExistsException("Given username already exists!")))
-                .switchIfEmpty(Mono.just(withEncodedPassword(user)))
-                .map(t -> withEncodedPassword(user))
-                .map(t -> toEntity(user.toBuilder()
-                        .createdDate(OffsetDateTime.now())
-                        .build()))
-                .flatMap(this.userRepository::save)
-                .flatMap(entity -> this.userAuthorityRepository.saveUserAuthorities(entity.getId(), user.getAuthorities().stream()
-                        .map(AswgAuthority::getCode).collect(Collectors.toSet())))
-                .then();
+        AswgUserEntity userEntity = this.userRepository.findByUsername(user.getUsername()).orElse(null);
+        if (userEntity != null)
+            throw new UsernameAlreadyExistsException("Given username already exists!");
+
+        AswgUserEntity newUserEntity = toEntity(withEncodedPassword(user).toBuilder()
+                .createdDate(OffsetDateTime.now())
+                .build());
+        newUserEntity = userRepository.save(newUserEntity);
+        userAuthorityRepository.saveUserAuthorities(newUserEntity.getId(), user.getAuthorities().stream()
+                .map(AswgAuthority::getCode).collect(Collectors.toSet()));
     }
 
     private AswgUserWithPassword withEncodedPassword(AswgUserWithPassword entity)
     {
         return entity.toBuilder()
-                .password(passwordEncoder.encode(entity.getPassword()))
+//                .password(passwordEncoder.encode(entity.getPassword()))
                 .build();
     }
 
+    @Transactional
     @Override
-    public Mono<Void> updateUser(AswgUserWithPassword user)
+    public void updateUser(AswgUserWithPassword user)
     {
         if (user.getId() == null)
-            return Mono.error(new IllegalArgumentException("No user id to update has been provided!"));
+            throw new IllegalArgumentException("No user id to update has been provided!");
 
         // Merge with existing
-        return this.userRepository.findById(user.getId())
+        this.userRepository.findById(user.getId())
                 .map(entity -> {
                     AswgUserEntity entityToUpdate = new AswgUserEntity();
                     entityToUpdate.setId(entity.getId());
                     entityToUpdate.setUsername(entity.getUsername());
                     entityToUpdate.setPassword(Optional.ofNullable(user.getPassword())
-                            .map(passwordEncoder::encode)
+//                            .map(passwordEncoder::encode)
                             .orElse(entity.getPassword()));
                     entityToUpdate.setLocked(user.isLocked());
                     entityToUpdate.setCreatedDateTime(entity.getCreatedDateTime());
                     return entityToUpdate;
                 })
-                .flatMap(this.userRepository::save)
-                .flatMap(entity -> this.userAuthorityRepository.saveUserAuthorities(entity.getId(), user.getAuthorities().stream()
+                .map(this.userRepository::save)
+                .ifPresent(entity -> this.userAuthorityRepository.saveUserAuthorities(entity.getId(), user.getAuthorities().stream()
                         .map(AswgAuthority::getCode)
                         .collect(Collectors.toSet())));
     }
@@ -159,19 +172,19 @@ public class UserServiceImpl implements UserService
                 .build();
     }
 
-    private AswgUser toAswgUser(Tuple2<AswgUserEntity, Set<AuthorityEntity>> objects)
+    private AswgUser toAswgUser(AswgUserEntity userEntity, Set<AuthorityEntity> authorityEntities)
     {
-        return toDomain(objects.getT1()).toBuilder()
-                .authorities(objects.getT2().stream()
+        return toDomain(userEntity).toBuilder()
+                .authorities(authorityEntities.stream()
                         .map(this::toDomainAuthority)
                         .collect(Collectors.toSet()))
                 .build();
     }
 
-    private AswgUserWithPassword toAswgUserWithPassword(Tuple2<AswgUserEntity, Set<AuthorityEntity>> objects)
+    private AswgUserWithPassword toAswgUserWithPassword(AswgUserEntity userEntity, Set<AuthorityEntity> authorityEntities)
     {
-        return toDomainWithPassword(objects.getT1()).toBuilder()
-                .authorities(objects.getT2().stream()
+        return toDomainWithPassword(userEntity).toBuilder()
+                .authorities(authorityEntities.stream()
                         .map(this::toDomainAuthority)
                         .collect(Collectors.toSet()))
                 .build();
@@ -183,36 +196,33 @@ public class UserServiceImpl implements UserService
                 .orElseThrow(() -> new RuntimeException("User has an invalid authority: " + authorityEntity.getCode()));
     }
 
-    private Mono<Set<AuthorityEntity>> fetchAuthorities(AswgUserEntity entity)
+    private Set<AuthorityEntity> fetchAuthorities(AswgUserEntity entity)
     {
-        return userAuthorityRepository.findUserAuthorities(entity.getId())
-                .collectList()
-                .map(HashSet::new);
+        return userAuthorityRepository.findUserAuthorities(entity.getId());
     }
 
-    private Mono<AswgUserEntity> resetDefaultAswgUserIfNeeded(AswgUserEntity entity)
+    private void resetDefaultAswgUserIfNeeded(AswgUserEntity entity)
     {
         if (!aswgConfig.isResetDefaultUser())
-            return Mono.just(entity);
+            return;
 
         log.info("Resetting default user: {}", aswgConfig.getUsername());
         entity.setUsername(aswgConfig.getUsername());
-        entity.setPassword(passwordEncoder.encode(aswgConfig.getPassword()));
+//        entity.setPassword(passwordEncoder.encode(aswgConfig.getPassword()));
         entity.setLocked(false);
         entity.setCreatedDateTime(OffsetDateTime.now());
 
-        return userRepository.save(entity)
-                .then(this.userAuthorityRepository.saveUserAuthorities(entity.getId(), EnumSet.allOf(AswgAuthority.class).stream()
-                        .map(AswgAuthority::getCode)
-                        .collect(Collectors.toSet())))
-                .then(Mono.just(entity));
+        entity = userRepository.save(entity);
+        userAuthorityRepository.saveUserAuthorities(entity.getId(), EnumSet.allOf(AswgAuthority.class).stream()
+                .map(AswgAuthority::getCode)
+                .collect(Collectors.toSet()));
     }
 
-    private Mono<Void> insertDefaultAswgUser()
+    private void insertDefaultAswgUser()
     {
         log.info("Creating default aswg user: {}", aswgConfig.getUsername());
         AswgUserWithPassword aswgUser = prepareDefaultAswgUser();
-        return addNewUser(aswgUser);
+        addNewUser(aswgUser);
     }
 
     private AswgUserWithPassword toDomainWithPassword(AswgUserEntity entity)

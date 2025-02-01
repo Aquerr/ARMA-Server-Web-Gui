@@ -1,14 +1,15 @@
 package pl.bartlomiejstepien.armaserverwebgui.repository;
 
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.DifficultyProfileEntity;
-import reactor.core.publisher.Mono;
+
+import java.util.Optional;
 
 @Repository
-public interface DifficultyProfileRepository extends ReactiveCrudRepository<DifficultyProfileEntity, Integer>
+public interface DifficultyProfileRepository extends JpaRepository<DifficultyProfileEntity, Integer>
 {
-    Mono<DifficultyProfileEntity> findFirstByActiveTrue();
+    Optional<DifficultyProfileEntity> findFirstByActiveTrue();
 
-    Mono<DifficultyProfileEntity> findByName(String name);
+    Optional<DifficultyProfileEntity> findByName(String name);
 }

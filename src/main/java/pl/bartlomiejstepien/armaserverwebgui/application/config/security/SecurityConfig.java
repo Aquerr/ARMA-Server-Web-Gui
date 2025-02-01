@@ -1,83 +1,104 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config.security;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
-import org.springframework.security.web.server.authentication.HttpStatusServerEntryPoint;
-import org.springframework.security.web.server.authentication.ServerAuthenticationEntryPointFailureHandler;
-import org.springframework.security.web.server.authorization.HttpStatusServerAccessDeniedHandler;
-import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationFilter;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsConfigurationSource;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.zalando.logbook.servlet.LogbookFilter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 
+import java.io.IOException;
 import java.util.List;
 
-@EnableReactiveMethodSecurity
-@Configuration
+@EnableMethodSecurity
+@Configuration(proxyBeanMethods = false)
 public class SecurityConfig
 {
-    @EnableWebFluxSecurity
+    @EnableWebSecurity
     @ConditionalOnProperty(value = "aswg.security.enabled", havingValue = "true")
+    @Configuration(proxyBeanMethods = false)
     public static class EnabledSecurityConfiguration
     {
         @Bean
-        public SecurityWebFilterChain filterChain(ServerHttpSecurity http,
-                                                  ReactiveAuthenticationManager jwtAuthenticationManager,
-                                                  JwtServerAuthenticationConverter jwtServerAuthenticationConverter)
+        public SecurityFilterChain filterChain(HttpSecurity http,
+                                               AuthenticationManager jwtAuthenticationManager,
+                                               JwtAuthenticationConverter jwtAuthenticationConverter,
+                                               LogbookFilter logbookFilter,
+                                               JwtFilter jwtFilter,
+                                               FrontEndRedirectWebFilter frontEndRedirectWebFilter
+        ) throws Exception
         {
-            AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(jwtAuthenticationManager);
-            authenticationWebFilter.setRequiresAuthenticationMatcher(new PathPatternParserServerWebExchangeMatcher("/api/**"));
-            authenticationWebFilter.setServerAuthenticationConverter(jwtServerAuthenticationConverter);
-            authenticationWebFilter.setAuthenticationFailureHandler(new ServerAuthenticationEntryPointFailureHandler(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED)));
+//            AuthenticationFilter authenticationWebFilter = new AuthenticationFilter(jwtAuthenticationManager, jwtAuthenticationConverter);
+//            authenticationWebFilter.setRequestMatcher(new AntPathRequestMatcher("/api/**"));
+//            authenticationWebFilter.setFailureHandler(new AuthenticationEntryPointFailureHandler(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
+//            authenticationWebFilter.setSuccessHandler((request, response, authentication) -> {});
 
-            http.authorizeExchange(auths -> {
-                        auths.pathMatchers("/api/v1/auth").permitAll();
-                        auths.pathMatchers("/api/v1/auth/logout").permitAll();
-                        auths.pathMatchers("/api/v1/ws/**").permitAll();
-                        auths.pathMatchers("/api/v1/actuator/info").permitAll();
-                        auths.pathMatchers("/api/v1/actuator/health").permitAll();
-                        auths.pathMatchers("/api/v1/actuator/**").authenticated();
-                        auths.pathMatchers("/api/**").authenticated();
-                        auths.pathMatchers("/ws/**").permitAll();
-                        auths.pathMatchers("/static/**").permitAll();
-                        auths.pathMatchers("/public/**").permitAll();
+            http.authorizeHttpRequests(auths -> {
+                        auths.requestMatchers("/api/v1/auth").permitAll();
+                        auths.requestMatchers("/api/v1/auth/logout").permitAll();
+                        auths.requestMatchers("/api/v1/ws/**").permitAll();
+                        auths.requestMatchers("/api/v1/actuator/info").permitAll();
+                        auths.requestMatchers("/api/v1/actuator/health").permitAll();
+                        auths.requestMatchers("/api/v1/actuator/**").authenticated();
+                        auths.requestMatchers("/api/**").authenticated();
+                        auths.requestMatchers("/ws/**").permitAll();
+                        auths.requestMatchers("/static/**").permitAll();
+                        auths.requestMatchers("/public/**").permitAll();
 
-                        auths.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                        auths.pathMatchers("/*").permitAll();
+                        auths.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                        auths.requestMatchers("/*").permitAll();
                     })
-                    .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-                    .formLogin((ServerHttpSecurity.FormLoginSpec::disable))
-                    .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+                    .anonymous(AbstractHttpConfigurer::disable)
+                    .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                    .logout(AbstractHttpConfigurer::disable)
+                    .addFilterAfter(jwtFilter, LogoutFilter.class)
+                    .addFilterBefore(logbookFilter, JwtFilter.class)
+                    .addFilterAfter(frontEndRedirectWebFilter, AnonymousAuthenticationFilter.class)
+                    .formLogin((AbstractHttpConfigurer::disable))
+                    .httpBasic(AbstractHttpConfigurer::disable)
                     .authenticationManager(jwtAuthenticationManager)
                     .exceptionHandling(exceptionHandlingSpec -> {
-                        exceptionHandlingSpec.accessDeniedHandler(new HttpStatusServerAccessDeniedHandler(HttpStatus.FORBIDDEN));
-                        exceptionHandlingSpec.authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED));
+                        exceptionHandlingSpec.accessDeniedHandler(new AccessDeniedHandlerImpl());
+                        exceptionHandlingSpec.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
                     })
                     .cors(Customizer.withDefaults())
-                    .csrf(ServerHttpSecurity.CsrfSpec::disable);
+                    .csrf(AbstractHttpConfigurer::disable);
             return http.build();
         }
 
         @Bean
-        public ReactiveAuthenticationManager jwtAuthenticationManager(UserService userService,
-                                                                      JwtService jwtService)
+        public JwtAuthenticationManager jwtAuthenticationManager(UserService userService,
+                                                              JwtService jwtService)
         {
-            return new JwtReactiveAuthenticationManager(userService, jwtService);
+            return new JwtAuthenticationManager(userService, jwtService);
         }
 
         @Bean
@@ -99,22 +120,20 @@ public class SecurityConfig
         }
     }
 
-    @EnableWebFluxSecurity
+    @EnableWebSecurity
     @ConditionalOnProperty(value = "aswg.security.enabled", matchIfMissing = true, havingValue = "false")
+    @Configuration(proxyBeanMethods = false)
     public static class DisabledSecurityConfiguration
     {
         @Bean
-        public SecurityWebFilterChain filterChain(ServerHttpSecurity http)
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception
         {
-            http.cors(Customizer.withDefaults())
-                .headers(headerSpec -> {
-                    headerSpec.frameOptions(ServerHttpSecurity.HeaderSpec.FrameOptionsSpec::disable);
-                })
-                .authorizeExchange(authorizeExchangeSpec -> {
-                    authorizeExchangeSpec.pathMatchers("/**").permitAll();
-                })
-                .csrf(ServerHttpSecurity.CsrfSpec::disable);
-            return http.build();
+            return http.cors(Customizer.withDefaults())
+                            .authorizeHttpRequests(authorizeRequests -> {
+                               authorizeRequests.requestMatchers("/**").permitAll();
+                            })
+                    .csrf(AbstractHttpConfigurer::disable)
+                    .build();
         }
 
         @Bean

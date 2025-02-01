@@ -1,34 +1,25 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
-import org.springframework.context.annotation.Bean;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.HandlerMapping;
-import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
-import org.springframework.web.reactive.socket.WebSocketHandler;
-import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.WorkshopModInstallProgressWebsocketHandler;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Configuration(proxyBeanMethods = false)
-public class WebSocketConfig
+@EnableWebSocket
+@AllArgsConstructor
+public class WebSocketConfig implements WebSocketConfigurer
 {
-    @Bean
-    public HandlerMapping handlerMapping(WorkshopModInstallProgressWebsocketHandler workshopModInstallProgressWebsocketHandler)
-    {
-        Map<String, WebSocketHandler> map = new HashMap<>();
-        map.put("/api/v1/ws/workshop-mod-install-progress", workshopModInstallProgressWebsocketHandler);
+    private final WorkshopModInstallProgressWebsocketHandler workshopModInstallProgressWebsocketHandler;
 
-        SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
-        mapping.setUrlMap(map);
-        mapping.setOrder(1);
-        return mapping;
-    }
-
-    @Bean
-    public WebSocketHandlerAdapter webSocketHandlerAdapter()
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry)
     {
-        return new WebSocketHandlerAdapter();
+        registry.addHandler(
+                workshopModInstallProgressWebsocketHandler,
+                "/api/v1/ws/workshop-mod-install-progress"
+        );
     }
 }

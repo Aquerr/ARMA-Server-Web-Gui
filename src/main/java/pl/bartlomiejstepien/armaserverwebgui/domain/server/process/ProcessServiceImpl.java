@@ -2,11 +2,11 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.process;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordIntegration;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
@@ -15,9 +15,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaSer
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.publisher.Sinks;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -62,12 +59,15 @@ public class ProcessServiceImpl implements ProcessService
     private Thread ioServerThread;
     private Thread ioServerErrorThread;
 
-    private final Sinks.Many<String> serverLogSink = Sinks.many().multicast().directAllOrNothing();
+    private SseEmitter LOGS_SERVER_SENT_EVENT_EMITTER;
 
     @Override
-    public Publisher<String> getServerLogPublisher()
+    public SseEmitter getServerLogPublisher()
     {
-        return serverLogSink.asFlux();
+        if (LOGS_SERVER_SENT_EVENT_EMITTER != null)
+            LOGS_SERVER_SENT_EVENT_EMITTER = new SseEmitter();
+
+        return LOGS_SERVER_SENT_EVENT_EMITTER;
     }
 
     @Override
@@ -94,38 +94,31 @@ public class ProcessServiceImpl implements ProcessService
     }
 
     @Override
-    public Mono<Void> startServer(boolean performUpdate)
+    public void startServer(boolean performUpdate)
     {
         if (getServerStatus().getStatus() != ServerStatus.Status.OFFLINE || serverStartScheduled)
             throw new ServerIsAlreadyRunningException("Server is already running!");
 
         serverStartScheduled = true;
 
-        Mono<?> flow = Mono.empty();
         if (performUpdate)
         {
-            flow = flow
-                    .then(trySendDiscordMessage(MessageKind.SERVER_UPDATED))
-                    .then(Mono.fromRunnable(this::tryUpdateArmaServer));
+            trySendDiscordMessage(MessageKind.SERVER_UPDATED);
+            tryUpdateArmaServer();
         }
 
-        return flow.thenMany(Flux.merge(
-                trySendDiscordMessage(MessageKind.SERVER_STARTED),
-                serverParametersGenerator.generateParameters()
-                        .flatMap(this::startServerProcess)
-        )).then();
+        trySendDiscordMessage(MessageKind.SERVER_STARTED);
+        startServerProcess();
     }
 
-    private Mono<Void> trySendDiscordMessage(MessageKind messageKind)
+    private void trySendDiscordMessage(MessageKind messageKind)
     {
-        return Mono.just(discordIntegration)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .flatMap(di -> di.sendMessage(messageKind));
+        discordIntegration.ifPresent(di -> di.sendMessage(messageKind));
     }
 
-    private Mono<Void> startServerProcess(ArmaServerParameters serverParameters)
+    private void startServerProcess()
     {
+        ArmaServerParameters serverParameters = serverParametersGenerator.generateParameters();
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(new File(serverParameters.getServerDirectory()));
         processBuilder.command(serverParameters.asList());
@@ -162,8 +155,6 @@ public class ProcessServiceImpl implements ProcessService
         });
         this.serverThread.setDaemon(true);
         this.serverThread.start();
-
-        return Mono.empty();
     }
 
     private void clearLogsFile() throws IOException
@@ -205,7 +196,7 @@ public class ProcessServiceImpl implements ProcessService
     }
 
     @Override
-    public Mono<Void> stopServer()
+    public void stopServer()
     {
         long pid;
         try
@@ -250,7 +241,7 @@ public class ProcessServiceImpl implements ProcessService
         {
             throw new RuntimeException("Could not save server pid.", e);
         }
-        return trySendDiscordMessage(MessageKind.SERVER_STOPPED);
+        trySendDiscordMessage(MessageKind.SERVER_STOPPED);
     }
 
     @Override
@@ -288,7 +279,7 @@ public class ProcessServiceImpl implements ProcessService
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     SERVER_LOGGER.info(line);
-                    serverLogSink.tryEmitNext(line);
+                    emitSseLog(line);
                 }
                 reader.close();
             } catch (final Exception e) {
@@ -305,7 +296,7 @@ public class ProcessServiceImpl implements ProcessService
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     SERVER_LOGGER.info(line);
-                    serverLogSink.tryEmitNext(line);
+                    emitSseLog(line);
                 }
                 reader.close();
             } catch (final Exception e) {
@@ -317,6 +308,21 @@ public class ProcessServiceImpl implements ProcessService
         this.ioServerErrorThread.start();
         this.ioServerThread.setDaemon(true);
         this.ioServerThread.start();
+    }
+
+    private void emitSseLog(String line)
+    {
+        if (LOGS_SERVER_SENT_EVENT_EMITTER != null)
+        {
+            try
+            {
+                LOGS_SERVER_SENT_EVENT_EMITTER.send(line);
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private void saveServerPid(long pid) throws IOException

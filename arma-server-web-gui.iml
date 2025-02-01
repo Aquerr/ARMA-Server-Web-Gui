@@ -4,14 +4,14 @@
     <content url="file://$MODULE_DIR$" dumb="true">
       <excludeFolder url="file://$MODULE_DIR$/src/web-ui/dist" />
       <excludeFolder url="file://$MODULE_DIR$/src/web-ui/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/aswg_profiles" />
+      <excludeFolder url="file://$MODULE_DIR$/logs" />
+      <excludeFolder url="file://$MODULE_DIR$/server" />
     </content>
   </component>
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
       <configuration />
     </facet>
-  </component>
-  <component name="SonarLintModuleSettings">
-    <option name="uniqueId" value="0d9385cc-8933-4aaa-a980-ee7313385fe3" />
   </component>
 </module>

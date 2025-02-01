@@ -19,9 +19,8 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,16 +34,16 @@ public class UserRestController
 
     @HasPermissionUsersView
     @GetMapping
-    public Flux<AswgUser> getUsers()
+    public List<AswgUser> getUsers()
     {
         return userService.getUsers();
     }
 
     @HasPermissionUsersAdd
     @PostMapping
-    public Mono<Void> addUser(@RequestBody NewUserRequest userRequest)
+    public void addUser(@RequestBody NewUserRequest userRequest)
     {
-        return this.userService.addNewUser(AswgUserWithPassword.builder()
+        this.userService.addNewUser(AswgUserWithPassword.builder()
                 .username(userRequest.getUsername())
                 .password(userRequest.getPassword())
                 .authorities(userRequest.getAuthorities().stream()
@@ -56,10 +55,10 @@ public class UserRestController
 
     @HasPermissionUsersUpdate
     @PutMapping("/{id}")
-    public Mono<Void> updateUser(@PathVariable("id") int userId,
+    public void updateUser(@PathVariable("id") int userId,
                                  @RequestBody UpdateUserRequest updateUserRequest)
     {
-        return this.userService.updateUser(AswgUserWithPassword.builder()
+        this.userService.updateUser(AswgUserWithPassword.builder()
                 .id(userId)
                 .password(updateUserRequest.getPassword())
                 .locked(updateUserRequest.isLocked())
@@ -72,14 +71,14 @@ public class UserRestController
 
     @HasPermissionUsersDelete
     @DeleteMapping("/{id}")
-    public Mono<Void> deleteUser(Authentication authentication,
+    public void deleteUser(Authentication authentication,
                                  @PathVariable("id") int userId)
     {
         if (authentication.getPrincipal() instanceof AswgUser aswgUser && aswgUser.getId() == userId) {
-                return Mono.error(new IllegalArgumentException("Cannot delete self."));
+                throw new IllegalArgumentException("Cannot delete self.");
         }
 
-        return this.userService.deleteUser(userId);
+        this.userService.deleteUser(userId);
     }
 
     @Data

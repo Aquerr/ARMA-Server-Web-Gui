@@ -3,24 +3,24 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModPreset;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.PresetImportParams;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSaveParams;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 public interface ModPresetService
 {
-    Flux<String> getModPresetsNames();
+    List<String> getModPresetsNames();
 
-    Flux<ModPreset> getModPresets();
+    List<ModPreset> getModPresets();
 
-    Mono<Void> saveModPreset(ModPresetSaveParams modPresetSaveParams);
+    void saveModPreset(ModPresetSaveParams modPresetSaveParams);
 
-    Mono<ModPreset> getModPreset(Long id);
+    ModPreset getModPreset(Long id);
 
-    Mono<ModPreset> getModPreset(String name);
+    ModPreset getModPreset(String name);
 
-    Mono<Void> importPreset(PresetImportParams params);
+    void importPreset(PresetImportParams params);
 
-    Mono<Void> selectPreset(String name);
+    void selectPreset(String name);
 
-    Mono<Void> deletePreset(String presetName);
+    void deletePreset(String presetName);
 }

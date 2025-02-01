@@ -2,42 +2,65 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.socket.WebSocketHandler;
-import org.springframework.web.reactive.socket.WebSocketMessage;
-import org.springframework.web.reactive.socket.WebSocketSession;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationStatus;
-import reactor.core.publisher.Mono;
-import reactor.core.publisher.Sinks;
+
+import java.io.IOException;
+import java.time.Duration;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class WorkshopModInstallProgressWebsocketHandler implements WebSocketHandler
+public class WorkshopModInstallProgressWebsocketHandler extends TextWebSocketHandler
 {
+    private static final Cache<String, WebSocketSession> websocketCache = Caffeine.newBuilder()
+            .expireAfterAccess(Duration.ofMinutes(30))
+            .build();
+
     private final ObjectMapper objectMapper;
 
-    private final Sinks.Many<WorkshopModInstallationStatus> workShopModInstallationSink = Sinks.many().multicast().onBackpressureBuffer();
-
-    public void publishInstallationStatus(WorkshopModInstallationStatus status)
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception
     {
-        this.workShopModInstallationSink.tryEmitNext(status);
+        websocketCache.put(session.getId(), session);
     }
 
     @Override
-    public Mono<Void> handle(WebSocketSession session)
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception
     {
-        return session.send(workShopModInstallationSink.asFlux().map(status -> convertToWebSocketMessage(session, status)));
+        websocketCache.invalidate(session.getId());
     }
 
-    private WebSocketMessage convertToWebSocketMessage(WebSocketSession session, WorkshopModInstallationStatus status)
+    public void publishInstallationStatus(WorkshopModInstallationStatus status)
+    {
+        for (WebSocketSession session : websocketCache.asMap().values())
+        {
+            TextMessage textMessage = convertToWebSocketMessage(status);
+            try
+            {
+                session.sendMessage(textMessage);
+            }
+            catch (IOException e)
+            {
+                log.error("Could not send message '{}' to websocket '{}'", textMessage, session, e);
+            }
+        }
+    }
+
+    private TextMessage convertToWebSocketMessage(WorkshopModInstallationStatus status)
     {
         try
         {
             String message = objectMapper.writeValueAsString(status);
-            return session.textMessage(message);
+            return new TextMessage(message);
         }
         catch (JsonProcessingException e)
         {

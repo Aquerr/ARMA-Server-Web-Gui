@@ -6,7 +6,6 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionAdd;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionDelete;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionUpdate;
@@ -25,7 +25,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.MissionFileValidator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.MissionService;
-import reactor.core.publisher.Mono;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -42,57 +41,55 @@ public class MissionRestController
 
     @HasPermissionMissionView
     @GetMapping
-    public Mono<GetMissionsResponse> getMissions()
+    public GetMissionsResponse getMissions()
     {
-        return this.missionService.getMissions()
-                .map(GetMissionsResponse::of);
+        return GetMissionsResponse.of(this.missionService.getMissions());
     }
 
     @HasPermissionMissionUpdate
     @PostMapping("/enabled")
-    public Mono<ResponseEntity<?>> saveEnabledMissionList(@RequestBody SaveEnabledMissionListRequest saveEnabledMissionListRequest)
+    public ResponseEntity<?> saveEnabledMissionList(@RequestBody SaveEnabledMissionListRequest saveEnabledMissionListRequest)
     {
-        return this.missionService.saveEnabledMissionList(saveEnabledMissionListRequest.getMissions())
-                .then(Mono.just(ResponseEntity.ok().build()));
+        this.missionService.saveEnabledMissionList(saveEnabledMissionListRequest.getMissions());
+        return ResponseEntity.ok().build();
     }
 
     @HasPermissionMissionAdd
     @PostMapping("/template")
-    public Mono<ResponseEntity<?>> addMission(@RequestBody AddMissionRequest addMissionRequest)
+    public ResponseEntity<?> addMission(@RequestBody AddMissionRequest addMissionRequest)
     {
         String template = addMissionRequest.getTemplate();
         if (template.contains(" "))
             throw new IllegalArgumentException("Mission template should not contains whitespace!");
 
-        return missionService.addMission(addMissionRequest.getName(), template)
-                .then(Mono.just(ResponseEntity.ok().build()));
+        missionService.addMission(addMissionRequest.getName(), template);
+        return ResponseEntity.ok().build();
     }
 
     @HasPermissionMissionUpload
     @PostMapping(value = "/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Mono<ResponseEntity<?>> uploadMissionFile(@RequestPart("file") Mono<FilePart> multipartFile)
+    public ResponseEntity<?> uploadMissionFile(@RequestPart("file") MultipartFile multipartFile)
     {
-        return multipartFile
-                .doOnNext(missionFileValidator::validate)
-                .doOnNext(filePart -> log.info("Uploading mission '{}' ", filePart.filename()))
-                .flatMap(missionService::save)
-                .then(Mono.just(ResponseEntity.ok().build()));
+        log.info("Uploading mission '{}' ", multipartFile.getOriginalFilename());
+        missionFileValidator.validate(multipartFile);
+        missionService.save(multipartFile);
+        return ResponseEntity.ok().build();
     }
 
     @HasPermissionMissionDelete
     @DeleteMapping(value = "/template/{template}")
-    public Mono<ResponseEntity<?>> deleteMission(@PathVariable("template") String template)
+    public ResponseEntity<?> deleteMission(@PathVariable("template") String template)
     {
-        return this.missionService.deleteMission(URLDecoder.decode(template, StandardCharsets.UTF_8))
-                .thenReturn(ResponseEntity.ok().build());
+        this.missionService.deleteMission(URLDecoder.decode(template, StandardCharsets.UTF_8));
+        return ResponseEntity.ok().build();
     }
 
     @HasPermissionMissionUpdate
     @PutMapping("/id/{id}")
-    public Mono<Void> updateMission(@PathVariable("id") long id,
+    public void updateMission(@PathVariable("id") long id,
                                     @RequestBody Mission mission)
     {
-        return this.missionService.updateMission(id, mission);
+        this.missionService.updateMission(id, mission);
     }
 
     @Value(staticConstructor = "of")

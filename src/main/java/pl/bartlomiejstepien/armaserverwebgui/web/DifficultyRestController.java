@@ -17,8 +17,8 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.DifficultyService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.DifficultyProfile;
 import pl.bartlomiejstepien.armaserverwebgui.web.model.DifficultyProfileApiModel;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/difficulties")
@@ -29,41 +29,40 @@ public class DifficultyRestController
 
     @HasPermissionDifficultyView
     @GetMapping
-    public Flux<DifficultyProfileApiModel> getDifficulties()
+    public List<DifficultyProfileApiModel> getDifficulties()
     {
-        return difficultyService.getDifficultyProfiles()
-                .map(this::toApiModel);
+        return difficultyService.getDifficultyProfiles().stream()
+                .map(this::toApiModel)
+                .toList();
     }
 
     @HasPermissionDifficultyAdd
     @PostMapping
-    public Mono<Void> saveDifficulty(@RequestBody DifficultyProfileApiModel difficultyProfileApiModel)
+    public void saveDifficulty(@RequestBody DifficultyProfileApiModel difficultyProfileApiModel)
     {
-        return difficultyService.saveDifficultyProfile(mapToDomainModel(difficultyProfileApiModel))
-                .then();
+        difficultyService.saveDifficultyProfile(mapToDomainModel(difficultyProfileApiModel));
     }
 
     @HasPermissionDifficultyUpdate
     @PutMapping("/{id}")
-    public Mono<Void> updateDifficulty(@PathVariable("id") String identifier,
-                                       @RequestBody DifficultyProfileApiModel difficultyProfileApiModel)
+    public void updateDifficulty(@PathVariable("id") String identifier,
+                                 @RequestBody DifficultyProfileApiModel difficultyProfileApiModel)
     {
-        return difficultyService.saveDifficultyProfile(mapToDomainModel(difficultyProfileApiModel))
-                .then();
+        difficultyService.saveDifficultyProfile(mapToDomainModel(difficultyProfileApiModel));
     }
 
     @HasPermissionDifficultyDelete
     @DeleteMapping("/{id}")
-    public Mono<Void> deleteDifficulty(@PathVariable("id") int id)
+    public void deleteDifficulty(@PathVariable("id") int id)
     {
-        return difficultyService.deleteDifficultyProfile(id);
+        difficultyService.deleteDifficultyProfile(id);
     }
 
     @HasPermissionDifficultyDelete
     @DeleteMapping
-    public Mono<Void> deleteDifficulty(@RequestParam("name") String name)
+    public void deleteDifficulty(@RequestParam("name") String name)
     {
-        return difficultyService.deleteDifficultyProfile(name);
+        difficultyService.deleteDifficultyProfile(name);
     }
 
     private DifficultyProfile mapToDomainModel(DifficultyProfileApiModel difficultyProfileApiModel)

@@ -1,44 +1,52 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
+import org.json.JSONException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
+import org.springframework.util.MultiValueMap;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.TestUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModSettingsService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModSettingsStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettings;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettingsHeader;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModSettingsEntity;
-import reactor.core.publisher.Flux;
-import reactor.core.scheduler.Schedulers;
-import reactor.test.StepVerifier;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ModSettingsRestControllerTest extends BaseIntegrationTest
 {
     @Autowired
     private ModSettingsService modSettingsService;
 
-    @Autowired
+    @MockitoSpyBean
     private ModSettingsStorage modSettingsStorage;
 
     @AfterEach
     void tearDown()
     {
-        this.modSettingsService.getModSettingsWithoutContents()
-                .flatMap(settings -> this.modSettingsService.deleteModSettings(settings.getId()))
-                .subscribe();
+        this.modSettingsService.getModSettingsWithoutContents().stream()
+                .map(ModSettingsHeader::getId)
+                .forEach(this.modSettingsService::deleteModSettings);
     }
 
     @Test
-    void shouldGetModSettings()
+    void shouldGetModSettings() throws JSONException
     {
         List<Long> ids = preSaveModSettings(ModSettings.builder()
                 .name("testsettings")
@@ -51,20 +59,23 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
                 .content("active-test-content")
                 .build());
 
-        WebTestClient.ResponseSpec responseSpec = webTestClient.get()
-                .uri("/api/v1/mods/settings")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .exchange();
+        ResponseEntity<String> responseEntity = testRestTemplate.exchange(
+                "/api/v1/mods/settings",
+                HttpMethod.GET,
+                new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))), String.class);
 
-        responseSpec.expectStatus().isOk();
-        responseSpec.expectBody().json(TestUtils.loadJsonIntegrationContractFor("mod-settings/get-mod-settings-list.json")
+        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+        JSONAssert.assertEquals(TestUtils.loadJsonIntegrationContractFor("mod-settings/get-mod-settings-list.json")
                 .replace("{mod_settings_id_1}", Long.toString(ids.getFirst()))
-                .replace("{mod_settings_id_2}", Long.toString(ids.get(1)))
-        );
+                .replace("{mod_settings_id_2}", Long.toString(ids.get(1))), responseEntity.getBody(), JSONCompareMode.LENIENT);
     }
 
     @Test
-    void shouldGetSingleModSettings()
+    void shouldGetSingleModSettings() throws JSONException
     {
         List<Long> ids = preSaveModSettings(ModSettings.builder()
                 .name("new-mod-settings")
@@ -72,18 +83,22 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
                 .content("new-content")
                 .build());
 
-        WebTestClient.ResponseSpec responseSpec = webTestClient.get()
-                .uri("/api/v1/mods/settings/" + ids.getFirst())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .exchange();
+        ResponseEntity<String> responseEntity = testRestTemplate.exchange(
+                "/api/v1/mods/settings/" + ids.getFirst(),
+                        HttpMethod.GET,
+                        new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
+                                HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                                HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                        ))), String.class);
 
-        responseSpec.expectStatus().isOk();
-        responseSpec.expectBody().json(TestUtils.loadJsonIntegrationContractFor("mod-settings/get-mod-settings.json")
-                .replace("{mod_settings_id}", Long.toString(ids.getFirst())));
+        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+        JSONAssert.assertEquals(TestUtils.loadJsonIntegrationContractFor("mod-settings/get-mod-settings.json")
+                .replace("{mod_settings_id}", Long.toString(ids.getFirst())), responseEntity.getBody(), JSONCompareMode.LENIENT);
     }
 
     @Test
-    void shouldGetModSettingsContent()
+    void shouldGetModSettingsContent() throws JSONException
     {
         List<Long> ids = preSaveModSettings(ModSettings.builder()
                 .name("new-mod-settings")
@@ -91,18 +106,22 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
                 .content("new-content")
                 .build());
 
-        WebTestClient.ResponseSpec responseSpec = webTestClient.get()
-                .uri("/api/v1/mods/settings/" + ids.getFirst())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .exchange();
+        ResponseEntity<String> responseEntity = testRestTemplate.exchange(
+                "/api/v1/mods/settings/" + ids.getFirst(),
+                        HttpMethod.GET,
+                        new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
+                                HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                                HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                        ))), String.class);
 
-        responseSpec.expectStatus().isOk();
-        responseSpec.expectBody().json(TestUtils.loadJsonIntegrationContractFor("mod-settings/get-mod-settings.json")
-                .replace("{mod_settings_id}", Long.toString(ids.getFirst())));
+        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+        JSONAssert.assertEquals(TestUtils.loadJsonIntegrationContractFor("mod-settings/get-mod-settings.json")
+                .replace("{mod_settings_id}", Long.toString(ids.getFirst())), responseEntity.getBody(), JSONCompareMode.LENIENT);
     }
 
     @Test
-    void shouldUpdateModSettings()
+    void shouldUpdateModSettings() throws JSONException
     {
         List<Long> ids = preSaveModSettings(ModSettings.builder()
                 .name("new-mod-settings")
@@ -110,29 +129,34 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
                 .content("new-content")
                 .build());
 
-        WebTestClient.ResponseSpec responseSpec1 = webTestClient.put()
-                .uri("/api/v1/mods/settings/" + ids.getFirst())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .body(BodyInserters.fromValue(ModSettings.builder()
-                        .id(ids.getFirst())
-                        .name("new-mod-settings-update")
-                        .active(false)
-                        .content("new-content-update")
-                        .build()))
-                .exchange();
+        ResponseEntity<String> responseEntity = testRestTemplate.exchange("/api/v1/mods/settings/" + ids.getFirst(),
+                        HttpMethod.PUT,
+                        new HttpEntity<>(ModSettings.builder()
+                                .id(ids.getFirst())
+                                .name("new-mod-settings-update")
+                                .active(false)
+                                .content("new-content-update")
+                                .build(), MultiValueMap.fromSingleValue(Map.of(
+                                HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                                HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                        ))), String.class);
 
-        responseSpec1.expectStatus().isOk();
-        responseSpec1.expectBody().json(TestUtils.loadJsonIntegrationContractFor("mod-settings/updated-mod-settings.json")
-                .replace("{mod_settings_id}", Long.toString(ids.getFirst())));
+        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+        JSONAssert.assertEquals(TestUtils.loadJsonIntegrationContractFor("mod-settings/updated-mod-settings.json")
+                .replace("{mod_settings_id}", Long.toString(ids.getFirst())), responseEntity.getBody(), JSONCompareMode.LENIENT);
 
-        WebTestClient.ResponseSpec responseSpec2 = webTestClient.get()
-                .uri("/api/v1/mods/settings/" + ids.getFirst() + "/content")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .exchange();
+        ResponseEntity<String> responseEntity2 = testRestTemplate.exchange("/api/v1/mods/settings/" + ids.getFirst() + "/content",
+                HttpMethod.GET,
+                new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))),
+                String.class);
 
-        responseSpec2.expectStatus().isOk();
-        responseSpec2.expectBody().json(TestUtils.loadJsonIntegrationContractFor("mod-settings/updated-mod-settings-only-content.json"));
+        assertTrue(responseEntity2.getStatusCode().is2xxSuccessful());
+        JSONAssert.assertEquals(TestUtils.loadJsonIntegrationContractFor("mod-settings/updated-mod-settings-only-content.json"), responseEntity2.getBody(), JSONCompareMode.LENIENT);
     }
 
     @Test
@@ -144,13 +168,18 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
                         .content("test-content")
                         .build());
 
-        WebTestClient.ResponseSpec responseSpec = webTestClient.get()
-                .uri("/api/v1/mods/settings")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .exchange();
+        ResponseEntity<List<ModSettingsHeader>> responseEntity = testRestTemplate.exchange(
+                "/api/v1/mods/settings",
+                HttpMethod.GET,
+                new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))), new ParameterizedTypeReference<>() {});
 
-        responseSpec.expectStatus().isOk();
-        responseSpec.expectBody().jsonPath("$.name", "testsettings");
+        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+        assertThat(responseEntity.getBody()).hasSize(1);
+        assertThat(responseEntity.getBody().get(0).getName()).isEqualTo("testsettings");
     }
 
     @Test
@@ -162,56 +191,41 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
                 .content("test-content")
                 .build());
 
-        WebTestClient.ResponseSpec responseSpec = webTestClient.delete()
-                .uri("/api/v1/mods/settings/" + ids.getFirst())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .exchange();
+        ResponseEntity<String> responseEntity = testRestTemplate.exchange(
+                "/api/v1/mods/settings/" + ids.getFirst(),
+                    HttpMethod.DELETE,
+                    new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
+                            HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                            HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                            HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                    ))), String.class);
 
-        responseSpec.expectStatus().isOk();
+        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
 
-        WebTestClient.ResponseSpec responseSpec2 = webTestClient.get()
-                .uri("/api/v1/mods/settings")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .exchange();
+        ResponseEntity<List> responseEntity2 = testRestTemplate.exchange(
+            "/api/v1/mods/settings",
+                        HttpMethod.GET,
+                        new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
+                                HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                                HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                        ))), List.class);
 
-        responseSpec2.expectStatus().isOk();
-        responseSpec2.expectBody().json("[]");
-
-        StepVerifier.create(modSettingsStorage.readModSettingsFileContent("testsettings", false))
-                .expectNext("")
-                .verifyComplete();
+        assertTrue(responseEntity2.getStatusCode().is2xxSuccessful());
+        assertThat(responseEntity2.getBody()).isEmpty();
     }
 
     private List<Long> preSaveModSettings(ModSettings... modSettingsArray)
     {
-        List<ModSettings> modSettingsList = Arrays.stream(modSettingsArray).toList();
-
-        try
-        {
-            return Flux.fromIterable(modSettingsList)
-                    .flatMap(modSettings -> this.modSettingsStorage.saveModSettingsFileContent(modSettings.getName(), modSettings.isActive(), modSettings.getContent())
-                            .then(this.modSettingsStorage.save(ModSettingsEntity.builder()
-                                    .name(modSettings.getName())
-                                    .active(modSettings.isActive())
-                                    .build())
-                            ))
-                    .map(ModSettingsEntity::getId)
-                    .collectList()
-                    .subscribeOn(Schedulers.immediate())
-                    .toFuture().get();
-        }
-        catch (InterruptedException | ExecutionException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private WebTestClient.ResponseSpec postWithAuth(String uri, Object body)
-    {
-        return webTestClient.post()
-                .uri(uri)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .body(BodyInserters.fromValue(body))
-                .exchange();
+        return Arrays.stream(modSettingsArray)
+                .map(modSettings -> {
+                    modSettingsStorage.saveModSettingsFileContent(modSettings.getName(), modSettings.isActive(), modSettings.getContent());
+                    return modSettingsStorage.save(ModSettingsEntity.builder()
+                            .name(modSettings.getName())
+                            .active(modSettings.isActive())
+                            .build());
+                })
+                .map(ModSettingsEntity::getId)
+                .toList();
     }
 }

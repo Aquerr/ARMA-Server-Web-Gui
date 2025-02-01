@@ -7,29 +7,31 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.security.JwtService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
-import reactor.core.publisher.Mono;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService
 {
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final JwtService jwtService;
 
-    public Mono<JwtToken> authenticate(String username, String password, String ipAddress)
+    public JwtToken authenticate(String username, String password, String ipAddress)
     {
         log.info("Login attempt for {} from {}", username, ipAddress);
-        return userService.getUserWithPassword(username)
-                .filter(user -> passwordEncoder.matches(password, user.getPassword()))
-                .switchIfEmpty(Mono.error(new BadCredentialsException("Invalid username or password")))
-                .flatMap(user -> this.userService.getUser(username))
-                .map(user -> new JwtToken(this.jwtService.createJwt(user), user.getAuthorities()));
+        AswgUserWithPassword aswgUserWithPassword = userService.getUserWithPassword(username);
+//        if (!passwordEncoder.matches(password, aswgUserWithPassword.getPassword()))
+//            throw new BadCredentialsException("Invalid username or password");
+
+        AswgUser user = this.userService.getUser(username);
+        return new JwtToken(this.jwtService.createJwt(user), user.getAuthorities());
     }
 
-    public Mono<Void> logout(String jwt)
+    public void logout(String jwt)
     {
-        return this.jwtService.invalidate(jwt);
+        this.jwtService.invalidate(jwt);
     }
 }

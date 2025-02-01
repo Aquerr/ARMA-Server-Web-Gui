@@ -5,6 +5,7 @@ import net.lingala.zip4j.ZipFile;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModFolderNameHelper;
@@ -13,8 +14,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.Cou
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.FileUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,39 +56,25 @@ public class ModStorageImpl implements ModStorage
     }
 
     @Override
-    public Mono<Path> save(FilePart multipartFile) throws IOException
+    public Path save(MultipartFile multipartFile) throws IOException
     {
         Path filePath = modDirectory.get().resolve(modFolderNameHelper.buildFor(multipartFile));
-        Mono<Void> blockingWrapper = Mono.fromRunnable(() -> {
-            try
-            {
-                Files.createDirectories(modDirectory.get());
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-        });
-        return blockingWrapper.subscribeOn(Schedulers.boundedElastic())
-                .then(saveFileAtPath(multipartFile, filePath))
-                .then(Mono.fromCallable(() -> unpackZipFile(filePath)))
-                .doOnSuccess(next ->
-                {
-                    try
-                    {
-                        // Usunięcie .zip
-                        deleteZipFile(filePath);
-                    }
-                    catch (IOException e)
-                    {
-                        e.printStackTrace();
-                        throw new RuntimeException(e.getMessage());
-                    }
-                });
+        Files.createDirectories(modDirectory.get());
+        saveFileAtPath(multipartFile, filePath);
+        unpackZipFile(filePath);
+        try
+        {
+            deleteZipFile(filePath);
+        }
+        catch (Exception exception)
+        {
+            log.error("Could not delete mod zip file.", exception);
+        }
+        return filePath;
     }
 
     @Override
-    public boolean doesModExists(FilePart filename)
+    public boolean doesModExists(MultipartFile filename)
     {
         return Files.exists(modDirectory.get().resolve(modFolderNameHelper.buildForWithoutExtension(filename)));
     }
@@ -119,7 +104,7 @@ public class ModStorageImpl implements ModStorage
     }
 
     @Override
-    public Mono<Boolean> deleteMod(InstalledModEntity installedModEntity)
+    public void deleteMod(InstalledModEntity installedModEntity)
     {
         final File[] files = this.modDirectory.get().toFile().listFiles();
         if (files != null)
@@ -135,15 +120,13 @@ public class ModStorageImpl implements ModStorage
             }
         }
 
-        return this.installedModRepository.delete(installedModEntity)
-                .thenReturn(true)
-                .onErrorReturn(false);
+        this.installedModRepository.delete(installedModEntity);
     }
 
     @Override
-    public Mono<InstalledModEntity> getInstalledMod(String modName)
+    public InstalledModEntity getInstalledMod(String modName)
     {
-        return this.installedModRepository.findByName(modName);
+        return this.installedModRepository.findByName(modName).orElse(null);
     }
 
     @Override
@@ -233,9 +216,16 @@ public class ModStorageImpl implements ModStorage
         return InstalledFileSystemMod.from(Paths.get(directoryPath));
     }
 
-    private Mono<Void> saveFileAtPath(FilePart multipartFile, Path saveLocation)
+    private void saveFileAtPath(MultipartFile multipartFile, Path saveLocation)
     {
-        return multipartFile.transferTo(saveLocation);
+        try
+        {
+            multipartFile.transferTo(saveLocation);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     private Path unpackZipFile(Path filePath)

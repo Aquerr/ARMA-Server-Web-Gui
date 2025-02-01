@@ -1,12 +1,15 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
@@ -15,35 +18,37 @@ import java.time.OffsetDateTime;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@Table("installed_mod")
+@Table(name = "installed_mod")
+@Entity
 public class InstalledModEntity
 {
     @Id
-    @Column("id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column("workshop_file_id")
+    @Column(name = "workshop_file_id")
     private long workshopFileId;
 
-    @Column("name")
+    @Column(name = "name")
     private String name;
 
-    @Column("directory_path")
+    @Column(name = "directory_path")
     private String directoryPath;
 
-    @Column("preview_url")
+    @Column(name = "preview_url")
     private String previewUrl;
 
-    @Column("created_date")
+    @Column(name = "created_date")
     private OffsetDateTime createdDate;
 
-    @Column("last_workshop_update")
+    @Column(name = "last_workshop_update")
     private OffsetDateTime lastWorkshopUpdate;
 
-    @Column("enabled")
+    @Column(name = "enabled")
     private boolean enabled;
 
-    @Column("server_mod")
+    @Column(name = "server_mod")
     private boolean serverMod;
 
     public String getModDirectoryName()

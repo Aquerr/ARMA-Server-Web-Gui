@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordIntegration;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordWebhookHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.DiscordMessageCreator;
@@ -24,7 +24,7 @@ import java.util.Map;
 public class DiscordConfig
 {
     @Bean
-    public WebClient discordWebClient(WebClient.Builder builder)
+    public RestClient discordRestClient(RestClient.Builder builder)
     {
         return builder.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
@@ -89,8 +89,8 @@ public class DiscordConfig
     @Bean
     public DiscordWebhookHandler discordWebhookHandler(ASWGConfig aswgConfig,
                                                        ObjectMapper objectMapper,
-                                                       WebClient discordWebClient)
+                                                       RestClient discordRestClient)
     {
-        return new DiscordWebhookHandler(aswgConfig.getDiscordWebhookUrl(), objectMapper, discordWebClient);
+        return new DiscordWebhookHandler(aswgConfig.getDiscordWebhookUrl(), objectMapper, discordRestClient);
     }
 }

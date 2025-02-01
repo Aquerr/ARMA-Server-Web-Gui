@@ -1,29 +1,27 @@
 package pl.bartlomiejstepien.armaserverwebgui.repository;
 
-import org.springframework.data.r2dbc.repository.Modifying;
-import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 @Repository
-public interface MissionRepository extends ReactiveCrudRepository<MissionEntity, Long>
+public interface MissionRepository extends JpaRepository<MissionEntity, Long>
 {
-    Flux<MissionEntity> findByTemplate(String template);
+    List<MissionEntity> findByTemplate(String template);
 
     @Modifying
-    Mono<Void> deleteByTemplate(String template);
+    void deleteByTemplate(String template);
 
     @Modifying
-    @Query(value = "UPDATE mission SET mission.enabled = true WHERE mission.template IN (:templates)")
-    Flux<Void> updateAllByTemplateSetEnabled(@Param("templates") List<String> templates);
+    @Query(nativeQuery = true, value = "UPDATE mission SET mission.enabled = true WHERE mission.template IN (:templates)")
+    void updateAllByTemplateSetEnabled(@Param("templates") List<String> templates);
 
     @Modifying
-    @Query(value = "UPDATE mission SET mission.enabled = false")
-    Flux<Void> disableAll();
+    @Query(nativeQuery = true, value = "UPDATE mission SET mission.enabled = false")
+    void disableAll();
 }

@@ -1,34 +1,33 @@
 package pl.bartlomiejstepien.armaserverwebgui.repository;
 
-import org.springframework.data.r2dbc.repository.Modifying;
-import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface InstalledModRepository extends ReactiveCrudRepository<InstalledModEntity, Long>
+public interface InstalledModRepository extends JpaRepository<InstalledModEntity, Long>
 {
-    Mono<InstalledModEntity> findByName(String name);
+    Optional<InstalledModEntity> findByName(String name);
 
-    Mono<InstalledModEntity> findByWorkshopFileId(Long id);
+    Optional<InstalledModEntity> findByWorkshopFileId(Long id);
 
-    Flux<InstalledModEntity> findAllByOrderByNameAsc();
-
-    @Modifying
-    @Query("UPDATE installed_mod SET installed_mod.enabled = false")
-    Mono<Void> disableAllMods();
+    List<InstalledModEntity> findAllByOrderByNameAsc();
 
     @Modifying
-    @Query("UPDATE installed_mod SET installed_mod.enabled = true WHERE installed_mod.workshop_file_id IN (:workshopFileIds)")
-    Mono<Void> enableMods(@Param("workshopFileIds") List<Long> workshopFileIds);
+    @Query(nativeQuery = true, value = "UPDATE installed_mod SET installed_mod.enabled = false")
+    void disableAllMods();
 
     @Modifying
-    @Query("UPDATE installed_mod SET installed_mod.server_mod = true WHERE installed_mod.workshop_file_id IN (:workshopFileIds)")
-    Mono<Void> setServerMods(@Param("workshopFileIds") List<Long> workshopFileIds);
+    @Query(nativeQuery = true, value = "UPDATE installed_mod SET installed_mod.enabled = true WHERE installed_mod.workshop_file_id IN (:workshopFileIds)")
+    void enableMods(@Param("workshopFileIds") List<Long> workshopFileIds);
+
+    @Modifying
+    @Query(nativeQuery = true, value = "UPDATE installed_mod SET installed_mod.server_mod = true WHERE installed_mod.workshop_file_id IN (:workshopFileIds)")
+    void setServerMods(@Param("workshopFileIds") List<Long> workshopFileIds);
 }

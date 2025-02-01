@@ -4,19 +4,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.MultipartBodyBuilder;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
-import reactor.core.publisher.Flux;
 
-import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ModsRestControllerTest extends BaseIntegrationTest
 {
@@ -26,45 +26,29 @@ class ModsRestControllerTest extends BaseIntegrationTest
     @BeforeEach
     void setUp()
     {
-        List<InstalledModEntity> modEntities = List.of(
-                InstalledModEntity.builder()
-                        .name("testmod")
-                        .workshopFileId(123456789)
-                        .directoryPath("./target/@testmod")
-                        .createdDate(OffsetDateTime.now())
-                        .build(),
-                InstalledModEntity.builder()
-                        .name("testmod2")
-                        .workshopFileId(123456782)
-                        .directoryPath("./target/@testmod2")
-                        .createdDate(OffsetDateTime.now())
-                        .build());
-
-        Flux.fromIterable(modEntities)
+        modService.getInstalledMods().stream()
                 .map(InstalledModEntity::getName)
-                .flatMap(modService::deleteMod)
-                .subscribe();
+                .forEach(modService::deleteMod);
     }
 
     @Test
     void uploadModFileShouldUploadFile()
     {
         // given
-        MultipartBodyBuilder multipartBodyBuilder = new MultipartBodyBuilder();
-        multipartBodyBuilder.part("file", new ClassPathResource("@testmod.zip"))
-                .contentType(MediaType.MULTIPART_FORM_DATA);
-        multipartBodyBuilder.part("file", new ClassPathResource("@testmod2.zip"))
-                .contentType(MediaType.MULTIPART_FORM_DATA);
+        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+        parts.add("file", new ClassPathResource("@testmod.zip"));
+        parts.add("file", new ClassPathResource("@testmod2.zip"));
 
         // when
-        WebTestClient.ResponseSpec responseSpec = webTestClient.mutate().responseTimeout(Duration.ofDays(1)).build().post()
-                .uri("/api/v1/mods")
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .body(BodyInserters.fromMultipartData(multipartBodyBuilder.build()))
-                .exchange();
+        var response = testRestTemplate.exchange(
+                "/api/v1/mods",
+                HttpMethod.POST,
+                new HttpEntity<>(parts, MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE,
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser()
+                ))), Object.class);
 
         // then
-        responseSpec.expectStatus().isOk();
+        assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 }

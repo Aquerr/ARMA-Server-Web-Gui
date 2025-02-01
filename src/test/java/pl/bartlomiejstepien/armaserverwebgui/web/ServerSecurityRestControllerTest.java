@@ -1,13 +1,25 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
+import org.apache.http.client.methods.HttpHead;
+import org.json.JSONException;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.util.MultiValueMap;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.web.response.ServerSecurityResponse;
 
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static pl.bartlomiejstepien.armaserverwebgui.TestUtils.loadJsonIntegrationContractFor;
@@ -20,20 +32,22 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
     private ServerConfigStorage serverConfigStorage;
 
     @Test
-    void shouldReturnSecurityProperties()
+    void shouldReturnSecurityProperties() throws JSONException
     {
         given(serverConfigStorage.getServerConfig()).willReturn(prepareArmaServerConfig());
 
-        webTestClient.get()
-                .uri(SECURITY_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectHeader()
-                .contentType(MediaType.APPLICATION_JSON)
-                .expectBody()
-                .json(loadJsonIntegrationContractFor("security/get-security-properties-response.json"));
+        var response = testRestTemplate.exchange(
+                SECURITY_PROPERTIES_URL,
+                HttpMethod.GET,
+                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))),
+                String.class
+        );
+
+        JSONAssert.assertEquals(loadJsonIntegrationContractFor("security/get-security-properties-response.json"), response.getBody(), JSONCompareMode.LENIENT);
     }
 
     @Test
@@ -41,14 +55,18 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
     {
         given(serverConfigStorage.getServerConfig()).willReturn(new ArmaServerConfig());
 
-        webTestClient.post()
-                .uri(SECURITY_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(loadJsonIntegrationContractFor("security/save-security-properties-request.json"))
-                .exchange()
-                .expectStatus()
-                .isOk();
+        var response = testRestTemplate.exchange(
+                SECURITY_PROPERTIES_URL,
+                HttpMethod.POST,
+                new HttpEntity<>(loadJsonIntegrationContractFor("security/save-security-properties-request.json"), MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))),
+                String.class
+        );
+
+        assertTrue(response.getStatusCode().is2xxSuccessful());
 
         ArmaServerConfig expected = prepareArmaServerConfig();
         verify(serverConfigStorage).saveServerConfig(expected);

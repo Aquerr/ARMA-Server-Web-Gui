@@ -1,34 +1,39 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("mission")
+@Table(name = "mission")
+@Entity
 public class MissionEntity
 {
     @Id
-    @Column("id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column("name")
+    @Column(name = "name")
     private String name;
 
-    @Column("template")
+    @Column(name = "template")
     private String template;
 
-    @Column("difficulty")
+    @Column(name = "difficulty")
     private String difficulty;
 
-    @Column("enabled")
+    @Column(name = "enabled")
     private boolean enabled;
 
-    @Column("parameters")
+    @Column(name = "parameters")
     private String parametersJson;
 }

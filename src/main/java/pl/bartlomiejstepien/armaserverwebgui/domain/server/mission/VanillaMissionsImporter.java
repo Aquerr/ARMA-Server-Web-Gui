@@ -8,10 +8,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.converter.Mis
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
 import pl.bartlomiejstepien.armaserverwebgui.repository.MissionRepository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
-import reactor.util.function.Tuple2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +22,10 @@ public class VanillaMissionsImporter
     @EventListener
     public void onApplicationReady(ApplicationReadyEvent event)
     {
-        importVanillaMissions()
-                .subscribeOn(Schedulers.boundedElastic())
-                .subscribe();
+        importVanillaMissions();
     }
 
-    private Flux<MissionEntity> importVanillaMissions()
+    private void importVanillaMissions()
     {
         final List<Mission> missions = new ArrayList<>();
         missions.addAll(vanillaMissions());
@@ -40,23 +34,20 @@ public class VanillaMissionsImporter
         missions.addAll(contactMissions());
 
         // Check if missions already exists, if not, add them
+        List<MissionEntity> existingMissionEntities = missionRepository.findAll();
+        List<Mission> notInstalledVanillaMissions = findNotInstalledTemplates(existingMissionEntities, missions);
+        if (notInstalledVanillaMissions.isEmpty())
+            return;
 
-        return missionRepository.findAll()
-                .collectList()
-                .zipWith(Mono.just(missions))
-                .map(this::findNotInstalledTemplates)
-                .flatMap(notInstalledTemplates -> notInstalledTemplates.isEmpty() ? Mono.empty() : Mono.just(notInstalledTemplates))
-                .doOnNext(notInstalledTemplates -> log.info("Importing vanilla missions: {}", notInstalledTemplates))
-                .flatMapMany(Flux::fromIterable)
+        log.info("Importing vanilla missions: {}", notInstalledVanillaMissions);
+        notInstalledVanillaMissions.stream()
                 .map(this.missionConverter::convertToEntity)
-                .flatMap(this.missionRepository::save);
+                .forEach(this.missionRepository::save);
     }
 
-    private List<Mission> findNotInstalledTemplates(Tuple2<List<MissionEntity>, List<Mission>> tuple2)
+    private List<Mission> findNotInstalledTemplates(List<MissionEntity> existingMissionEntities, List<Mission> vanillaMissions)
     {
-        List<String> installedMissions = tuple2.getT1().stream().map(MissionEntity::getTemplate).toList();
-        List<Mission> vanillaMissions = tuple2.getT2();
-
+        List<String> installedMissions = existingMissionEntities.stream().map(MissionEntity::getTemplate).toList();
         return vanillaMissions.stream()
                 .filter(vanillaMission -> !installedMissions.contains(vanillaMission.getTemplate()))
                 .toList();

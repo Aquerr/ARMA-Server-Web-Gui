@@ -1,8 +1,8 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
 
 import java.io.File;
@@ -14,9 +14,9 @@ public class MissionFileNameHelper
     private static final String MISSION_FILE_EXTENSION = ".pbo";
     private final AswgFileNameNormalizer fileNameNormalizer;
 
-    public String resolveMissionNameFromFilePart(FilePart filePart)
+    public String resolveMissionNameFromFilePart(MultipartFile multipartFile)
     {
-        String normalizedFileName = normalizeFileName(filePart.filename());
+        String normalizedFileName = normalizeFileName(multipartFile.getOriginalFilename());
         return normalizedFileName.substring(0, normalizedFileName.length() - MISSION_FILE_EXTENSION.length());
     }
 

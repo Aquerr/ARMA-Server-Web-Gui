@@ -1,26 +1,31 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.ZonedDateTime;
 
 @Data
-@Table("invalid_jwt_token")
+@Table(name = "invalid_jwt_token")
+@Entity
 public class InvalidJwtTokenEntity
 {
     @Id
-    @Column("id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
-    @Column("jwt")
+    @Column(name = "jwt")
     private String jwt;
 
-    @Column("invalidated_date_time")
+    @Column(name = "invalidated_date_time")
     private ZonedDateTime invalidatedDateTime;
 
-    @Column("expiration_date_time")
+    @Column(name = "expiration_date_time")
     private ZonedDateTime expirationDateTime;
 }

@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionLogsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.LoggingService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ProcessService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -29,32 +28,35 @@ public class LoggingRestController
     private final ProcessService processService;
 
     @GetMapping("/properties")
-    public Mono<LoggingProperties> getLoggingProperties()
+    public LoggingProperties getLoggingProperties()
     {
-        return Mono.just(loggingService.getLoggingProperties())
-                .map(this::toViewResponse);
+        return toViewResponse(loggingService.getLoggingProperties());
     }
 
     @PostMapping("/properties")
-    public Mono<ResponseEntity<Void>> saveLoggingProperties(@RequestBody LoggingProperties loggingProperties)
+    public ResponseEntity<?> saveLoggingProperties(@RequestBody LoggingProperties loggingProperties)
     {
-        return Mono.just(loggingProperties).map(this::toDomainModel)
-                .doOnNext(this.loggingService::saveLoggingProperties)
-                .then(Mono.just(ResponseEntity.ok().build()));
+        this.loggingService.saveLoggingProperties(toDomainModel(loggingProperties));
+        return ResponseEntity.ok().build();
     }
 
     @HasPermissionLogsView
     @GetMapping("/latest-logs")
-    public Mono<LatestServerLogsResponse> getLatestLogs()
+    public LatestServerLogsResponse getLatestLogs()
     {
-        return Mono.just(LatestServerLogsResponse.of(this.processService.getLatestServerLogs()));
+        return LatestServerLogsResponse.of(this.processService.getLatestServerLogs());
     }
 
     @HasPermissionLogsView
     @GetMapping(value = "/logs-sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<String> subscribeToLogPublisher()
+    public SseEmitter subscribeToLogPublisher()
     {
-        return Flux.from(this.processService.getServerLogPublisher());
+        //TODO: To fix
+
+        SseEmitter sseEmitter = new SseEmitter();
+        return sseEmitter;
+
+//        return Flux.from(this.processService.getServerLogPublisher());
     }
 
     private pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.model.LoggingProperties toDomainModel(LoggingProperties loggingProperties)

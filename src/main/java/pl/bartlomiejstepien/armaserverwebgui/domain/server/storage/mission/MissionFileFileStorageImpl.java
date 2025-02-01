@@ -1,10 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,11 +30,11 @@ public class MissionFileFileStorageImpl implements MissionFileStorage
     }
 
     @Override
-    public Mono<Void> save(FilePart multipartFile) throws IOException
+    public void save(MultipartFile multipartFile) throws IOException
     {
         Files.createDirectories(missionsDirectory.get());
-        String normalizedFileName = missionFileNameHelper.normalizeFileName(multipartFile.filename());
-        return multipartFile.transferTo(missionsDirectory.get().resolve(normalizedFileName));
+        String normalizedFileName = missionFileNameHelper.normalizeFileName(multipartFile.getOriginalFilename());
+        multipartFile.transferTo(missionsDirectory.get().resolve(normalizedFileName));
     }
 
     @Override

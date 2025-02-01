@@ -1,29 +1,34 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.user.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.OffsetDateTime;
 
 @Data
-@Table("aswg_user")
+@Table(name = "aswg_user")
+@Entity
 public class AswgUserEntity
 {
     @Id
-    @Column("id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
-    @Column("username")
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column("password")
+    @Column(name = "password")
     private String password;
 
-    @Column("locked")
+    @Column(name = "locked")
     private boolean locked;
 
-    @Column("created_date_time")
+    @Column(name = "created_date_time")
     private OffsetDateTime createdDateTime;
 }

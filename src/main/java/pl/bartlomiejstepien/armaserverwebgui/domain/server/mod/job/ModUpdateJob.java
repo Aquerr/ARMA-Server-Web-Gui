@@ -9,8 +9,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 
-import java.util.UUID;
-
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -33,12 +31,11 @@ public class ModUpdateJob
 
         log.info("Executing Mod Update Job");
         modService.getInstalledMods()
-                .map(this::scheduleModUpdate)
-                .subscribe();
+                .forEach(this::scheduleModUpdate);
     }
 
-    private UUID scheduleModUpdate(InstalledModEntity installedModEntity)
+    private void scheduleModUpdate(InstalledModEntity installedModEntity)
     {
-        return steamService.scheduleWorkshopModDownload(installedModEntity.getWorkshopFileId(), installedModEntity.getName(), false);
+        steamService.scheduleWorkshopModDownload(installedModEntity.getWorkshopFileId(), installedModEntity.getName(), false);
     }
 }

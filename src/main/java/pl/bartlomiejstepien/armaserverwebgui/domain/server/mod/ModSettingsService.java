@@ -6,11 +6,10 @@ import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettings;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettingsHeader;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModSettingsEntity;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
@@ -25,50 +24,49 @@ public class ModSettingsService
 
     private final ModSettingsStorage modSettingsStorage;
 
-    public Mono<String> getModSettingsContent(long id)
+    public String getModSettingsContent(long id)
     {
-        return this.modSettingsStorage.findById(id)
-                .switchIfEmpty(Mono.error(new RuntimeException("Could not find settings for id = " + id)))
-                .flatMap(entity -> modSettingsStorage.readModSettingsFileContent(entity.getName(), entity.isActive()));
+        ModSettingsEntity modSettingsEntity = this.modSettingsStorage.findById(id);
+        if (modSettingsEntity == null)
+            throw new RuntimeException("Could not find settings for id = " + id);
+
+        return modSettingsStorage.readModSettingsFileContent(modSettingsEntity.getName(), modSettingsEntity.isActive());
     }
 
-    public Mono<ModSettingsHeader> saveModSettings(ModSettings modSettings)
+    public ModSettingsHeader saveModSettings(ModSettings modSettings)
     {
         validateModSettingsName(modSettings);
 
         ModSettingsEntity entity = toEntity(modSettings);
 
-        Mono<?> mono = Mono.empty();
         if (modSettings.isActive())
         {
-            mono = mono.then(modSettingsStorage.findActive())
-                    .zipWhen(modSettingsEntity -> modSettingsStorage.readModSettingsFileContent(modSettingsEntity.getName(), true))
-                    .flatMap(settingsWithContent -> {
-                        String name = settingsWithContent.getT1().getName();
-                        if (!settingsWithContent.getT1().getId().equals(modSettings.getId()))
-                        {
-                            return modSettingsStorage.saveModSettingsFileContent(name, false, settingsWithContent.getT2());
-                        }
-                        else return Mono.empty();
-                    })
-                    .then(Mono.just(modSettings))
-                    .filter(settings -> Objects.nonNull(settings.getId()))
-                    .flatMap(settings -> modSettingsStorage.findById(settings.getId()))
-                    .flatMap(modSettingsEntity -> modSettingsStorage.deleteModSettingsFile(modSettingsEntity.getName(), modSettingsEntity.isActive()))
-                    .then(modSettingsStorage.deactivateAll());
+            ModSettingsEntity activeModSettings = modSettingsStorage.findActive();
+            String modSettingsContent = modSettingsStorage.readModSettingsFileContent(activeModSettings.getName(), true);
+            if (!activeModSettings.getId().equals(modSettings.getId()))
+            {
+                modSettingsStorage.saveModSettingsFileContent(activeModSettings.getName(), false, modSettingsContent);
+            }
+
+            if (modSettings.getId() != null)
+            {
+                ModSettingsEntity modSettingsEntity = modSettingsStorage.findById(modSettings.getId());
+                modSettingsStorage.deleteModSettingsFile(modSettingsEntity.getName(), modSettingsEntity.isActive());
+            }
+
+            modSettingsStorage.deactivateAll();
         }
         else
         {
-            mono = Mono.just(modSettings)
-                    .filter(settings -> Objects.nonNull(settings.getId()))
-                    .flatMap(settings -> modSettingsStorage.findById(settings.getId()))
-                    .flatMap(settings -> modSettingsStorage.deleteModSettingsFile(settings.getName(), settings.isActive()));
+            if (modSettings.getId() != null)
+            {
+                ModSettingsEntity modSettingsEntity = modSettingsStorage.findById(modSettings.getId());
+                modSettingsStorage.deleteModSettingsFile(modSettingsEntity.getName(), modSettingsEntity.isActive());
+            }
         }
 
-        return mono
-                .then(Mono.defer(() -> this.modSettingsStorage.saveModSettingsFileContent(modSettings.getName(), modSettings.isActive(), modSettings.getContent())))
-                .then(this.modSettingsStorage.save(entity))
-                .map(ModSettingsService::toDomain);
+        this.modSettingsStorage.saveModSettingsFileContent(modSettings.getName(), modSettings.isActive(), modSettings.getContent());
+        return toDomain(this.modSettingsStorage.save(entity));
     }
 
     private static void validateModSettingsName(ModSettings modSettings)
@@ -93,16 +91,18 @@ public class ModSettingsService
                 .build();
     }
 
-    public Mono<ModSettingsHeader> getModSettingsWithoutContents(long id)
+    public ModSettingsHeader getModSettingsWithoutContents(long id)
     {
-        return this.modSettingsStorage.findById(id)
-                .map(ModSettingsService::toDomain);
+        return Optional.ofNullable(this.modSettingsStorage.findById(id))
+                .map(ModSettingsService::toDomain)
+                .orElse(null);
     }
 
-    public Flux<ModSettingsHeader> getModSettingsWithoutContents()
+    public List<ModSettingsHeader> getModSettingsWithoutContents()
     {
-        return this.modSettingsStorage.findAll()
-                .map(ModSettingsService::toDomain);
+        return this.modSettingsStorage.findAll().stream()
+                .map(ModSettingsService::toDomain)
+                .toList();
     }
 
     private static ModSettingsHeader toDomain(ModSettingsEntity entity)
@@ -114,11 +114,13 @@ public class ModSettingsService
                 .build();
     }
 
-    public Mono<Void> deleteModSettings(long id)
+    public void deleteModSettings(long id)
     {
-        return this.modSettingsStorage.findById(id)
-                .flatMap(entity -> this.modSettingsStorage.deleteModSettingsFile(entity.getName(), entity.isActive())
-                        .then(Mono.just(entity)))
-                .flatMap(modSettingsStorage::delete);
+        ModSettingsEntity entity = this.modSettingsStorage.findById(id);
+        if (entity != null)
+        {
+            this.modSettingsStorage.deleteModSettingsFile(entity.getName(), entity.isActive());
+            this.modSettingsStorage.delete(entity);
+        }
     }
 }

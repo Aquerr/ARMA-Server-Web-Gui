@@ -2,7 +2,6 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,7 +11,6 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ProcessService;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -24,29 +22,27 @@ public class StatusController
     private final ProcessService processService;
 
     @GetMapping
-    public Mono<StatusResponse> getServerStatus()
+    public StatusResponse getServerStatus()
     {
-        return Mono.just(processService.getServerStatus())
-                .map(serverStatus -> {
-                    if (serverStatus.getStatus() == ServerStatus.Status.ONLINE)
-                        return new StatusResponse(serverStatus, processService.getServerPlayers());
-                    else return new StatusResponse(serverStatus, List.of());
-                });
+        ServerStatus status = processService.getServerStatus();
+        List<ArmaServerPlayer> players = List.of();
+        if (status.getStatus() == ServerStatus.Status.ONLINE)
+            players = processService.getServerPlayers();
+        return new StatusResponse(status, players);
     }
 
     @HasPermissionServerStartStop
     @PostMapping("/toggle")
-    public Mono<Void> toggleServerStatus(@RequestBody() ToggleStatusRequest toggleStatusRequest)
+    public void toggleServerStatus(@RequestBody() ToggleStatusRequest toggleStatusRequest)
     {
-        return Mono.just(toggleStatusRequest)
-                .flatMap(request ->
-                {
-                    if (request.getRequestedStatus() == ServerStatus.Status.OFFLINE)
-                        return this.processService.stopServer();
-                    else
-                        return this.processService.startServer(toggleStatusRequest.isPerformUpdate());
-                })
-                .then();
+        if (toggleStatusRequest.getRequestedStatus() == ServerStatus.Status.OFFLINE)
+        {
+            this.processService.stopServer();
+        }
+        else
+        {
+            this.processService.startServer(toggleStatusRequest.isPerformUpdate());
+        }
     }
 
     @Data
@@ -56,10 +52,5 @@ public class StatusController
         boolean performUpdate;
     }
 
-    @Value
-    public static class StatusResponse
-    {
-        ServerStatus status;
-        List<ArmaServerPlayer> playerList;
-    }
+    public record StatusResponse(ServerStatus status, List<ArmaServerPlayer> playerList) { }
 }

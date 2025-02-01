@@ -186,7 +186,7 @@ public class SteamCmdHandler
         WorkshopModInstallSteamTask task = (WorkshopModInstallSteamTask) steamTask;
 
         WorkshopMod workshopMod = this.steamWebApiService.getWorkshopMod(task.getFileId());
-        InstalledModEntity installedModEntity = this.installedModRepository.findByWorkshopFileId(task.getFileId()).blockOptional().orElse(null);
+        InstalledModEntity installedModEntity = this.installedModRepository.findByWorkshopFileId(task.getFileId()).orElse(null);
 
         ModDirectory modDirectory = ModDirectory.from(buildModDirectoryPath(task.getTitle()));
         log.info("Prepared mod directory: {}", modDirectory.getPath());
@@ -291,7 +291,7 @@ public class SteamCmdHandler
 
     private void saveModInDatabase(long workshopFileId, String modName, ModDirectory modDirectory, WorkshopMod workshopMod)
     {
-        InstalledModEntity installedModEntity = this.installedModRepository.findByWorkshopFileId(workshopFileId).block();
+        InstalledModEntity installedModEntity = this.installedModRepository.findByWorkshopFileId(workshopFileId).orElse(null);
 
         InstalledModEntity.InstalledModEntityBuilder installedModBuilder;
         if (installedModEntity != null) // Update
@@ -320,7 +320,7 @@ public class SteamCmdHandler
                         .map(DotnetDateTimeUtils::dotnetTicksToOffsetDateTime)
                         .orElse(OffsetDateTime.now())));
 
-        installedModRepository.save(installedModBuilder.build()).subscribe();
+        installedModRepository.save(installedModBuilder.build());
         log.info("Mod: {} saved in DB", modName);
     }
 

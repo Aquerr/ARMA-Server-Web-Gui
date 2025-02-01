@@ -1,31 +1,45 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthority;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
-import reactor.core.publisher.Mono;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
-public class JwtReactiveAuthenticationManager implements ReactiveAuthenticationManager
+public class JwtAuthenticationManager implements AuthenticationManager
 {
     private final UserService userService;
     private final JwtService jwtService;
 
     @Override
-    public Mono<Authentication> authenticate(Authentication authentication)
+    public Authentication authenticate(Authentication authentication)
     {
-        return Mono.just(authentication)
-                .map(authentication1 -> jwtService.validateJwt(String.valueOf(authentication1.getCredentials())))
-                .onErrorResume(Exception.class, err -> Mono.error(new BadCredentialsException("Bad auth token!")))
-                .flatMap(jws -> userService.getUser(jws.getPayload().getSubject()))
-                .mapNotNull(this::toAuthentication);
+        try
+        {
+            return toAuthentication(AswgUser.builder()
+                    .username("test")
+                    .authorities(EnumSet.allOf(AswgAuthority.class))
+                    .build());
+//            Jws<Claims> jws = jwtService.validateJwt(String.valueOf(authentication.getCredentials()));
+//            return Optional.ofNullable(userService.getUser(jws.getPayload().getSubject()))
+//                    .map(this::toAuthentication)
+//                    .orElse(null);
+        }
+        catch (Exception exception)
+        {
+            throw new BadCredentialsException("Bad auth token!");
+        }
     }
 
     //TODO: Create custom Authentication implementation or store AswgUser in UsernamePasswordAuthenticationToken

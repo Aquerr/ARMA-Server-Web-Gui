@@ -13,7 +13,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.Server
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.ServerSecurityService;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.SaveServerSecurityRequest;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.ServerSecurityResponse;
-import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1/security")
@@ -24,18 +23,17 @@ public class ServerSecurityRestController
 
     @HasPermissionSecuritySettingsView
     @GetMapping
-    public Mono<ServerSecurityResponse> getServerSecurity()
+    public ServerSecurityResponse getServerSecurity()
     {
-        return Mono.just(this.serverSecurityService.getServerSecurity())
-                .map(this::toResponseModel);
+        return toResponseModel(this.serverSecurityService.getServerSecurity());
     }
 
     @HasPermissionSecuritySettingsSave
     @PostMapping
-    public Mono<ResponseEntity<?>> saveServerSecurity(@RequestBody SaveServerSecurityRequest saveServerSecurityRequest)
+    public ResponseEntity<?> saveServerSecurity(@RequestBody SaveServerSecurityRequest saveServerSecurityRequest)
     {
         this.serverSecurityService.saveServerSecurity(toDomainModel(saveServerSecurityRequest));
-        return Mono.just(ResponseEntity.ok().build());
+        return ResponseEntity.ok().build();
     }
 
     private ServerSecurityProperties toDomainModel(SaveServerSecurityRequest request)

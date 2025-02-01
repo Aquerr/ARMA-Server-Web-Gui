@@ -7,7 +7,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.converter.MissionConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
@@ -18,8 +18,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.Server
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionFileNameHelper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionFileStorage;
 import pl.bartlomiejstepien.armaserverwebgui.repository.MissionRepository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -62,27 +60,26 @@ class MissionServiceImplTest
         Mission mission = prepareMission(MISSION_NAME_1);
         mission.setEnabled(false);
         MissionEntity missionEntity = prepareMissionEntity(MISSION_NAME_1);
-        FilePart filePart = mock(FilePart.class);
-        given(filePart.filename()).willReturn(MISSION_NAME_1);
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        given(multipartFile.getOriginalFilename()).willReturn(MISSION_NAME_1);
         given(missionFileStorage.doesMissionExists(MISSION_NAME_1)).willReturn(false);
-        given(missionFileStorage.save(filePart)).willReturn(Mono.empty());
-        given(missionFileNameHelper.resolveMissionNameFromFilePart(filePart)).willReturn(MISSION_NAME_1);
+        given(missionFileNameHelper.resolveMissionNameFromFilePart(multipartFile)).willReturn(MISSION_NAME_1);
         given(missionConverter.convertToEntity(mission)).willReturn(missionEntity);
-        given(missionRepository.save(missionEntity)).willReturn(Mono.just(missionEntity));
+        given(missionRepository.save(missionEntity)).willReturn(missionEntity);
 
-        missionService.save(filePart).block();
+        missionService.save(multipartFile);
 
-        verify(missionFileStorage, times(1)).save(filePart);
+        verify(missionFileStorage, times(1)).save(multipartFile);
     }
 
     @Test
     void shouldThrowMissionFileAlreadyExistsExceptionWhenMissionFileExists()
     {
-        FilePart filePart = mock(FilePart.class);
-        given(filePart.filename()).willReturn(MISSION_NAME_1);
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        given(multipartFile.getOriginalFilename()).willReturn(MISSION_NAME_1);
         given(missionFileStorage.doesMissionExists(MISSION_NAME_1)).willReturn(true);
 
-        assertThrows(MissionFileAlreadyExistsException.class, () -> missionService.save(filePart));
+        assertThrows(MissionFileAlreadyExistsException.class, () -> missionService.save(multipartFile));
     }
 
     @Test
@@ -94,9 +91,7 @@ class MissionServiceImplTest
         Mission mission2 = prepareMission(MISSION_NAME_2);
         List<Mission> missions = List.of(mission1, mission2);
 
-        given(missionRepository.disableAll()).willReturn(Flux.empty());
-        given(missionRepository.updateAllByTemplateSetEnabled(List.of(MISSION_NAME_1, MISSION_NAME_2))).willReturn(Flux.empty());
-        given(missionRepository.findAll()).willReturn(Flux.just(missionEntity1, missionEntity2));
+        given(missionRepository.findAll()).willReturn(List.of(missionEntity1, missionEntity2));
         given(missionConverter.convertToDomainMission(missionEntity1)).willReturn(prepareMission(MISSION_NAME_1));
         given(missionConverter.convertToDomainMission(missionEntity2)).willReturn(prepareMission(MISSION_NAME_2));
         given(serverConfigStorage.getServerConfig()).willReturn(prepareArmaServerConfig(List.of(MISSION_NAME_1, MISSION_NAME_2)));
@@ -104,8 +99,10 @@ class MissionServiceImplTest
         given(missionConverter.convertToArmaMissionObject(mission2)).willReturn(prepareConfigMission(MISSION_NAME_2));
         given(serverConfigStorage.getServerConfig()).willReturn(prepareArmaServerConfig(List.of()));
 
-        missionService.saveEnabledMissionList(missions).block();
+        missionService.saveEnabledMissionList(missions);
 
+        verify(missionRepository).disableAll();
+        verify(missionRepository).updateAllByTemplateSetEnabled(List.of(MISSION_NAME_1, MISSION_NAME_2));
         verify(serverConfigStorage).saveServerConfig(armaServerConfigArgumentCaptor.capture());
         assertThat(armaServerConfigArgumentCaptor.getValue().getMissions())
                 .extracting(ArmaServerConfig.Missions.Mission::getTemplate)
@@ -122,11 +119,11 @@ class MissionServiceImplTest
         Mission mission1 = prepareMission(MISSION_NAME_1);
         Mission mission2 = prepareMission(MISSION_NAME_2);
         mission2.setEnabled(false);
-        given(missionRepository.findAll()).willReturn(Flux.just(missionEntity1, missionEntity2));
+        given(missionRepository.findAll()).willReturn(List.of(missionEntity1, missionEntity2));
         given(missionConverter.convertToDomainMission(missionEntity1)).willReturn(mission1);
         given(missionConverter.convertToDomainMission(missionEntity2)).willReturn(mission2);
 
-        Missions missions = missionService.getMissions().block();
+        Missions missions = missionService.getMissions();
 
         assertThat(missions.getDisabledMissions()).containsExactly(mission2);
         assertThat(missions.getEnabledMissions()).containsExactly(mission1);
@@ -136,11 +133,11 @@ class MissionServiceImplTest
     void shouldDeleteMission()
     {
         MissionEntity missionEntity1 = prepareMissionEntity(MISSION_NAME_2);
-        given(missionRepository.findByTemplate(MISSION_TEMPLATE_1)).willReturn(Flux.just(missionEntity1));
-        given(missionRepository.deleteByTemplate(MISSION_TEMPLATE_1)).willReturn(Mono.empty());
+        given(missionRepository.findByTemplate(MISSION_TEMPLATE_1)).willReturn(List.of(missionEntity1));
 
-        missionService.deleteMission(MISSION_TEMPLATE_1).block();
+        missionService.deleteMission(MISSION_TEMPLATE_1);
 
+        verify(missionRepository).deleteByTemplate(MISSION_TEMPLATE_1);
         verify(missionFileStorage, times(1)).deleteMission(MISSION_TEMPLATE_1);
     }
 

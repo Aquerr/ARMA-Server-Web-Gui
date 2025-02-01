@@ -1,71 +1,62 @@
 package pl.bartlomiejstepien.armaserverwebgui.repository;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
-import org.springframework.data.relational.core.query.Criteria;
-import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.AuthorityEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.UserAuthorityEntity;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class UserAuthorityRepository {
 
-    private final R2dbcEntityTemplate r2dbcEntityTemplate;
+    private final EntityManager entityManager;
 
-    public Mono<Void> deleteAll()
+    @Transactional
+    public void deleteAll()
     {
-        return r2dbcEntityTemplate.delete(UserAuthorityEntity.class)
-                .all()
-                .then();
+        entityManager.createQuery("DELETE FROM UserAuthorityEntity").executeUpdate();
     }
 
-    public Flux<AuthorityEntity> findUserAuthorities(int userId)
+    @Transactional
+    public Set<AuthorityEntity> findUserAuthorities(int userId)
     {
-        return r2dbcEntityTemplate.select(UserAuthorityEntity.class)
-                .matching(Query.query(Criteria.where("user_id").is(userId)))
-                .all()
-                .map(UserAuthorityEntity::getAuthorityId)
-                .collectList()
-                .flatMapMany(authorityIds -> this.r2dbcEntityTemplate
-                        .select(AuthorityEntity.class)
-                        .matching(Query.query(Criteria.where("id").in(authorityIds))).all());
+        return (Set<AuthorityEntity>) entityManager.createQuery("FROM AuthorityEntity authority WHERE authority.id " +
+                "IN (SELECT user_authority.authorityId FROM UserAuthorityEntity user_authority WHERE user_authority.userId = :userId)")
+                .setParameter("userId", userId)
+                .getResultList().stream()
+                .collect(Collectors.toSet());
     }
 
-    public Mono<Void> saveUserAuthorities(int userId, Set<String> authorities)
+    @Transactional
+    public void saveUserAuthorities(int userId, Set<String> authorities)
     {
-        return r2dbcEntityTemplate.select(AuthorityEntity.class)
-                .matching(Query.query(Criteria.where("code").in(authorities)))
-                .all()
-                .map(AuthorityEntity::getId)
-                .collectList()
-                .flatMap(authorityIds -> r2dbcEntityTemplate.delete(UserAuthorityEntity.class)
-                        .matching(Query.query(Criteria.where("user_id").is(userId)))
-                        .all()
-                        .then(Mono.just(authorityIds)))
-                .map(authorityIds -> authorityIds.stream()
-                        .map(authorityId -> UserAuthorityEntity.builder()
-                                .userId(userId)
-                                .authorityId(authorityId)
-                                .build())
-                        .toList())
-                .flatMapMany(Flux::fromIterable)
-                .flatMap(userAuthorityEntity -> r2dbcEntityTemplate.insert(UserAuthorityEntity.class)
-                        .using(userAuthorityEntity))
-                .collectList()
-                .then();
+        List<AuthorityEntity> authorityEntities = entityManager.createQuery("FROM AuthorityEntity authority_entity " +
+                "WHERE authority_entity.code IN (:authorities)")
+                .setParameter("authorities", authorities)
+                .getResultList();
+
+        deleteByUserId(userId);
+
+        for (AuthorityEntity authorityEntity : authorityEntities)
+        {
+            entityManager.persist(UserAuthorityEntity.builder()
+                    .userId(userId)
+                    .authorityId(authorityEntity.getId())
+                    .build());
+        }
     }
 
-    public Mono<Void> deleteByUserId(int userId)
+    @Transactional
+    public void deleteByUserId(int userId)
     {
-        return r2dbcEntityTemplate.delete(UserAuthorityEntity.class)
-                .matching(Query.query(Criteria.where("user_id").is(userId)))
-                .all()
-                .then();
+        entityManager.createQuery("DELETE FROM UserAuthorityEntity user_authority_entity WHERE user_authority_entity.userId = :userId")
+                .setParameter("userId", userId)
+                .executeUpdate();
     }
 }

@@ -14,12 +14,9 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopMod
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetEntryRepository;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetRepository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,135 +32,134 @@ public class ModPresetServiceImpl implements ModPresetService
     private final ModPresetEntryRepository modPresetEntryRepository;
 
     @Override
-    public Flux<String> getModPresetsNames()
+    public List<String> getModPresetsNames()
     {
-        return this.modPresetRepository.findAll()
-                .map(ModPresetEntity::getName);
+        return this.modPresetRepository.findAll().stream()
+                .map(ModPresetEntity::getName)
+                .toList();
     }
 
     @Override
-    public Flux<ModPreset> getModPresets()
+    public List<ModPreset> getModPresets()
     {
-        return Flux.zip(
-                modPresetRepository.findAll(),
-                modPresetEntryRepository.findAll().collectList()
-        ).map(this::mapToModPresets);
+        List<ModPresetEntity.EntryEntity> modPresetEntities = modPresetEntryRepository.findAll();
+        return modPresetRepository.findAll().stream()
+                .map(entity -> mapToModPreset(entity, modPresetEntities))
+                .toList();
     }
 
-    private ModPreset mapToModPresets(Tuple2<ModPresetEntity, List<ModPresetEntity.EntryEntity>> tuple)
+    private ModPreset mapToModPreset(ModPresetEntity entity, List<ModPresetEntity.EntryEntity> entryEntities)
     {
-        List<ModPresetEntity.EntryEntity> entries = tuple.getT2().stream()
-                .filter(entryEntity -> entryEntity.getModPresetId().equals(tuple.getT1().getId()))
+        List<ModPresetEntity.EntryEntity> entries = entryEntities.stream()
+                .filter(entryEntity -> entryEntity.getModPresetId().equals(entity.getId()))
                 .toList();
 
-        return this.modPresetConverter.convert(tuple.getT1(), entries);
+        return this.modPresetConverter.convert(entity, entries);
     }
 
-    private Mono<Void> saveModPreset(ModPreset modPreset)
+    private void saveModPreset(ModPreset modPreset)
     {
-        return Mono.fromCallable(() -> this.modPresetConverter.convert(modPreset))
-                .flatMap(this.modPresetRepository::save)
-                .thenMany(Flux.fromIterable(this.modPresetConverter.convertToEntities(modPreset.getEntries())))
-                .flatMap(this.modPresetEntryRepository::save)
-                .then();
+        ModPresetEntity modPresetEntity = this.modPresetConverter.convert(modPreset);
+        this.modPresetRepository.save(modPresetEntity);
+        List<ModPresetEntity.EntryEntity> entryEntities = this.modPresetConverter.convertToEntities(modPreset.getEntries());
+        this.modPresetEntryRepository.saveAll(entryEntities);
     }
 
     @Override
-    public Mono<Void> saveModPreset(ModPresetSaveParams modPresetSaveParams)
+    public void saveModPreset(ModPresetSaveParams modPresetSaveParams)
     {
-        return this.getModPreset(modPresetSaveParams.getName())
-                .defaultIfEmpty(ModPreset.builder().name(modPresetSaveParams.getName()).build())
-                .flatMap(this::clearModPresetEntries)
-                .flatMap(modPreset -> this.modService.getInstalledMods()
-                        .filter(installedMod -> modPresetSaveParams.getModNames().contains(installedMod.getName()))
-                        .map(installedMod -> ModPreset.Entry.builder()
-                                .modId(installedMod.getWorkshopFileId())
-                                .name(installedMod.getName())
-                                .modPresetId(modPreset.getId())
-                                .build())
-                        .collectList()
-                        .map(entries -> ModPreset.builder()
-                                .id(modPreset.getId())
-                                .name(modPreset.getName())
-                                .entries(entries)
-                                .build()))
-                .doOnNext(modPreset -> log.info("Saving mod preset: {}", modPreset))
-                .flatMap(this::saveModPreset)
-                .then();
+        ModPreset modPreset = Optional.ofNullable(getModPreset(modPresetSaveParams.getName()))
+                .orElse(ModPreset.builder().name(modPresetSaveParams.getName()).build());
+
+        clearModPresetEntries(modPreset);
+        List<ModPreset.Entry> modPresetEntries = this.modService.getInstalledMods().stream()
+                .filter(installedMod -> modPresetSaveParams.getModNames().contains(installedMod.getName()))
+                .map(installedMod -> ModPreset.Entry.builder()
+                        .modId(installedMod.getWorkshopFileId())
+                        .name(installedMod.getName())
+                        .modPresetId(modPreset.getId())
+                        .build())
+                .toList();
+
+        ModPreset modPresetToSave = ModPreset.builder()
+                        .id(modPreset.getId())
+                        .name(modPreset.getName())
+                        .entries(modPresetEntries)
+                        .build();
+
+        log.info("Saving mod preset: {}", modPresetToSave);
+        saveModPreset(modPresetToSave);
     }
 
-    private Mono<ModPreset> clearModPresetEntries(ModPreset modPreset)
+    private void clearModPresetEntries(ModPreset modPreset)
     {
-        return this.modPresetEntryRepository.findAllByModPresetId(modPreset.getId())
-                .map(this.modPresetEntryRepository::delete)
-                .then(Mono.just(modPreset));
-    }
-
-    @Override
-    public Mono<ModPreset> getModPreset(Long id)
-    {
-        return Mono.zip(
-                modPresetRepository.findById(id),
-                modPresetEntryRepository.findAllByModPresetId(id).collectList()
-        ).map(this::mapToModPresets);
+        this.modPresetEntryRepository.deleteAll(this.modPresetEntryRepository.findAllByModPresetId(modPreset.getId()));
     }
 
     @Override
-    public Mono<ModPreset> getModPreset(String name)
+    public ModPreset getModPreset(Long id)
+    {
+        ModPresetEntity modPresetEntity = modPresetRepository.findById(id).orElse(null);
+        if (modPresetEntity == null)
+            throw new PresetDoesNotExistException();
+
+        return mapToModPreset(modPresetEntity, modPresetEntryRepository.findAllByModPresetId(id));
+    }
+
+    @Override
+    public ModPreset getModPreset(String name)
     {
         return modPresetRepository.findByName(name)
-                .flatMap(modPresetEntity -> Mono.zip(
-                        Mono.just(modPresetEntity),
-                        modPresetEntryRepository.findAllByModPresetId(modPresetEntity.getId()).collectList()
-                ))
-                .map(this::mapToModPresets);
+                .map(entity -> mapToModPreset(entity, modPresetEntryRepository.findAllByModPresetId(entity.getId())))
+                .orElse(null);
     }
 
     @Override
-    public Mono<Void> importPreset(PresetImportParams params)
+    public void importPreset(PresetImportParams params)
     {
-        return this.modPresetRepository.findByName(params.getName())
-                .defaultIfEmpty(new ModPresetEntity(null, params.getName()))
-                .flatMap(this.modPresetRepository::save)
-                .flatMap(modPresetEntity -> this.modPresetEntryRepository.findAllByModPresetId(modPresetEntity.getId())
-                        .map(this.modPresetEntryRepository::delete)
-                        .then(Mono.just(this.modPresetConverter.convertToEntities(params.getModParams().stream()
-                                        .map(modParam -> ModPreset.Entry.builder()
-                                                .id(null)
-                                                .name(modParam.getTitle())
-                                                .modId(modParam.getId())
-                                                .modPresetId(modPresetEntity.getId())
-                                                .build()).toList())))
-                        .doOnNext(entryEntities -> log.info("Saving mod preset entities {}", Arrays.toString(entryEntities.toArray())))
-                        .map(this.modPresetEntryRepository::saveAll))
-                .flatMap(Flux::collectList)
-                .flatMapMany(entries -> Flux.fromIterable(entries.stream().map(entry -> new WorkshopModInstallationRequest(entry.getModId(), entry.getName())).toList()))
-                .map(request -> {
-                    this.steamService.scheduleWorkshopModDownload(request.getFileId(), request.getTitle(), false);
-                    return request;
-                })
-                .doOnError(throwable -> log.error("Error: {}", throwable))
-                .then();
+        log.info("Importing preset: {}", params);
+        ModPresetEntity modPresetEntity = this.modPresetRepository.findByName(params.getName()).orElse(null);
+        if (modPresetEntity == null)
+            modPresetEntity = new ModPresetEntity(null, params.getName());
+
+        modPresetRepository.save(modPresetEntity);
+        if (modPresetEntity.getId() != null)
+        {
+            modPresetEntryRepository.deleteAll(modPresetEntryRepository.findAllByModPresetId(modPresetEntity.getId()));
+        }
+
+        ModPresetEntity finalModPresetEntity = modPresetEntity;
+        List<ModPresetEntity.EntryEntity> entryEntities = modPresetEntryRepository.saveAll(modPresetConverter.convertToEntities(params.getModParams().stream()
+                .map(modParam -> ModPreset.Entry.builder()
+                        .id(null)
+                        .name(modParam.getTitle())
+                        .modId(modParam.getId())
+                        .modPresetId(finalModPresetEntity.getId())
+                        .build())
+                .toList()));
+
+        entryEntities.stream()
+                .map(entry -> new WorkshopModInstallationRequest(entry.getModId(), entry.getName()))
+                .forEach(request -> steamService.scheduleWorkshopModDownload(request.getFileId(), request.getTitle(), false));
     }
 
     @Override
-    public Mono<Void> selectPreset(String name)
+    public void selectPreset(String name)
     {
-        return getModPreset(name)
-                .flatMap(modPreset -> this.modService.saveEnabledModList(convertToModViews(modPreset.getEntries())));
+        this.modService.saveEnabledModList(convertToModViews(getModPreset(name).getEntries()));
     }
 
     @Override
-    public Mono<Void> deletePreset(String presetName)
+    public void deletePreset(String presetName)
     {
-        return this.modPresetRepository.findByName(presetName)
-                .switchIfEmpty(Mono.error(new PresetDoesNotExistException()))
-                .flatMapMany(modPresetEntity -> this.modPresetEntryRepository.findAllByModPresetId(modPresetEntity.getId()))
-                .flatMap(this.modPresetEntryRepository::delete)
-                .then(this.modPresetRepository.findByName(presetName))
-                .switchIfEmpty(Mono.error(new PresetDoesNotExistException()))
-                .doOnNext(modPresetEntity -> log.info("Deleting mod preset: {}", modPresetEntity))
-                .flatMap(this.modPresetRepository::delete);
+        ModPresetEntity modPresetEntity = this.modPresetRepository.findByName(presetName)
+                .orElse(null);
+        if (modPresetEntity == null)
+            throw new PresetDoesNotExistException();
+
+        log.info("Deleting mod preset: {}", presetName);
+        this.modPresetEntryRepository.deleteAll(this.modPresetEntryRepository.findAllByModPresetId(modPresetEntity.getId()));
+        this.modPresetRepository.delete(modPresetEntity);
     }
 
     private Set<EnabledMod> convertToModViews(List<ModPreset.Entry> entries)

@@ -7,7 +7,6 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModPresetsAdd;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModPresetsDelete;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModPresetsSelect;
@@ -34,8 +34,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModPreset;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.PresetImportParams;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSaveParams;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.ModFileValidator;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -54,82 +52,84 @@ public class ModsRestController
 
     @HasPermissionModsView
     @GetMapping
-    public Mono<GetModsResponse> getMods()
+    public GetModsResponse getMods()
     {
-        return this.modService.getModsView().map(GetModsResponse::of);
+        return GetModsResponse.of(this.modService.getModsView());
     }
 
     @HasPermissionModsUpdate
     @PostMapping("/enabled")
-    public Mono<ResponseEntity<?>> saveEnabledModsList(@RequestBody SaveEnabledModsListRequest request)
+    public ResponseEntity<?> saveEnabledModsList(@RequestBody SaveEnabledModsListRequest request)
     {
-        return this.modService.saveEnabledModList(request.getMods())
-                .then(Mono.just(ResponseEntity.ok().build()));
+        this.modService.saveEnabledModList(request.getMods());
+        return ResponseEntity.ok().build();
     }
 
     @HasPermissionModsUpload
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Mono<ResponseEntity<?>> uploadModFile(@RequestPart("file") Flux<FilePart> multipartFile)
+    public ResponseEntity<?> uploadModFile(@RequestPart("file") List<MultipartFile> multipartFiles)
     {
-        return multipartFile
-                .doOnNext(modFileValidator::validate)
-                .doOnNext(filePart -> log.info("Uploading mod '{}' ", filePart.filename()))
-                .flatMap(modService::saveModFile)
-                .then(Mono.just(ResponseEntity.ok().build()));
+        for (MultipartFile multipartFile : multipartFiles)
+        {
+            modFileValidator.validate(multipartFile);
+            log.info("Uploading mod '{}' ", multipartFile.getOriginalFilename());
+            modService.saveModFile(multipartFile);
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     @HasPermissionModsDelete
     @DeleteMapping(value = "/{modName}")
-    public Mono<ResponseEntity<Object>> deleteMod(@PathVariable("modName") String modName)
+    public ResponseEntity<?> deleteMod(@PathVariable("modName") String modName)
     {
-        return this.modService.deleteMod(modName)
-                .thenReturn(ResponseEntity.ok().build())
-                .onErrorReturn(ResponseEntity.internalServerError().build());
+        this.modService.deleteMod(modName);
+        return ResponseEntity.ok().build();
     }
 
     @HasPermissionModPresetsView
     @GetMapping("/presets-names")
-    public Mono<ModPresetNamesResponse> getModPresetsNames()
+    public ModPresetNamesResponse getModPresetsNames()
     {
-        return this.modPresetService.getModPresetsNames().collectList().map(ModPresetNamesResponse::of);
+        return ModPresetNamesResponse.of(this.modPresetService.getModPresetsNames());
     }
 
     @HasPermissionModPresetsView
     @GetMapping("/presets/{id}")
-    public Mono<ModPreset> getModPreset(@PathVariable("id") Long id)
+    public ModPreset getModPreset(@PathVariable("id") Long id)
     {
         return this.modPresetService.getModPreset(id);
     }
 
     @HasPermissionModPresetsAdd
     @PutMapping("/presets/{name}")
-    public Mono<PresetSaveResponse> savePreset(@PathVariable("name") String name, @RequestBody PresetSaveRequest request)
+    public PresetSaveResponse savePreset(@PathVariable("name") String name, @RequestBody PresetSaveRequest request)
     {
-        return this.modPresetService.saveModPreset(ModPresetSaveParams.of(name, request.modNames))
-                .then(Mono.just(new PresetSaveResponse(true)));
+        this.modPresetService.saveModPreset(ModPresetSaveParams.of(name, request.getModNames()));
+        return new PresetSaveResponse(true);
     }
 
     @HasPermissionModPresetsDelete
     @DeleteMapping("/presets/{name}")
-    public Mono<PresetDeleteResponse> deletePreset(@PathVariable("name") String presetName)
+    public PresetDeleteResponse deletePreset(@PathVariable("name") String presetName)
     {
-        return this.modPresetService.deletePreset(presetName)
-                .thenReturn(new PresetDeleteResponse(true));
+        this.modPresetService.deletePreset(presetName);
+        return new PresetDeleteResponse(true);
     }
 
     @HasPermissionModPresetsAdd
     @PostMapping("/presets/import")
-    public Mono<Void> importPreset(@RequestBody PresetImportRequest request)
+    public void importPreset(@RequestBody PresetImportRequest request)
     {
-        return this.modPresetService.importPreset(PresetImportParams.of(request.getName(), request.getModParams().stream()
+        this.modPresetService.importPreset(PresetImportParams.of(request.getName(), request.getModParams().stream()
                 .map(param -> PresetImportParams.ModParam.of(param.getTitle(), param.getId())).toList()));
     }
 
     @HasPermissionModPresetsSelect
     @PostMapping("/presets/select")
-    public Mono<Void> selectPreset(@RequestBody PresetSelectRequest request)
+    public void selectPreset(@RequestBody PresetSelectRequest request)
     {
-        return this.modPresetService.selectPreset(request.getName());
+        this.modPresetService.selectPreset(request.getName());
     }
 
     @Value(staticConstructor = "of")

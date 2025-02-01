@@ -9,15 +9,11 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.InstalledModEntit
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import static java.lang.String.format;
 
 @Component
 @AllArgsConstructor
@@ -45,52 +41,48 @@ public class InstallDeleteModsFromFilesystemJob
 
     private void saveOrDeleteModsFromDB(List<InstalledFileSystemMod> installedFileSystemMods)
     {
-        modService.getInstalledMods()
-                .collectList()
-                .flatMapMany(installedModsInDB -> Flux.concat(deleteOldMods(installedModsInDB, installedFileSystemMods),
-                        installNewMods(installedModsInDB, installedFileSystemMods)))
-                .subscribe();
+        List<InstalledModEntity> installedModsInDB = modService.getInstalledMods();
+        deleteOldMods(installedModsInDB, installedFileSystemMods);
+        installNewMods(installedModsInDB, installedFileSystemMods);
     }
 
-    private Flux<Void> deleteOldMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
+    private void deleteOldMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
     {
         if (!aswgConfig.isModsScannerDeletionEnabled())
         {
             log.info("File scanner deletion job is disabled. Skipping...");
-            return Flux.empty();
+            return;
         }
 
         List<InstalledModEntity> modsToDeleteInDB = findModsToDeleteFromDB(installedModsInDB, installedFileSystemMods);
         log.info("Mods to delete: {}", Arrays.toString(modsToDeleteInDB.toArray()));
-        return Flux.fromIterable(modsToDeleteInDB)
-                .flatMapSequential(mod -> modService.deleteFromDB(mod.getId()));
+        modsToDeleteInDB.stream()
+                .map(InstalledModEntity::getId)
+                .forEach(modService::deleteFromDB);
     }
 
-    private Flux<Void> installNewMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
+    private void installNewMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
     {
         if (!aswgConfig.isModsScannerInstallationEnabled())
         {
             log.info("File scanner installation job is disabled. Skipping...");
-            return Flux.empty();
+            return;
         }
 
         List<InstalledModEntity> modsToAddToDB = findModsToAddToDB(installedModsInDB, installedFileSystemMods);
         log.info("Mods to add: {}", Arrays.toString(modsToAddToDB.toArray()));
-        return Flux.fromIterable(modsToAddToDB)
-                .flatMapSequential(this::saveToDB);
+        modsToAddToDB.forEach(this::saveToDB);
     }
 
-    private Mono<Void> saveToDB(InstalledModEntity mod)
+    private void saveToDB(InstalledModEntity mod)
     {
         try
         {
-            return modService.saveToDB(mod)
-                    .doOnError(exception -> log.warn(format("Could not add mod to DB. Mod = %s", mod.toString()), exception))
-                    .then();
+            modService.saveToDB(mod);
         }
         catch (Exception exception)
         {
-            return Mono.empty();
+            log.warn("Could not add mod to DB. Mod = {}", mod.toString(), exception);
         }
     }
 
@@ -99,7 +91,6 @@ public class InstallDeleteModsFromFilesystemJob
         return installedFileSystemMods.stream()
                 .filter(InstalledFileSystemMod::isValid)
                 .filter(installedMod -> databaseMods.stream().noneMatch(databaseMod -> databaseMod.getWorkshopFileId() == installedMod.getWorkshopFileId()))
-                .peek(mod -> log.info("Found new file system mod: {}", mod))
                 .map(this::toEntity)
                 .filter(Objects::nonNull)
                 .toList();
@@ -120,7 +111,6 @@ public class InstallDeleteModsFromFilesystemJob
     {
         return databaseMods.stream()
                 .filter(installedDatabaseMod -> installedFileSystemMods.stream().noneMatch(fileSystemMod -> fileSystemMod.getWorkshopFileId() == installedDatabaseMod.getWorkshopFileId()))
-                .peek(mod -> log.info("Found mod to delete: {}", mod))
                 .toList();
     }
 }

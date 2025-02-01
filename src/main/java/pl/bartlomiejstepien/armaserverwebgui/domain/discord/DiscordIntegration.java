@@ -2,9 +2,9 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.discord;
 
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.DiscordMessageCreator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
-import reactor.core.publisher.Mono;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class DiscordIntegration
 {
@@ -18,9 +18,10 @@ public class DiscordIntegration
         this.discordMessageCreators = discordMessageCreators;
     }
 
-    public Mono<Void> sendMessage(MessageKind messageKind)
+    public void sendMessage(MessageKind messageKind)
     {
-        return this.discordMessageCreators.get(messageKind).create()
-                .flatMap(this.discordWebhookHandler::sendMessage);
+        Optional.ofNullable(this.discordMessageCreators.get(messageKind))
+                .map(DiscordMessageCreator::create)
+                .ifPresent(this.discordWebhookHandler::sendMessage);
     }
 }

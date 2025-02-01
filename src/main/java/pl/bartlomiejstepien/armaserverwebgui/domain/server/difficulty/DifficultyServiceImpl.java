@@ -14,19 +14,15 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
 import pl.bartlomiejstepien.armaserverwebgui.repository.DifficultyProfileRepository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgValueHelper.toInt;
 
@@ -61,11 +57,11 @@ public class DifficultyServiceImpl implements DifficultyService
     @EventListener(ApplicationReadyEvent.class)
     public void postSetup()
     {
-        if (Long.valueOf(0).equals(this.difficultyProfileRepository.count().block())
-                && this.difficultyProfileRepository.findByName(DEFAULT_PROFILE_NAME).block() == null) {
+        if (Long.valueOf(0).equals(this.difficultyProfileRepository.count())
+                && this.difficultyProfileRepository.findByName(DEFAULT_PROFILE_NAME) == null) {
             log.info("Default profile {} not found. Creating one...", DEFAULT_PROFILE_NAME);
             DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, DEFAULT_PROFILE_NAME, true);
-            this.difficultyProfileRepository.save(difficultyProfileEntity).subscribe();
+            this.difficultyProfileRepository.save(difficultyProfileEntity);
             saveToFile(map(new DifficultyConfig(), difficultyProfileEntity));
         }
     }
@@ -78,51 +74,49 @@ public class DifficultyServiceImpl implements DifficultyService
             log.info("Difficulty scanner is disabled. Skipping...");
         }
 
-        scanDifficultyProfilesDirectoryForNewProfiles()
-                .subscribeOn(Schedulers.boundedElastic())
-                .subscribe();
+        scanDifficultyProfilesDirectoryForNewProfiles();
     }
 
-    private Mono<Void> scanDifficultyProfilesDirectoryForNewProfiles()
+    private void scanDifficultyProfilesDirectoryForNewProfiles()
     {
-        return Mono.just(resolveDifficultyDirectoryPath())
-                .filter(Files::exists)
-                .mapNotNull(path -> path.toFile().list())
-                .filter(Objects::nonNull)
-                .mapNotNull(fileNames -> Stream.of(fileNames).toList())
-                .zipWith(difficultyProfileRepository.findAll().collectList(), (profileFileNames, difficultyProfileEntities) -> {
-                    List<String> existingProfileNames = difficultyProfileEntities.stream()
-                            .map(DifficultyProfileEntity::getName)
-                            .toList();
+        Path difficultiesDirectoryPath = resolveDifficultyDirectoryPath();
+        if (!Files.exists(difficultiesDirectoryPath))
+            return;
 
-                    return profileFileNames.stream()
-                            .filter(profileFileName -> !existingProfileNames.contains(profileFileName))
-                            .collect(Collectors.toSet());
-                })
-                .flatMapMany(Flux::fromIterable)
-                .map(profileName -> {
-                    DifficultyConfig difficultyConfig = readDifficultyFile(profileName);
-                    DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, profileName, true);
-                    this.difficultyProfileRepository.save(difficultyProfileEntity).subscribe();
-                    saveToFile(map(difficultyConfig, difficultyProfileEntity));
-                    return profileName;
-                })
-                .then();
+        List<String> fileNames = Arrays.stream(difficultiesDirectoryPath.toFile().list())
+                .filter(Objects::nonNull)
+                .toList();
+
+        List<String> existingProfileNames = difficultyProfileRepository.findAll().stream()
+                .map(DifficultyProfileEntity::getName)
+                .toList();
+        List<String> newDifficultyProfiles = fileNames.stream()
+                .filter(name -> !existingProfileNames.contains(name))
+                .toList();
+
+        for (String name : newDifficultyProfiles)
+        {
+            DifficultyConfig difficultyConfig = readDifficultyFile(name);
+            DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, name, true);
+            this.difficultyProfileRepository.save(difficultyProfileEntity);
+            saveToFile(map(difficultyConfig, difficultyProfileEntity));
+        }
     }
 
     @Override
-    public Mono<String> getActiveDifficultyProfile()
+    public String getActiveDifficultyProfile()
     {
         return difficultyProfileRepository.findFirstByActiveTrue()
-                .mapNotNull(DifficultyProfileEntity::getName)
-                .switchIfEmpty(Mono.just(DEFAULT_PROFILE_NAME));
+                .map(DifficultyProfileEntity::getName)
+                .orElse(DEFAULT_PROFILE_NAME);
     }
 
     @Override
-    public Flux<DifficultyProfile> getDifficultyProfiles()
+    public List<DifficultyProfile> getDifficultyProfiles()
     {
-        return difficultyProfileRepository.findAll()
-                .map(this::mapToDifficultyProfile);
+        return difficultyProfileRepository.findAll().stream()
+                .map(this::mapToDifficultyProfile)
+                .toList();
     }
 
     private DifficultyProfile mapToDifficultyProfile(DifficultyProfileEntity difficultyProfileEntity)
@@ -132,50 +126,46 @@ public class DifficultyServiceImpl implements DifficultyService
     }
 
     @Override
-    public Mono<DifficultyProfileEntity> saveDifficultyProfile(DifficultyProfile difficultyProfile)
+    public DifficultyProfileEntity saveDifficultyProfile(DifficultyProfile difficultyProfile)
     {
-        return Mono.justOrEmpty(difficultyProfile.getId())
-                .flatMap(difficultyProfileRepository::findById)
-                .mapNotNull(profile -> {
-                    if (!profile.getName().equals(difficultyProfile.getName())) {
-                        deleteFile(profile.getName());
-                    }
-                    return profile;
-                })
-                .switchIfEmpty(difficultyProfileRepository.findByName(difficultyProfile.getName()))
-                .switchIfEmpty(Mono.just(new DifficultyProfileEntity()))
-                .map(difficultyProfileEntity -> {
-                    difficultyProfileEntity.setName(difficultyProfile.getName());
-                    difficultyProfileEntity.setActive(difficultyProfile.isActive());
-                    return difficultyProfileEntity;
-                })
-                .map(profile -> {
-                    saveToFile(difficultyProfile);
-                    return profile;
-                })
-                .flatMap(difficultyProfileRepository::save);
+        DifficultyProfileEntity entity = difficultyProfileRepository.findById(difficultyProfile.getId()).orElse(null);
+        if (entity != null && !entity.getName().equals(difficultyProfile.getName()))
+        {
+                deleteFile(entity.getName());
+        }
+
+        entity = difficultyProfileRepository.findByName(difficultyProfile.getName()).orElse(null);
+        if (entity == null)
+        {
+            entity = new DifficultyProfileEntity();
+        }
+        entity.setName(difficultyProfile.getName());
+        entity.setActive(difficultyProfile.isActive());
+
+        saveToFile(difficultyProfile);
+        return difficultyProfileRepository.save(entity);
     }
 
     @Override
-    public Mono<Void> deleteDifficultyProfile(int id)
+    public void deleteDifficultyProfile(int id)
     {
-        return difficultyProfileRepository.findById(id)
+        difficultyProfileRepository.findById(id)
                 .map(difficultyProfileEntity -> {
                     deleteFile(difficultyProfileEntity.getName());
                     return difficultyProfileEntity;
                 })
-                .flatMap(difficultyProfileRepository::delete);
+                .ifPresent(difficultyProfileRepository::delete);
     }
 
     @Override
-    public Mono<Void> deleteDifficultyProfile(String name)
+    public void deleteDifficultyProfile(String name)
     {
-        return difficultyProfileRepository.findByName(name)
+        difficultyProfileRepository.findByName(name)
                 .map(difficultyProfileEntity -> {
                     deleteFile(name);
                     return difficultyProfileEntity;
                 })
-                .flatMap(difficultyProfileRepository::delete);
+                .ifPresent(difficultyProfileRepository::delete);
     }
 
     private void deleteFile(String difficultyName)

@@ -8,8 +8,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.config.WebFluxConfigurer;
-import org.springframework.web.server.WebFilter;
 import org.zalando.logbook.BodyFilter;
 import org.zalando.logbook.ContentType;
 import org.zalando.logbook.Logbook;
@@ -19,7 +17,8 @@ import org.zalando.logbook.core.DefaultSink;
 import org.zalando.logbook.core.ResponseFilters;
 import org.zalando.logbook.json.FastJsonHttpLogFormatter;
 import org.zalando.logbook.json.JsonBodyFilters;
-import org.zalando.logbook.spring.webflux.LogbookWebFilter;
+import org.zalando.logbook.servlet.LogbookFilter;
+import org.zalando.logbook.servlet.SecureLogbookFilter;
 
 import javax.annotation.Nullable;
 import java.util.Set;
@@ -29,20 +28,26 @@ import static org.zalando.logbook.core.Conditions.exclude;
 import static org.zalando.logbook.core.Conditions.requestTo;
 
 @Configuration(proxyBeanMethods = false)
-public class LogbookConfig implements WebFluxConfigurer
+public class LogbookConfig
 {
     private static final String[] IGNORED_FILE_CONTENT = new String[]{"text/html", "text/css", "text/javascript", "application/javascript", "image/*"};
 
     @Bean
-    public WebFilter logbookFilter(Logbook logbook)
+    public LogbookFilter logbookFilter(Logbook logbook)
     {
-        return new LogbookWebFilter(logbook);
+        return new LogbookFilter(logbook);
+    }
+
+    @Bean
+    public SecureLogbookFilter secureLogbookFilter(Logbook logbook)
+    {
+        return new SecureLogbookFilter(logbook);
     }
 
     @Bean
     public Logbook logbook(ObjectMapper objectMapper)
     {
-        Logbook logbook = Logbook.builder()
+        return Logbook.builder()
                 .responseFilter(ResponseFilters.replaceBody(response -> contentType("text/html", IGNORED_FILE_CONTENT).test(response) ? "<skipped>" : null))
                 .bodyFilter(JsonBodyFilters.replaceJsonStringProperty(Set.of("password"), "XXX"))
                 .condition(exclude(
@@ -57,7 +62,6 @@ public class LogbookConfig implements WebFluxConfigurer
                         new DefaultHttpLogWriter()
                 ))
                 .build();
-        return logbook;
     }
 
     @AllArgsConstructor

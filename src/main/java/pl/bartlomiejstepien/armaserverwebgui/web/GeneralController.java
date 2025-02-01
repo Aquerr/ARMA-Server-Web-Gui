@@ -13,11 +13,8 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.GeneralService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ArmaServerParametersGenerator;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.SaveGeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.GeneralPropertiesResponse;
-import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple5;
 
 @RestController
 @RequestMapping("/api/v1/general")
@@ -30,44 +27,36 @@ public class GeneralController
 
     @HasPermissionGeneralSettingsView
     @GetMapping("/properties")
-    public Mono<GeneralPropertiesResponse> getGeneralProperties()
+    public GeneralPropertiesResponse getGeneralProperties()
     {
-        return Mono.zip(
-                Mono.justOrEmpty(aswgConfig.getServerDirectoryPath()),
-                Mono.justOrEmpty(aswgConfig.getModsDirectoryPath()),
-                Mono.justOrEmpty(aswgConfig.getServerPort()),
+        return GeneralPropertiesResponse.of(
+                this.aswgConfig.getServerDirectoryPath(),
+                this.aswgConfig.getModsDirectoryPath(),
+                this.aswgConfig.getServerPort(),
                 armaServerParametersGenerator.generateParameters(),
-                Mono.just(generalService.getGeneralProperties())
-        ).map(this::mapToResponse);
+                this.generalService.getGeneralProperties()
+        );
     }
 
     @HasPermissionGeneralSettingsSave
     @PostMapping("/properties")
-    public Mono<ResponseEntity<Void>> saveGeneralProperties(@RequestBody SaveGeneralProperties saveGeneralProperties)
+    public ResponseEntity<?> saveGeneralProperties(@RequestBody SaveGeneralProperties saveGeneralProperties)
     {
-        return Mono.just(saveGeneralProperties)
-                .map(properties -> {
-                    this.aswgConfig.setServerDirectoryPath(properties.getServerDirectory());
-                    this.aswgConfig.setModsDirectoryPath(properties.getModsDirectory());
-                    this.aswgConfig.setServerPort(properties.getPort());
-                    this.generalService.saveGeneralProperties(GeneralProperties.builder()
-                            .hostname(properties.getHostname())
-                            .maxPlayers(properties.getMaxPlayers())
-                            .motd(properties.getMotd())
-                            .motdInterval(properties.getMotdInterval())
-                            .persistent(properties.isPersistent())
-                            .drawingInMap(properties.isDrawingInMap())
-                            .headlessClients(properties.getHeadlessClients())
-                            .localClients(properties.getLocalClients())
-                            .build());
-                    return Mono.empty();
-                })
-                .then(Mono.fromRunnable(this.aswgConfig::saveToFile))
-                .then(Mono.just(ResponseEntity.ok().build()));
-    }
+        this.aswgConfig.setServerDirectoryPath(saveGeneralProperties.getServerDirectory());
+        this.aswgConfig.setModsDirectoryPath(saveGeneralProperties.getModsDirectory());
+        this.aswgConfig.setServerPort(saveGeneralProperties.getPort());
+        this.generalService.saveGeneralProperties(GeneralProperties.builder()
+                .hostname(saveGeneralProperties.getHostname())
+                .maxPlayers(saveGeneralProperties.getMaxPlayers())
+                .motd(saveGeneralProperties.getMotd())
+                .motdInterval(saveGeneralProperties.getMotdInterval())
+                .persistent(saveGeneralProperties.isPersistent())
+                .drawingInMap(saveGeneralProperties.isDrawingInMap())
+                .headlessClients(saveGeneralProperties.getHeadlessClients())
+                .localClients(saveGeneralProperties.getLocalClients())
+                .build());
 
-    private GeneralPropertiesResponse mapToResponse(Tuple5<String, String, Integer, ArmaServerParameters, GeneralProperties> tuple)
-    {
-        return GeneralPropertiesResponse.of(tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4(), tuple.getT5());
+        this.aswgConfig.saveToFile();
+        return ResponseEntity.ok().build();
     }
 }

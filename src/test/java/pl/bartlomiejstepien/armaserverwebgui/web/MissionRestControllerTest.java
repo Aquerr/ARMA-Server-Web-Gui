@@ -3,12 +3,20 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.util.MultiValueMap;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
 import pl.bartlomiejstepien.armaserverwebgui.repository.MissionRepository;
 
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pl.bartlomiejstepien.armaserverwebgui.TestUtils.loadJsonIntegrationContractFor;
 
 class MissionRestControllerTest extends BaseIntegrationTest
@@ -19,48 +27,74 @@ class MissionRestControllerTest extends BaseIntegrationTest
     @BeforeEach
     public void setUp()
     {
-        missionRepository.deleteAll().subscribe();
+        missionRepository.deleteAll();
     }
 
     @Test
     void updateShouldReturnErrorWhenMissionDoesNotExist()
     {
-        webTestClient.put()
-                .uri("/api/v1/missions/id/1")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(loadJsonIntegrationContractFor("mission/update-mission.json"))
-                .exchange()
-                .expectStatus().isNotFound();
+        var response = testRestTemplate.exchange(
+                "/api/v1/missions/id/1",
+                HttpMethod.PUT,
+                new HttpEntity<>(loadJsonIntegrationContractFor("mission/update-mission.json"), MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))),
+                String.class
+        );
+
+        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
     void shouldDeleteMissionReturnErrorWhenMissionNotFound() {
-        webTestClient.delete()
-                .uri("/api/v1/missions/template/test")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .exchange()
-                .expectStatus().isNotFound();
+        var response = testRestTemplate.exchange(
+                "/api/v1/missions/template/test",
+                HttpMethod.DELETE,
+                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))),
+                String.class
+        );
+
+        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
     void shouldDeleteMission() {
         String missionTemplate = "1-operacja 1604.sehreno";
-        missionRepository.save(new MissionEntity(null, "1604", missionTemplate, "custom", true, null)).block();
+        missionRepository.save(new MissionEntity(null, "1604", missionTemplate, "custom", true, null));
 
         String jwt = createJwtForTestUser();
 
-        webTestClient.delete()
-                .uri("/api/v1/missions/template/" + missionTemplate)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
-                .exchange()
-                .expectStatus().isOk();
+        var response1 = testRestTemplate.exchange(
+                "/api/v1/missions/template/" + missionTemplate,
+                HttpMethod.DELETE,
+                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + jwt,
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))),
+                String.class
+        );
+        assertTrue(response1.getStatusCode().is2xxSuccessful());
 
-        webTestClient.get()
-                .uri("/api/v1/missions")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody().json("{\"disabledMissions\": [], \"enabledMissions\": []}");
+        var response2 = testRestTemplate.exchange(
+                "/api/v1/missions",
+                HttpMethod.GET,
+                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + jwt,
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))),
+                MissionRestController.GetMissionsResponse.class
+        );
+
+        assertTrue(response2.getStatusCode().is2xxSuccessful());
+        assertThat(response2.getBody().getEnabledMissions()).isEmpty();
+        assertThat(response2.getBody().getDisabledMissions()).isEmpty();
     }
 }

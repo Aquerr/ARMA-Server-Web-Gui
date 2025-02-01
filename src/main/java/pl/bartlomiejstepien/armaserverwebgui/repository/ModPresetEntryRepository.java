@@ -1,12 +1,13 @@
 package pl.bartlomiejstepien.armaserverwebgui.repository;
 
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetEntity;
-import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 @Repository
-public interface ModPresetEntryRepository extends ReactiveCrudRepository<ModPresetEntity.EntryEntity, Long>
+public interface ModPresetEntryRepository extends JpaRepository<ModPresetEntity.EntryEntity, Long>
 {
-    Flux<ModPresetEntity.EntryEntity> findAllByModPresetId(Long presetId);
+    List<ModPresetEntity.EntryEntity> findAllByModPresetId(Long presetId);
 }

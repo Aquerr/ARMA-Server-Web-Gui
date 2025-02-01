@@ -3,17 +3,17 @@ package pl.bartlomiejstepien.armaserverwebgui.application.config.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ServerWebExchange;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.model.InvalidJwtTokenEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.InvalidJwtTokenRepository;
-import reactor.core.publisher.Mono;
 
 import javax.crypto.SecretKey;
 import java.time.Duration;
@@ -69,8 +69,8 @@ public class JwtService
     public void onApplicationReady(ApplicationReadyEvent event)
     {
         invalidJwtTokenRepository.findAll()
+                .stream()
                 .map(invalidJwtTokenEntity -> new BlackListedJwt(invalidJwtTokenEntity.getJwt(), invalidJwtTokenEntity.getExpirationDateTime()))
-                .toIterable()
                 .forEach(blackListedJwt -> BLACK_LISTED_JWTS.put(blackListedJwt.jwt(), blackListedJwt));
     }
 
@@ -103,30 +103,34 @@ public class JwtService
         }
     }
 
-    public String extractJwt(ServerWebExchange serverWebExchange)
+    public String extractJwt(HttpServletRequest httpServletRequest)
     {
-        return ofNullable(serverWebExchange.getRequest().getHeaders().getFirst(AUTHORIZATION_HEADER))
+        return ofNullable(httpServletRequest.getHeader(AUTHORIZATION_HEADER))
                 .filter(headerValue -> headerValue.startsWith(BEARER))
                 .map(headerValue -> headerValue.substring(BEARER.length()))
                 .orElse(null);
     }
 
-    public Mono<Void> invalidate(String jwt)
+    public void invalidate(String jwt)
     {
-        return Mono.just(validateJwt(jwt))
-                .map(jws -> jws.getPayload().getExpiration().toInstant().atZone(ZoneId.systemDefault()))
-                .flatMap(expirationDateTime -> {
-                    BLACK_LISTED_JWTS.put(jwt, new BlackListedJwt(jwt, expirationDateTime));
+        Jws<Claims> jws = validateJwt(jwt);
+        ZonedDateTime expirationDateTime = jws.getPayload().getExpiration().toInstant().atZone(ZoneId.systemDefault());
 
-                    InvalidJwtTokenEntity invalidJwtTokenEntity = new InvalidJwtTokenEntity();
-                    invalidJwtTokenEntity.setJwt(jwt);
-                    invalidJwtTokenEntity.setInvalidatedDateTime(ZonedDateTime.now());
-                    invalidJwtTokenEntity.setExpirationDateTime(expirationDateTime);
-                    return invalidJwtTokenRepository.save(invalidJwtTokenEntity);
-                })
-                .doOnError((throwable -> log.error("Could not save invalid jwt '{}'", jwt, throwable)))
-                .onErrorResume(throwable -> Mono.empty())
-                .then();
+        BLACK_LISTED_JWTS.put(jwt, new BlackListedJwt(jwt, expirationDateTime));
+
+        InvalidJwtTokenEntity invalidJwtTokenEntity = new InvalidJwtTokenEntity();
+        invalidJwtTokenEntity.setJwt(jwt);
+        invalidJwtTokenEntity.setInvalidatedDateTime(ZonedDateTime.now());
+        invalidJwtTokenEntity.setExpirationDateTime(expirationDateTime);
+
+        try
+        {
+            invalidJwtTokenRepository.save(invalidJwtTokenEntity);
+        }
+        catch (Exception exception)
+        {
+            log.error("Could not save invalid jwt '{}'", jwt, exception);
+        }
     }
 
     private record BlackListedJwt(String jwt, ZonedDateTime expirationTime) { }

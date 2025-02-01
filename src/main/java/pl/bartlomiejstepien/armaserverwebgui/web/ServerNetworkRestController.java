@@ -13,7 +13,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.Network
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.ServerNetworkService;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.NetworkPropertiesRequest;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.NetworkPropertiesResponse;
-import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1/network")
@@ -24,18 +23,17 @@ public class ServerNetworkRestController
 
     @HasPermissionNetworkSettingsView
     @GetMapping("/properties")
-    public Mono<NetworkPropertiesResponse> getNetworkProperties()
+    public NetworkPropertiesResponse getNetworkProperties()
     {
-        return Mono.just(this.networkService.getNetworkProperties())
-                .map(this::toResponseModel);
+        return toResponseModel(this.networkService.getNetworkProperties());
     }
 
     @HasPermissionNetworkSettingsSave
     @PostMapping("/properties")
-    public Mono<ResponseEntity<?>> saveServerSecurity(@RequestBody NetworkPropertiesRequest saveNetworkPropertiesRequest)
+    public ResponseEntity<?> saveServerSecurity(@RequestBody NetworkPropertiesRequest saveNetworkPropertiesRequest)
     {
         this.networkService.saveNetworkProperties(toDomainModel(saveNetworkPropertiesRequest));
-        return Mono.just(ResponseEntity.ok().build());
+        return ResponseEntity.ok().build();
     }
 
     private NetworkProperties toDomainModel(NetworkPropertiesRequest request)

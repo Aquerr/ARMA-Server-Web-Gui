@@ -1,21 +1,27 @@
 package pl.bartlomiejstepien.armaserverwebgui.web.validator;
 
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.web.exception.NotAllowedFileTypeException;
 
+import java.util.Optional;
+
 @Component
-public class ModFileValidator implements Validator<FilePart>
+public class ModFileValidator implements Validator<MultipartFile>
 {
     @Override
-    public void validate(FilePart filePart)
+    public void validate(MultipartFile multipartFile)
     {
-        if (!hasCorrectFileType(filePart))
+        if (!hasCorrectFileType(multipartFile))
             throw new NotAllowedFileTypeException("Wrong file type! Only .zip files are supported!");
     }
 
-    private boolean hasCorrectFileType(FilePart filePart)
+    private boolean hasCorrectFileType(MultipartFile multipartFile)
     {
-        return filePart.filename().endsWith(".zip");
+        String contentType = Optional.ofNullable(multipartFile.getContentType()).orElse("unknown");
+        String originalFilename = Optional.ofNullable(multipartFile.getOriginalFilename()).orElse("unknown");
+
+        return contentType.equalsIgnoreCase("application/zip")
+                || originalFilename.endsWith(".zip");
     }
 }

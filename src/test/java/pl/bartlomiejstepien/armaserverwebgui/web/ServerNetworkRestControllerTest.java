@@ -1,14 +1,23 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
+import org.json.JSONException;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.util.MultiValueMap;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.NetworkConfig;
 
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pl.bartlomiejstepien.armaserverwebgui.TestUtils.loadJsonIntegrationContractFor;
 
 class ServerNetworkRestControllerTest extends BaseIntegrationTest
@@ -19,30 +28,37 @@ class ServerNetworkRestControllerTest extends BaseIntegrationTest
     private ServerConfigStorage serverConfigStorage;
 
     @Test
-    void shouldSaveNetworkProperties()
+    void shouldSaveNetworkProperties() throws JSONException
     {
         serverConfigStorage.saveServerConfig(prepareArmaServerConfig());
         serverConfigStorage.saveNetworkConfig(prepareNetworkConfig());
 
-        webTestClient.post()
-                .uri(NETWORK_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(loadJsonIntegrationContractFor("network/save-network-properties-request.json"))
-                .exchange()
-                .expectStatus()
-                .isOk();
+        var response1 = testRestTemplate.exchange(
+                NETWORK_PROPERTIES_URL,
+                HttpMethod.POST,
+                new HttpEntity<>(loadJsonIntegrationContractFor("network/save-network-properties-request.json"), MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))),
+                String.class
+        );
 
-        webTestClient.get()
-                .uri(NETWORK_PROPERTIES_URL)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectHeader()
-                .contentType(MediaType.APPLICATION_JSON)
-                .expectBody()
-                .json(loadJsonIntegrationContractFor("network/get-network-properties-response.json"));
+        assertTrue(response1.getStatusCode().is2xxSuccessful());
+
+        var response2 = testRestTemplate.exchange(
+                NETWORK_PROPERTIES_URL,
+                HttpMethod.GET,
+                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))),
+                String.class
+        );
+
+        assertTrue(response2.getStatusCode().is2xxSuccessful());
+        JSONAssert.assertEquals(loadJsonIntegrationContractFor("network/get-network-properties-response.json"), response2.getBody(), JSONCompareMode.LENIENT);
     }
 
     private ArmaServerConfig prepareArmaServerConfig()
