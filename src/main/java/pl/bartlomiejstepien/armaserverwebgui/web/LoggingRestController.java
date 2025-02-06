@@ -51,12 +51,7 @@ public class LoggingRestController
     @GetMapping(value = "/logs-sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribeToLogPublisher()
     {
-        //TODO: To fix
-
-        SseEmitter sseEmitter = new SseEmitter();
-        return sseEmitter;
-
-//        return Flux.from(this.processService.getServerLogPublisher());
+        return this.processService.getServerLogEmitter();
     }
 
     private pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.model.LoggingProperties toDomainModel(LoggingProperties loggingProperties)

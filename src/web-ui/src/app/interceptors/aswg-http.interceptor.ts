@@ -27,20 +27,24 @@ export class AswgHttpInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(tap({
       error: (error: HttpErrorResponse) => {
+        const errorResponse = error.error;
         if (error.status === 401) {
           if (this.authService.isAuthenticated()) {
             this.authService.clearAuth();
           }
           this.router.navigate(['login']);
           this.maskService.hide();
-          this.notificationService.warningNotification("You are not authorized.", "Unauthorized");
+          const errorMessage = errorResponse.message || "You are not authorized.";
+          this.notificationService.warningNotification(errorMessage, "Unauthorized");
         } else if (error.status === 404) {
+          const errorMessage = errorResponse.message || "Resource has not been found.";
           this.router.navigate(['']);
           this.maskService.hide();
-          this.notificationService.errorNotification("Resource has not been found.", "Not found");
+          this.notificationService.errorNotification(errorMessage, "Not found");
         } else if (error.status === 500) {
+          const errorMessage = errorResponse.message || "An error occurred on the server.";
           this.maskService.hide();
-          this.notificationService.errorNotification("An error occurred on the server.", "Server error");
+          this.notificationService.errorNotification(errorMessage, "Server error");
         } else {
           console.warn(error.message);
         }

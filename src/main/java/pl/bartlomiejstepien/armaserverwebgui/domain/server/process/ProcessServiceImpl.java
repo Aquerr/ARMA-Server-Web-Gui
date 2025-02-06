@@ -11,6 +11,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordIntegration;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerIsAlreadyRunningException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerNotInstalledException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
@@ -26,11 +27,13 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 @Service
 @RequiredArgsConstructor
@@ -59,15 +62,17 @@ public class ProcessServiceImpl implements ProcessService
     private Thread ioServerThread;
     private Thread ioServerErrorThread;
 
-    private SseEmitter LOGS_SERVER_SENT_EVENT_EMITTER;
+    private final ConcurrentLinkedDeque<SseEmitter> serverLogsEmitters = new ConcurrentLinkedDeque<>();
 
     @Override
-    public SseEmitter getServerLogPublisher()
+    public SseEmitter getServerLogEmitter()
     {
-        if (LOGS_SERVER_SENT_EVENT_EMITTER != null)
-            LOGS_SERVER_SENT_EVENT_EMITTER = new SseEmitter();
-
-        return LOGS_SERVER_SENT_EVENT_EMITTER;
+        SseEmitter emitter = new SseEmitter();
+        emitter.onTimeout(() -> serverLogsEmitters.remove(emitter));
+        emitter.onError(throwable -> serverLogsEmitters.remove(emitter));
+        emitter.onCompletion(() -> serverLogsEmitters.remove(emitter));
+        serverLogsEmitters.add(emitter);
+        return emitter;
     }
 
     @Override
@@ -99,16 +104,24 @@ public class ProcessServiceImpl implements ProcessService
         if (getServerStatus().getStatus() != ServerStatus.Status.OFFLINE || serverStartScheduled)
             throw new ServerIsAlreadyRunningException("Server is already running!");
 
-        serverStartScheduled = true;
-
-        if (performUpdate)
+        try
         {
-            trySendDiscordMessage(MessageKind.SERVER_UPDATED);
-            tryUpdateArmaServer();
-        }
+            serverStartScheduled = true;
 
-        trySendDiscordMessage(MessageKind.SERVER_STARTED);
-        startServerProcess();
+            if (performUpdate)
+            {
+                trySendDiscordMessage(MessageKind.SERVER_UPDATED);
+                tryUpdateArmaServer();
+            }
+
+            trySendDiscordMessage(MessageKind.SERVER_STARTED);
+            startServerProcess();
+        }
+        catch (Exception exception)
+        {
+            serverStartScheduled = false;
+            throw exception;
+        }
     }
 
     private void trySendDiscordMessage(MessageKind messageKind)
@@ -119,6 +132,9 @@ public class ProcessServiceImpl implements ProcessService
     private void startServerProcess()
     {
         ArmaServerParameters serverParameters = serverParametersGenerator.generateParameters();
+        if (Files.notExists(Paths.get(serverParameters.getServerDirectory()).resolve(serverParameters.getExecutablePath())))
+            throw new ServerNotInstalledException("Server executable does not exist. Is the server installed?");
+
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(new File(serverParameters.getServerDirectory()));
         processBuilder.command(serverParameters.asList());
@@ -312,17 +328,16 @@ public class ProcessServiceImpl implements ProcessService
 
     private void emitSseLog(String line)
     {
-        if (LOGS_SERVER_SENT_EVENT_EMITTER != null)
-        {
+        serverLogsEmitters.forEach(emitter -> {
             try
             {
-                LOGS_SERVER_SENT_EVENT_EMITTER.send(line);
+                emitter.send(line);
             }
             catch (IOException e)
             {
                 throw new RuntimeException(e);
             }
-        }
+        });
     }
 
     private void saveServerPid(long pid) throws IOException
