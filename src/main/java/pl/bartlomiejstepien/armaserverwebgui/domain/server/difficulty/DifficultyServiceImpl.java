@@ -257,6 +257,7 @@ public class DifficultyServiceImpl implements DifficultyService
         options.setDetectedMines(newOptions.getDetectedMines());
         options.setCommands(newOptions.getCommands());
         options.setWaypoints(newOptions.getWaypoints());
+        options.setTacticalPing(newOptions.getTacticalPing());
 
         options.setWeaponInfo(newOptions.getWeaponInfo());
         options.setStanceIndicator(newOptions.getStanceIndicator());
