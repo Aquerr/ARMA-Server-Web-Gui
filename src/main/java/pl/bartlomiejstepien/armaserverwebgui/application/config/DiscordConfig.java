@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
+import org.zalando.logbook.Logbook;
+import org.zalando.logbook.spring.LogbookClientHttpRequestInterceptor;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordIntegration;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordWebhookHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.DiscordMessageCreator;
@@ -24,9 +26,11 @@ import java.util.Map;
 public class DiscordConfig
 {
     @Bean
-    public RestClient discordRestClient(RestClient.Builder builder)
+    public RestClient discordRestClient(RestClient.Builder builder,
+                                        Logbook logbook)
     {
         return builder.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .requestInterceptor(new LogbookClientHttpRequestInterceptor(logbook))
                 .build();
     }
 

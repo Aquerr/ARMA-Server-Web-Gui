@@ -185,6 +185,7 @@ public class ProcessServiceImpl implements ProcessService
         {
             if (steamService.isSteamCmdInstalled())
             {
+                log.info("Scheduling Arma update");
                 UUID taskId = steamService.scheduleArmaUpdate();
 
                 // Wait for update
