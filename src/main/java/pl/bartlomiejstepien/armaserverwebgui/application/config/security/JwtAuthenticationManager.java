@@ -8,11 +8,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthority;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,14 +25,10 @@ public class JwtAuthenticationManager implements AuthenticationManager
     {
         try
         {
-            return toAuthentication(AswgUser.builder()
-                    .username("test")
-                    .authorities(EnumSet.allOf(AswgAuthority.class))
-                    .build());
-//            Jws<Claims> jws = jwtService.validateJwt(String.valueOf(authentication.getCredentials()));
-//            return Optional.ofNullable(userService.getUser(jws.getPayload().getSubject()))
-//                    .map(this::toAuthentication)
-//                    .orElse(null);
+            Jws<Claims> jws = jwtService.validateJwt(String.valueOf(authentication.getCredentials()));
+            return Optional.ofNullable(userService.getUser(jws.getPayload().getSubject()))
+                    .map(this::toAuthentication)
+                    .orElse(null);
         }
         catch (Exception exception)
         {
