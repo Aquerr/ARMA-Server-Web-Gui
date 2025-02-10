@@ -51,4 +51,9 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  onKeyDown(event: KeyboardEvent) {
+    if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+      this.login();
+    }
+  }
 }
