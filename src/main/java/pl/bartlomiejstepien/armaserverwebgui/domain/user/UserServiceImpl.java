@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService
     private final ASWGConfig aswgConfig;
 
     @EventListener
+    @Transactional
     public void onApplicationReady(ApplicationReadyEvent event)
     {
         // Insert default user to db

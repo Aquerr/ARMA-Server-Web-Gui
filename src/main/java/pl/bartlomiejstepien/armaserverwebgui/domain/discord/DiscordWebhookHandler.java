@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.discord;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordMessage;
 
@@ -37,7 +38,8 @@ public class DiscordWebhookHandler
 
         restClient.post()
                 .uri(this.webhookUrl)
-                .body(HttpRequest.BodyPublishers.ofByteArray(jsonMessage.getBytes(StandardCharsets.UTF_8)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(jsonMessage)
                 .retrieve()
                 .toBodilessEntity();
     }
