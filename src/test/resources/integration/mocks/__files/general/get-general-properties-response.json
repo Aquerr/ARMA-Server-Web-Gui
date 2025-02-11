@@ -1,5 +1,5 @@
 {
-  "serverDirectory": ".",
+  "serverDirectory": "./target",
   "modsDirectory": "mods",
   "maxPlayers": 10
 }

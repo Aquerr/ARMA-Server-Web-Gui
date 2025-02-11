@@ -61,7 +61,7 @@ public class ModStorageImpl implements ModStorage
         Path filePath = modDirectory.get().resolve(modFolderNameHelper.buildFor(multipartFile));
         Files.createDirectories(modDirectory.get());
         saveFileAtPath(multipartFile, filePath);
-        unpackZipFile(filePath);
+        Path modFolderPath = unpackZipFile(filePath);
         try
         {
             deleteZipFile(filePath);
@@ -70,7 +70,7 @@ public class ModStorageImpl implements ModStorage
         {
             log.error("Could not delete mod zip file.", exception);
         }
-        return filePath;
+        return modFolderPath;
     }
 
     @Override

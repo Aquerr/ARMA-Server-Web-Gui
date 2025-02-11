@@ -7,6 +7,7 @@
       <excludeFolder url="file://$MODULE_DIR$/aswg_profiles" />
       <excludeFolder url="file://$MODULE_DIR$/logs" />
       <excludeFolder url="file://$MODULE_DIR$/server" />
+      <excludeFolder url="file://$MODULE_DIR$/userconfig" />
     </content>
   </component>
   <component name="FacetManager">

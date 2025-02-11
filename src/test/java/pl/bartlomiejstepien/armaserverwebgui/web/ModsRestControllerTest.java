@@ -13,7 +13,10 @@ import org.springframework.util.MultiValueMap;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
+import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 
+import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,10 +25,28 @@ class ModsRestControllerTest extends BaseIntegrationTest
 {
     @Autowired
     private ModService modService;
+    @Autowired
+    private InstalledModRepository installedModRepository;
 
     @BeforeEach
     void setUp()
     {
+        List<InstalledModEntity> modEntities = List.of(
+        InstalledModEntity.builder()
+                .name("testmod")
+                .workshopFileId(123456789)
+                .directoryPath("./target/mods/@testmod")
+                .createdDate(OffsetDateTime.now())
+                .build(),
+        InstalledModEntity.builder()
+                .name("testmod2")
+                .workshopFileId(123456782)
+                .directoryPath("./target/mods/@testmod2")
+                .createdDate(OffsetDateTime.now())
+                .build());
+
+        installedModRepository.saveAll(modEntities);
+
         modService.getInstalledMods().stream()
                 .map(InstalledModEntity::getName)
                 .forEach(modService::deleteMod);

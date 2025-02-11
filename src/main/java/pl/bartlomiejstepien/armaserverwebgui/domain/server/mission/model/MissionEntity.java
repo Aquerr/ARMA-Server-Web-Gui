@@ -34,6 +34,6 @@ public class MissionEntity
     @Column(name = "enabled")
     private boolean enabled;
 
-    @Column(name = "parameters")
+    @Column(name = "parameters", columnDefinition = "CHARACTER LARGE OBJECT")
     private String parametersJson;
 }

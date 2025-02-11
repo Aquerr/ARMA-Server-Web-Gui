@@ -16,6 +16,7 @@ import pl.bartlomiejstepien.armaserverwebgui.config.AswgTestConfiguration;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthority;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
+import pl.bartlomiejstepien.armaserverwebgui.repository.AuthorityRepository;
 import pl.bartlomiejstepien.armaserverwebgui.repository.UserAuthorityRepository;
 import pl.bartlomiejstepien.armaserverwebgui.repository.UserRepository;
 
@@ -54,6 +55,8 @@ public abstract class BaseIntegrationTest
     protected UserRepository userRepository;
     @Autowired
     protected UserAuthorityRepository userAuthorityRepository;
+    @Autowired
+    protected AuthorityRepository authorityRepository;
 
     @BeforeEach
     public void setUpTestUser()
