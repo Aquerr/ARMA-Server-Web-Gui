@@ -27,7 +27,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -68,7 +68,7 @@ public class ProcessServiceImpl implements ProcessService
     @Override
     public SseEmitter getServerLogEmitter()
     {
-        SseEmitter emitter = new SseEmitter();
+        SseEmitter emitter = new SseEmitter(Duration.ofSeconds(60).toMillis());
         emitter.onTimeout(() -> serverLogsEmitters.remove(emitter));
         emitter.onError(throwable -> serverLogsEmitters.remove(emitter));
         emitter.onCompletion(() -> serverLogsEmitters.remove(emitter));
