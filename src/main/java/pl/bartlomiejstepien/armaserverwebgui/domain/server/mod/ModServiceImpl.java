@@ -98,6 +98,7 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
+    @Transactional
     public void deleteMod(String modName)
     {
         InstalledModEntity installedModEntity = this.modStorage.getInstalledMod(modName);
@@ -108,6 +109,7 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
+    @Transactional
     public void saveEnabledModList(Set<EnabledMod> enabledMods)
     {
         List<InstalledFileSystemMod> installedModEntities = getInstalledModsFromFileSystem();
@@ -132,12 +134,14 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<InstalledModEntity> getInstalledMods()
     {
         return this.installedModRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<WorkshopMod> getInstalledWorkshopMods()
     {
         return this.installedModRepository.findAllByOrderByNameAsc().stream()
