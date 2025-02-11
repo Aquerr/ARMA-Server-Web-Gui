@@ -133,7 +133,7 @@ public class ModsRestController
     }
 
     @Value(staticConstructor = "of")
-    private static class GetModsResponse
+    public static class GetModsResponse
     {
         Set<ModView> disabledMods;
         Set<ModView> enabledMods;
@@ -145,19 +145,19 @@ public class ModsRestController
     }
 
     @Data
-    private static class SaveEnabledModsListRequest
+    public static class SaveEnabledModsListRequest
     {
         Set<EnabledMod> mods = new HashSet<>();
     }
 
     @Value(staticConstructor = "of")
-    private static class ModPresetNamesResponse
+    public static class ModPresetNamesResponse
     {
         List<String> presets;
     }
 
     @Data
-    private static class PresetImportRequest
+    public static class PresetImportRequest
     {
         private String name;
         private List<ModParam> modParams = new ArrayList<>();
@@ -171,26 +171,26 @@ public class ModsRestController
     }
 
     @Data
-    private static class PresetSelectRequest
+    public static class PresetSelectRequest
     {
         private String name;
     }
 
     @Value
-    private static class PresetDeleteResponse
+    public static class PresetDeleteResponse
     {
         boolean deleted;
     }
 
     @Data
-    private static class PresetSaveRequest
+    public static class PresetSaveRequest
     {
         private String name;
         private List<String> modNames = new ArrayList<>();
     }
 
     @Value
-    private static class PresetSaveResponse
+    public static class PresetSaveResponse
     {
         boolean saved;
     }

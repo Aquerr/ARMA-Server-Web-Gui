@@ -146,7 +146,11 @@ public class ModPresetServiceImpl implements ModPresetService
     @Override
     public void selectPreset(String name)
     {
-        this.modService.saveEnabledModList(convertToModViews(getModPreset(name).getEntries()));
+        ModPreset modPreset = getModPreset(name);
+        if (modPreset == null)
+            throw new PresetDoesNotExistException();
+
+        this.modService.saveEnabledModList(convertToModViews(modPreset.getEntries()));
     }
 
     @Override

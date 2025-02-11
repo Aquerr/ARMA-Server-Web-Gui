@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 @Service
@@ -62,7 +63,7 @@ public class ProcessServiceImpl implements ProcessService
     private Thread ioServerThread;
     private Thread ioServerErrorThread;
 
-    private final ConcurrentLinkedDeque<SseEmitter> serverLogsEmitters = new ConcurrentLinkedDeque<>();
+    private static final ConcurrentLinkedDeque<SseEmitter> serverLogsEmitters = new ConcurrentLinkedDeque<>();
 
     @Override
     public SseEmitter getServerLogEmitter()
@@ -296,7 +297,7 @@ public class ProcessServiceImpl implements ProcessService
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     SERVER_LOGGER.info(line);
-                    emitSseLog(line);
+                    CompletableFuture.runAsync(new SubmitLogTask(line));
                 }
                 reader.close();
             } catch (final Exception e) {
@@ -313,7 +314,7 @@ public class ProcessServiceImpl implements ProcessService
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     SERVER_LOGGER.info(line);
-                    emitSseLog(line);
+                    CompletableFuture.runAsync(new SubmitLogTask(line));
                 }
                 reader.close();
             } catch (final Exception e) {
@@ -374,5 +375,27 @@ public class ProcessServiceImpl implements ProcessService
     private File getServerLogsFile()
     {
         return Paths.get(aswgConfig.getServerDirectoryPath()).resolve(this.logsLocation).resolve(serverLogFileName).toFile();
+    }
+
+    @lombok.Value
+    private static class SubmitLogTask implements Runnable
+    {
+        String log;
+
+        @Override
+        public void run()
+        {
+            serverLogsEmitters.forEach(emitter ->
+            {
+                try
+                {
+                    emitter.send(log);
+                }
+                catch (IOException e)
+                {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
     }
 }

@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -11,7 +12,9 @@ public class ModPreset
 {
     private Long id;
     private String name;
-    private List<Entry> entries;
+
+    @Builder.Default
+    private List<Entry> entries = new ArrayList<>();
 
     @Data
     @Builder
