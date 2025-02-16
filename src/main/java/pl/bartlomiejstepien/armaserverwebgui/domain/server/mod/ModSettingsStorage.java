@@ -214,6 +214,7 @@ public class ModSettingsStorage
 
         Set<String> settingsToInstall = settingsFileNames.stream()
                 .map(this::stripExtension)
+                .map(this.fileNameNormalizer::normalize)
                 .filter(name -> !existingSettingsNames.contains(name))
                 .collect(Collectors.toSet());
 
