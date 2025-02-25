@@ -35,33 +35,33 @@ public class DiscordConfig
     }
 
     @Bean
-    public PlayerJoinedMessageCreator playerJoinedMessageCreator()
+    public PlayerJoinedMessageCreator playerJoinedMessageCreator(ASWGConfig aswgConfig)
     {
-        return new PlayerJoinedMessageCreator();
+        return new PlayerJoinedMessageCreator(aswgConfig);
     }
 
     @Bean
-    public ServerStartingMessageCreator serverStartingMessageCreator()
+    public ServerStartingMessageCreator serverStartingMessageCreator(ASWGConfig aswgConfig)
     {
-        return new ServerStartingMessageCreator();
+        return new ServerStartingMessageCreator(aswgConfig);
     }
 
     @Bean
-    public ServerStartedMessageCreator serverStartedMessageCreator()
+    public ServerStartedMessageCreator serverStartedMessageCreator(ASWGConfig aswgConfig)
     {
-        return new ServerStartedMessageCreator();
+        return new ServerStartedMessageCreator(aswgConfig);
     }
 
     @Bean
-    public ServerUpdatedMessageCreator serverUpdatedMessageCreator()
+    public ServerUpdatedMessageCreator serverUpdatedMessageCreator(ASWGConfig aswgConfig)
     {
-        return new ServerUpdatedMessageCreator();
+        return new ServerUpdatedMessageCreator(aswgConfig);
     }
 
     @Bean
-    public ServerStoppedMessageCreator serverStoppedMessageCreator()
+    public ServerStoppedMessageCreator serverStoppedMessageCreator(ASWGConfig aswgConfig)
     {
-        return new ServerStoppedMessageCreator();
+        return new ServerStoppedMessageCreator(aswgConfig);
     }
 
     @Bean
@@ -95,6 +95,6 @@ public class DiscordConfig
                                                        ObjectMapper objectMapper,
                                                        RestClient discordRestClient)
     {
-        return new DiscordWebhookHandler(aswgConfig.getDiscordWebhookUrl(), objectMapper, discordRestClient);
+        return new DiscordWebhookHandler(aswgConfig.getDiscordProperties().getWebhookUrl(), objectMapper, discordRestClient);
     }
 }

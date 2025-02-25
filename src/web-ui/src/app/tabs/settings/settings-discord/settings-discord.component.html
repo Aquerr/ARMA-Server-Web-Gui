@@ -10,6 +10,14 @@
         </mat-select>
       </mat-form-field>
       <mat-form-field>
+        <mat-label>Webhook Url</mat-label>
+        <input name="webhookUrl" formControlName="webhookUrl" matInput type="text">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Server starting message</mat-label>
+        <input name="serverStartingMessage" formControlName="serverStartingMessage" matInput type="text">
+      </mat-form-field>
+      <mat-form-field>
         <mat-label>Server start message</mat-label>
         <input name="serverStartMessage" formControlName="serverStartMessage" matInput type="text">
       </mat-form-field>
@@ -22,5 +30,8 @@
         <input name="serverUpdateMessage" formControlName="serverUpdateMessage" matInput type="text">
       </mat-form-field>
     </form>
+    <div class="button-container">
+      <button mat-flat-button color="primary" (click)="save()">Save</button>
+    </div>
   </div>
 </form>

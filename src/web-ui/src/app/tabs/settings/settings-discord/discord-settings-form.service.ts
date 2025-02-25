@@ -1,5 +1,6 @@
 import {inject, Injectable} from "@angular/core";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {DiscordIntegrationSettings} from "../../../model/discord-settings.model";
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,8 @@ export class DiscordSettingsFormService {
   getForm(): FormGroup {
     return this.formBuilder.group({
       enabled: [false, [Validators.required]],
+      webhookUrl: [''],
+      serverStartingMessage: [''],
       serverStartMessage: [''],
       serverStopMessage: [''],
       serverUpdateMessage: ['']
@@ -18,14 +21,18 @@ export class DiscordSettingsFormService {
 
   setForm(form: FormGroup, settings: DiscordIntegrationSettings) {
     this.getEnabledControl(form).setValue(settings.enabled);
+    this.getWebhookUrlControl(form).setValue(settings.webhookUrl);
+    this.getServerStartingMessageControl(form).setValue(settings.serverStartingMessage);
     this.getServerStartMessageControl(form).setValue(settings.serverStartMessage);
     this.getServerStopMessageControl(form).setValue(settings.serverStopMessage);
     this.getServerUpdateMessageControl(form).setValue(settings.serverUpdateMessage);
   }
 
-  asAswgUser(form: FormGroup): DiscordIntegrationSettings {
+  asSettings(form: FormGroup): DiscordIntegrationSettings {
     return {
       enabled: this.getEnabledControl(form).value,
+      webhookUrl: this.getWebhookUrlControl(form).value,
+      serverStartingMessage: this.getServerStartingMessageControl(form).value,
       serverStartMessage: this.getServerStartMessageControl(form).value,
       serverStopMessage: this.getServerStopMessageControl(form).value,
       serverUpdateMessage: this.getServerUpdateMessageControl(form).value,
@@ -34,6 +41,14 @@ export class DiscordSettingsFormService {
 
   getEnabledControl(form: FormGroup): AbstractControl {
     return form.get('enabled') as AbstractControl;
+  }
+
+  getWebhookUrlControl(form: FormGroup): AbstractControl {
+    return form.get('webhookUrl') as AbstractControl;
+  }
+
+  getServerStartingMessageControl(form: FormGroup): AbstractControl {
+    return form.get('serverStartingMessage') as AbstractControl;
   }
 
   getServerStartMessageControl(form: FormGroup): AbstractControl {
@@ -47,11 +62,4 @@ export class DiscordSettingsFormService {
   getServerStopMessageControl(form: FormGroup): AbstractControl {
     return form.get('serverStopMessage') as AbstractControl;
   }
-}
-
-export interface DiscordIntegrationSettings {
-  enabled: boolean;
-  serverStartMessage: string;
-  serverStopMessage: string;
-  serverUpdateMessage: string;
 }

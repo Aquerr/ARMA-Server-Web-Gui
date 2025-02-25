@@ -1,6 +1,8 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
+import lombok.Data;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -19,6 +21,7 @@ import java.util.Properties;
 @Component
 @Setter
 @Getter
+@RequiredArgsConstructor
 public class ASWGConfig
 {
     private static final Path ASWG_CONFIGURATION_FILE_PATH = Paths.get("aswg-config.properties");
@@ -41,11 +44,16 @@ public class ASWGConfig
     private static final String DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED = "aswg.job.difficulty-scanner.installation.enabled";
     private static final String MOD_SETTINGS_INSTLLATION_SCANNER_ENABLED = "aswg.job.mod-settings-scanner.installation.enabled";
     private static final String VANILLA_MISSIONS_IMPORTER = "aswg.vanilla-missions-importer.enabled";
+
+    // Discord
     private static final String DISCORD_WEBHOOK_ENABLED = "aswg.discord.webhook.enabled";
     private static final String DISCORD_WEBHOOK_URL = "aswg.discord.webhook.url";
+    private static final String DISCORD_MESSAGE_SERVER_STARTING = "aswg.discord.message.server-starting";
+    private static final String DISCORD_MESSAGE_SERVER_START = "aswg.discord.message.server-start";
+    private static final String DISCORD_MESSAGE_SERVER_STOP = "aswg.discord.message.server-stop";
+    private static final String DISCORD_MESSAGE_SERVER_UPDATE = "aswg.discord.message.server-update";
 
     private static final String SERVER_BRANCH = "aswg.server.branch";
-
 
     @Value("${aswg.default-user.username:}")
     private String username;
@@ -81,13 +89,10 @@ public class ASWGConfig
     @Value("${aswg.vanilla-missions-importer.enabled:false}")
     private boolean vanillaMissionsImporter;
 
-    @Value("${aswg.discord.webhook.enabled:false}")
-    private boolean discordWebhookEnabled;
-    @Value("${aswg.discord.webhook.url:}")
-    private String discordWebhookUrl;
-
     @Value("${aswg.server.branch:public}")
     private String serverBranch;
+
+    private final DiscordProperties discordProperties;
 
     @EventListener(ApplicationReadyEvent.class)
     public void onEnvironmentPreparedEvent() throws IOException
@@ -136,10 +141,34 @@ public class ASWGConfig
         configurationProperties.setProperty(FILE_SCANNER_DELETION_ENABLED_PROPERTY, String.valueOf(this.modsScannerDeletionEnabled));
         configurationProperties.setProperty(DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED, String.valueOf(this.difficultyProfileInstallationScannerEnabled));
         configurationProperties.setProperty(MOD_SETTINGS_INSTLLATION_SCANNER_ENABLED, String.valueOf(this.modSettingsInstallationScannerEnabled));
-        configurationProperties.setProperty(DISCORD_WEBHOOK_URL, this.discordWebhookUrl);
-        configurationProperties.setProperty(DISCORD_WEBHOOK_ENABLED, String.valueOf(this.discordWebhookEnabled));
+
+        configurationProperties.setProperty(DISCORD_WEBHOOK_URL, this.discordProperties.getWebhookUrl());
+        configurationProperties.setProperty(DISCORD_WEBHOOK_ENABLED, String.valueOf(this.discordProperties.isEnabled()));
+        configurationProperties.setProperty(DISCORD_MESSAGE_SERVER_STARTING, this.discordProperties.getMessageServerStarting());
+        configurationProperties.setProperty(DISCORD_MESSAGE_SERVER_START, this.discordProperties.getMessageServerStart());
+        configurationProperties.setProperty(DISCORD_MESSAGE_SERVER_STOP, this.discordProperties.getMessageServerStop());
+        configurationProperties.setProperty(DISCORD_MESSAGE_SERVER_UPDATE, this.discordProperties.getMessageServerUpdate());
+
         configurationProperties.setProperty(VANILLA_MISSIONS_IMPORTER, String.valueOf(this.vanillaMissionsImporter));
         configurationProperties.setProperty(SERVER_BRANCH, String.valueOf(this.serverBranch));
         return configurationProperties;
+    }
+
+    @Data
+    @Component
+    public static class DiscordProperties
+    {
+        @Value("${aswg.discord.webhook.enabled:false}")
+        private boolean enabled;
+        @Value("${aswg.discord.webhook.url:}")
+        private String webhookUrl;
+        @Value("${aswg.discord.message.server-starting:}")
+        private String messageServerStarting;
+        @Value("${aswg.discord.message.server-start:}")
+        private String messageServerStart;
+        @Value("${aswg.discord.message.server-stop:}")
+        private String messageServerStop;
+        @Value("${aswg.discord.message.server-update:}")
+        private String messageServerUpdate;
     }
 }
