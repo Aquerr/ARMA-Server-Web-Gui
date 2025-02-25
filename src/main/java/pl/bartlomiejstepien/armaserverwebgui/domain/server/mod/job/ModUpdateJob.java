@@ -17,10 +17,10 @@ public class ModUpdateJob
     private final ModService modService;
     private final SteamService steamService;
 
-    @Value("${aswg.job.mod-update.enabled}")
+    @Value("${aswg.job.mod-update.enabled:false}")
     private boolean enabled = false;
 
-    @Scheduled(cron = "${aswg.job.mod-update.cron}")
+    @Scheduled(cron = "${aswg.job.mod-update.cron:* * 1 * * *}")
     public void updateMods()
     {
         if (!enabled)

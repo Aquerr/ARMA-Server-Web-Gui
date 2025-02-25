@@ -47,24 +47,24 @@ public class ASWGConfig
     private static final String SERVER_BRANCH = "aswg.server.branch";
 
 
-    @Value("${aswg.default-user.username}")
+    @Value("${aswg.default-user.username:}")
     private String username;
-    @Value("${aswg.default-user.password}")
+    @Value("${aswg.default-user.password:}")
     private String password;
-    @Value("${aswg.default-user.reset}")
+    @Value("${aswg.default-user.reset:false}")
     private boolean resetDefaultUser;
-    @Value("${aswg.server-port}")
+    @Value("${aswg.server-port:2302}")
     private int serverPort;
     @Value("${aswg.server-directory-path:}")
     private String serverDirectoryPath;
     @Value("${aswg.mods-directory-path:}")
     private String modsDirectoryPath;
 
-    @Value("${aswg.steamcmd.path}")
+    @Value("${aswg.steamcmd.path:}")
     private String steamCmdPath;
-    @Value("${aswg.steamcmd.username}")
+    @Value("${aswg.steamcmd.username:}")
     private String steamCmdUsername;
-    @Value("${aswg.steamcmd.password}")
+    @Value("${aswg.steamcmd.password:}")
     private String steamCmdPassword;
     @Value("${aswg.steam.web-api-token:}")
     private String steamApiKey;
@@ -74,16 +74,16 @@ public class ASWGConfig
     @Value("${aswg.job.mods-scanner.installation.enabled:false}")
     private boolean modsScannerDeletionEnabled;
 
-    @Value("${aswg.job.difficulty-scanner.installation.enabled}")
+    @Value("${aswg.job.difficulty-scanner.installation.enabled:true}")
     private boolean difficultyProfileInstallationScannerEnabled;
-    @Value("${aswg.job.mod-settings-scanner.installation.enabled}")
+    @Value("${aswg.job.mod-settings-scanner.installation.enabled:true}")
     private boolean modSettingsInstallationScannerEnabled;
-    @Value("${aswg.vanilla-missions-importer.enabled}")
+    @Value("${aswg.vanilla-missions-importer.enabled:false}")
     private boolean vanillaMissionsImporter;
 
-    @Value("${aswg.discord.webhook.enabled}")
+    @Value("${aswg.discord.webhook.enabled:false}")
     private boolean discordWebhookEnabled;
-    @Value("${aswg.discord.webhook.url}")
+    @Value("${aswg.discord.webhook.url:}")
     private String discordWebhookUrl;
 
     @Value("${aswg.server.branch:public}")

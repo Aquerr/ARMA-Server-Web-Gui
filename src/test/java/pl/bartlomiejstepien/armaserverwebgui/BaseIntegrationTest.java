@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-//import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.wiremock.spring.EnableWireMock;
 import org.wiremock.spring.InjectWireMock;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.security.JwtService;
@@ -25,9 +23,7 @@ import java.util.EnumSet;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = AswgTestConfiguration.class)
-@ContextConfiguration(loader = TestSpringContextLoader.class)
 @EnableWireMock
-//@AutoConfigureWireMock(port = 0)
 public abstract class BaseIntegrationTest
 {
     protected static final String TEST_USER_NAME = "test_user";
@@ -43,7 +39,6 @@ public abstract class BaseIntegrationTest
     protected int serverPort;
 
     @InjectWireMock
-//    @Autowired
     protected WireMockServer wireMockServer;
     @Autowired
     protected JwtService jwtService;
