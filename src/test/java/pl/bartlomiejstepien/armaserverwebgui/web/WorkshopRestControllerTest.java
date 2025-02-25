@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
+import org.wiremock.spring.EnableWireMock;
+import org.wiremock.spring.InjectWireMock;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.TestUtils;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.WorkshopQueryRequest;
@@ -20,10 +23,14 @@ import java.util.Map;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 
+@EnableWireMock
 class WorkshopRestControllerTest extends BaseIntegrationTest
 {
     @Autowired
     private CacheManager cacheManager;
+
+    @InjectWireMock
+    private WireMockServer wireMockServer;
 
     @Test
     void queryShouldReturnWorkshopModsFromCache() throws JSONException
