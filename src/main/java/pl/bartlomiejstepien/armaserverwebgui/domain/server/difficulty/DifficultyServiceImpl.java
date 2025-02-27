@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgValueHelper.toInt;
@@ -128,7 +129,10 @@ public class DifficultyServiceImpl implements DifficultyService
     @Override
     public DifficultyProfileEntity saveDifficultyProfile(DifficultyProfile difficultyProfile)
     {
-        DifficultyProfileEntity entity = difficultyProfileRepository.findById(difficultyProfile.getId()).orElse(null);
+        DifficultyProfileEntity entity = Optional.ofNullable(difficultyProfile.getId())
+                .flatMap(difficultyProfileRepository::findById)
+                .orElse(null);
+
         if (entity != null && !entity.getName().equals(difficultyProfile.getName()))
         {
                 deleteFile(entity.getName());
