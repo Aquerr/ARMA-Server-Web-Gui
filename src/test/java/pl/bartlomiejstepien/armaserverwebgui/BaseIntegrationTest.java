@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
-import pl.bartlomiejstepien.armaserverwebgui.application.config.security.JwtService;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtService;
 import pl.bartlomiejstepien.armaserverwebgui.config.AswgTestConfiguration;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthority;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;

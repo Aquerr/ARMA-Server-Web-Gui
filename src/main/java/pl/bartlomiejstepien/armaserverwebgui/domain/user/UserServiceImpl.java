@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService
 {
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserAuthorityRepository userAuthorityRepository;
     private final ASWGConfig aswgConfig;
@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService
     private AswgUserWithPassword withEncodedPassword(AswgUserWithPassword entity)
     {
         return entity.toBuilder()
-//                .password(passwordEncoder.encode(entity.getPassword()))
+                .password(passwordEncoder.encode(entity.getPassword()))
                 .build();
     }
 
@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService
                     entityToUpdate.setId(entity.getId());
                     entityToUpdate.setUsername(entity.getUsername());
                     entityToUpdate.setPassword(Optional.ofNullable(user.getPassword())
-//                            .map(passwordEncoder::encode)
+                            .map(passwordEncoder::encode)
                             .orElse(entity.getPassword()));
                     entityToUpdate.setLocked(user.isLocked());
                     entityToUpdate.setCreatedDateTime(entity.getCreatedDateTime());
@@ -209,7 +209,7 @@ public class UserServiceImpl implements UserService
 
         log.info("Resetting default user: {}", aswgConfig.getUsername());
         entity.setUsername(aswgConfig.getUsername());
-//        entity.setPassword(passwordEncoder.encode(aswgConfig.getPassword()));
+        entity.setPassword(passwordEncoder.encode(aswgConfig.getPassword()));
         entity.setLocked(false);
         entity.setCreatedDateTime(OffsetDateTime.now());
 

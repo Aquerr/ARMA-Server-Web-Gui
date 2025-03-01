@@ -2,8 +2,8 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod;
 
 import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.ZipFile;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
@@ -103,6 +103,26 @@ public class ModStorageImpl implements ModStorage
         return CppFileHelper.readFile(modDirectory.resolve(CppFileHelper.MOD_CPP), ModCppFile.class);
     }
 
+    @Override
+    public void deleteFileSystemMod(String modName)
+    {
+        final String modFolderName = this.modFolderNameHelper.buildFor(modName);
+        final File[] files = this.modDirectory.get().toFile().listFiles();
+        if (files != null)
+        {
+            for (final File file : files)
+            {
+                if (file.getName().equals(modFolderName))
+                {
+                    log.info("Deleting mod: {}", modName);
+                    FileUtils.deleteFilesRecursively(file.toPath(), true);
+                    break;
+                }
+            }
+        }
+    }
+
+    @Transactional
     @Override
     public void deleteMod(InstalledModEntity installedModEntity)
     {

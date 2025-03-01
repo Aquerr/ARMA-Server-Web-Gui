@@ -62,7 +62,7 @@ class GeneralControllerTest extends BaseIntegrationTest
     }
 
     @Test
-    void getGeneralPropertiesShouldTriggerUnauthorizedErrorWhenUserNotAuthorized()
+    void getGeneralPropertiesShouldTriggerForbiddenErrorWhenUserNotAuthorized()
     {
         var response = testRestTemplate.exchange(
                 API_GENERAL_PROPERTIES_URL,
@@ -71,7 +71,7 @@ class GeneralControllerTest extends BaseIntegrationTest
                 Object.class
         );
 
-        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     @Test
@@ -104,7 +104,7 @@ class GeneralControllerTest extends BaseIntegrationTest
     }
 
     @Test
-    void saveGeneralPropertiesShouldTriggerUnauthorizedErrorWhenUserNotAuthorized()
+    void saveGeneralPropertiesShouldTriggerForbiddenErrorWhenUserNotAuthorized()
     {
         var response = testRestTemplate.exchange(
                 API_GENERAL_PROPERTIES_URL,
@@ -115,6 +115,6 @@ class GeneralControllerTest extends BaseIntegrationTest
                 Object.class
         );
 
-        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 
 import java.io.File;
@@ -33,9 +34,9 @@ public class ModKeyServiceImpl implements ModKeyService
     }
 
     @Override
-    public void copyKeysForMod(InstalledFileSystemMod installedFileSystemMod)
+    public void copyKeysForMod(ModDirectory modDirectory)
     {
-        Path modKeysDirectoryPath = installedFileSystemMod.getModDirectory().getKeysDirectory();
+        Path modKeysDirectoryPath = modDirectory.getKeysDirectory();
         if (modKeysDirectoryPath == null)
             return; // Mod has no keys directory... skip...
 

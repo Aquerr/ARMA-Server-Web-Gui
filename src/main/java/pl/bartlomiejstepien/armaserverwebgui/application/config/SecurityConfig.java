@@ -1,13 +1,9 @@
-package pl.bartlomiejstepien.armaserverwebgui.application.config.security;
+package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -15,33 +11,32 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
-import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationFilter;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.zalando.logbook.servlet.LogbookFilter;
+import pl.bartlomiejstepien.armaserverwebgui.application.frontend.FrontEndRedirectWebFilter;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthenticationEntryPoint;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtAuthenticationManager;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtService;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.filter.JwtFilter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 
-import java.io.IOException;
 import java.util.List;
 
 @EnableMethodSecurity
 @Configuration(proxyBeanMethods = false)
 public class SecurityConfig
 {
+    public static final String ANT_PATTERN_ALL_API_ENDPOINTS = "/api/**";
+
     @EnableWebSecurity
     @ConditionalOnProperty(value = "aswg.security.enabled", havingValue = "true")
     @Configuration(proxyBeanMethods = false)
@@ -50,17 +45,12 @@ public class SecurityConfig
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http,
                                                AuthenticationManager jwtAuthenticationManager,
-                                               JwtAuthenticationConverter jwtAuthenticationConverter,
                                                LogbookFilter logbookFilter,
                                                JwtFilter jwtFilter,
-                                               FrontEndRedirectWebFilter frontEndRedirectWebFilter
+                                               FrontEndRedirectWebFilter frontEndRedirectWebFilter,
+                                               AswgAuthenticationEntryPoint aswgAuthenticationEntryPoint
         ) throws Exception
         {
-//            AuthenticationFilter authenticationWebFilter = new AuthenticationFilter(jwtAuthenticationManager, jwtAuthenticationConverter);
-//            authenticationWebFilter.setRequestMatcher(new AntPathRequestMatcher("/api/**"));
-//            authenticationWebFilter.setFailureHandler(new AuthenticationEntryPointFailureHandler(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
-//            authenticationWebFilter.setSuccessHandler((request, response, authentication) -> {});
-
             http.authorizeHttpRequests(auths -> {
                         auths.requestMatchers("/api/v1/auth").permitAll();
                         auths.requestMatchers("/api/v1/auth/logout").permitAll();
@@ -68,7 +58,7 @@ public class SecurityConfig
                         auths.requestMatchers("/api/v1/actuator/info").permitAll();
                         auths.requestMatchers("/api/v1/actuator/health").permitAll();
                         auths.requestMatchers("/api/v1/actuator/**").authenticated();
-                        auths.requestMatchers("/api/**").authenticated();
+                        auths.requestMatchers(ANT_PATTERN_ALL_API_ENDPOINTS).authenticated();
                         auths.requestMatchers("/ws/**").permitAll();
                         auths.requestMatchers("/static/**").permitAll();
                         auths.requestMatchers("/public/**").permitAll();
@@ -87,7 +77,7 @@ public class SecurityConfig
                     .authenticationManager(jwtAuthenticationManager)
                     .exceptionHandling(exceptionHandlingSpec -> {
                         exceptionHandlingSpec.accessDeniedHandler(new AccessDeniedHandlerImpl());
-                        exceptionHandlingSpec.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+                        exceptionHandlingSpec.authenticationEntryPoint(aswgAuthenticationEntryPoint);
                     })
                     .cors(Customizer.withDefaults())
                     .csrf(AbstractHttpConfigurer::disable);
@@ -96,7 +86,7 @@ public class SecurityConfig
 
         @Bean
         public JwtAuthenticationManager jwtAuthenticationManager(UserService userService,
-                                                              JwtService jwtService)
+                                                                 JwtService jwtService)
         {
             return new JwtAuthenticationManager(userService, jwtService);
         }

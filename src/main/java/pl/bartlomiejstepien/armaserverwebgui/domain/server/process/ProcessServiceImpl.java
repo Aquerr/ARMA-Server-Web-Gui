@@ -35,6 +35,8 @@ import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +66,7 @@ public class ProcessServiceImpl implements ProcessService
     private Thread ioServerErrorThread;
 
     private static final ConcurrentLinkedDeque<SseEmitter> serverLogsEmitters = new ConcurrentLinkedDeque<>();
+    private static final ExecutorService LOGS_EMITTER_EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
 
     @Override
     public SseEmitter getServerLogEmitter()
@@ -328,20 +331,6 @@ public class ProcessServiceImpl implements ProcessService
         this.ioServerThread.start();
     }
 
-    private void emitSseLog(String line)
-    {
-        serverLogsEmitters.forEach(emitter -> {
-            try
-            {
-                emitter.send(line);
-            }
-            catch (IOException e)
-            {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
     private void saveServerPid(long pid) throws IOException
     {
         File pidFile = getPidFile();
@@ -385,11 +374,15 @@ public class ProcessServiceImpl implements ProcessService
         @Override
         public void run()
         {
-            serverLogsEmitters.forEach(emitter ->
-            {
+            emitSseLog(log);
+        }
+
+        private void emitSseLog(String line)
+        {
+            serverLogsEmitters.forEach(emitter -> {
                 try
                 {
-                    emitter.send(log);
+                    emitter.send(line);
                 }
                 catch (IOException e)
                 {

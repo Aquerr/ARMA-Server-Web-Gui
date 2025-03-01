@@ -60,8 +60,12 @@ public class ModPresetServiceImpl implements ModPresetService
     private void saveModPreset(ModPreset modPreset)
     {
         ModPresetEntity modPresetEntity = this.modPresetConverter.convert(modPreset);
-        this.modPresetRepository.save(modPresetEntity);
-        List<ModPresetEntity.EntryEntity> entryEntities = this.modPresetConverter.convertToEntities(modPreset.getEntries());
+        modPresetEntity = this.modPresetRepository.save(modPresetEntity);
+
+        ModPresetEntity finalModPresetEntity = modPresetEntity;
+        List<ModPresetEntity.EntryEntity> entryEntities = this.modPresetConverter.convertToEntities(modPreset.getEntries().stream()
+                .map(entry -> entry.toBuilder().modPresetId(finalModPresetEntity.getId()).build())
+                .toList());
         this.modPresetEntryRepository.saveAll(entryEntities);
     }
 

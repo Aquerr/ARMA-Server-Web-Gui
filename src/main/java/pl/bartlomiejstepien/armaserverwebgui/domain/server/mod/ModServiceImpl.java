@@ -22,6 +22,7 @@ import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -43,6 +44,7 @@ public class ModServiceImpl implements ModService
     private final InstalledModEntityHelper installedModEntityHelper;
 
     @Override
+    @Transactional
     public void saveModFile(MultipartFile multipartFile)
     {
         if(modStorage.doesModExists(multipartFile))
@@ -112,8 +114,8 @@ public class ModServiceImpl implements ModService
     @Transactional
     public void saveEnabledModList(Set<EnabledMod> enabledMods)
     {
-        List<InstalledFileSystemMod> installedModEntities = getInstalledModsFromFileSystem();
-        Set<InstalledFileSystemMod> installedActiveMods = enabledMods.stream()
+        List<InstalledModEntity> installedModEntities = installedModRepository.findAll();
+        Set<InstalledModEntity> modsToActivate = enabledMods.stream()
                 .map(modView -> installedModEntities.stream()
                     .filter(mod -> mod.getWorkshopFileId() == (modView.getWorkshopFileId()))
                     .findFirst()
@@ -122,15 +124,20 @@ public class ModServiceImpl implements ModService
                 .collect(Collectors.toSet());
 
         installedModRepository.disableAllMods();
-        installedModRepository.enableMods(enabledMods.stream()
-                .map(EnabledMod::getWorkshopFileId)
+        installedModRepository.enableMods(modsToActivate.stream()
+                .map(InstalledModEntity::getWorkshopFileId)
                 .toList());
-        installedModRepository.setServerMods(enabledMods.stream()
-                .filter(EnabledMod::getServerMod)
-                .map(EnabledMod::getWorkshopFileId)
+        installedModRepository.setServerMods(modsToActivate.stream()
+                .filter(InstalledModEntity::isServerMod)
+                .map(InstalledModEntity::getWorkshopFileId)
                 .toList());
         modKeyService.clearServerKeys();
-        installedActiveMods.forEach(modKeyService::copyKeysForMod);
+
+        modsToActivate.stream()
+                        .map(InstalledModEntity::getDirectoryPath)
+                        .map(Paths::get)
+                        .map(ModDirectory::from)
+                        .forEach(modKeyService::copyKeysForMod);
     }
 
     @Override

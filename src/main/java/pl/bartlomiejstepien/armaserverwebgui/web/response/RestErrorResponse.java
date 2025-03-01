@@ -6,5 +6,6 @@ import lombok.Value;
 public class RestErrorResponse
 {
     String message;
-    int code;
+    String code;
+    int status;
 }

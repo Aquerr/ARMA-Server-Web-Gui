@@ -29,10 +29,15 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.eventSource.close();
+    if (this.eventSource) {
+      this.eventSource.close();
+    }
   }
 
   private awaitForLogs() {
+    if (!this.authService.isAuthenticated())
+      return;
+
     const headers = new Headers();
     headers.set("Authorization", "Bearer " + this.authService.getAuthToken() || "");
     this.eventSource = new FetchEventSource(`${API_BASE_URL}/logging/logs-sse`, {
@@ -67,6 +72,9 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
   }
 
   private initWithLatestLogs() {
+    if (!this.authService.isAuthenticated())
+      return;
+
     this.serverLoggingService.getLatestServerLogs().subscribe(response => {
       response.logs.forEach(log => this.logs += log + "\n");
       this.scrollConsoleToBottom();

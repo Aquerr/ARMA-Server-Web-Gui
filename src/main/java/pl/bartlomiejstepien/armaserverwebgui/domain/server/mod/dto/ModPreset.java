@@ -17,7 +17,7 @@ public class ModPreset
     private List<Entry> entries = new ArrayList<>();
 
     @Data
-    @Builder
+    @Builder(toBuilder = true)
     public static class Entry
     {
         private Long id;

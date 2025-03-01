@@ -1,4 +1,4 @@
-package pl.bartlomiejstepien.armaserverwebgui.application.config.security;
+package pl.bartlomiejstepien.armaserverwebgui.application.frontend;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

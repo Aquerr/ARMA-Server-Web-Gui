@@ -1,6 +1,7 @@
-package pl.bartlomiejstepien.armaserverwebgui.application.config.security;
+package pl.bartlomiejstepien.armaserverwebgui.application.security.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,11 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.stereotype.Service;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.exception.BadAuthTokenException;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.exception.AuthTokenExpiredException;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.model.InvalidJwtTokenEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
-import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.InvalidJwtTokenRepository;
 
 import javax.crypto.SecretKey;
 import java.time.Duration;
@@ -96,10 +97,13 @@ public class JwtService
                     .build()
                     .parseSignedClaims(jwt);
         }
+        catch (ExpiredJwtException jwtException)
+        {
+            throw new AuthTokenExpiredException();
+        }
         catch (Exception exception)
         {
-            log.error(exception.getMessage());
-            throw exception;
+            throw new BadAuthTokenException(exception);
         }
     }
 

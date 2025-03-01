@@ -20,6 +20,8 @@ public interface ModStorage {
 
     ModCppFile readModFile(Path modDirectory) throws CouldNotReadModMetaFile;
 
+    void deleteFileSystemMod(String modName);
+
     void deleteMod(InstalledModEntity installedModEntity);
 
     InstalledModEntity getInstalledMod(String modName);

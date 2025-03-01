@@ -14,5 +14,6 @@ import java.lang.annotation.Target;
 public @interface ApiException
 {
     HttpStatus status();
+    ApiExceptionCode code();
     String messageKey();
 }

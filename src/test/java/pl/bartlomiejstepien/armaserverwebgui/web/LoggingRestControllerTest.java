@@ -54,7 +54,7 @@ class LoggingRestControllerTest extends BaseIntegrationTest
     }
 
     @Test
-    void getLoggingPropertiesShouldTriggerUnauthorizedErrorWhenUserNotAuthorized()
+    void getLoggingPropertiesShouldTriggerForbiddenErrorWhenUserNotAuthorized()
     {
         var response = testRestTemplate.exchange(
                 LOGGING_PROPERTIES_URL,
@@ -66,7 +66,7 @@ class LoggingRestControllerTest extends BaseIntegrationTest
                 String.class
         );
 
-        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     @Test
@@ -90,7 +90,7 @@ class LoggingRestControllerTest extends BaseIntegrationTest
     }
 
     @Test
-    void saveLoggingPropertiesShouldTriggerUnauthorizedErrorWhenUserNotAuthorized()
+    void saveLoggingPropertiesShouldTriggerForbiddenErrorWhenUserNotAuthorized()
     {
         var response = testRestTemplate.exchange(
                 LOGGING_PROPERTIES_URL,
@@ -102,7 +102,7 @@ class LoggingRestControllerTest extends BaseIntegrationTest
                 String.class
         );
 
-        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     private LoggingProperties prepareLoggingProperties()
