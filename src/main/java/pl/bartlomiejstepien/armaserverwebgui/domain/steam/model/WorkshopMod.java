@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Builder
 @Data
@@ -15,4 +16,5 @@ public class WorkshopMod
     private String previewUrl;
     private String modWorkshopUrl;
     private OffsetDateTime lastUpdate;
+    private List<Long> dependencies;
 }

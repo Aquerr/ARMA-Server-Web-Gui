@@ -38,6 +38,7 @@ public class SteamWebApiService
                 .returnPreviews(true)
                 .queryType(WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TOTAL_UNIQUE_SUBSCRIPTIONS)
                 .fileType(WorkShopQueryFilesRequest.PublishedFileInfoMatchingFileType.ITEMS)
+                .returnChildren(true)
                 .build());
 
         String nextPageCursor = null;

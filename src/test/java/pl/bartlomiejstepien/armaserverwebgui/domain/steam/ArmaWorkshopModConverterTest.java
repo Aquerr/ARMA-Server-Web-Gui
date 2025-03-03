@@ -1,7 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam;
 
-import io.github.aquerr.steamwebapiclient.response.PublishedFileDetailsResponse;
-import io.github.aquerr.steamwebapiclient.response.WorkShopQueryResponse;
+import io.github.aquerr.steamwebapiclient.response.shared.PublishedFileDetails;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,7 +10,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class WorkshopModConverterTestDir
+class ArmaWorkshopModConverterTest
 {
     private static final String TITLE = "Title";
     private static final String DESCRIPTION = "Description";
@@ -24,7 +23,7 @@ class WorkshopModConverterTestDir
     @Test
     void shouldConvertReturnNullWhenPassedNullPublishedFileDetailsWorkshop()
     {
-        WorkshopMod workshopMod = converter.convert((WorkShopQueryResponse.QueryFilesResponse.PublishedFileDetails) null);
+        WorkshopMod workshopMod = converter.convert(null);
 
         assertThat(workshopMod).isNull();
     }
@@ -32,7 +31,7 @@ class WorkshopModConverterTestDir
     @Test
     void shouldConvertReturnNullWhenPassedNullPublishedFileDetails()
     {
-        WorkshopMod workshopMod = converter.convert((PublishedFileDetailsResponse.QueryFilesResponse.PublishedFileDetails) null);
+        WorkshopMod workshopMod = converter.convert(null);
 
         assertThat(workshopMod).isNull();
     }
@@ -40,7 +39,7 @@ class WorkshopModConverterTestDir
     @Test
     void shouldConvertPublishedFileDetails()
     {
-        WorkShopQueryResponse.QueryFilesResponse.PublishedFileDetails publishedFileDetails = new WorkShopQueryResponse.QueryFilesResponse.PublishedFileDetails();
+        PublishedFileDetails publishedFileDetails = new PublishedFileDetails();
         publishedFileDetails.setTitle(TITLE);
         publishedFileDetails.setPublishedFileId(String.valueOf(FILE_ID));
         publishedFileDetails.setFileDescription(DESCRIPTION);
