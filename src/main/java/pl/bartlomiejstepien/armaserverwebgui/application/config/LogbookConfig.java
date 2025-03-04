@@ -12,11 +12,11 @@ import org.zalando.logbook.BodyFilter;
 import org.zalando.logbook.ContentType;
 import org.zalando.logbook.Logbook;
 import org.zalando.logbook.core.DefaultCorrelationId;
-import org.zalando.logbook.core.DefaultHttpLogWriter;
-import org.zalando.logbook.core.DefaultSink;
 import org.zalando.logbook.core.ResponseFilters;
 import org.zalando.logbook.json.FastJsonHttpLogFormatter;
 import org.zalando.logbook.json.JsonBodyFilters;
+import org.zalando.logbook.json.JsonHttpLogFormatter;
+import org.zalando.logbook.logstash.LogstashLogbackSink;
 import org.zalando.logbook.servlet.LogbookFilter;
 import org.zalando.logbook.servlet.SecureLogbookFilter;
 
@@ -57,9 +57,8 @@ public class LogbookConfig
                 .bodyFilter(new FilterJsonAttribute(objectMapper, "publishedFileDetails"))
                 .bodyFilter(new FilterJsonAttribute(objectMapper, "content"))
                 .correlationId(new DefaultCorrelationId())
-                .sink(new DefaultSink(
-                        new FastJsonHttpLogFormatter(),
-                        new DefaultHttpLogWriter()
+                .sink(new LogstashLogbackSink(
+                        new JsonHttpLogFormatter()
                 ))
                 .build();
     }
