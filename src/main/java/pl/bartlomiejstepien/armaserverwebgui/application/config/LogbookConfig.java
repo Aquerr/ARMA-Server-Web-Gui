@@ -6,21 +6,33 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ContainerNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.zalando.logbook.BodyFilter;
 import org.zalando.logbook.ContentType;
+import org.zalando.logbook.Correlation;
+import org.zalando.logbook.HttpRequest;
+import org.zalando.logbook.HttpResponse;
 import org.zalando.logbook.Logbook;
+import org.zalando.logbook.Precorrelation;
+import org.zalando.logbook.Sink;
 import org.zalando.logbook.core.DefaultCorrelationId;
+import org.zalando.logbook.core.DefaultHttpLogFormatter;
 import org.zalando.logbook.core.DefaultHttpLogWriter;
 import org.zalando.logbook.core.DefaultSink;
 import org.zalando.logbook.core.ResponseFilters;
 import org.zalando.logbook.json.FastJsonHttpLogFormatter;
 import org.zalando.logbook.json.JsonBodyFilters;
+import org.zalando.logbook.json.JsonHttpLogFormatter;
+import org.zalando.logbook.logstash.LogstashLogbackSink;
 import org.zalando.logbook.servlet.LogbookFilter;
 import org.zalando.logbook.servlet.SecureLogbookFilter;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.Set;
 
 import static org.zalando.logbook.core.Conditions.contentType;
@@ -57,10 +69,12 @@ public class LogbookConfig
                 .bodyFilter(new FilterJsonAttribute(objectMapper, "publishedFileDetails"))
                 .bodyFilter(new FilterJsonAttribute(objectMapper, "content"))
                 .correlationId(new DefaultCorrelationId())
-                .sink(new DefaultSink(
-                        new FastJsonHttpLogFormatter(),
-                        new DefaultHttpLogWriter()
-                ))
+//                .sink(
+//                        new DefaultSink(
+//                        new DefaultHttpLogFormatter(),
+//                        new DefaultHttpLogWriter()
+//                ))
+                .sink(new AswgLogbookSink())
                 .build();
     }
 
@@ -97,5 +111,42 @@ public class LogbookConfig
                 return body;
             }
         }
+    }
+
+    @Slf4j
+    private static class AswgLogbookSink implements Sink
+    {
+        @Override
+        public void write(Precorrelation precorrelation, HttpRequest request) throws IOException
+        {
+//            MDC.put("logbook.uri", request.getRequestUri());
+
+            AswgLog aswgLog = new AswgLog();
+            aswgLog.setUri(request.getRequestUri());
+            aswgLog.setMethod(request.getMethod());
+            aswgLog.setData(request.getBodyAsString());
+            log.info("Server request: {}", aswgLog);
+//            MDC.remove("logbook.uri");
+        }
+
+        @Override
+        public void write(Correlation correlation, HttpRequest request, HttpResponse response) throws IOException
+        {
+//            MDC.put("logbook.duration", correlation.getDuration().toString());
+            AswgLog aswgLog = new AswgLog();
+            aswgLog.setUri(request.getRequestUri());
+            aswgLog.setMethod(request.getMethod());
+            aswgLog.setData(request.getBodyAsString());
+            log.info("Server response: {}", aswgLog);
+//            MDC.remove("logbook.duration");
+        }
+    }
+
+    @Data
+    private static class AswgLog
+    {
+        String uri;
+        String method;
+        String data;
     }
 }
