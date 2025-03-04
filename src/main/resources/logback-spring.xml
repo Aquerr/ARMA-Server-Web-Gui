@@ -20,7 +20,7 @@
             <maxFileSize>4MB</maxFileSize>
             <maxHistory>10</maxHistory>
             <totalSizeCap>50MB</totalSizeCap>
-            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            <cleanHistoryOnStart>false</cleanHistoryOnStart>
         </rollingPolicy>
     </appender>
     <appender name="SERVER_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -34,7 +34,7 @@
             <maxFileSize>4MB</maxFileSize>
             <maxHistory>10</maxHistory>
             <totalSizeCap>50MB</totalSizeCap>
-            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            <cleanHistoryOnStart>false</cleanHistoryOnStart>
         </rollingPolicy>
     </appender>
 
