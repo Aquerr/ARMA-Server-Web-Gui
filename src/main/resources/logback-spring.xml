@@ -9,20 +9,67 @@
     <springProperty name="ASWG_LOGS_LOCATION" scope="context" source="aswg.logs.location"></springProperty>
     <springProperty name="SERVER_LOG_FILE_NAME" scope="context" source="server.log.file.name"></springProperty>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <encoder>
-            <pattern>${FILE_LOG_PATTERN}</pattern>
-            <charset>${FILE_LOG_CHARSET}</charset>
-        </encoder>
-        <file>${ASWG_LOGS_LOCATION}/aswg.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${ASWG_LOGS_LOCATION}/aswg.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
-            <maxFileSize>4MB</maxFileSize>
-            <maxHistory>10</maxHistory>
-            <totalSizeCap>50MB</totalSizeCap>
-            <cleanHistoryOnStart>false</cleanHistoryOnStart>
-        </rollingPolicy>
-    </appender>
+    <!--
+        JSON file appender
+        Produces logs in JSON format to a .txt file
+
+        To use it, enable "file-json-logs" spring profile.
+    -->
+    <springProfile name="file-json-logs">
+        <appender name="FILE-JSON-LOGS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${ASWG_LOGS_LOCATION}/aswg.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${ASWG_LOGS_LOCATION}/aswg.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+                <maxFileSize>4MB</maxFileSize>
+                <maxHistory>10</maxHistory>
+                <totalSizeCap>50MB</totalSizeCap>
+                <cleanHistoryOnStart>false</cleanHistoryOnStart>
+            </rollingPolicy>
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <pattern>
+                        <pattern>
+                            <omitEmptyFields>true</omitEmptyFields>
+                            {
+                                "timestamp": "%date{ISO8601}",
+                                "log.level": "%level",
+                                "log.name": "%logger",
+                                "thread": "%thread",
+                                "method": "%X{method}",
+                                "request.uri": "%X{uri}",
+                                "request.body": "%X{body}",
+                                "request.user-agent": "%X{user-agent}",
+                                "request.content-type": "%X{request-content-type}",
+                                "response.content-type": "%X{response-content-type}",
+                                "response.duration": "%X{duration}",
+                                "response.body": "%X{response-body}",
+                                "message": "%message"
+                            }
+                        </pattern>
+                    </pattern>
+                </providers>
+            </encoder>
+        </appender>
+    </springProfile>
+
+    <!-- Default file appender -->
+    <springProfile name="!file-json-logs">
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+                <charset>${FILE_LOG_CHARSET}</charset>
+            </encoder>
+            <file>${ASWG_LOGS_LOCATION}/aswg.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${ASWG_LOGS_LOCATION}/aswg.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+                <maxFileSize>4MB</maxFileSize>
+                <maxHistory>10</maxHistory>
+                <totalSizeCap>50MB</totalSizeCap>
+                <cleanHistoryOnStart>false</cleanHistoryOnStart>
+            </rollingPolicy>
+        </appender>
+    </springProfile>
+
     <appender name="SERVER_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${ASWG_LOGS_LOCATION}/${SERVER_LOG_FILE_NAME}</file>
         <encoder>
@@ -38,15 +85,27 @@
         </rollingPolicy>
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="CONSOLE" />
-        <appender-ref ref="FILE" />
-    </root>
+
+
+
+    <springProfile name="file-json-logs">
+        <root level="INFO">
+            <appender-ref ref="FILE-JSON-LOGS" />
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+    <springProfile name="!file-json-logs">
+        <root level="INFO">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
     <logger name="arma-server" level="INFO" additivity="false">
         <appender-ref ref="SERVER_LOG_FILE" />
     </logger>
     <logger name="org.zalando.logbook" level="TRACE" additivity="false">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
+        <appender-ref ref="FILE-JSON-LOGS"/>
     </logger>
 </configuration>

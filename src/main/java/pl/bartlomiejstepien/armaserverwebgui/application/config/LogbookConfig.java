@@ -6,21 +6,32 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ContainerNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.zalando.logbook.BodyFilter;
 import org.zalando.logbook.ContentType;
+import org.zalando.logbook.Correlation;
+import org.zalando.logbook.HttpRequest;
+import org.zalando.logbook.HttpResponse;
 import org.zalando.logbook.Logbook;
+import org.zalando.logbook.Precorrelation;
+import org.zalando.logbook.Sink;
 import org.zalando.logbook.core.DefaultCorrelationId;
-import org.zalando.logbook.core.DefaultHttpLogWriter;
-import org.zalando.logbook.core.DefaultSink;
 import org.zalando.logbook.core.ResponseFilters;
-import org.zalando.logbook.json.FastJsonHttpLogFormatter;
 import org.zalando.logbook.json.JsonBodyFilters;
 import org.zalando.logbook.servlet.LogbookFilter;
 import org.zalando.logbook.servlet.SecureLogbookFilter;
+import pl.bartlomiejstepien.armaserverwebgui.application.tracing.HttpTracingFields;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.zalando.logbook.core.Conditions.contentType;
@@ -57,10 +68,7 @@ public class LogbookConfig
                 .bodyFilter(new FilterJsonAttribute(objectMapper, "publishedFileDetails"))
                 .bodyFilter(new FilterJsonAttribute(objectMapper, "content"))
                 .correlationId(new DefaultCorrelationId())
-                .sink(new DefaultSink(
-                        new FastJsonHttpLogFormatter(),
-                        new DefaultHttpLogWriter()
-                ))
+                .sink(new AswgLogbookSink())
                 .build();
     }
 
@@ -97,5 +105,88 @@ public class LogbookConfig
                 return body;
             }
         }
+    }
+
+    /**
+     * Sink that produces a log and puts values in MDC so that they are available during entire thread execution.
+     */
+    @Slf4j
+    private static class AswgLogbookSink implements Sink
+    {
+        @Override
+        public void write(Precorrelation precorrelation, HttpRequest request) throws IOException
+        {
+            AswgHttpLog aswgHttpLog = toAswgHttpLog(precorrelation.getId(), request);
+            putInMdc(aswgHttpLog);
+            log.info("Server request: {}", aswgHttpLog);
+        }
+
+        @Override
+        public void write(Correlation correlation, HttpRequest request, HttpResponse response) throws IOException
+        {
+            AswgHttpLog aswgHttpLog = toAswgHttpLog(correlation.getId(), correlation.getDuration(), request, response);
+            putInMdc(aswgHttpLog);
+            log.info("Server response: {}", aswgHttpLog);
+        }
+
+        private static AswgHttpLog toAswgHttpLog(String correlationId,
+                                                 HttpRequest request) throws IOException
+        {
+            return AswgHttpLog.builder()
+                    .requestUri(request.getRequestUri())
+                    .method(request.getMethod())
+                    .requestBody(request.getBodyAsString())
+                    .requestContentType(request.getContentType())
+                    .correlationId(correlationId)
+                    .requestUserAgent(request.getHeaders().getFirst(HttpHeaders.USER_AGENT))
+                    .build();
+        }
+
+        private static AswgHttpLog toAswgHttpLog(String correlationId,
+                                                 Duration duration,
+                                                 HttpRequest request,
+                                                 HttpResponse response) throws IOException
+        {
+            return toAswgHttpLog(correlationId, request)
+                    .toBuilder()
+                    .requestDuration(duration)
+                    .responseContentType(response.getContentType())
+                    .responseBody(response.getBodyAsString())
+                    .responseStatus(String.format("%s %s", response.getStatus(), response.getReasonPhrase()))
+                    .build();
+        }
+
+        private void putInMdc(AswgHttpLog httpLog)
+        {
+            MDC.put(HttpTracingFields.CORRELATION_ID.getFieldName(), httpLog.getCorrelationId());
+            MDC.put(HttpTracingFields.URI.getFieldName(), httpLog.getRequestUri());
+            MDC.put(HttpTracingFields.CONTENT_TYPE.getFieldName(), httpLog.getRequestContentType());
+            MDC.put(HttpTracingFields.USER_AGENT.getFieldName(), httpLog.getRequestContentType());
+            MDC.put(HttpTracingFields.DURATION.getFieldName(), Optional.ofNullable(httpLog.getRequestDuration())
+                    .map(Duration::toMillis)
+                    .map(String::valueOf)
+                    .orElse(null));
+            MDC.put(HttpTracingFields.BODY.getFieldName(), httpLog.getRequestBody());
+            MDC.put(HttpTracingFields.METHOD.getFieldName(), httpLog.getMethod());
+            MDC.put(HttpTracingFields.RESPONSE_BODY.getFieldName(), httpLog.getResponseBody());
+            MDC.put(HttpTracingFields.RESPONSE_CONTENT_TYPE.getFieldName(), httpLog.getResponseContentType());
+            MDC.put(HttpTracingFields.STATUS.getFieldName(), httpLog.getResponseStatus());
+        }
+    }
+
+    @Builder(toBuilder = true)
+    @Value
+    private static class AswgHttpLog
+    {
+        String correlationId;
+        String requestUri;
+        String requestContentType;
+        String requestUserAgent;
+        Duration requestDuration;
+        String requestBody;
+        String method;
+        String responseBody;
+        String responseContentType;
+        String responseStatus;
     }
 }
