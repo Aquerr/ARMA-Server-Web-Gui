@@ -118,7 +118,7 @@ public class LogbookConfig
         {
             AswgHttpLog aswgHttpLog = toAswgHttpLog(precorrelation.getId(), request);
             putInMdc(aswgHttpLog);
-            log.info("Server request: {}", aswgHttpLog);
+            log.info("Server request: {}", aswgHttpLog.getRequestBody());
         }
 
         @Override
@@ -126,7 +126,7 @@ public class LogbookConfig
         {
             AswgHttpLog aswgHttpLog = toAswgHttpLog(correlation.getId(), correlation.getDuration(), request, response);
             putInMdc(aswgHttpLog);
-            log.info("Server response: {}", aswgHttpLog);
+            log.info("Server response: {}", aswgHttpLog.getResponseBody());
         }
 
         private static AswgHttpLog toAswgHttpLog(String correlationId,
