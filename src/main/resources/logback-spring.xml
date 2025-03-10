@@ -37,13 +37,12 @@
                                 "thread": "%thread",
                                 "method": "%X{method}",
                                 "request.uri": "%X{uri}",
-                                "request.body": "%X{body}",
                                 "request.user-agent": "%X{user-agent}",
                                 "request.content-type": "%X{request-content-type}",
                                 "response.content-type": "%X{response-content-type}",
                                 "response.duration": "%X{duration}",
-                                "response.body": "%X{response-body}",
-                                "message": "%message"
+                                "message": "%message",
+                                "exception": "%throwable"
                             }
                         </pattern>
                     </pattern>

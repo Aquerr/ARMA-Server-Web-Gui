@@ -1,5 +1,8 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.tracing;
 
+import lombok.Getter;
+
+@Getter
 public enum HttpTracingFields
 {
     URI("uri"),
@@ -7,8 +10,6 @@ public enum HttpTracingFields
     USER_ID("user-id"),
     USER_AGENT("user-agent"),
     DURATION("duration"),
-    BODY("body"),
-    RESPONSE_BODY("response-body"),
     CONTENT_TYPE("content-type"),
     RESPONSE_CONTENT_TYPE("response-content-type"),
     STATUS("status"),
@@ -20,10 +21,5 @@ public enum HttpTracingFields
     HttpTracingFields(String fieldName)
     {
         this.fieldName = fieldName;
-    }
-
-    public String getFieldName()
-    {
-        return fieldName;
     }
 }

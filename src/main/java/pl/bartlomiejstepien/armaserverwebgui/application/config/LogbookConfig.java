@@ -116,17 +116,31 @@ public class LogbookConfig
         @Override
         public void write(Precorrelation precorrelation, HttpRequest request) throws IOException
         {
-            AswgHttpLog aswgHttpLog = toAswgHttpLog(precorrelation.getId(), request);
-            putInMdc(aswgHttpLog);
-            log.info("Server request: {}", aswgHttpLog.getRequestBody());
+            try
+            {
+                AswgHttpLog aswgHttpLog = toAswgHttpLog(precorrelation.getId(), request);
+                putInMdc(aswgHttpLog);
+                log.info("Server request: {}", aswgHttpLog.getRequestBody());
+            }
+            catch (Exception e)
+            {
+                throw new IOException(e);
+            }
         }
 
         @Override
         public void write(Correlation correlation, HttpRequest request, HttpResponse response) throws IOException
         {
-            AswgHttpLog aswgHttpLog = toAswgHttpLog(correlation.getId(), correlation.getDuration(), request, response);
-            putInMdc(aswgHttpLog);
-            log.info("Server response: {}", aswgHttpLog.getResponseBody());
+            try
+            {
+                AswgHttpLog aswgHttpLog = toAswgHttpLog(correlation.getId(), correlation.getDuration(), request, response);
+                putInMdc(aswgHttpLog);
+                log.info("Server response: {}", aswgHttpLog.getResponseBody());
+            }
+            catch (Exception e)
+            {
+                throw new IOException(e);
+            }
         }
 
         private static AswgHttpLog toAswgHttpLog(String correlationId,
@@ -166,9 +180,7 @@ public class LogbookConfig
                     .map(Duration::toMillis)
                     .map(String::valueOf)
                     .orElse(null));
-            MDC.put(HttpTracingFields.BODY.getFieldName(), httpLog.getRequestBody());
             MDC.put(HttpTracingFields.METHOD.getFieldName(), httpLog.getMethod());
-            MDC.put(HttpTracingFields.RESPONSE_BODY.getFieldName(), httpLog.getResponseBody());
             MDC.put(HttpTracingFields.RESPONSE_CONTENT_TYPE.getFieldName(), httpLog.getResponseContentType());
             MDC.put(HttpTracingFields.STATUS.getFieldName(), httpLog.getResponseStatus());
         }

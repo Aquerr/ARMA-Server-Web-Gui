@@ -97,7 +97,7 @@
           <mat-error *ngIf="hasFormError('minErrorToSendNear', 'required')">This field is required</mat-error>
           <mat-error *ngIf="hasFormError('minErrorToSendNear', 'pattern')">Wrong pattern</mat-error>
         </mat-form-field>
-        <mat-form-field matTooltip="sers with custom face or custom sound larger than this size are kicked when trying to connect." matTooltipPosition="right">
+        <mat-form-field matTooltip="Users with custom face or custom sound larger than THIS size are kicked when trying to connect." matTooltipPosition="right">
           <mat-label>Max Custom File Size</mat-label>
           <input name="maxCustomFileSize" formControlName="maxCustomFileSize" matInput type="number" min="0" (keydown)="allowDigits($event)">
           <mat-error *ngIf="hasFormError('maxCustomFileSize', 'required')">This field is required</mat-error>
