@@ -13,7 +13,8 @@ public enum HttpTracingFields
     CONTENT_TYPE("content-type"),
     RESPONSE_CONTENT_TYPE("response-content-type"),
     STATUS("status"),
-    CORRELATION_ID("correlation-id")
+    CORRELATION_ID("correlation-id"),
+    REUQEST_HOST("request-host"),
     ;
 
     private final String fieldName;

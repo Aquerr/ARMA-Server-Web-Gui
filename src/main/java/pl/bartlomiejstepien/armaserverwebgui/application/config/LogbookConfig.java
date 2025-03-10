@@ -147,6 +147,7 @@ public class LogbookConfig
                                                  HttpRequest request) throws IOException
         {
             return AswgHttpLog.builder()
+                    .requestHost(request.getHost())
                     .requestUri(request.getRequestUri())
                     .method(request.getMethod())
                     .requestBody(request.getBodyAsString())
@@ -175,7 +176,7 @@ public class LogbookConfig
             MDC.put(HttpTracingFields.CORRELATION_ID.getFieldName(), httpLog.getCorrelationId());
             MDC.put(HttpTracingFields.URI.getFieldName(), httpLog.getRequestUri());
             MDC.put(HttpTracingFields.CONTENT_TYPE.getFieldName(), httpLog.getRequestContentType());
-            MDC.put(HttpTracingFields.USER_AGENT.getFieldName(), httpLog.getRequestContentType());
+            MDC.put(HttpTracingFields.USER_AGENT.getFieldName(), httpLog.getRequestUserAgent());
             MDC.put(HttpTracingFields.DURATION.getFieldName(), Optional.ofNullable(httpLog.getRequestDuration())
                     .map(Duration::toMillis)
                     .map(String::valueOf)
@@ -183,6 +184,7 @@ public class LogbookConfig
             MDC.put(HttpTracingFields.METHOD.getFieldName(), httpLog.getMethod());
             MDC.put(HttpTracingFields.RESPONSE_CONTENT_TYPE.getFieldName(), httpLog.getResponseContentType());
             MDC.put(HttpTracingFields.STATUS.getFieldName(), httpLog.getResponseStatus());
+            MDC.put(HttpTracingFields.REUQEST_HOST.getFieldName(), httpLog.getRequestHost());
         }
     }
 
@@ -191,6 +193,7 @@ public class LogbookConfig
     private static class AswgHttpLog
     {
         String correlationId;
+        String requestHost;
         String requestUri;
         String requestContentType;
         String requestUserAgent;

@@ -36,6 +36,7 @@
                                 "log.name": "%logger",
                                 "thread": "%thread",
                                 "method": "%X{method}",
+                                "request.host": "%X{request-host}",
                                 "request.uri": "%X{uri}",
                                 "request.user-agent": "%X{user-agent}",
                                 "request.content-type": "%X{request-content-type}",
