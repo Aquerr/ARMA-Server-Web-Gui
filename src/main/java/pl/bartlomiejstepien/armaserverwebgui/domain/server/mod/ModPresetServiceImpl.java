@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModPresetConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModPreset;
@@ -32,6 +33,7 @@ public class ModPresetServiceImpl implements ModPresetService
     private final ModPresetEntryRepository modPresetEntryRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<String> getModPresetsNames()
     {
         return this.modPresetRepository.findAll().stream()
@@ -40,6 +42,7 @@ public class ModPresetServiceImpl implements ModPresetService
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ModPreset> getModPresets()
     {
         List<ModPresetEntity.EntryEntity> modPresetEntities = modPresetEntryRepository.findAll();
@@ -70,6 +73,7 @@ public class ModPresetServiceImpl implements ModPresetService
     }
 
     @Override
+    @Transactional
     public void saveModPreset(ModPresetSaveParams modPresetSaveParams)
     {
         ModPreset modPreset = Optional.ofNullable(getModPreset(modPresetSaveParams.getName()))
@@ -101,6 +105,7 @@ public class ModPresetServiceImpl implements ModPresetService
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ModPreset getModPreset(Long id)
     {
         ModPresetEntity modPresetEntity = modPresetRepository.findById(id).orElse(null);
@@ -111,6 +116,7 @@ public class ModPresetServiceImpl implements ModPresetService
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ModPreset getModPreset(String name)
     {
         return modPresetRepository.findByName(name)
@@ -119,6 +125,7 @@ public class ModPresetServiceImpl implements ModPresetService
     }
 
     @Override
+    @Transactional
     public void importPreset(PresetImportParams params)
     {
         log.info("Importing preset: {}", params);
@@ -148,6 +155,7 @@ public class ModPresetServiceImpl implements ModPresetService
     }
 
     @Override
+    @Transactional
     public void selectPreset(String name)
     {
         ModPreset modPreset = getModPreset(name);
@@ -158,6 +166,7 @@ public class ModPresetServiceImpl implements ModPresetService
     }
 
     @Override
+    @Transactional
     public void deletePreset(String presetName)
     {
         ModPresetEntity modPresetEntity = this.modPresetRepository.findByName(presetName)
