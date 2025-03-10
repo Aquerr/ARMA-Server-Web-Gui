@@ -92,19 +92,23 @@
             <appender-ref ref="FILE-JSON-LOGS" />
             <appender-ref ref="CONSOLE" />
         </root>
+        <logger name="org.zalando.logbook" level="TRACE" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE-JSON-LOGS" />
+        </logger>
     </springProfile>
     <springProfile name="!file-json-logs">
         <root level="INFO">
             <appender-ref ref="FILE"/>
             <appender-ref ref="CONSOLE" />
         </root>
+        <logger name="org.zalando.logbook" level="TRACE" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+        </logger>
     </springProfile>
 
     <logger name="arma-server" level="INFO" additivity="false">
         <appender-ref ref="SERVER_LOG_FILE" />
-    </logger>
-    <logger name="org.zalando.logbook" level="TRACE" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE-JSON-LOGS"/>
     </logger>
 </configuration>
