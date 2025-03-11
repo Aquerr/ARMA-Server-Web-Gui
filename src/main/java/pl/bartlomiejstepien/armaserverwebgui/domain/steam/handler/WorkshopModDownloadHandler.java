@@ -25,8 +25,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopModInstallSteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -48,9 +46,6 @@ public class WorkshopModDownloadHandler implements SteamTaskHandler
     private final InstalledModRepository installedModRepository;
     private final ModStorage modStorage;
     private final WorkshopModInstallProgressWebsocketHandler workshopModInstallProgressWebsocketHandler;
-
-    private Thread steamCmdThread;
-    private Thread steamCmdErrorThread;
 
     @Override
     public void handle(SteamTask steamTask)
@@ -206,24 +201,22 @@ public class WorkshopModDownloadHandler implements SteamTaskHandler
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(Paths.get(parameters.getSteamCmdPath()).getParent().toFile());
         processBuilder.command(parameters.asExecutionParameters());
+        processBuilder.inheritIO();
         Process process;
         try
         {
             log.info("Starting workshop mod download process with params: {}", parameters);
             process = processBuilder.start();
-            handleProcessInputOutput(process);
             log.info("Download process started!");
         }
         catch (Exception e)
         {
-            closeProcessInputOutput();
             return CompletableFuture.failedFuture(e);
         }
         return process.onExit().thenApplyAsync(p ->
                 {
                     int exitValue = p.exitValue();
                     log.info("Exit value: " + exitValue);
-                    closeProcessInputOutput();
                     if (exitValue == 0)
                     {
                         log.info("Mod download complete!");
@@ -269,58 +262,5 @@ public class WorkshopModDownloadHandler implements SteamTaskHandler
                 .resolve("content")
                 .resolve(String.valueOf(SteamUtils.ARMA_APP_ID))
                 .resolve(String.valueOf(fileId));
-    }
-
-    private void handleProcessInputOutput(Process process)
-    {
-        this.steamCmdThread = new Thread(() ->
-        {
-            try {
-                final BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    log.info(line);
-                }
-                reader.close();
-            } catch (final Exception e) {
-                e.printStackTrace();
-                log.error("Error", e);
-            }
-        });
-
-        this.steamCmdErrorThread = new Thread(() ->
-        {
-            try {
-                final BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getErrorStream()));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    log.error(line);
-                }
-                reader.close();
-            } catch (final Exception e) {
-                e.printStackTrace();
-                log.error("Error", e);
-            }
-        });
-        this.steamCmdErrorThread.setDaemon(true);
-        this.steamCmdErrorThread.start();
-        this.steamCmdThread.setDaemon(true);
-        this.steamCmdThread.start();
-    }
-
-    private void closeProcessInputOutput()
-    {
-        if (steamCmdThread != null)
-        {
-            steamCmdThread.interrupt();
-            steamCmdThread = null;
-        }
-        if (steamCmdErrorThread != null)
-        {
-            steamCmdErrorThread.interrupt();
-            steamCmdErrorThread = null;
-        }
     }
 }

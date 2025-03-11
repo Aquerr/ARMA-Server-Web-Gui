@@ -4,52 +4,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModFolderNameHelper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.WorkshopModInstallProgressWebsocketHandler;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationStatus;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.MetaCppFile;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.dotnet.DotnetDateTimeUtils;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotUpdateArmaServerException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.RetryableException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamTaskHandleException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.handler.SteamTaskHandler;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.QueuedSteamTask;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamCmdAppUpdateParameters;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamCmdWorkshopDownloadParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopModInstallSteamTask;
-import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-
-import static java.lang.String.format;
-import static java.util.Optional.ofNullable;
 
 @Component
 @Slf4j

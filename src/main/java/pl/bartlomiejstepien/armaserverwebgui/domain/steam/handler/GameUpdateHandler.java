@@ -12,8 +12,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamTaskHan
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamCmdAppUpdateParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamTask;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -25,9 +23,6 @@ import java.util.concurrent.CompletionException;
 public class GameUpdateHandler implements SteamTaskHandler
 {
     private final ASWGConfig aswgConfig;
-
-    private Thread steamCmdThread;
-    private Thread steamCmdErrorThread;
 
     @Override
     public void handle(SteamTask steamTask)
@@ -58,23 +53,21 @@ public class GameUpdateHandler implements SteamTaskHandler
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(Paths.get(parameters.getSteamCmdPath()).getParent().toFile());
         processBuilder.command(parameters.asExecutionParameters());
+        processBuilder.inheritIO();
         Process process;
         try
         {
             log.info("Starting ARMA update process with params: {}", parameters);
             process = processBuilder.start();
-            handleProcessInputOutput(process);
             log.info("Update started...");
         }
         catch (Exception e)
         {
-            closeProcessInputOutput();
             return CompletableFuture.failedFuture(e);
         }
         return process.onExit().thenApplyAsync(p -> {
             int exitValue = p.exitValue();
             log.info("Exit value: " + exitValue);
-            closeProcessInputOutput();
             if (exitValue == 0)
             {
                 log.info("Arma update complete!");
@@ -85,58 +78,5 @@ public class GameUpdateHandler implements SteamTaskHandler
                 return CompletableFuture.failedFuture(new RuntimeException("Could not update ARMA server! Exit value: " + exitValue));
             }
         });
-    }
-
-    private void handleProcessInputOutput(Process process)
-    {
-        this.steamCmdThread = new Thread(() ->
-        {
-            try {
-                final BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    log.info(line);
-                }
-                reader.close();
-            } catch (final Exception e) {
-                e.printStackTrace();
-                log.error("Error", e);
-            }
-        });
-
-        this.steamCmdErrorThread = new Thread(() ->
-        {
-            try {
-                final BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getErrorStream()));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    log.error(line);
-                }
-                reader.close();
-            } catch (final Exception e) {
-                e.printStackTrace();
-                log.error("Error", e);
-            }
-        });
-        this.steamCmdErrorThread.setDaemon(true);
-        this.steamCmdErrorThread.start();
-        this.steamCmdThread.setDaemon(true);
-        this.steamCmdThread.start();
-    }
-
-    private void closeProcessInputOutput()
-    {
-        if (steamCmdThread != null)
-        {
-            steamCmdThread.interrupt();
-            steamCmdThread = null;
-        }
-        if (steamCmdErrorThread != null)
-        {
-            steamCmdErrorThread.interrupt();
-            steamCmdErrorThread = null;
-        }
     }
 }
