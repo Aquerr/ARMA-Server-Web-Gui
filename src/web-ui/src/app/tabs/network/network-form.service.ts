@@ -6,32 +6,36 @@ import {ServerNetworkProperties} from "../../service/server-network.service";
   providedIn: 'root'
 })
 export class NetworkFormService {
+
+  private readonly digitsRegex = /^\d+$/;
+  private readonly decimalRegex = /^\d+(.\d+)?$/;
+
   constructor(private readonly fb: FormBuilder) {
   }
 
   getForm(): FormGroup {
     return this.fb.group({
       upnp: [false, [Validators.required]],
-      maxPing: [500, [Validators.required]],
+      maxPing: [500, [Validators.required, Validators.pattern(this.digitsRegex)]],
       loopback: [false, [Validators.required]],
       disconnectTimeout: [5, [Validators.required, Validators.min(1)]],
-      maxDesync: [150, [Validators.required]],
-      maxPacketLoss: [150, [Validators.required]],
+      maxDesync: [150, [Validators.required, Validators.pattern(this.digitsRegex)]],
+      maxPacketLoss: [150, [Validators.required, Validators.pattern(this.digitsRegex)]],
       enablePlayerDiag: [false, [Validators.required]],
-      steamProtocolMaxDataSize: [1024, [Validators.required]],
-      minBandwidth: [131072, Validators.required],
-      maxBandwidth: [10000000000, Validators.required],
-      maxMsgSend: [128, Validators.required],
-      maxSizeGuaranteed: [512, Validators.required],
-      maxSizeNonGuaranteed: [256, Validators.required],
-      minErrorToSend: ['0.001', [Validators.required, Validators.pattern("[0-9]+(.[0-9]+)?")]],
-      minErrorToSendNear: ['0.01', [Validators.required, Validators.pattern("[0-9]+(.[0-9]+)?")]],
-      maxCustomFileSize: [0, Validators.required],
-      maxPacketSize: [1400, Validators.required],
-      manualKickTimeout: [60, [Validators.required, Validators.min(-2)]],
-      connectivityKickTimeout: [60, [Validators.required, Validators.min(-2)]],
-      battlEyeKickTimeout: [60, [Validators.required, Validators.min(-2)]],
-      harmlessKickTimeout: [60, [Validators.required, Validators.min(-2)]],
+      steamProtocolMaxDataSize: [1024, [Validators.required, Validators.pattern(this.digitsRegex)]],
+      minBandwidth: [131072, [Validators.required, Validators.pattern(this.digitsRegex)]],
+      maxBandwidth: [10000000000, [Validators.required, Validators.pattern(this.digitsRegex)]],
+      maxMsgSend: [128, [Validators.required, Validators.pattern(this.digitsRegex)]],
+      maxSizeGuaranteed: [512, [Validators.required, Validators.pattern(this.digitsRegex)]],
+      maxSizeNonGuaranteed: [256, [Validators.required, Validators.pattern(this.digitsRegex)]],
+      minErrorToSend: ['0.001', [Validators.required, Validators.pattern(this.decimalRegex)]],
+      minErrorToSendNear: ['0.01', [Validators.required, Validators.pattern(this.decimalRegex)]],
+      maxCustomFileSize: [0, [Validators.required, Validators.pattern(this.digitsRegex)]],
+      maxPacketSize: [1400, [Validators.required, Validators.pattern(this.digitsRegex)]],
+      manualKickTimeout: [60, [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]],
+      connectivityKickTimeout: [60, [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]],
+      battlEyeKickTimeout: [60, [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]],
+      harmlessKickTimeout: [60, [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]],
     });
   }
 

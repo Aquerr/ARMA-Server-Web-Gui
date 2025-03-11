@@ -52,15 +52,14 @@ export class NetworkComponent implements OnInit {
   }
 
   allowDecimals(event: KeyboardEvent) {
-    return this.allowDigits(event) || event.key === ".";
+    const target = event.target as HTMLInputElement;
+    target.value = target.value.replace(/[^.\d]/, '');
+    this.form.markAllAsTouched();
   }
 
   allowDigits(event: KeyboardEvent) {
-    const number = event.key as unknown as number;
-    return number >= 0 && number <= 9 || this.isInputAllowedKey(event.key);
-  }
-
-  isInputAllowedKey(key: string) {
-    return key === 'Backspace' || key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Tab' || key === 'Delete';
+    const target = event.target as HTMLInputElement;
+    target.value = target.value.replace(/\D+/, '');
+    this.form.markAllAsTouched();
   }
 }
