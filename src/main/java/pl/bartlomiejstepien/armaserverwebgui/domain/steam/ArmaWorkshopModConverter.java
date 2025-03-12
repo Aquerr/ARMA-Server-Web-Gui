@@ -22,6 +22,7 @@ public class ArmaWorkshopModConverter
                         .map(PublishedFileDetails.ChildItem::getPublishedFileId)
                         .map(Long::valueOf)
                         .toList())
+                .lastUpdate(publishedFileDetails.getUpdatedDateTime().toOffsetDateTime())
                 .build();
     }
 }

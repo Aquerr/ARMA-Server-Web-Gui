@@ -63,13 +63,16 @@ public class SteamWebApiService
     {
         try
         {
-            return Optional.ofNullable(this.steamWebApiClient.getSteamRemoteStorageClient().getPublishedFileDetails(new PublishedFileDetailsRequest(List.of(modId))))
+            log.info("Fetching workshop mod info for mod id: {}", modId);
+            WorkshopMod workshopMod = Optional.ofNullable(this.steamWebApiClient.getSteamRemoteStorageClient().getPublishedFileDetails(new PublishedFileDetailsRequest(List.of(modId))))
                     .map(PublishedFileDetailsResponse::getResponse)
                     .map(PublishedFileDetailsResponse.QueryFilesResponse::getPublishedFileDetails)
                     .filter(list -> !list.isEmpty())
                     .map(List::getFirst)
                     .map(this.armaWorkshopModConverter::convert)
                     .orElse(null);
+            log.info("Got workshop mod info: {}", workshopMod);
+            return workshopMod;
         }
         catch (Exception exception)
         {
