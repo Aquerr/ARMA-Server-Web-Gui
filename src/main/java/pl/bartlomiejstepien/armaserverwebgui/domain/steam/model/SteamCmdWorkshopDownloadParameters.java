@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class SteamCmdWorkshopDownloadParameters
+public class SteamCmdWorkshopDownloadParameters implements ProcessParameters
 {
     private long fileId;
     private String title;
@@ -16,7 +16,8 @@ public class SteamCmdWorkshopDownloadParameters
     private String steamUsername;
     private String steamPassword;
 
-    public List<String> asExecutionParameters()
+    @Override
+    public List<String> asProcessParameters()
     {
         return List.of(
                 steamCmdPath,

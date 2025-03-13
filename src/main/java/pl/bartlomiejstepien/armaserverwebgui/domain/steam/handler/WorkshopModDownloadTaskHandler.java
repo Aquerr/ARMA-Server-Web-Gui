@@ -14,6 +14,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirect
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.dotnet.DotnetDateTimeUtils;
+import pl.bartlomiejstepien.armaserverwebgui.application.util.ExternalProcess;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamWebApiService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
@@ -29,8 +30,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
@@ -38,7 +37,7 @@ import static java.util.Optional.ofNullable;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class WorkshopModDownloadHandler implements SteamTaskHandler
+public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
 {
     private final ASWGConfig aswgConfig;
     private final ModFolderNameHelper modFolderNameHelper;
@@ -136,28 +135,27 @@ public class WorkshopModDownloadHandler implements SteamTaskHandler
         if (!StringUtils.hasText(steamCmdPath))
             throw new SteamCmdPathNotSetException();
 
-        Path path;
         try
         {
-            path = downloadModThroughSteamCmd(SteamCmdWorkshopDownloadParameters.builder()
+            downloadModThroughSteamCmd(SteamCmdWorkshopDownloadParameters.builder()
                     .fileId(fileId)
                     .title(title)
                     .appId(SteamUtils.ARMA_APP_ID)
                     .steamCmdPath(aswgConfig.getSteamCmdPath())
                     .steamUsername(aswgConfig.getSteamCmdUsername())
                     .steamPassword(aswgConfig.getSteamCmdPassword())
-                    .build()).join();
+                    .build());
         }
-        catch (CompletionException e)
+        catch (Exception e)
         {
             throw new CouldNotDownloadWorkshopModException(e.getMessage(), e);
         }
 
-        if (path == null || Files.notExists(path))
+        Path path = buildWorkshopModDownloadPath(fileId);
+        if (Files.notExists(path))
         {
             throw new CouldNotDownloadWorkshopModException(format("Could not download mod id=%s title=%s.", fileId, title));
         }
-
         return path;
     }
 
@@ -196,62 +194,33 @@ public class WorkshopModDownloadHandler implements SteamTaskHandler
         log.info("Mod: {} saved in DB", modName);
     }
 
-    private CompletableFuture<Path> downloadModThroughSteamCmd(SteamCmdWorkshopDownloadParameters parameters)
+    private void downloadModThroughSteamCmd(SteamCmdWorkshopDownloadParameters parameters) throws Exception
     {
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.directory(Paths.get(parameters.getSteamCmdPath()).getParent().toFile());
-        processBuilder.command(parameters.asExecutionParameters());
-        processBuilder.inheritIO();
-        Process process;
-        try
-        {
-            log.info("Starting workshop mod download process with params: {}", parameters);
-            process = processBuilder.start();
-            log.info("Download process started!");
-        }
-        catch (Exception e)
-        {
-            return CompletableFuture.failedFuture(e);
-        }
-        return process.onExit().thenApplyAsync(p ->
-                {
-                    int exitValue = p.exitValue();
-                    log.info("Exit value: " + exitValue);
-                    if (exitValue == 0)
-                    {
-                        log.info("Mod download complete!");
-                        return CompletableFuture.completedFuture("Ok!");
-                    }
-                    else
-                    {
-                        return CompletableFuture.failedFuture(new RuntimeException("Could not download the mod file! Exit value: " + exitValue));
-                    }
-                })
-                .thenApplyAsync(t -> buildWorkshopModDownloadPath(parameters.getFileId()));
+        ExternalProcess externalProcess = new ExternalProcess();
+        externalProcess.startProcess(Paths.get(parameters.getSteamCmdPath()).getParent().toFile(), parameters);
     }
 
     private Path buildWorkshopModDownloadPath(long fileId)
     {
-        Path path;
         if (SystemUtils.isWindows())
         {
-            path = buildSteamAppsPath(Paths.get(aswgConfig.getSteamCmdPath())
+            return buildSteamAppsPath(Paths.get(aswgConfig.getSteamCmdPath())
                     .getParent(), fileId);
         }
         else
         {
-            path = buildSteamAppsPath(Paths.get(System.getProperty("user.home"))
+            String userHomeDirectory = System.getProperty("user.home");
+            Path path = buildSteamAppsPath(Paths.get(userHomeDirectory)
                     .resolve("Steam"), fileId);
 
-            if (!Files.exists(path))
-            {
-                path = buildSteamAppsPath(Paths.get(System.getProperty("user.home"))
+            if (Files.exists(path))
+                return path;
+
+            return buildSteamAppsPath(Paths.get(userHomeDirectory)
                         .resolve(".local")
                         .resolve("share")
                         .resolve("Steam"), fileId);
-            }
         }
-        return path;
     }
 
     private Path buildSteamAppsPath(Path basePath, long fileId)

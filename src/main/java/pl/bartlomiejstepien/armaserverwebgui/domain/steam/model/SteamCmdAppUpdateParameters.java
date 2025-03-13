@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class SteamCmdAppUpdateParameters
+public class SteamCmdAppUpdateParameters implements ProcessParameters
 {
     private int appId;
     private String serverDirectoryPath;
@@ -17,7 +17,8 @@ public class SteamCmdAppUpdateParameters
     private String steamPassword;
     private String branch;
 
-    public List<String> asExecutionParameters()
+    @Override
+    public List<String> asProcessParameters()
     {
         final List<String> params = new ArrayList<>(List.of(
                 steamCmdPath,
