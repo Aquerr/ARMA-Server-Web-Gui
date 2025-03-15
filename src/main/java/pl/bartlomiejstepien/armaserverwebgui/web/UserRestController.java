@@ -81,6 +81,20 @@ public class UserRestController
         this.userService.deleteUser(userId);
     }
 
+    @HasPermissionUsersUpdate
+    @PostMapping("/{id}/password-change")
+    public void updateUserPassword(@PathVariable("id") int userId,
+                                   @RequestBody PasswordChange passwordChange)
+    {
+        this.userService.updatePassword(userId, passwordChange.getPassword());
+    }
+
+    @Data
+    public static class PasswordChange
+    {
+        private String password;
+    }
+
     @Data
     public static class NewUserRequest
     {

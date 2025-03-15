@@ -28,6 +28,10 @@ export class UsersService {
   deleteUser(id: number) {
     return this.httpClient.delete(`${API_BASE_URL}/users/${id}`);
   }
+
+  updatePassword(id: number, password: string) {
+    return this.httpClient.post(`${API_BASE_URL}/users/${id}/password-change`, {password: password})
+  }
 }
 
 export interface AswgUser {

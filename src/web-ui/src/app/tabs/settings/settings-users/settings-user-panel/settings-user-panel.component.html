@@ -14,13 +14,16 @@
             <input matInput formControlName="username" type="text">
           </mat-form-field>
 
-          <!-- TODO: Add password change checkbox -->
-          <mat-form-field>
-            <mat-label>Password</mat-label>
-            <input matInput formControlName="password" type="password" placeholder="<hidden>">
-          </mat-form-field>
+          @if (user.id) {
+            <button mat-stroked-button (click)="showEditPasswordModal()">Change password</button>
+          } @else {
+            <mat-form-field>
+              <mat-label>Password</mat-label>
+              <input matInput formControlName="password" type="password" placeholder="<hidden>">
+            </mat-form-field>
+          }
           <aswg-chip-form-input
-            style="width: 100%"
+            style="width: 100%; margin-top: 1rem;"
             labelText="Authorities"
             [control]="formService.getAuthoritiesControl(form)"
             [parent]="form"

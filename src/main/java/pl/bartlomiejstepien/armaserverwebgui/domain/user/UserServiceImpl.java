@@ -152,6 +152,18 @@ public class UserServiceImpl implements UserService
                         .collect(Collectors.toSet())));
     }
 
+    @Override
+    @Transactional
+    public void updatePassword(int userId, String password)
+    {
+        AswgUserEntity userEntity = this.userRepository.findById(userId).orElse(null);
+        if (userEntity == null)
+            throw new IllegalArgumentException("User does not exist for id" + userId);
+
+        userEntity.setPassword(passwordEncoder.encode(password));
+        this.userRepository.save(userEntity);
+    }
+
     private AswgUserEntity toEntity(AswgUserWithPassword user)
     {
         AswgUserEntity entity = new AswgUserEntity();

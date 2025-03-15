@@ -3,6 +3,8 @@ import {AswgUser} from "../../../../service/users.service";
 import {FormGroup} from "@angular/forms";
 import {EditUserFormService} from "./edit-user-form.service";
 import {AswgAuthority} from "../../../../model/authority.model";
+import {DialogService} from "../../../../service/dialog.service";
+import {PasswordChangeModalComponent} from "./password-change-modal/password-change-modal.component";
 
 @Component({
   selector: 'app-settings-user-panel',
@@ -13,6 +15,7 @@ import {AswgAuthority} from "../../../../model/authority.model";
 export class SettingsUserPanelComponent implements OnInit {
 
   formService: EditUserFormService = inject(EditUserFormService);
+  dialogService: DialogService = inject(DialogService);
 
   @Input({required: true})
   user!: AswgUser;
@@ -46,5 +49,11 @@ export class SettingsUserPanelComponent implements OnInit {
 
   prepareAuthorities() {
     return Object.values(AswgAuthority).sort();
+  }
+
+  showEditPasswordModal() {
+    this.dialogService.open(PasswordChangeModalComponent,
+      (dialogResult) => {
+    }, this.user)
   }
 }

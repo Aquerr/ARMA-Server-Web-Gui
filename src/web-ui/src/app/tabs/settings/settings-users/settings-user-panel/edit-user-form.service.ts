@@ -12,7 +12,7 @@ export class EditUserFormService {
     return this.formBuilder.group({
       id: [null],
       username: ['', Validators.required],
-      password: ['', Validators.required],
+      password: [''],
       locked: [false, Validators.required],
       authorities: [[]]
     });

@@ -20,4 +20,6 @@ public interface UserService
     void addNewUser(AswgUserWithPassword user);
 
     void updateUser(AswgUserWithPassword user);
+
+    void updatePassword(int userId, String password);
 }
