@@ -20,7 +20,7 @@ public class ModUpdateJob
     @Value("${aswg.job.mod-update.enabled:false}")
     private boolean enabled = false;
 
-    @Scheduled(cron = "${aswg.job.mod-update.cron:* * 1 * * *}")
+    @Scheduled(cron = "${aswg.job.mod-update.cron:0 0 1 * * *}")
     public void updateMods()
     {
         if (!enabled)
