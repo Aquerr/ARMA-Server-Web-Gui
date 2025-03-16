@@ -45,6 +45,9 @@ public class ASWGConfig
     private static final String MOD_SETTINGS_INSTLLATION_SCANNER_ENABLED = "aswg.job.mod-settings-scanner.installation.enabled";
     private static final String VANILLA_MISSIONS_IMPORTER = "aswg.vanilla-missions-importer.enabled";
 
+    private static final String JOB_MOD_UPDATE_ENABLED_PROPERTY = "aswg.job.mod-update.enabled";
+    private static final String JOB_MOD_UPDATE_CRON_PROPERTY = "aswg.job.mod-update.cron";
+
     // Discord
     private static final String DISCORD_WEBHOOK_ENABLED = "aswg.discord.webhook.enabled";
     private static final String DISCORD_WEBHOOK_URL = "aswg.discord.webhook.url";
@@ -88,6 +91,12 @@ public class ASWGConfig
     private boolean modSettingsInstallationScannerEnabled;
     @Value("${aswg.vanilla-missions-importer.enabled:false}")
     private boolean vanillaMissionsImporter;
+
+    @Value("${" + JOB_MOD_UPDATE_ENABLED_PROPERTY + "}")
+    private boolean jobModUpdateEnabled;
+
+    @Value("${" + JOB_MOD_UPDATE_CRON_PROPERTY + "}")
+    private String jobModUpdateCron;
 
     @Value("${aswg.server.branch:public}")
     private String serverBranch;
@@ -141,6 +150,9 @@ public class ASWGConfig
         configurationProperties.setProperty(FILE_SCANNER_DELETION_ENABLED_PROPERTY, String.valueOf(this.modsScannerDeletionEnabled));
         configurationProperties.setProperty(DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED, String.valueOf(this.difficultyProfileInstallationScannerEnabled));
         configurationProperties.setProperty(MOD_SETTINGS_INSTLLATION_SCANNER_ENABLED, String.valueOf(this.modSettingsInstallationScannerEnabled));
+
+        configurationProperties.setProperty(JOB_MOD_UPDATE_ENABLED_PROPERTY, String.valueOf(this.jobModUpdateEnabled));
+        configurationProperties.setProperty(JOB_MOD_UPDATE_CRON_PROPERTY, this.jobModUpdateCron);
 
         configurationProperties.setProperty(DISCORD_WEBHOOK_URL, this.discordProperties.getWebhookUrl());
         configurationProperties.setProperty(DISCORD_WEBHOOK_ENABLED, String.valueOf(this.discordProperties.isEnabled()));
