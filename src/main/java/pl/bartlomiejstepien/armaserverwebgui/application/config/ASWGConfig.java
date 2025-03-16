@@ -92,10 +92,10 @@ public class ASWGConfig
     @Value("${aswg.vanilla-missions-importer.enabled:false}")
     private boolean vanillaMissionsImporter;
 
-    @Value("${" + JOB_MOD_UPDATE_ENABLED_PROPERTY + "}")
+    @Value("${" + JOB_MOD_UPDATE_ENABLED_PROPERTY + ":true}")
     private boolean jobModUpdateEnabled;
 
-    @Value("${" + JOB_MOD_UPDATE_CRON_PROPERTY + "}")
+    @Value("${" + JOB_MOD_UPDATE_CRON_PROPERTY + ":0 0 1 * * *}")
     private String jobModUpdateCron;
 
     @Value("${aswg.server.branch:public}")
