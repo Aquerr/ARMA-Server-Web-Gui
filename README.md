@@ -37,16 +37,14 @@ Check the feature list below to get to know more.
 
 # Setup
 
-ASWG is very easy to set up.
-
-Installation:
+### Installation:
 - Install JRE 21
 - [Install Arma Server in desired directory](https://community.bistudio.com/wiki/Arma_3:_Dedicated_Server).
-- [Build ASWG yourself](#Building). (There is no download link ATM)
+- [Download](https://github.com/Aquerr/ARMA-Server-Web-Gui/packages/2322633) ASWG from Github Packages or [build ASWG yourself](#Building).
 - Put `ASWG.jar` file in desired folder where you want your ASWG to be running.
 - Run `ASWG.jar` by executing `java -jar aswg.jar` in the console.
   - To change `ASWG` port, for example to `8444`. Run it with `java -Dserver.port=8444 -jar aswg.jar`
-- A configuration file will be created after running ASWG. Edit it to set the ASWG username and password. Restart ASWG after making changes.
+- ASWG configuration file will be created after on first run. Edit it to set the ASWG username and password. Restart ASWG after making changes.
 - Open `http://localhost:8085` to enter ASWG.
 - Extra: If you want to use steam workshop and download mods automatically, configure steamcmd properties.
 
@@ -54,7 +52,6 @@ For SteamCMD installation check [SteamCMD wiki](https://developer.valvesoftware.
 
 # Building
 
-To build ASWG: 
 - Install JDK 21
 - Clone repo
 - Go to project directory
