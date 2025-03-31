@@ -1,0 +1,27 @@
+<nav class="navbar navbar-dark aswg-bg-blue">
+  <div class="top-container">
+    <div class="left-column">
+      <a class="navbar-brand" routerLink="/general">ASWG</a>
+    </div>
+    <div class="right-column">
+      <div class="theme-container">
+        <button mat-icon-button
+                color="primary"
+                (click)="changeTheme()">
+          <mat-icon matTooltip="Change Theme" *ngIf="!darkMode">nightlight</mat-icon>
+          <mat-icon matTooltip="Change Theme" *ngIf="darkMode">light_mode</mat-icon>
+        </button>
+      </div>
+      <div class="username-container">
+        <mat-icon [fontIcon]="'person'"></mat-icon>
+        <span class="user-name" *ngIf="isAuthenticated()">{{ username }}</span>
+      </div>
+      <button mat-icon-button
+              color="primary"
+              (click)="logout()"
+              *ngIf="isAuthenticated()">
+        <mat-icon [fontIcon]="'logout'"></mat-icon>
+      </button>
+    </div>
+  </div>
+</nav>

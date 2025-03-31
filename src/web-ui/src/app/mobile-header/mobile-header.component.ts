@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {AuthService} from "../service/auth.service";
 
 @Component({
     selector: 'app-mobile-header',
@@ -7,19 +8,17 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
     standalone: false
 })
 export class MobileHeaderComponent {
-
   @Input()
   darkMode: boolean = true;
 
   @Output()
   changeThemeEmit: EventEmitter<void> = new EventEmitter();
 
+  username: string | null = null;
   sideMenuExpanded = false;
 
-  constructor() { }
-
-  changeTheme() {
-    this.changeThemeEmit.emit();
+  constructor(private authService: AuthService) {
+    if (this.isAuthenticated()) this.username = this.authService.getUsername();
   }
 
   toggleSideMenu() {
@@ -28,6 +27,14 @@ export class MobileHeaderComponent {
 
   closeSideMenu() {
     this.sideMenuExpanded = false;
+  }
+
+  isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
+  changeTheme() {
+    this.changeThemeEmit.emit();
   }
 
 }

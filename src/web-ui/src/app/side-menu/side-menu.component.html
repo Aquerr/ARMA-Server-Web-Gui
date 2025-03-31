@@ -1,59 +1,64 @@
 <div class="side-menu-container">
-<ng-container *ngIf="!isMobile">
-  <div class="nav-container">
-    <a class="navbar-brand" routerLink="/general">ASWG</a>
-    <mat-icon class="theme-icon" (click)="changeTheme()" matTooltip="Change theme" *ngIf="!darkMode">nightlight</mat-icon>
-    <mat-icon class="theme-icon" (click)="changeTheme()" matTooltip="Change theme" *ngIf="darkMode">light_mode</mat-icon>
-  </div>
-</ng-container>
-<mat-nav-list class="nav-list">
-  <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/status')">
-    <span>Status</span>
-    <mat-icon [fontIcon]="'connected_tv'"></mat-icon>
-  </mat-list-item>
-  <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/general')">
-    <span>General</span>
-    <mat-icon [fontIcon]="'view_list'"></mat-icon>
-  </mat-list-item>
-  <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/security')">
-    <span>Security</span>
-    <mat-icon [fontIcon]="'security'"></mat-icon>
-  </mat-list-item>
-  <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/network')">
-    <span>Network</span>
-    <mat-icon [fontIcon]="'network_check'"></mat-icon>
-  </mat-list-item>
-  <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/difficulty')">
-    <span>Difficulty</span>
-    <mat-icon [fontIcon]="'gamepad'"></mat-icon>
-  </mat-list-item>
-  <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/missions')">
-    <span>Missions</span>
-    <mat-icon [fontIcon]="'folder_managed'"></mat-icon>
-  </mat-list-item>
-  <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/mods')">
-    <span>Mods</span>
-    <mat-icon [fontIcon]="'folder_managed'"></mat-icon>
-  </mat-list-item>
-  <mat-list-item class="aswg-list-item" [ngClass]="isWorkshopActive ? '' : 'aswg-list-item-inactive'" (click)="routerLinkClicked('/workshop')">
-    <span>Workshop</span>
-    <mat-icon [fontIcon]="'home_repair_service'"></mat-icon>
-  </mat-list-item>
-  <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/logging')">
-    <span>Logging</span>
-    <mat-icon [fontIcon]="'description'"></mat-icon>
-  </mat-list-item>
-  <mat-divider></mat-divider>
-  <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/settings')">
-    <span>Settings</span>
-    <mat-icon [fontIcon]="'settings'"></mat-icon>
-  </mat-list-item>
-  <mat-divider></mat-divider>
-  <mat-list-item class="aswg-list-item"
-                 (click)="logout()"
-                  *ngIf="isAuthenticated()">
-    <span>Logout</span>
-    <mat-icon [fontIcon]="'logout'"></mat-icon>
-  </mat-list-item>
-</mat-nav-list>
+  <mat-nav-list class="nav-list">
+    <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/status')">
+      <span>Status</span>
+      <mat-icon [fontIcon]="'connected_tv'"></mat-icon>
+    </mat-list-item>
+    <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/general')">
+      <span>General</span>
+      <mat-icon [fontIcon]="'view_list'"></mat-icon>
+    </mat-list-item>
+    <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/security')">
+      <span>Security</span>
+      <mat-icon [fontIcon]="'security'"></mat-icon>
+    </mat-list-item>
+    <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/network')">
+      <span>Network</span>
+      <mat-icon [fontIcon]="'network_check'"></mat-icon>
+    </mat-list-item>
+    <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/difficulty')">
+      <span>Difficulty</span>
+      <mat-icon [fontIcon]="'gamepad'"></mat-icon>
+    </mat-list-item>
+    <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/missions')">
+      <span>Missions</span>
+      <mat-icon [fontIcon]="'folder_managed'"></mat-icon>
+    </mat-list-item>
+    <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/mods')">
+      <span>Mods</span>
+      <mat-icon [fontIcon]="'folder_managed'"></mat-icon>
+    </mat-list-item>
+    <mat-list-item class="aswg-list-item" [ngClass]="isWorkshopActive ? '' : 'aswg-list-item-inactive'"
+                   (click)="routerLinkClicked('/workshop')">
+      <span>Workshop</span>
+      <mat-icon [fontIcon]="'home_repair_service'"></mat-icon>
+    </mat-list-item>
+    <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/logging')">
+      <span>Logging</span>
+      <mat-icon [fontIcon]="'description'"></mat-icon>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <ng-container *ngIf="isMobile">
+      <mat-list-item class="aswg-list-item" (click)="changeTheme()">
+        <span>Change theme</span>
+        <mat-icon class="theme-icon" matTooltip="Change theme" *ngIf="!darkMode">nightlight
+        </mat-icon>
+        <mat-icon class="theme-icon" matTooltip="Change theme" *ngIf="darkMode">light_mode
+        </mat-icon>
+      </mat-list-item>
+    </ng-container>
+    <mat-list-item class="aswg-list-item" (click)="routerLinkClicked('/settings')">
+      <span>Settings</span>
+      <mat-icon [fontIcon]="'settings'"></mat-icon>
+    </mat-list-item>
+    <ng-container *ngIf="isMobile">
+      <mat-divider></mat-divider>
+      <mat-list-item class="aswg-list-item"
+                     (click)="logout()"
+                     *ngIf="isAuthenticated()">
+        <span>Logout</span>
+        <mat-icon [fontIcon]="'logout'"></mat-icon>
+      </mat-list-item>
+    </ng-container>
+  </mat-nav-list>
 </div>
