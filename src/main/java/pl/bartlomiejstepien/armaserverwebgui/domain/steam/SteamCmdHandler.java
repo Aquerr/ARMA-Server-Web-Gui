@@ -81,6 +81,7 @@ public class SteamCmdHandler
         }
         catch (Exception exception)
         {
+            this.currentlyProcessingTask = null;
             log.warn("Exception during handling of steam task.", exception);
             if (exception instanceof RetryableException && steamTaskRetryPolicy.canRetry(queuedSteamTask))
             {
