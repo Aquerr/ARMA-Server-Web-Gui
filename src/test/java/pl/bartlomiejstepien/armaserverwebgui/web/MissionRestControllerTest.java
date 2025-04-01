@@ -50,9 +50,9 @@ class MissionRestControllerTest extends BaseIntegrationTest
     @Test
     void shouldDeleteMissionReturnErrorWhenMissionNotFound() {
         var response = testRestTemplate.exchange(
-                "/api/v1/missions/template/test",
+                "/api/v1/missions/template",
                 HttpMethod.DELETE,
-                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
+                new HttpEntity<>("{\"template\": \"test\"}", MultiValueMap.fromSingleValue(Map.of(
                         HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
                         HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
                         HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
@@ -71,9 +71,44 @@ class MissionRestControllerTest extends BaseIntegrationTest
         String jwt = createJwtForTestUser();
 
         var response1 = testRestTemplate.exchange(
-                "/api/v1/missions/template/" + missionTemplate,
+                "/api/v1/missions/template",
                 HttpMethod.DELETE,
+                new HttpEntity<>("{\"template\": \"" + missionTemplate + "\"}", MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + jwt,
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))),
+                String.class
+        );
+        assertTrue(response1.getStatusCode().is2xxSuccessful());
+
+        var response2 = testRestTemplate.exchange(
+                "/api/v1/missions",
+                HttpMethod.GET,
                 new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + jwt,
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))),
+                MissionRestController.GetMissionsResponse.class
+        );
+
+        assertTrue(response2.getStatusCode().is2xxSuccessful());
+        assertThat(response2.getBody().getEnabledMissions()).isEmpty();
+        assertThat(response2.getBody().getDisabledMissions()).isEmpty();
+    }
+
+    @Test
+    void shouldDeleteMissionWithPercentageEncodedWhitespace() {
+        String missionTemplate = "1-operacja%201604.sehreno";
+        missionRepository.save(new MissionEntity(null, "1604", missionTemplate, "custom", true, null));
+
+        String jwt = createJwtForTestUser();
+
+        var response1 = testRestTemplate.exchange(
+                "/api/v1/missions/template",
+                HttpMethod.DELETE,
+                new HttpEntity<>("{\"template\": \"" + missionTemplate + "\"}", MultiValueMap.fromSingleValue(Map.of(
                         HttpHeaders.AUTHORIZATION, "Bearer " + jwt,
                         HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
                         HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE

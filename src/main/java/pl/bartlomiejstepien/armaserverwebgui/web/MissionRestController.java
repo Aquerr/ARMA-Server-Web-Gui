@@ -26,8 +26,6 @@ import pl.bartlomiejstepien.armaserverwebgui.web.validator.MissionFileValidator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.MissionService;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -77,10 +75,10 @@ public class MissionRestController
     }
 
     @HasPermissionMissionDelete
-    @DeleteMapping(value = "/template/{template}")
-    public ResponseEntity<?> deleteMission(@PathVariable("template") String template)
+    @DeleteMapping(value = "/template")
+    public ResponseEntity<?> deleteMission(@RequestBody DeleteMissionRequest deleteMissionRequest)
     {
-        this.missionService.deleteMission(URLDecoder.decode(template, StandardCharsets.UTF_8));
+        this.missionService.deleteMission(deleteMissionRequest.getTemplate());
         return ResponseEntity.ok().build();
     }
 
@@ -114,6 +112,12 @@ public class MissionRestController
     public static class AddMissionRequest
     {
         private String name;
+        private String template;
+    }
+
+    @Data
+    public static class DeleteMissionRequest
+    {
         private String template;
     }
 }

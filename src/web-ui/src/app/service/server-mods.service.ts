@@ -25,7 +25,7 @@ export class ServerModsService {
   }
 
   deleteMod(modName: string): Observable<any> {
-    return this.httpClient.delete(`${this.MODS_URL}/` + encodeURIComponent(modName));
+    return this.httpClient.delete(`${this.MODS_URL}`, {body: {"name": modName}});
   }
 
   saveEnabledMods(saveEnabledModsRequest: SaveEnabledModsRequest) {

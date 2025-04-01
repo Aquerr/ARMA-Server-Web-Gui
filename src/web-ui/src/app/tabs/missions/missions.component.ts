@@ -97,6 +97,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
     this.maskService.show();
     this.missionsService.deleteMission(missionTemplate).subscribe(response => {
       this.maskService.hide();
+      this.notificationService.successNotification("Mission has been deleted!");
       this.reloadMissionsDataSubject.next(null);
     });
   }

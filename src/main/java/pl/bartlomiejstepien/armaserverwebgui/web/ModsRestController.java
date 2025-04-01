@@ -80,10 +80,10 @@ public class ModsRestController
     }
 
     @HasPermissionModsDelete
-    @DeleteMapping(value = "/{modName}")
-    public ResponseEntity<?> deleteMod(@PathVariable("modName") String modName)
+    @DeleteMapping
+    public ResponseEntity<?> deleteMod(@RequestBody DeleteModRequest request)
     {
-        this.modService.deleteMod(modName);
+        this.modService.deleteMod(request.getName());
         return ResponseEntity.ok().build();
     }
 
@@ -193,5 +193,11 @@ public class ModsRestController
     public static class PresetSaveResponse
     {
         boolean saved;
+    }
+
+    @Data
+    public static class DeleteModRequest
+    {
+        String name;
     }
 }

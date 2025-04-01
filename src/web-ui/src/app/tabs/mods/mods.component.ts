@@ -126,6 +126,7 @@ export class ModsComponent implements OnInit, OnDestroy {
   }
 
   onModDelete(mod: Mod) {
+    this.notificationService.successNotification("Mod has been deleted!");
     this.reloadModsDataSubject.next(null);
   }
 
