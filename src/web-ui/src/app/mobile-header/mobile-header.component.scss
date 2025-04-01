@@ -35,14 +35,20 @@ mat-icon:hover {
   margin-left: 10px;
 }
 
-.theme-icon {
-  display: grid;
-  justify-items: right;
-  align-items: center;
-  margin-right: 10px;
-  cursor: pointer;
-}
-
 .mobile-side-menu {
   width: 100%;
 }
+
+.username-container {
+  display: flex;
+  justify-items: right;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  padding: 0 5px;
+}
+
+.username-container span {
+  color: white;
+}
+

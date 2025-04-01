@@ -101,10 +101,12 @@ import {MatAutocomplete, MatAutocompleteTrigger} from "@angular/material/autocom
 import {
   PasswordChangeModalComponent
 } from "./tabs/settings/settings-users/settings-user-panel/password-change-modal/password-change-modal.component";
+import {DesktopHeaderComponent} from "./desktop-header/desktop-header.component";
 
 @NgModule({
   declarations: [
     AppComponent,
+    DesktopHeaderComponent,
     MobileHeaderComponent,
     GeneralComponent,
     NetworkComponent,

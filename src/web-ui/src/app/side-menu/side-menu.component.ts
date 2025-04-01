@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {WorkshopService} from "../service/workshop.service";
 import {AuthService} from "../service/auth.service";
 import {Router} from "@angular/router";
@@ -12,18 +12,19 @@ import {MaskService} from "../service/mask.service";
     styleUrls: ['./side-menu.component.scss'],
     standalone: false
 })
-export class SideMenuComponent implements OnInit {
+export class SideMenuComponent {
   @Input()
   isMobile = false;
   @Input()
   darkMode: boolean = true;
+
   @Output()
   routerLinkClickEmitter: EventEmitter<string> = new EventEmitter();
   @Output()
   changeThemeEmit: EventEmitter<void> = new EventEmitter();
 
   isWorkshopActive: boolean = false;
-
+  username: string | null = null;
   routePreCheck = new Map<string, (routerLink: string) => Observable<boolean>>();
 
   constructor(private router: Router,
@@ -35,17 +36,25 @@ export class SideMenuComponent implements OnInit {
     if (this.authService.isAuthenticated()) {
       this.workshopService.canUseWorkshop().subscribe(response => {
         this.isWorkshopActive = response.active;
-      })
+      });
+      this.username = this.authService.getUsername();
     }
 
     this.routePreCheck.set("/workshop", () => this.canUseWorkshopRoute());
   }
 
-  ngOnInit(): void {
+  changeTheme() {
+    this.changeThemeEmit.emit();
   }
 
   isAuthenticated() {
     return this.authService.isAuthenticated();
+  }
+
+  logout() {
+    this.routerLinkClicked("/logout");
+    this.authService.logout();
+    this.router.navigateByUrl("/login");
   }
 
   routerLinkClicked(routerLink: string) {
@@ -68,16 +77,6 @@ export class SideMenuComponent implements OnInit {
         this.routerLinkClickEmitter.emit(routerLink);
       }
     });
-  }
-
-  changeTheme() {
-    this.changeThemeEmit.emit();
-  }
-
-  logout() {
-    this.routerLinkClicked("/logout");
-    this.authService.logout();
-    this.router.navigateByUrl("/login");
   }
 
   private canUseRouteDefault(): Observable<boolean> {

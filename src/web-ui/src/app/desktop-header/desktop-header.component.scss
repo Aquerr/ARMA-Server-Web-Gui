@@ -1,0 +1,36 @@
+.aswg-bg-blue {
+  background-color: var(--aswg-primary-color);
+}
+
+.top-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+}
+
+mat-icon {
+  color: white;
+}
+
+mat-icon:hover {
+  cursor: pointer;
+}
+
+.right-column {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.right-column span {
+  color: white;
+}
+
+.username-container {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  gap: 5px;
+}
