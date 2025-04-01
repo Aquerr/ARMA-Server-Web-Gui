@@ -7,7 +7,7 @@
     <a class="navbar-brand" routerLink="/general">ASWG</a>
     <div class="username-container">
       <mat-icon [fontIcon]="'person'"></mat-icon>
-      <span class="user-name" *ngIf="isAuthenticated()">{{ username }}</span>
+      <span class="user-name" *ngIf="isAuthenticated()">{{ getUsername() }}</span>
     </div>
   </div>
 
