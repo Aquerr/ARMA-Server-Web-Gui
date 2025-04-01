@@ -6,11 +6,11 @@
     <app-desktop-header class="desktop-header" (changeThemeEmit)="changeTheme()"
                         [darkMode]="isDarkMode()"></app-desktop-header>
   </ng-template>
-  <div style="display: flex; flex-direction: row; height: 100%;">
-    <div class="side-menu-wrapper" *ngIf="!isMobile">
-      <app-side-menu [darkMode]="isDarkMode()"></app-side-menu>
-      <ng-container [ngTemplateOutlet]="footer" *ngIf="!isMobile"></ng-container>
-    </div>
+  <div class="side-menu-wrapper" *ngIf="!isMobile">
+    <app-side-menu [darkMode]="isDarkMode()"></app-side-menu>
+    <ng-container [ngTemplateOutlet]="footer" *ngIf="!isMobile"></ng-container>
+  </div>
+  <div class="router-wrapper">
     <div class="router-section">
       <div class="content">
         <router-outlet></router-outlet>

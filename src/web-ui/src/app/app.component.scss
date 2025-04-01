@@ -2,9 +2,16 @@
   padding: 10px;
 }
 
-.router-section {
-  display: block;
+.router-wrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
   margin-left: 280px;
+}
+
+.router-section {
+  margin-top: 50px;
+  display: block;
   min-height: 300px;
   width: calc(100vw - 280px);
 }
@@ -21,6 +28,7 @@
   justify-content: space-between;
   width: 280px;
   height: 100%;
+  margin-top: 50px;
   background-color: var(--aswg-bg-primary-bg-color);
 }
 
@@ -32,12 +40,26 @@
   justify-content: space-between;
 }
 
+.desktop-header {
+  position: fixed;
+  height: 50px;
+  z-index: 100;
+  width: 100%;
+}
+
 @media (max-width: 800px) {
 
   footer {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .router-wrapper {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    margin-left: 0;
   }
 
   .router-section {
