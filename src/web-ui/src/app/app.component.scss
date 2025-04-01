@@ -52,4 +52,11 @@
     position: fixed;
     z-index: 100;
   }
+
+  .desktop-header {
+    position: fixed;
+    height: 50px;
+    z-index: 100;
+    width: 100%;
+  }
 }

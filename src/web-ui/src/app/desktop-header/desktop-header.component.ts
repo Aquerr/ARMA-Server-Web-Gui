@@ -19,14 +19,11 @@ export class DesktopHeaderComponent {
   changeThemeEmit: EventEmitter<void> = new EventEmitter();
   @Output()
   routerLinkClickEmitter: EventEmitter<string> = new EventEmitter();
-
-  username: string | null = null;
   routePreCheck = new Map<string, (routerLink: string) => Observable<boolean>>();
 
   constructor(private authService: AuthService,
               private router: Router,
               private maskService: MaskService) {
-    if (this.isAuthenticated()) this.username = this.authService.getUsername();
   }
 
   logout() {
@@ -36,6 +33,10 @@ export class DesktopHeaderComponent {
   }
   isAuthenticated() {
     return this.authService.isAuthenticated();
+  }
+
+  getUsername() {
+    return this.authService.getUsername();
   }
 
   changeTheme() {

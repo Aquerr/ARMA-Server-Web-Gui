@@ -13,12 +13,9 @@ export class MobileHeaderComponent {
 
   @Output()
   changeThemeEmit: EventEmitter<void> = new EventEmitter();
-
-  username: string | null = null;
   sideMenuExpanded = false;
 
   constructor(private authService: AuthService) {
-    if (this.isAuthenticated()) this.username = this.authService.getUsername();
   }
 
   toggleSideMenu() {
@@ -31,6 +28,10 @@ export class MobileHeaderComponent {
 
   isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
+  }
+
+  getUsername() {
+    return this.authService.getUsername();
   }
 
   changeTheme() {

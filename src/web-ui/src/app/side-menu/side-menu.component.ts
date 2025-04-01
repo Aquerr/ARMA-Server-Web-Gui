@@ -24,7 +24,6 @@ export class SideMenuComponent {
   changeThemeEmit: EventEmitter<void> = new EventEmitter();
 
   isWorkshopActive: boolean = false;
-  username: string | null = null;
   routePreCheck = new Map<string, (routerLink: string) => Observable<boolean>>();
 
   constructor(private router: Router,
@@ -37,7 +36,6 @@ export class SideMenuComponent {
       this.workshopService.canUseWorkshop().subscribe(response => {
         this.isWorkshopActive = response.active;
       });
-      this.username = this.authService.getUsername();
     }
 
     this.routePreCheck.set("/workshop", () => this.canUseWorkshopRoute());

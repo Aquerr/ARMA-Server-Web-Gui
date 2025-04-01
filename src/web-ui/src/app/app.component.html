@@ -3,7 +3,7 @@
     <app-mobile-header class="row mb-4" (changeThemeEmit)="changeTheme()" [darkMode]="isDarkMode()"></app-mobile-header>
   </ng-container>
   <ng-template #desktopHeader>
-    <app-desktop-header class="row" (changeThemeEmit)="changeTheme()"
+    <app-desktop-header class="desktop-header" (changeThemeEmit)="changeTheme()"
                         [darkMode]="isDarkMode()"></app-desktop-header>
   </ng-template>
   <div style="display: flex; flex-direction: row; height: 100%;">
