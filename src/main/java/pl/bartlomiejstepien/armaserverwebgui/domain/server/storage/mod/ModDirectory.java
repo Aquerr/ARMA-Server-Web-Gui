@@ -1,8 +1,12 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod;
 
 import org.springframework.data.util.Lazy;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -75,5 +79,21 @@ public class ModDirectory
                         .map(ModCppFile::getName)
                         .filter(StringUtils::hasText)
                         .orElse(getDirectoryName()));
+    }
+
+    public long getSizeBytes()
+    {
+        try
+        {
+            return Files.walk(this.path)
+                    .map(Path::toFile)
+                    .filter(File::isFile)
+                    .mapToLong(File::length)
+                    .sum();
+        }
+        catch (IOException e)
+        {
+            return 0;
+        }
     }
 }

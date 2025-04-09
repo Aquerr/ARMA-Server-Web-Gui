@@ -12,7 +12,9 @@ public interface ModStorage {
 
     Path save(MultipartFile multipartFile) throws IOException;
 
-    boolean doesModExists(MultipartFile multipartFile);
+    boolean doesModFileExists(MultipartFile multipartFile);
+
+    boolean doesModFileExists(String modName);
 
     List<InstalledFileSystemMod> getInstalledModsFromFileSystem();
 

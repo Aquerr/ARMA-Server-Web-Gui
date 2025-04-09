@@ -7,5 +7,8 @@ import pl.bartlomiejstepien.armaserverwebgui.application.ApiExceptionCode;
 @ApiException(status = HttpStatus.INTERNAL_SERVER_ERROR, code = ApiExceptionCode.STEAM_CMD_NOT_INSTALLED, messageKey = "aswg.steam.not-installed")
 public class SteamCmdNotInstalled extends RuntimeException
 {
-
+    public SteamCmdNotInstalled()
+    {
+        super("Steamcmd is not installed!");
+    }
 }

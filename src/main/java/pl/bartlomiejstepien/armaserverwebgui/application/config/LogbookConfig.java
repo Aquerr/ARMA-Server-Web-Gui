@@ -7,11 +7,14 @@ import com.fasterxml.jackson.databind.node.ContainerNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpHeaders;
 import org.zalando.logbook.BodyFilter;
 import org.zalando.logbook.ContentType;
@@ -56,7 +59,7 @@ public class LogbookConfig
     }
 
     @Bean
-    public Logbook logbook(ObjectMapper objectMapper)
+    public Logbook logbook(ObjectMapper objectMapper, Environment environment)
     {
         return Logbook.builder()
                 .responseFilter(ResponseFilters.replaceBody(response -> contentType("text/html", IGNORED_FILE_CONTENT).test(response) ? "<skipped>" : null))
@@ -68,7 +71,7 @@ public class LogbookConfig
                 .bodyFilter(new FilterJsonAttribute(objectMapper, "publishedFileDetails"))
                 .bodyFilter(new FilterJsonAttribute(objectMapper, "content"))
                 .correlationId(new DefaultCorrelationId())
-                .sink(new AswgLogbookSink())
+                .sink(new AswgLogbookSink(environment))
                 .build();
     }
 
@@ -111,8 +114,11 @@ public class LogbookConfig
      * Sink that produces a log and puts values in MDC so that they are available during entire thread execution.
      */
     @Slf4j
+    @RequiredArgsConstructor
     private static class AswgLogbookSink implements Sink
     {
+        private final Environment environment;
+
         @Override
         public void write(Precorrelation precorrelation, HttpRequest request) throws IOException
         {
@@ -120,7 +126,14 @@ public class LogbookConfig
             {
                 AswgHttpLog aswgHttpLog = toAswgHttpLog(precorrelation.getId(), request);
                 putInMdc(aswgHttpLog);
-                log.info("Server request: {}", aswgHttpLog.getRequestBody());
+                if (environment.acceptsProfiles(Profiles.of("file-json-logs")))
+                {
+                    log.info("Server request {}", aswgHttpLog.getRequestBody());
+                }
+                else
+                {
+                    log.info("Server request: {}", aswgHttpLog);
+                }
             }
             catch (Exception e)
             {
@@ -135,7 +148,14 @@ public class LogbookConfig
             {
                 AswgHttpLog aswgHttpLog = toAswgHttpLog(correlation.getId(), correlation.getDuration(), request, response);
                 putInMdc(aswgHttpLog);
-                log.info("Server response: {}", aswgHttpLog.getResponseBody());
+                if (environment.acceptsProfiles(Profiles.of("file-json-logs")))
+                {
+                    log.info("Server response {}", aswgHttpLog.getResponseBody());
+                }
+                else
+                {
+                    log.info("Server response: {}", aswgHttpLog);
+                }
             }
             catch (Exception e)
             {

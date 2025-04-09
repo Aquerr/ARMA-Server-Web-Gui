@@ -45,9 +45,9 @@ public class ModServiceImpl implements ModService
 
     @Override
     @Transactional
-    public void saveModFile(MultipartFile multipartFile)
+    public void saveModFile(MultipartFile multipartFile, boolean overwrite)
     {
-        if(modStorage.doesModExists(multipartFile))
+        if(!overwrite && modStorage.doesModFileExists(multipartFile))
             throw new ModFileAlreadyExistsException();
 
         try
@@ -59,6 +59,12 @@ public class ModServiceImpl implements ModService
         {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public boolean checkModFileExists(String modName)
+    {
+        return modStorage.doesModFileExists(modName);
     }
 
     @Override
@@ -171,34 +177,35 @@ public class ModServiceImpl implements ModService
         List<InstalledFileSystemMod> fileSystemMods = this.modStorage.getInstalledModsFromFileSystem();
 
         ModsView modsView = new ModsView();
-        Set<ModView> disabledModViews = installedModEntities.stream()
+        List<ModView> disabledModViews = installedModEntities.stream()
                 .filter(mod -> !mod.isEnabled())
-                .map(modEntity -> ModView.builder()
-                                .workshopFileId(modEntity.getWorkshopFileId())
-                                .name(modEntity.getName())
-                                .serverMod(modEntity.isServerMod())
-                                .previewUrl(modEntity.getPreviewUrl())
-                                .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(modEntity.getWorkshopFileId()))
-                                .fileExists(fileSystemMods.stream().anyMatch(mod -> mod.getWorkshopFileId() == modEntity.getWorkshopFileId()))
-                                .lastUpdateDateTime(modEntity.getLastWorkshopUpdate())
-                                .build())
-                .collect(Collectors.toSet());
+                .map(mod -> asModView(mod, fileSystemMods))
+                .toList();
 
-        Set<ModView> enabledModViews = installedModEntities.stream()
+        List<ModView> enabledModViews = installedModEntities.stream()
                 .filter(InstalledModEntity::isEnabled)
-                .map(modEntity -> ModView.builder()
-                        .workshopFileId(modEntity.getWorkshopFileId())
-                        .name(modEntity.getName())
-                        .serverMod(modEntity.isServerMod())
-                        .previewUrl(modEntity.getPreviewUrl())
-                        .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(modEntity.getWorkshopFileId()))
-                        .fileExists(fileSystemMods.stream().anyMatch(mod -> mod.getWorkshopFileId() == modEntity.getWorkshopFileId()))
-                        .lastUpdateDateTime(modEntity.getLastWorkshopUpdate())
-                        .build())
-                .collect(Collectors.toSet());
+                .map(mod -> asModView(mod, fileSystemMods))
+                .toList();
 
         modsView.setDisabledMods(disabledModViews);
         modsView.setEnabledMods(enabledModViews);
         return modsView;
+    }
+
+    private ModView asModView(InstalledModEntity modEntity, List<InstalledFileSystemMod> fileSystemMods)
+    {
+        return ModView.builder()
+                .workshopFileId(modEntity.getWorkshopFileId())
+                .name(modEntity.getName())
+                .serverMod(modEntity.isServerMod())
+                .previewUrl(modEntity.getPreviewUrl())
+                .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(modEntity.getWorkshopFileId()))
+                .fileExists(fileSystemMods.stream().anyMatch(mod -> mod.getWorkshopFileId() == modEntity.getWorkshopFileId()))
+                .sizeBytes(fileSystemMods.stream().filter(mod -> mod.getModDirectory().getDirectoryName().equals(modEntity.getModDirectoryName()))
+                        .findFirst()
+                        .map(mod -> mod.getModDirectory().getSizeBytes())
+                        .orElse(0L))
+                .lastUpdateDateTime(modEntity.getLastWorkshopUpdate())
+                .build();
     }
 }

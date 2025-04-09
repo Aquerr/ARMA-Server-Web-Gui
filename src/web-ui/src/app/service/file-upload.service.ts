@@ -30,7 +30,7 @@ export abstract class FileUploadService {
     return this.fileUploadMonitorService.getUploadingFiles();
   }
 
-  protected doUpload(file: File) {
+  protected uploadFile(file: File, overwrite: boolean) {
     if (!this.isFileAllowed(file)) {
       this.notificationService.errorNotification(`Wrong file type! Only ${this.allowedFileExtensions} files are supported!`);
       return;
@@ -41,7 +41,7 @@ export abstract class FileUploadService {
       return;
     }
 
-    this.upload(file).pipe(tap(this.fileUploadMonitorService.monitorFileUpload(file))).subscribe({
+    return this.doUpload(file, overwrite).pipe(tap(this.fileUploadMonitorService.monitorFileUpload(file))).subscribe({
       next: (response) => {
         if (response.type == HttpEventType.Response) {
           this.fileUploadedSubject.next(file);
@@ -65,7 +65,7 @@ export abstract class FileUploadService {
       || this.allowedFileTypes.includes(file.type);
   }
 
-  protected abstract upload(file: File): Observable<any>;
+  protected abstract doUpload(file: File, overwrite: boolean): Observable<any>;
 
   protected doAfterUpload(file: File | null) {};
 }

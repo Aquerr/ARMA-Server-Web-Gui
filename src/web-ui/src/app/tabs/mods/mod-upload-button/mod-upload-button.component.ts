@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import {ModUploadService} from "../service/mod-upload.service";
+import {Component, EventEmitter, Output} from '@angular/core';
 
 @Component({
     selector: 'app-upload-mod',
@@ -9,7 +8,9 @@ import {ModUploadService} from "../service/mod-upload.service";
 })
 export class ModUploadButtonComponent {
 
-  constructor(private modUploadService: ModUploadService) { }
+  @Output() fileSelected: EventEmitter<File> = new EventEmitter<File>();
+
+  constructor() { }
 
   onFileSelected(event: Event) {
     const target = (event.target as HTMLInputElement);
@@ -20,7 +21,7 @@ export class ModUploadButtonComponent {
     const file : File = target.files[0];
     if (file)
     {
-      this.modUploadService.uploadMod(file);
+      this.fileSelected.emit(file);
     }
   }
 }

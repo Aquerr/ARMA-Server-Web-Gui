@@ -15,10 +15,10 @@ export class MissionUploadService extends FileUploadService {
   }
 
   uploadMission(file: File) {
-    this.doUpload(file);
+    this.uploadFile(file, false);
   }
 
-  override upload(file: File): Observable<any> {
+  override doUpload(file: File): Observable<any> {
     const formData = new FormData();
     formData.append("file", file);
     return this.missionService.uploadMission(formData);

@@ -8,6 +8,7 @@ import {FormControl} from "@angular/forms";
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {ModUploadService} from "./service/mod-upload.service";
 import {Router} from "@angular/router";
+import {DialogService} from "../../service/dialog.service";
 
 @Component({
     selector: 'app-mods',
@@ -32,7 +33,8 @@ export class ModsComponent implements OnInit, OnDestroy {
               private maskService: MaskService,
               private notificationService: NotificationService,
               private modUploadService: ModUploadService,
-              private router: Router) {
+              private router: Router,
+              private dialogService: DialogService) {
 
     this.reloadModsDataSubject = new Subject();
     this.reloadModsDataSubscription = this.reloadModsDataSubject.subscribe(() => {
@@ -59,7 +61,20 @@ export class ModsComponent implements OnInit, OnDestroy {
   }
 
   onFileDropped(file: File) {
-    this.modUploadService.uploadMod(file);
+    this.maskService.show();
+    this.modService.checkModFilesExists(file.name).subscribe(response => {
+      this.maskService.hide();
+      if (response.exists) {
+        const onCloseCallback = (result: boolean) => {
+          if (!result) return;
+          this.modUploadService.uploadMod(file, true);
+        };
+
+        this.dialogService.openCommonConfirmationDialog({question: `File for mod <strong>${file.name}</strong> already exists. <br>Do you want to overwrite it?`}, onCloseCallback);
+      } else {
+        this.modUploadService.uploadMod(file);
+      }
+    });
   }
 
   private reloadMods() {

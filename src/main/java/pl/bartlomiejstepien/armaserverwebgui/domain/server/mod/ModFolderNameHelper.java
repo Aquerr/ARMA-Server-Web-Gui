@@ -11,9 +11,9 @@ public class ModFolderNameHelper
 {
     private final AswgFileNameNormalizer fileNameNormalizer;
 
-    public String buildForWithoutExtension(MultipartFile multipartFile)
+    public String buildForWithoutExtension(String fileNameWithExtension)
     {
-        String fileName = buildFor(multipartFile);
+        String fileName = buildFor(fileNameWithExtension);
         return fileName.substring(0, fileName.lastIndexOf("."));
     }
 

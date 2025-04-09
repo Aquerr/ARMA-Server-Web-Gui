@@ -2,22 +2,28 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from 'src/environments/environment';
-import {Mod} from "../model/mod.model";
+import { Mod } from "../model/mod.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServerModsService {
 
-  private readonly MODS_URL = `${API_BASE_URL}/mods`
+  private readonly MODS_URL = `${API_BASE_URL}/mods`;
+  private readonly MODS_PRESETS_URL = `${API_BASE_URL}/mods-presets`;
+  private readonly MODS_FILES_URL = `${API_BASE_URL}/mods-files`;
 
   constructor(private httpClient: HttpClient) { }
 
   uploadMod(formData: FormData): Observable<any> {
-    return this.httpClient.post(this.MODS_URL, formData, {
+    return this.httpClient.post(this.MODS_FILES_URL, formData, {
       reportProgress: true,
       observe: 'events'
     });
+  }
+
+  checkModFilesExists(modFileName: string): Observable<DoesModExistsResponse> {
+    return this.httpClient.get<DoesModExistsResponse>(`${this.MODS_FILES_URL}/${modFileName}/exists`);
   }
 
   getInstalledMods(): Observable<GetModsResponse>{
@@ -33,23 +39,23 @@ export class ServerModsService {
   }
 
   getModPresetsNames(): Observable<ModPresetNamesResponse> {
-    return this.httpClient.get<ModPresetNamesResponse>(`${this.MODS_URL}/presets-names`);
+    return this.httpClient.get<ModPresetNamesResponse>(`${this.MODS_PRESETS_URL}`);
   }
 
   importPreset(request: ModPresetImportRequest) {
-    return this.httpClient.post(`${this.MODS_URL}/presets/import`, request);
+    return this.httpClient.post(`${this.MODS_PRESETS_URL}/import`, request);
   }
 
   selectPreset(request: ModPresetSelectRequest) {
-    return this.httpClient.post(`${this.MODS_URL}/presets/select`, request);
+    return this.httpClient.post(`${this.MODS_PRESETS_URL}/select`, request);
   }
 
   deletePreset(presetName: string): Observable<ModPresetDeleteResponse> {
-    return this.httpClient.delete<ModPresetDeleteResponse>(`${this.MODS_URL}/presets/${presetName}`);
+    return this.httpClient.delete<ModPresetDeleteResponse>(`${this.MODS_PRESETS_URL}/${presetName}`);
   }
 
   savePreset(request: ModPresetSaveRequest): Observable<ModPresetSaveResponse> {
-    return this.httpClient.put<ModPresetSaveResponse>(`${this.MODS_URL}/presets/${request.name}`, request);
+    return this.httpClient.put<ModPresetSaveResponse>(`${this.MODS_PRESETS_URL}/${request.name}`, request);
   }
 }
 
@@ -91,4 +97,8 @@ export interface ModPresetSaveRequest {
 
 export interface ModPresetSaveResponse {
   saved: boolean;
+}
+
+export interface DoesModExistsResponse {
+  exists: boolean;
 }

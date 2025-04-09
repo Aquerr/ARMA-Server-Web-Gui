@@ -74,9 +74,15 @@ public class ModStorageImpl implements ModStorage
     }
 
     @Override
-    public boolean doesModExists(MultipartFile filename)
+    public boolean doesModFileExists(MultipartFile filename)
     {
-        return Files.exists(modDirectory.get().resolve(modFolderNameHelper.buildForWithoutExtension(filename)));
+        return doesModFileExists(filename.getOriginalFilename());
+    }
+
+    @Override
+    public boolean doesModFileExists(String fileNameWithExtension)
+    {
+        return Files.exists(modDirectory.get().resolve(modFolderNameHelper.buildForWithoutExtension(fileNameWithExtension)));
     }
 
     @Override
@@ -222,6 +228,13 @@ public class ModStorageImpl implements ModStorage
         File modFolder = modFolderPath.getParent().resolve(modFolderPath.getFileName()).toFile();
         Path newModFolderPath = modFolder.toPath().resolveSibling(fileNameNormalizer.normalize(modFolder.getName()));
         modFolder.renameTo(newModFolderPath.toFile());
+
+        // Clear old directory
+        if (!modFolder.getName().equals(newModFolderPath.getFileName().toString()))
+        {
+            FileUtils.deleteFilesRecursively(modFolder.toPath(), true);
+        }
+
         return newModFolderPath;
     }
 

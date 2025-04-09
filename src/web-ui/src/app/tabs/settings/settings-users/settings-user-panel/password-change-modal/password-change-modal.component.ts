@@ -36,8 +36,6 @@ export class PasswordChangeModalComponent {
   }
 
   confirm() {
-    console.log(this.user);
-    console.log(this.form);
     this.form.markAllAsTouched();
     if (this.form.valid) {
       this.maskService.show();

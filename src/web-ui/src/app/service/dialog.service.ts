@@ -40,7 +40,7 @@ export class DialogService {
       }
     } else {
       return {
-        width: '250px',
+        width: '350px',
         enterAnimationDuration: '200ms',
         exitAnimationDuration: '200ms',
         data: data

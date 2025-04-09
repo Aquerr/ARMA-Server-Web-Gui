@@ -64,7 +64,7 @@ class ModsRestControllerTest extends BaseIntegrationTest
 
         // when
         var response = testRestTemplate.exchange(
-                "/api/v1/mods",
+                "/api/v1/mods-files",
                 HttpMethod.POST,
                 new HttpEntity<>(parts, MultiValueMap.fromSingleValue(Map.of(
                         HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -89,7 +89,7 @@ class ModsRestControllerTest extends BaseIntegrationTest
 
         // when
         var response1 = testRestTemplate.exchange(
-                "/api/v1/mods",
+                "/api/v1/mods-files",
                 HttpMethod.POST,
                 new HttpEntity<>(parts, MultiValueMap.fromSingleValue(Map.of(
                         HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -103,7 +103,7 @@ class ModsRestControllerTest extends BaseIntegrationTest
         assertTrue(response1.getStatusCode().is2xxSuccessful());
 
         var response2 = testRestTemplate.exchange(
-                "/api/v1/mods/presets/select",
+                "/api/v1/mods-presets/select",
                 HttpMethod.POST,
                 new HttpEntity<>(TestUtils.loadJsonIntegrationContractFor("mods/select-mod-preset-request.json"), MultiValueMap.fromSingleValue(Map.of(
                         HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,

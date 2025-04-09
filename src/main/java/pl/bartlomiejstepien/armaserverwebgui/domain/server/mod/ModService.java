@@ -13,7 +13,9 @@ import java.util.Set;
 
 public interface ModService
 {
-    void saveModFile(MultipartFile multipartFile);
+    void saveModFile(MultipartFile multipartFile, boolean overwrite);
+
+    boolean checkModFileExists(String modName);
 
     ModsView getModsView();
 
