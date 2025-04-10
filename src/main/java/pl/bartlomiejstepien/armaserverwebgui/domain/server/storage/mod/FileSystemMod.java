@@ -13,23 +13,23 @@ import static java.util.Optional.ofNullable;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class InstalledFileSystemMod
+public class FileSystemMod
 {
     private final ModDirectory modDirectory;
 
-    private InstalledFileSystemMod(ModDirectory modDirectory)
+    private FileSystemMod(ModDirectory modDirectory)
     {
         this.modDirectory = modDirectory;
     }
 
-    public static InstalledFileSystemMod from(Path modDirectory)
+    public static FileSystemMod from(Path modDirectory)
     {
-        return new InstalledFileSystemMod(ModDirectory.from(modDirectory));
+        return new FileSystemMod(ModDirectory.from(modDirectory));
     }
 
-    public static InstalledFileSystemMod from(ModDirectory modDirectory)
+    public static FileSystemMod from(ModDirectory modDirectory)
     {
-        return new InstalledFileSystemMod(modDirectory);
+        return new FileSystemMod(modDirectory);
     }
 
     public long getWorkshopFileId()

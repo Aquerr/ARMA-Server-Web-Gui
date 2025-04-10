@@ -60,10 +60,15 @@ public class ModsRestController
     {
         List<ModView> disabledMods;
         List<ModView> enabledMods;
+        List<ModView> notManagedMods;
 
         private static GetModsResponse of(ModsView modsView)
         {
-            return new GetModsResponse(modsView.getDisabledMods(), modsView.getEnabledMods());
+            return new GetModsResponse(
+                    modsView.getDisabledMods(),
+                    modsView.getEnabledMods(),
+                    modsView.getNotManagedMods()
+            );
         }
     }
 

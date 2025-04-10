@@ -1,5 +1,6 @@
 <div appDragAndDropFile (fileDropped)="onFileDropped($event)" class="app-mods-tab">
-    <h1>Mods</h1>
+  <h1>Mods</h1>
+
   <div class="fields">
     <div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%">
       <mat-form-field>
@@ -12,6 +13,7 @@
       </div>
     </div>
   </div>
+
   <div class="mod-list-group" cdkDropListGroup>
     <div class="mods-list">
         <h2>Disabled <span style="filter: brightness(50%)">({{disabledMods.length}})</span></h2>
@@ -46,6 +48,25 @@
       </div>
    </div>
   </div>
+
+  @if (notManagedMods.length > 0) {
+    <div>
+      <h2>Detected not managed mods</h2>
+      <div>
+        <div class="not-managed-mod-list">
+          @for (mod of notManagedMods; track mod.name) {
+            <div class="not-managed-mod-list-item">
+              <div class="not-managed-mod-list-item-header">{{mod.name}}</div>
+              <div style="display: flex;">
+                <button mat-button (click)="registerNotManagedMod(mod)">Manage</button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
   <div class="buttons-section-bottom">
     <div>
       <button mat-flat-button color="primary" (click)="save()">Save</button>

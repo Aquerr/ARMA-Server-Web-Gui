@@ -86,12 +86,12 @@ public class ModStorageImpl implements ModStorage
     }
 
     @Override
-    public List<InstalledFileSystemMod> getInstalledModsFromFileSystem()
+    public List<FileSystemMod> getModsFromFileSystem()
     {
         return Optional.ofNullable(modDirectory.get().toFile().listFiles())
                 .map(files -> Stream.of(files)
                         .filter(this::isModDirectory)
-                        .map(this::getInstalledFileSystemModFromDirectory)
+                        .map(this::getFileSystemModFromDirectory)
                         .filter(Objects::nonNull)
                         .toList())
                 .orElse(Collections.emptyList());
@@ -238,7 +238,7 @@ public class ModStorageImpl implements ModStorage
         return newModFolderPath;
     }
 
-    private InstalledFileSystemMod getInstalledFileSystemModFromDirectory(File file)
+    private FileSystemMod getFileSystemModFromDirectory(File file)
     {
         if (Files.notExists(file.toPath()))
         {
@@ -246,7 +246,7 @@ public class ModStorageImpl implements ModStorage
         }
 
         String directoryPath = file.getPath();
-        return InstalledFileSystemMod.from(Paths.get(directoryPath));
+        return FileSystemMod.from(Paths.get(directoryPath));
     }
 
     private void saveFileAtPath(MultipartFile multipartFile, Path saveLocation)

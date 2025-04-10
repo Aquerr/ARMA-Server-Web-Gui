@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 
 import java.time.OffsetDateTime;
@@ -17,7 +17,7 @@ public class InstalledModEntityHelper
 {
     private final SteamService steamService;
 
-    public InstalledModEntity toEntity(InstalledFileSystemMod fileSystemMod)
+    public InstalledModEntity toEntity(FileSystemMod fileSystemMod)
     {
         InstalledModEntity.InstalledModEntityBuilder installedModBuilder = InstalledModEntity.builder();
         installedModBuilder.workshopFileId(fileSystemMod.getWorkshopFileId());

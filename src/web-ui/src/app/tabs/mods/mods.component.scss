@@ -27,6 +27,29 @@
   display: block;
 }
 
+.not-managed-mod-list {
+  border: solid 1px #444c56;
+  border-radius: 4px;
+}
+
+.not-managed-mod-list-item {
+  border-bottom: #444c56 solid 1px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem;
+  font-weight: 500;
+
+  .not-managed-mod-list-item-header {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.not-managed-mod-list-item:last-child {
+  border:none;
+}
+
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 4px;

@@ -16,7 +16,7 @@ public interface ModStorage {
 
     boolean doesModFileExists(String modName);
 
-    List<InstalledFileSystemMod> getInstalledModsFromFileSystem();
+    List<FileSystemMod> getModsFromFileSystem();
 
     MetaCppFile readModMetaFile(Path modDirectory) throws CouldNotReadModMetaFile;
 

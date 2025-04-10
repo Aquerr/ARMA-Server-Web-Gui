@@ -13,7 +13,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModWork
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
@@ -23,6 +23,7 @@ import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -94,15 +95,15 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public List<InstalledFileSystemMod> getInstalledModsFromFileSystem()
+    public List<FileSystemMod> getInstalledModsFromFileSystem()
     {
-        return this.modStorage.getInstalledModsFromFileSystem();
+        return this.modStorage.getModsFromFileSystem();
     }
 
     @Override
     public ModsView getModsView()
     {
-        return toModsView(getInstalledMods());
+        return toModsView(getInstalledModsFromFileSystem(), getInstalledMods());
     }
 
     @Override
@@ -169,13 +170,13 @@ public class ModServiceImpl implements ModService
         if (installedModEntity != null)
             return;
 
-        installedModRepository.save(installedModEntityHelper.toEntity(InstalledFileSystemMod.from(modDirectory)));
+        installedModRepository.save(installedModEntityHelper.toEntity(FileSystemMod.from(modDirectory)));
     }
 
-    private ModsView toModsView(List<InstalledModEntity> installedModEntities)
+    private ModsView toModsView(
+            List<FileSystemMod> fileSystemMods,
+            List<InstalledModEntity> installedModEntities)
     {
-        List<InstalledFileSystemMod> fileSystemMods = this.modStorage.getInstalledModsFromFileSystem();
-
         ModsView modsView = new ModsView();
         List<ModView> disabledModViews = installedModEntities.stream()
                 .filter(mod -> !mod.isEnabled())
@@ -187,12 +188,31 @@ public class ModServiceImpl implements ModService
                 .map(mod -> asModView(mod, fileSystemMods))
                 .toList();
 
+        List<ModView> notManagedMods = new LinkedList<>(fileSystemMods.stream()
+                .filter(fileSystemMod -> installedModEntities.stream()
+                        .noneMatch(installedModEntity -> installedModEntity.getModDirectoryName().equals(fileSystemMod.getModDirectory().getDirectoryName())))
+                .map(this::asModView)
+                .toList());
+
         modsView.setDisabledMods(disabledModViews);
         modsView.setEnabledMods(enabledModViews);
+        modsView.setNotManagedMods(notManagedMods);
         return modsView;
     }
 
-    private ModView asModView(InstalledModEntity modEntity, List<InstalledFileSystemMod> fileSystemMods)
+    private ModView asModView(FileSystemMod fileSystemMod)
+    {
+        return ModView.builder()
+                .workshopFileId(fileSystemMod.getWorkshopFileId())
+                .name(fileSystemMod.getName())
+                .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(fileSystemMod.getWorkshopFileId()))
+                .fileExists(fileSystemMod.isValid())
+                .sizeBytes(fileSystemMod.getModDirectory().getSizeBytes())
+                .lastUpdateDateTime(fileSystemMod.getLastUpdated())
+                .build();
+    }
+
+    private ModView asModView(InstalledModEntity modEntity, List<FileSystemMod> fileSystemMods)
     {
         return ModView.builder()
                 .workshopFileId(modEntity.getWorkshopFileId())

@@ -62,6 +62,7 @@ export class ServerModsService {
 export interface GetModsResponse{
   disabledMods: Mod[];
   enabledMods: Mod[];
+  notManagedMods: Mod[];
 }
 
 export interface SaveEnabledModsRequest {

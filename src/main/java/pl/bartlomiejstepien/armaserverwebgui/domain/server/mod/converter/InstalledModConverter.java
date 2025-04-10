@@ -3,10 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
-
-import java.nio.file.Paths;
 
 @Component
 @AllArgsConstructor

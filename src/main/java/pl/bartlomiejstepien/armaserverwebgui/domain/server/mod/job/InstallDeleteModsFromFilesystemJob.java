@@ -8,7 +8,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.InstalledModEntityHelper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,18 +35,18 @@ public class InstallDeleteModsFromFilesystemJob
 
         log.info("Running mod directory scan.");
 
-        List<InstalledFileSystemMod> installedFileSystemMods = modService.getInstalledModsFromFileSystem();
-        saveOrDeleteModsFromDB(installedFileSystemMods);
+        List<FileSystemMod> fileSystemMods = modService.getInstalledModsFromFileSystem();
+        saveOrDeleteModsFromDB(fileSystemMods);
     }
 
-    private void saveOrDeleteModsFromDB(List<InstalledFileSystemMod> installedFileSystemMods)
+    private void saveOrDeleteModsFromDB(List<FileSystemMod> fileSystemMods)
     {
         List<InstalledModEntity> installedModsInDB = modService.getInstalledMods();
-        deleteOldMods(installedModsInDB, installedFileSystemMods);
-        installNewMods(installedModsInDB, installedFileSystemMods);
+        deleteOldMods(installedModsInDB, fileSystemMods);
+        installNewMods(installedModsInDB, fileSystemMods);
     }
 
-    private void deleteOldMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
+    private void deleteOldMods(List<InstalledModEntity> installedModsInDB, List<FileSystemMod> fileSystemMods)
     {
         if (!aswgConfig.isModsScannerDeletionEnabled())
         {
@@ -54,14 +54,14 @@ public class InstallDeleteModsFromFilesystemJob
             return;
         }
 
-        List<InstalledModEntity> modsToDeleteInDB = findModsToDeleteFromDB(installedModsInDB, installedFileSystemMods);
+        List<InstalledModEntity> modsToDeleteInDB = findModsToDeleteFromDB(installedModsInDB, fileSystemMods);
         log.info("Mods to delete: {}", Arrays.toString(modsToDeleteInDB.toArray()));
         modsToDeleteInDB.stream()
                 .map(InstalledModEntity::getId)
                 .forEach(modService::deleteFromDB);
     }
 
-    private void installNewMods(List<InstalledModEntity> installedModsInDB, List<InstalledFileSystemMod> installedFileSystemMods)
+    private void installNewMods(List<InstalledModEntity> installedModsInDB, List<FileSystemMod> fileSystemMods)
     {
         if (!aswgConfig.isModsScannerInstallationEnabled())
         {
@@ -69,7 +69,7 @@ public class InstallDeleteModsFromFilesystemJob
             return;
         }
 
-        List<InstalledModEntity> modsToAddToDB = findModsToAddToDB(installedModsInDB, installedFileSystemMods);
+        List<InstalledModEntity> modsToAddToDB = findModsToAddToDB(installedModsInDB, fileSystemMods);
         log.info("Mods to add: {}", Arrays.toString(modsToAddToDB.toArray()));
         modsToAddToDB.forEach(this::saveToDB);
     }
@@ -86,31 +86,31 @@ public class InstallDeleteModsFromFilesystemJob
         }
     }
 
-    private List<InstalledModEntity> findModsToAddToDB(List<InstalledModEntity> databaseMods, List<InstalledFileSystemMod> installedFileSystemMods)
+    private List<InstalledModEntity> findModsToAddToDB(List<InstalledModEntity> databaseMods, List<FileSystemMod> fileSystemMods)
     {
-        return installedFileSystemMods.stream()
-                .filter(InstalledFileSystemMod::isValid)
+        return fileSystemMods.stream()
+                .filter(FileSystemMod::isValid)
                 .filter(installedMod -> databaseMods.stream().noneMatch(databaseMod -> databaseMod.getWorkshopFileId() == installedMod.getWorkshopFileId()))
                 .map(this::toEntity)
                 .filter(Objects::nonNull)
                 .toList();
     }
 
-    private InstalledModEntity toEntity(InstalledFileSystemMod installedFileSystemMod)
+    private InstalledModEntity toEntity(FileSystemMod fileSystemMod)
     {
-        if (installedFileSystemMod.getWorkshopFileId() == 0)
+        if (fileSystemMod.getWorkshopFileId() == 0)
         {
-            log.warn("Installed mod {} has published file id = 0", installedFileSystemMod.getName());
+            log.warn("Installed mod {} has published file id = 0", fileSystemMod.getName());
             return null;
         }
 
-        return helper.toEntity(installedFileSystemMod);
+        return helper.toEntity(fileSystemMod);
     }
 
-    private List<InstalledModEntity> findModsToDeleteFromDB(List<InstalledModEntity> databaseMods, List<InstalledFileSystemMod> installedFileSystemMods)
+    private List<InstalledModEntity> findModsToDeleteFromDB(List<InstalledModEntity> databaseMods, List<FileSystemMod> fileSystemMods)
     {
         return databaseMods.stream()
-                .filter(installedDatabaseMod -> installedFileSystemMods.stream().noneMatch(fileSystemMod -> fileSystemMod.getWorkshopFileId() == installedDatabaseMod.getWorkshopFileId()))
+                .filter(installedDatabaseMod -> fileSystemMods.stream().noneMatch(fileSystemMod -> fileSystemMod.getWorkshopFileId() == installedDatabaseMod.getWorkshopFileId()))
                 .toList();
     }
 }
