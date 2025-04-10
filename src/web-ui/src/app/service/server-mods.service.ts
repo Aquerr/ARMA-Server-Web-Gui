@@ -38,6 +38,10 @@ export class ServerModsService {
     return this.httpClient.post(`${this.MODS_URL}/enabled`, saveEnabledModsRequest);
   }
 
+  manageMod(name: string) {
+    return this.httpClient.post(`${this.MODS_URL}/manage`, {name: name});
+  }
+
   getModPresetsNames(): Observable<ModPresetNamesResponse> {
     return this.httpClient.get<ModPresetNamesResponse>(`${this.MODS_PRESETS_URL}`);
   }
@@ -62,6 +66,7 @@ export class ServerModsService {
 export interface GetModsResponse{
   disabledMods: Mod[];
   enabledMods: Mod[];
+  notManagedMods: Mod[];
 }
 
 export interface SaveEnabledModsRequest {

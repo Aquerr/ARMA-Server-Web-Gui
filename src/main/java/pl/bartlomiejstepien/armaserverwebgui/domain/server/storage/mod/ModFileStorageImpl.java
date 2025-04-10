@@ -36,7 +36,7 @@ import static java.lang.String.format;
 
 @Slf4j
 @Repository
-public class ModStorageImpl implements ModStorage
+public class ModFileStorageImpl implements ModFileStorage
 {
     private final Supplier<Path> modDirectory;
     private final InstalledModRepository installedModRepository;
@@ -44,10 +44,10 @@ public class ModStorageImpl implements ModStorage
     private final ModFolderNameHelper modFolderNameHelper;
     private final AswgFileNameNormalizer fileNameNormalizer;
 
-    public ModStorageImpl(ASWGConfig aswgConfig,
-                          InstalledModRepository installedModRepository,
-                          ModFolderNameHelper modFolderNameHelper,
-                          AswgFileNameNormalizer fileNameNormalizer)
+    public ModFileStorageImpl(ASWGConfig aswgConfig,
+                              InstalledModRepository installedModRepository,
+                              ModFolderNameHelper modFolderNameHelper,
+                              AswgFileNameNormalizer fileNameNormalizer)
     {
         this.modDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath()).resolve(aswgConfig.getModsDirectoryPath());
         this.installedModRepository = installedModRepository;
@@ -86,12 +86,12 @@ public class ModStorageImpl implements ModStorage
     }
 
     @Override
-    public List<InstalledFileSystemMod> getInstalledModsFromFileSystem()
+    public List<FileSystemMod> getModsFromFileSystem()
     {
         return Optional.ofNullable(modDirectory.get().toFile().listFiles())
                 .map(files -> Stream.of(files)
                         .filter(this::isModDirectory)
-                        .map(this::getInstalledFileSystemModFromDirectory)
+                        .map(this::getFileSystemModFromDirectory)
                         .filter(Objects::nonNull)
                         .toList())
                 .orElse(Collections.emptyList());
@@ -192,7 +192,8 @@ public class ModStorageImpl implements ModStorage
         return modDirectory.getPath();
     }
 
-    private void normalizeEachFileNameInFolderRecursively(Path filePath)
+    @Override
+    public void normalizeEachFileNameInFolderRecursively(Path filePath)
     {
         try
         {
@@ -223,7 +224,8 @@ public class ModStorageImpl implements ModStorage
         }
     }
 
-    private Path renameModFolderToLowerCaseWithUnderscores(Path modFolderPath)
+    @Override
+    public Path renameModFolderToLowerCaseWithUnderscores(Path modFolderPath)
     {
         File modFolder = modFolderPath.getParent().resolve(modFolderPath.getFileName()).toFile();
         Path newModFolderPath = modFolder.toPath().resolveSibling(fileNameNormalizer.normalize(modFolder.getName()));
@@ -238,7 +240,7 @@ public class ModStorageImpl implements ModStorage
         return newModFolderPath;
     }
 
-    private InstalledFileSystemMod getInstalledFileSystemModFromDirectory(File file)
+    private FileSystemMod getFileSystemModFromDirectory(File file)
     {
         if (Files.notExists(file.toPath()))
         {
@@ -246,7 +248,7 @@ public class ModStorageImpl implements ModStorage
         }
 
         String directoryPath = file.getPath();
-        return InstalledFileSystemMod.from(Paths.get(directoryPath));
+        return FileSystemMod.from(Paths.get(directoryPath));
     }
 
     private void saveFileAtPath(MultipartFile multipartFile, Path saveLocation)

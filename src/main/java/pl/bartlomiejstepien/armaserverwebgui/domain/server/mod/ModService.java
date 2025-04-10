@@ -5,7 +5,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public interface ModService
 
     void deleteFromDB(long id);
 
-    List<InstalledFileSystemMod> getInstalledModsFromFileSystem();
+    List<FileSystemMod> getInstalledModsFromFileSystem();
 
     void deleteMod(String modName);
 
@@ -36,4 +36,8 @@ public interface ModService
     List<InstalledModEntity> getInstalledMods();
 
     List<WorkshopMod> getInstalledWorkshopMods();
+
+    void manageMod(String name);
+
+    List<FileSystemMod> findNotManagedMods();
 }

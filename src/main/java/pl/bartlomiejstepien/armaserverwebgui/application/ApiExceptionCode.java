@@ -15,6 +15,9 @@ public enum ApiExceptionCode
     MISSION_ALREADY_EXISTS,
 
     MOD_ALREADY_EXISTS,
+    MOD_NOT_FOUND,
+
+    PRESET_NOT_FOUND,
 
 
     STEAM_CMD_NOT_INSTALLED

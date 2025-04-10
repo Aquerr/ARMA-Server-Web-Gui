@@ -11,11 +11,12 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.InstalledModConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModWorkshopUrlBuilder;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.NotManagedModNotFoundException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModFileStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
@@ -35,7 +36,7 @@ import static java.lang.String.format;
 @Slf4j
 public class ModServiceImpl implements ModService
 {
-    private final ModStorage modStorage;
+    private final ModFileStorage modFileStorage;
     private final InstalledModRepository installedModRepository;
     private final InstalledModConverter installedModConverter;
     private final SteamService steamService;
@@ -47,12 +48,12 @@ public class ModServiceImpl implements ModService
     @Transactional
     public void saveModFile(MultipartFile multipartFile, boolean overwrite)
     {
-        if(!overwrite && modStorage.doesModFileExists(multipartFile))
+        if(!overwrite && modFileStorage.doesModFileExists(multipartFile))
             throw new ModFileAlreadyExistsException();
 
         try
         {
-            Path savedFilePath = modStorage.save(multipartFile);
+            Path savedFilePath = modFileStorage.save(multipartFile);
             saveModInDatabase(savedFilePath);
         }
         catch (IOException e)
@@ -64,7 +65,7 @@ public class ModServiceImpl implements ModService
     @Override
     public boolean checkModFileExists(String modName)
     {
-        return modStorage.doesModFileExists(modName);
+        return modFileStorage.doesModFileExists(modName);
     }
 
     @Override
@@ -94,26 +95,26 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public List<InstalledFileSystemMod> getInstalledModsFromFileSystem()
+    public List<FileSystemMod> getInstalledModsFromFileSystem()
     {
-        return this.modStorage.getInstalledModsFromFileSystem();
+        return this.modFileStorage.getModsFromFileSystem();
     }
 
     @Override
     public ModsView getModsView()
     {
-        return toModsView(getInstalledMods());
+        return toModsView(getInstalledModsFromFileSystem(), getInstalledMods());
     }
 
     @Override
     @Transactional
     public void deleteMod(String modName)
     {
-        InstalledModEntity installedModEntity = this.modStorage.getInstalledMod(modName);
+        InstalledModEntity installedModEntity = this.modFileStorage.getInstalledMod(modName);
         if (installedModEntity == null)
             throw new RuntimeException(format("Mod [%s] does not exist", modName));
 
-        this.modStorage.deleteMod(installedModEntity);
+        this.modFileStorage.deleteMod(installedModEntity);
     }
 
     @Override
@@ -162,6 +163,54 @@ public class ModServiceImpl implements ModService
                 .toList();
     }
 
+    @Override
+    @Transactional
+    public void manageMod(String name)
+    {
+        List<FileSystemMod> notManagedMods = findNotManagedMods();
+        FileSystemMod fileSystemMod = notManagedMods.stream()
+                .filter(mod -> mod.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+
+        if (fileSystemMod == null)
+            throw new NotManagedModNotFoundException();
+
+        startManagingMod(fileSystemMod);
+    }
+
+    private void startManagingMod(FileSystemMod fileSystemMod)
+    {
+        Path normalizedModPath = this.modFileStorage.renameModFolderToLowerCaseWithUnderscores(fileSystemMod.getModDirectory().getPath());
+        this.modFileStorage.normalizeEachFileNameInFolderRecursively(normalizedModPath);
+
+        FileSystemMod correctedFileSystemMod = findNotManagedMods().stream()
+                .filter(mod -> mod.getName().equals(fileSystemMod.getName()))
+                .findFirst()
+                .orElse(null);
+
+        if (correctedFileSystemMod == null)
+            throw new NotManagedModNotFoundException();
+
+        saveToDB(installedModEntityHelper.toEntity(correctedFileSystemMod));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<FileSystemMod> findNotManagedMods()
+    {
+        return this.findNotManagedMods(this.getInstalledModsFromFileSystem(), this.getInstalledMods());
+    }
+
+    private List<FileSystemMod> findNotManagedMods(List<FileSystemMod> fileSystemMods, List<InstalledModEntity> installedModEntities)
+    {
+        return fileSystemMods.stream()
+                .filter(fileSystemMod -> installedModEntities.stream()
+                        .noneMatch(installedModEntity -> installedModEntity.getModDirectoryName().equals(fileSystemMod.getModDirectory().getDirectoryName())))
+                .toList();
+
+    }
+
     private void saveModInDatabase(Path modDirectoryPath)
     {
         ModDirectory modDirectory = ModDirectory.from(modDirectoryPath);
@@ -169,13 +218,13 @@ public class ModServiceImpl implements ModService
         if (installedModEntity != null)
             return;
 
-        installedModRepository.save(installedModEntityHelper.toEntity(InstalledFileSystemMod.from(modDirectory)));
+        installedModRepository.save(installedModEntityHelper.toEntity(FileSystemMod.from(modDirectory)));
     }
 
-    private ModsView toModsView(List<InstalledModEntity> installedModEntities)
+    private ModsView toModsView(
+            List<FileSystemMod> fileSystemMods,
+            List<InstalledModEntity> installedModEntities)
     {
-        List<InstalledFileSystemMod> fileSystemMods = this.modStorage.getInstalledModsFromFileSystem();
-
         ModsView modsView = new ModsView();
         List<ModView> disabledModViews = installedModEntities.stream()
                 .filter(mod -> !mod.isEnabled())
@@ -187,12 +236,29 @@ public class ModServiceImpl implements ModService
                 .map(mod -> asModView(mod, fileSystemMods))
                 .toList();
 
+        List<ModView> notManagedMods = findNotManagedMods(fileSystemMods, installedModEntities).stream()
+                .map(this::asModView)
+                .toList();
+
         modsView.setDisabledMods(disabledModViews);
         modsView.setEnabledMods(enabledModViews);
+        modsView.setNotManagedMods(notManagedMods);
         return modsView;
     }
 
-    private ModView asModView(InstalledModEntity modEntity, List<InstalledFileSystemMod> fileSystemMods)
+    private ModView asModView(FileSystemMod fileSystemMod)
+    {
+        return ModView.builder()
+                .workshopFileId(fileSystemMod.getWorkshopFileId())
+                .name(fileSystemMod.getName())
+                .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(fileSystemMod.getWorkshopFileId()))
+                .fileExists(fileSystemMod.isValid())
+                .sizeBytes(fileSystemMod.getModDirectory().getSizeBytes())
+                .lastUpdateDateTime(fileSystemMod.getLastUpdated())
+                .build();
+    }
+
+    private ModView asModView(InstalledModEntity modEntity, List<FileSystemMod> fileSystemMods)
     {
         return ModView.builder()
                 .workshopFileId(modEntity.getWorkshopFileId())

@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.InstalledFileSystemMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.MetaCppFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
@@ -47,10 +47,10 @@ class InstalledModEntityHelperTest
                 .previewUrl("previewurl")
                 .build());
 
-        InstalledFileSystemMod installedFileSystemMod = prepareFileSystemMod();
+        FileSystemMod fileSystemMod = prepareFileSystemMod();
 
         // when
-        InstalledModEntity entity = installedModEntityHelper.toEntity(installedFileSystemMod);
+        InstalledModEntity entity = installedModEntityHelper.toEntity(fileSystemMod);
 
         // then
         assertThat(entity.getId()).isNull();
@@ -76,10 +76,10 @@ class InstalledModEntityHelperTest
 
         given(steamService.getWorkshopMod(2041057379L)).willReturn(null);
 
-        InstalledFileSystemMod installedFileSystemMod = prepareFileSystemMod();
+        FileSystemMod fileSystemMod = prepareFileSystemMod();
 
         // when
-        InstalledModEntity entity = installedModEntityHelper.toEntity(installedFileSystemMod);
+        InstalledModEntity entity = installedModEntityHelper.toEntity(fileSystemMod);
 
         // then
         assertThat(entity.getId()).isNull();
@@ -91,8 +91,8 @@ class InstalledModEntityHelperTest
         assertThat(entity.getPreviewUrl()).isNull();
     }
 
-    private InstalledFileSystemMod prepareFileSystemMod()
+    private FileSystemMod prepareFileSystemMod()
     {
-        return InstalledFileSystemMod.from(modDirectory);
+        return FileSystemMod.from(modDirectory);
     }
 }

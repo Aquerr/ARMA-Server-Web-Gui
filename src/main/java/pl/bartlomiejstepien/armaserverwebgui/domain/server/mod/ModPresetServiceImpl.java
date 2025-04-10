@@ -8,7 +8,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModPresetConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModPreset;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.PresetImportParams;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.PresetDoesNotExistException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.PresetNotFoundException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSaveParams;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
@@ -110,7 +110,7 @@ public class ModPresetServiceImpl implements ModPresetService
     {
         ModPresetEntity modPresetEntity = modPresetRepository.findById(id).orElse(null);
         if (modPresetEntity == null)
-            throw new PresetDoesNotExistException();
+            throw new PresetNotFoundException();
 
         return mapToModPreset(modPresetEntity, modPresetEntryRepository.findAllByModPresetId(id));
     }
@@ -160,7 +160,7 @@ public class ModPresetServiceImpl implements ModPresetService
     {
         ModPreset modPreset = getModPreset(name);
         if (modPreset == null)
-            throw new PresetDoesNotExistException();
+            throw new PresetNotFoundException();
 
         this.modService.saveEnabledModList(convertToModViews(modPreset.getEntries()));
     }
@@ -172,7 +172,7 @@ public class ModPresetServiceImpl implements ModPresetService
         ModPresetEntity modPresetEntity = this.modPresetRepository.findByName(presetName)
                 .orElse(null);
         if (modPresetEntity == null)
-            throw new PresetDoesNotExistException();
+            throw new PresetNotFoundException();
 
         log.info("Deleting mod preset: {}", presetName);
         this.modPresetEntryRepository.deleteAll(this.modPresetEntryRepository.findAllByModPresetId(modPresetEntity.getId()));

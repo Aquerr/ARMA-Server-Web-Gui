@@ -238,6 +238,12 @@ input::placeholder {
   --mdc-linear-progress-track-color: rgba(109, 109, 109, 0.25) !important;
 }
 
+.cdk-global-scrollblock{
+  position: static !important;
+  width: initial !important;
+  overflow-y: inherit !important;
+}
+
 body, html {
   width: 100%;
   height: 100%;
@@ -249,7 +255,6 @@ body {
   background-color: var(--aswg-bg-primary-bg-color);
   color: var(--aswg-primary-text-color);
 }
-
 
 .mat-nack-bar-container {
   width: 40rem !important;

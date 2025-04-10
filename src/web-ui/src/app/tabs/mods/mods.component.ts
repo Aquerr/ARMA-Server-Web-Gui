@@ -22,6 +22,7 @@ export class ModsComponent implements OnInit, OnDestroy {
   reloadModsDataSubscription!: Subscription;
   modUploadSubscription!: Subscription;
 
+  notManagedMods: Mod[] = [];
   disabledMods: Mod[] = [];
   enabledMods: Mod[] = [];
   filteredDisabledMods: Mod[] = [];
@@ -80,11 +81,15 @@ export class ModsComponent implements OnInit, OnDestroy {
   private reloadMods() {
     this.maskService.show();
     this.modService.getInstalledMods().subscribe(modsResponse => {
+      this.notManagedMods = modsResponse.notManagedMods;
       this.disabledMods = modsResponse.disabledMods;
       this.enabledMods = modsResponse.enabledMods;
       this.filteredDisabledMods = [...this.disabledMods].sort((a, b) => a.name.localeCompare(b.name));
       this.filteredEnabledMods = [...this.enabledMods].sort((a, b) => a.name.localeCompare(b.name));
       this.maskService.hide();
+      if (this.notManagedMods.length > 0) {
+        this.notificationService.infoNotification("ASWG detected some new mods. Scroll to the bottom to see them.");
+      }
     });
   }
 
@@ -169,5 +174,18 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   openModSettings() {
     this.router.navigate(["/mods-settings"]);
+  }
+
+  registerNotManagedMod(mod: Mod) {
+    this.dialogService.openCommonConfirmationDialog({question: `Are you sure you want to add <strong>${mod.name}</strong> to managed mods?`}, dialogResult => {
+      if (dialogResult) {
+        this.maskService.show();
+        this.modService.manageMod(mod.name).subscribe(() => {
+          this.maskService.hide();
+          this.reloadMods();
+          this.notificationService.successNotification(`Mod ${mod.name} is not managed by ASWG`);
+        });
+      }
+    });
   }
 }

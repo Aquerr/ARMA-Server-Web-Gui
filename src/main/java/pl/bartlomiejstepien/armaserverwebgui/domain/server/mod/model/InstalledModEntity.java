@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 
+/**
+ * Represents installed and managed mod by ASWG.
+ */
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor

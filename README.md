@@ -4,7 +4,7 @@
 [![Discord](https://img.shields.io/discord/447076657698963466.svg?color=blue&label=Discord&logo=Discord&logoColor=white)](https://discord.gg/Zg3rWta)
 
 ## General
-ASWG is a very user-friendly management gui for Arma 3 servers.
+ASWG is a user-friendly management gui for Arma 3 servers.
 
 It is a web application that was built with a goal to provide easy way to manage Arma server located on Linux systems (however it supports Windows as well!).
 
@@ -26,6 +26,7 @@ Check the feature list below to get to know more.
 * Mods management
 * Mission management
 * Workshop and mods installation via SteamCMD (manual installation required for SteamCMD)
+* Multi-user support
 
 ### Screenshots
 

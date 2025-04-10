@@ -55,15 +55,28 @@ public class ModsRestController
         return ResponseEntity.ok().build();
     }
 
+    @HasPermissionModsUpdate
+    @PostMapping("/manage")
+    public ResponseEntity<?> manageMod(@RequestBody ManageModsRequest request)
+    {
+        this.modService.manageMod(request.getName());
+        return ResponseEntity.ok().build();
+    }
+
     @Value(staticConstructor = "of")
     public static class GetModsResponse
     {
         List<ModView> disabledMods;
         List<ModView> enabledMods;
+        List<ModView> notManagedMods;
 
         private static GetModsResponse of(ModsView modsView)
         {
-            return new GetModsResponse(modsView.getDisabledMods(), modsView.getEnabledMods());
+            return new GetModsResponse(
+                    modsView.getDisabledMods(),
+                    modsView.getEnabledMods(),
+                    modsView.getNotManagedMods()
+            );
         }
     }
 
@@ -75,6 +88,12 @@ public class ModsRestController
 
     @Data
     public static class DeleteModRequest
+    {
+        String name;
+    }
+
+    @Data
+    public static class ManageModsRequest
     {
         String name;
     }

@@ -11,7 +11,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMo
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.MetaCppFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorage;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModFileStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.dotnet.DotnetDateTimeUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.util.ExternalProcess;
@@ -43,7 +43,7 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
     private final ModFolderNameHelper modFolderNameHelper;
     private final SteamWebApiService steamWebApiService;
     private final InstalledModRepository installedModRepository;
-    private final ModStorage modStorage;
+    private final ModFileStorage modFileStorage;
     private final WorkshopModInstallProgressWebsocketHandler workshopModInstallProgressWebsocketHandler;
 
     @Override
@@ -78,11 +78,11 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
 
         if (SystemUtils.isWindows())
         {
-            this.modStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, modDirectory);
+            this.modFileStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, modDirectory);
         }
         else
         {
-            this.modStorage.linkModFolderToSteamCmdModFolder(steamCmdModFolderPath, modDirectory);
+            this.modFileStorage.linkModFolderToSteamCmdModFolder(steamCmdModFolderPath, modDirectory);
         }
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 75));
 

@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-public interface ModStorage {
+public interface ModFileStorage
+{
 
     Path save(MultipartFile multipartFile) throws IOException;
 
@@ -16,7 +17,7 @@ public interface ModStorage {
 
     boolean doesModFileExists(String modName);
 
-    List<InstalledFileSystemMod> getInstalledModsFromFileSystem();
+    List<FileSystemMod> getModsFromFileSystem();
 
     MetaCppFile readModMetaFile(Path modDirectory) throws CouldNotReadModMetaFile;
 
@@ -31,4 +32,8 @@ public interface ModStorage {
     Path copyModFolderFromSteamCmd(Path steamCmdModFolderPath, ModDirectory modDirectory);
 
     Path linkModFolderToSteamCmdModFolder(Path steamCmdModFolderPath, ModDirectory modDirectory);
+
+    void normalizeEachFileNameInFolderRecursively(Path filePath);
+
+    Path renameModFolderToLowerCaseWithUnderscores(Path modFolderPath);
 }
