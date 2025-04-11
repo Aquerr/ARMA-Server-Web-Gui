@@ -14,6 +14,7 @@ import {FormControl} from "@angular/forms";
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {MissionUploadService} from "./service/mission-upload.service";
 import {NewMissionDialogComponent} from "./new-mission-dialog/new-mission-dialog.component";
+import {DragFileService} from "../../service/drag-file.service";
 
 @Component({
     selector: 'app-missions',
@@ -39,7 +40,8 @@ export class MissionsComponent implements OnInit, OnDestroy {
               private maskService: MaskService,
               private notificationService: NotificationService,
               private matDialog: MatDialog,
-              private missionUploadService: MissionUploadService) {
+              private missionUploadService: MissionUploadService,
+              private dragFileService: DragFileService) {
     this.reloadMissionsDataSubject = new Subject();
     this.reloadMissionDataSubscription = this.reloadMissionsDataSubject.subscribe(() => {
       this.reloadMissions();
@@ -49,6 +51,10 @@ export class MissionsComponent implements OnInit, OnDestroy {
         this.reloadMissionsDataSubject.next(null);
       }
     });
+  }
+
+  emitDrag(dragEnabled: boolean) {
+    this.dragFileService.setDragEnabled(dragEnabled);
   }
 
   ngOnInit(): void {

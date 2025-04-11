@@ -23,7 +23,7 @@
     }
 
     @if (missionType == 'FILE') {
-      <div class="upload-drop-zone" appDragAndDropFile (fileDropped)="onFileDropped($event)" (click)="fileInput.click()">
+      <div class="upload-drop-zone" appDragAndDropFile (fileDropped)="onFileDropped($event)" (dragenter)="emitDrag(true)" (dragleave)="emitDrag(false)" (click)="fileInput.click()">
         <input style="display: none;" type="file" #fileInput (change)="onFileSelected($event)" accept=".pbo">
         <div>
           @if (file !== null) {

@@ -9,6 +9,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag
 import {ModUploadService} from "./service/mod-upload.service";
 import {Router} from "@angular/router";
 import {DialogService} from "../../service/dialog.service";
+import {DragFileService} from "../../service/drag-file.service";
 
 @Component({
     selector: 'app-mods',
@@ -34,7 +35,8 @@ export class ModsComponent implements OnInit, OnDestroy {
               private notificationService: NotificationService,
               private modUploadService: ModUploadService,
               private router: Router,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private dragFileService: DragFileService) {
 
     this.reloadModsDataSubject = new Subject();
     this.reloadModsDataSubscription = this.reloadModsDataSubject.subscribe(() => {
@@ -169,5 +171,9 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   openModSettings() {
     this.router.navigate(["/mods-settings"]);
+  }
+
+  emitDrag(dragEnabled: boolean) {
+    this.dragFileService.setDragEnabled(dragEnabled);
   }
 }

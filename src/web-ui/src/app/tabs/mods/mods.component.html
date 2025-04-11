@@ -1,4 +1,4 @@
-<div appDragAndDropFile (fileDropped)="onFileDropped($event)" class="app-mods-tab">
+<div appDragAndDropFile (fileDropped)="onFileDropped($event)" (dragenter)="emitDrag(true)" (dragleave)="emitDrag(false)" class="app-mods-tab">
     <h1>Mods</h1>
   <div class="fields">
     <div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%">

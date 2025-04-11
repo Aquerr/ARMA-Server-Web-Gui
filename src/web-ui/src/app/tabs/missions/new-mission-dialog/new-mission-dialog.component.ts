@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {DragFileService} from "../../../service/drag-file.service";
 
 @Component({
     selector: 'app-new-mission-dialog',
@@ -14,7 +15,8 @@ export class NewMissionDialogComponent {
   form: FormGroup;
 
   constructor(private dialogRef: MatDialogRef<NewMissionDialogComponent>,
-              formBuilder: FormBuilder) {
+              formBuilder: FormBuilder,
+              private dragFileService: DragFileService) {
     this.form = formBuilder.group({
       name: new FormControl(''),
       template: new FormControl(
@@ -57,5 +59,9 @@ export class NewMissionDialogComponent {
         file: this.file
       }
     );
+  }
+
+  emitDrag(dragEnabled: boolean) {
+    this.dragFileService.setDragEnabled(dragEnabled);
   }
 }

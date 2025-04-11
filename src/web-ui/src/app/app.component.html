@@ -12,7 +12,7 @@
   </div>
   <div class="router-wrapper">
     <div class="router-section">
-      <div class="content">
+      <div class="content" [ngClass]="isDragEnabled ? 'background-strips' : ''">
         <router-outlet></router-outlet>
       </div>
       <ng-container [ngTemplateOutlet]="footer" *ngIf="isMobile"></ng-container>

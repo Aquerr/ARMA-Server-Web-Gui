@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {map, Observable} from "rxjs";
+import {Observable, tap} from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import {API_BASE_URL} from "../../environments/environment";
 import {JwtTokenResponse} from "../model/jwt.model";
@@ -23,7 +23,7 @@ export class AuthService  {
       {
         observe: "response"
       })
-      .pipe(map(userData => {
+      .pipe(tap(userData => {
         sessionStorage.setItem(AuthService.STORAGE_USERNAME_KEY, username);
         sessionStorage.setItem(AuthService.STORAGE_AUTH_TOKEN_KEY, (userData.body?.jwt ? userData.body?.jwt : ''));
         sessionStorage.setItem(AuthService.STORAGE_AUTHORITIES_KEY, JSON.stringify(userData.body?.authorities || []));
