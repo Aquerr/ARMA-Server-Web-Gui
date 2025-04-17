@@ -35,7 +35,7 @@ public class GameUpdateTaskHandler implements SteamTaskHandler
                     .appId(SteamUtils.ARMA_SERVER_APP_ID)
                     .branch(Optional.ofNullable(aswgConfig.getServerBranch()).filter(branch -> !SteamUtils.ARMA_BRANCH_PUBLIC.equals(branch))
                             .orElse(null))
-                    .serverDirectoryPath(this.aswgConfig.getServerDirectoryPath())
+                    .serverDirectoryPath(Paths.get(this.aswgConfig.getServerDirectoryPath()).toAbsolutePath().toString())
                     .steamCmdPath(steamCmdPath)
                     .steamUsername(this.aswgConfig.getSteamCmdUsername())
                     .steamPassword(this.aswgConfig.getSteamCmdPassword())

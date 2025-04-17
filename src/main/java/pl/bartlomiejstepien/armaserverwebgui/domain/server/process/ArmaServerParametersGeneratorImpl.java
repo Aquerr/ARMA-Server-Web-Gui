@@ -13,7 +13,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMo
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerExecutable;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ServerFiles;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamUtils;
 
 import java.io.File;
 import java.util.List;
@@ -37,7 +36,7 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
     @Override
     public ArmaServerParameters generateParameters()
     {
-        String serverExecToUse = calculateServerExecutable(aswgConfig.getServerBranch());
+        String serverExecToUse = ServerExecutable.getForBranch(aswgConfig.getServerBranch());
 
         List<InstalledModEntity> installedMods = modService.getInstalledMods();
 
@@ -65,19 +64,5 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
                 .mods(modsDirs)
                 .serverMods(serverModsDirs)
                 .build();
-    }
-
-    private boolean is64Bit()
-    {
-        return System.getProperty("os.arch").contains("64");
-    }
-
-    private String calculateServerExecutable(String serverBranch)
-    {
-        if (SteamUtils.ARMA_BRANCH_PROFILING.equals(serverBranch))
-        {
-            return is64Bit() ? ServerExecutable.PROFILING_BRANCH.getGetServerExecutable64bit() : ServerExecutable.PROFILING_BRANCH.getServerExecutable();
-        }
-        return is64Bit() ? ServerExecutable.MAIN_BRANCH.getGetServerExecutable64bit() : ServerExecutable.MAIN_BRANCH.getServerExecutable();
     }
 }

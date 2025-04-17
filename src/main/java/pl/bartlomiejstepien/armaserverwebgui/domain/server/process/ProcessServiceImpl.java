@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Collections;
@@ -136,8 +137,9 @@ public class ProcessServiceImpl implements ProcessService
     private void startServerProcess()
     {
         ArmaServerParameters serverParameters = serverParametersGenerator.generateParameters();
-        if (Files.notExists(Paths.get(serverParameters.getServerDirectory()).resolve(serverParameters.getExecutablePath())))
-            throw new ServerNotInstalledException("Server executable does not exist. Is the server installed?");
+        Path serverExecutablePath = Paths.get(serverParameters.getExecutablePath());
+        if (Files.notExists(serverExecutablePath))
+            throw new ServerNotInstalledException(String.format("Server executable '%s' does not exist. Is the server installed?", serverExecutablePath.toAbsolutePath()));
 
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(new File(serverParameters.getServerDirectory()));
