@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model;
 
 import lombok.Builder;
 import lombok.Data;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class GeneralProperties
     private int motdInterval;
     private boolean persistent;
     private boolean drawingInMap;
-    List<String> headlessClients;
-    List<String> localClients;
+    private List<String> headlessClients;
+    private List<String> localClients;
+    private Mission.Difficulty forcedDifficulty;
 }

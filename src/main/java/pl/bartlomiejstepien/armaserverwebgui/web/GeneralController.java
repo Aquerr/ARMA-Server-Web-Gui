@@ -54,6 +54,7 @@ public class GeneralController
                 .drawingInMap(saveGeneralProperties.isDrawingInMap())
                 .headlessClients(saveGeneralProperties.getHeadlessClients())
                 .localClients(saveGeneralProperties.getLocalClients())
+                .forcedDifficulty(saveGeneralProperties.getForcedDifficulty())
                 .build());
 
         this.aswgConfig.saveToFile();

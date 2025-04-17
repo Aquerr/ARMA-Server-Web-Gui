@@ -44,6 +44,8 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
                         .toList())
                         .orElse(null))
                 .kickDuplicate(armaServerConfig.getKickDuplicate() == 1)
+                .voteThreshold(armaServerConfig.getVoteThreshold())
+                .voteMissionPlayers(armaServerConfig.getVoteMissionPlayers())
                 .build();
     }
 
@@ -72,6 +74,8 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
                     .toArray(VoteCmd[]::new))
                 .orElse(null));
         armaServerConfig.setKickDuplicate(serverSecurityProperties.isKickDuplicate() ? 1 : 0);
+        armaServerConfig.setVoteThreshold(serverSecurityProperties.getVoteThreshold());
+        armaServerConfig.setVoteMissionPlayers(serverSecurityProperties.getVoteMissionPlayers());
         serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 }

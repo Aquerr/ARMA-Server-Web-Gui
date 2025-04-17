@@ -18,6 +18,7 @@ import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.GeneralService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.GeneralPropertiesResponse;
 
 import java.util.Map;
@@ -96,6 +97,7 @@ class GeneralControllerTest extends BaseIntegrationTest
         assertThat(aswgConfig.getModsDirectoryPath()).isEqualTo("anotherModsDirectory");
         verify(generalService).saveGeneralProperties(GeneralProperties.builder()
                 .maxPlayers(MAX_PLAYERS)
+                .forcedDifficulty(Mission.Difficulty.RECRUIT)
                 .build());
 
         aswgConfig.setServerDirectoryPath(initialServerDirectory);

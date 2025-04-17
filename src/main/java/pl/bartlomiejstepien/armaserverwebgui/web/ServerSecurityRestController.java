@@ -50,6 +50,8 @@ public class ServerSecurityRestController
                 .adminUUIDs(request.getAdminUUIDs())
                 .voteCommands(request.getAllowedVoteCmds())
                 .kickDuplicate(request.isKickDuplicate())
+                .voteThreshold(request.getVoteThreshold())
+                .voteMissionPlayers(request.getVoteMissionPlayers())
                 .build();
     }
 
@@ -67,6 +69,8 @@ public class ServerSecurityRestController
                 .adminUUIDs(properties.getAdminUUIDs())
                 .allowedVoteCmds(properties.getVoteCommands())
                 .kickDuplicate(properties.isKickDuplicate())
+                .voteThreshold(properties.getVoteThreshold())
+                .voteMissionPlayers(properties.getVoteMissionPlayers())
                 .build();
     }
 }

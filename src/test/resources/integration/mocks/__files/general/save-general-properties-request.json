@@ -1,5 +1,6 @@
 {
   "serverDirectory": "fake/fakeServerDirectory",
   "modsDirectory": "anotherModsDirectory",
-  "maxPlayers": 10
+  "maxPlayers": 10,
+  "forcedDifficulty": "RECRUIT"
 }

@@ -2,11 +2,13 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.general;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +29,7 @@ public class GeneralServiceImpl implements GeneralService
                 .drawingInMap(Boolean.parseBoolean(armaServerConfig.getDrawingInMap()))
                 .headlessClients(Arrays.stream(armaServerConfig.getHeadlessClients()).toList())
                 .localClients(Arrays.stream(armaServerConfig.getLocalClients()).toList())
+                .forcedDifficulty(!"".equals(armaServerConfig.getForcedDifficulty()) ? Mission.Difficulty.findOrDefault(armaServerConfig.getForcedDifficulty()) : null)
                 .build();
     }
 
@@ -42,6 +45,10 @@ public class GeneralServiceImpl implements GeneralService
         armaServerConfig.setDrawingInMap(String.valueOf(generalProperties.isDrawingInMap()));
         armaServerConfig.setHeadlessClients(generalProperties.getHeadlessClients().toArray(new String[0]));
         armaServerConfig.setLocalClients(generalProperties.getLocalClients().toArray(new String[0]));
+        armaServerConfig.setForcedDifficulty(Optional.ofNullable(generalProperties.getForcedDifficulty())
+                .map(Enum::name)
+                .map(String::toLowerCase)
+                .orElse(""));
         serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 }

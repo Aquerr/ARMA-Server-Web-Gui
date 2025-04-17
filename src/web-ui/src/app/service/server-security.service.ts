@@ -34,6 +34,8 @@ export interface SaveServerSecurityRequest {
   adminUUIDs: string[];
   allowedVoteCmds: VoteCmd[];
   kickDuplicate: boolean;
+  voteThreshold: string;
+  voteMissionPlayers: number;
 }
 
 export interface GetServerSecurityResponse {
@@ -48,6 +50,8 @@ export interface GetServerSecurityResponse {
   adminUUIDs: string[];
   allowedVoteCmds: VoteCmd[];
   kickDuplicate: boolean;
+  voteThreshold: string;
+  voteMissionPlayers: number;
 }
 
 export enum AllowedFilePatching {

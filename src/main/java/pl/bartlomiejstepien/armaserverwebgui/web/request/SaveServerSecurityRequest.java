@@ -22,4 +22,6 @@ public class SaveServerSecurityRequest
     private List<String> adminUUIDs;
     private List<VoteCommand> allowedVoteCmds;
     private boolean kickDuplicate;
+    private String voteThreshold;
+    private int voteMissionPlayers;
 }

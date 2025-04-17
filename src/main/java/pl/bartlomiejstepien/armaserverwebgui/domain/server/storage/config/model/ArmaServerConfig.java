@@ -77,6 +77,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "drawingInMap", type = PropertyType.RAW_STRING)
     private String drawingInMap = "true";
 
+    @CfgProperty(name = "forcedDifficulty", type = PropertyType.QUOTED_STRING)
+    private String forcedDifficulty = "";
+
     @CfgProperty(name = "headlessClients[]", type = PropertyType.ARRAY_OF_STRINGS)
     private String[] headlessClients = {};
 
@@ -94,6 +97,12 @@ public class ArmaServerConfig
 
     @CfgProperty(name = "allowedVoteCmds[]", type = PropertyType.ARRAY_OF_NO_FIELDS_OBJECT)
     private VoteCmd[] allowedVoteCmds = {};
+
+    @CfgProperty(name = "voteThreshold", type = PropertyType.RAW_STRING)
+    private String voteThreshold = "0.5";
+
+    @CfgProperty(name = "voteMissionPlayers", type = PropertyType.INTEGER)
+    private int voteMissionPlayers = 1;
 
     @CfgProperty(name = "kickduplicate", type = PropertyType.INTEGER)
     private int kickDuplicate = 0;

@@ -71,6 +71,16 @@
         [control]="formService.getFilePatchingIgnoredClientsControl(form)"
         [parent]="form"
       ></aswg-chip-form-input>
+      <mat-form-field matTooltip="Percentage of votes needed to confirm a vote. 0.3 = 30%" matTooltipPosition="right">
+        <mat-label>Vote Threshold</mat-label>
+        <input formControlName="voteThreshold" matInput type="text">
+        <mat-error *ngIf="hasFormError('voteThreshold', 'required')">This field is required</mat-error>
+      </mat-form-field>
+      <mat-form-field matTooltip="Start mission-voting when X number of players connect." matTooltipPosition="right">
+        <mat-label>Vote Mission Players</mat-label>
+        <input formControlName="voteMissionPlayers" matInput type="text">
+        <mat-error *ngIf="hasFormError('voteMissionPlayers', 'required')">This field is required</mat-error>
+      </mat-form-field>
       <div>
         <mat-label matTooltip="Players can use this commands to vote for e.g. mission change" matTooltipPosition="right">Allowed Vote Commands</mat-label>
         <app-vote-cmds-list [formGroup]="form" (listChanged)="setVoteCmds($event)"></app-vote-cmds-list>

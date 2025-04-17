@@ -26,6 +26,8 @@ export class SecurityFormService {
       adminUUIDs: [[]],
       allowedVoteCmds: [[]],
       kickDuplicate: [false, [Validators.required]],
+      voteThreshold: ['0.5', [Validators.required]],
+      voteMissionPlayers: [1, [Validators.required]],
     });
   }
 
@@ -41,6 +43,8 @@ export class SecurityFormService {
     this.getAdminUUIDsControl(form).setValue(data.adminUUIDs);
     this.getAllowedVoteCmdsControl(form).setValue(data.allowedVoteCmds);
     this.getKickDuplicateControl(form).setValue(data.kickDuplicate);
+    this.getVoteThresholdControl(form).setValue(data.voteThreshold);
+    this.getVoteMissionPlayersControl(form).setValue(data.voteMissionPlayers);
   }
 
   get(form: FormGroup) {
@@ -55,7 +59,9 @@ export class SecurityFormService {
       allowedLoadFileExtensions: this.getAllowedLoadFileExtensionsControl(form).value,
       adminUUIDs: this.getAdminUUIDsControl(form).value,
       allowedVoteCmds: this.getAllowedVoteCmdsControl(form).value,
-      kickDuplicate: this.getKickDuplicateControl(form).value
+      kickDuplicate: this.getKickDuplicateControl(form).value,
+      voteThreshold: this.getVoteThresholdControl(form).value,
+      voteMissionPlayers: this.getVoteMissionPlayersControl(form).value,
     } as SaveServerSecurityRequest;
   }
 
@@ -101,6 +107,14 @@ export class SecurityFormService {
 
   getKickDuplicateControl(form: FormGroup) {
     return this.getControl(form, 'kickDuplicate');
+  }
+
+  getVoteThresholdControl(form: FormGroup) {
+    return this.getControl(form, 'voteThreshold');
+  }
+
+  getVoteMissionPlayersControl(form: FormGroup) {
+    return this.getControl(form, 'voteMissionPlayers');
   }
 
   private getControl(form: FormGroup, controlName: string) {

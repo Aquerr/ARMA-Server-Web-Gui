@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.web.response;
 import lombok.Builder;
 import lombok.Value;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class GeneralPropertiesResponse
     boolean drawingInMap;
     List<String> headlessClients;
     List<String> localClients;
+    Mission.Difficulty forcedDifficulty;
 
     public static GeneralPropertiesResponse of(String serverDirectory,
                                                           String modsDirectory,
@@ -43,6 +45,7 @@ public class GeneralPropertiesResponse
                 .drawingInMap(generalProperties.isDrawingInMap())
                 .headlessClients(generalProperties.getHeadlessClients())
                 .localClients(generalProperties.getLocalClients())
+                .forcedDifficulty(generalProperties.getForcedDifficulty())
                 .build();
     }
 }

@@ -14,5 +14,7 @@
   "adminUUIDs": [
     "12341235421321"
   ],
-  "kickDuplicate": true
+  "kickDuplicate": true,
+  "voteThreshold": "0.3",
+  "voteMissionPlayers": 2
 }

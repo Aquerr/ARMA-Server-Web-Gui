@@ -83,6 +83,8 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
         armaServerConfig.setAdmins(new String[]{"12341235421321"});
         armaServerConfig.setAllowedVoteCmds(null);
         armaServerConfig.setKickDuplicate(1);
+        armaServerConfig.setVoteThreshold("0.3");
+        armaServerConfig.setVoteMissionPlayers(2);
         return armaServerConfig;
     }
 }

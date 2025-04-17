@@ -4,6 +4,7 @@ import {API_BASE_URL} from "../../environments/environment";
 import {Observable, of, throwError} from "rxjs";
 import {PermissionService} from "./permission.service";
 import {AswgAuthority} from "../model/authority.model";
+import {MissionDifficulty} from "../model/mission.model";
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,7 @@ export interface SaveGeneralProperties {
   drawingInMap: boolean;
   headlessClients: string[];
   localClients: string[];
+  forcedDifficulty: MissionDifficulty | null;
 }
 
 export interface GeneralProperties {
@@ -56,4 +58,5 @@ export interface GeneralProperties {
   drawingInMap: boolean;
   headlessClients: string[];
   localClients: string[];
+  forcedDifficulty: MissionDifficulty | null;
 }

@@ -23,6 +23,8 @@ public class ServerSecurityProperties
     private List<String> adminUUIDs;
     private List<VoteCommand> voteCommands;
     private boolean kickDuplicate;
+    private String voteThreshold;
+    private int voteMissionPlayers;
 
     @Getter
     public enum AllowedFilePatching

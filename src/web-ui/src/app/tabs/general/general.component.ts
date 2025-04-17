@@ -3,6 +3,7 @@ import {MaskService} from "../../service/mask.service";
 import {SaveGeneralProperties, ServerGeneralService} from "../../service/server-general.service";
 import {NotificationService} from "../../service/notification.service";
 import {MotdListComponent} from "./motd-list/motd-list.component";
+import {MissionDifficulty} from "../../model/mission.model";
 
 @Component({
     selector: 'app-general',
@@ -24,6 +25,7 @@ export class GeneralComponent implements OnInit {
   drawingInMap: boolean = true;
   headlessClients: string[] = [];
   localClients: string[] = [];
+  forcedDifficulty: MissionDifficulty | null = null;
 
   constructor(private readonly maskService: MaskService,
               private readonly serverGeneralService: ServerGeneralService,
@@ -45,6 +47,7 @@ export class GeneralComponent implements OnInit {
       this.drawingInMap = response.drawingInMap;
       this.headlessClients = response.headlessClients;
       this.localClients = response.localClients;
+      this.forcedDifficulty = response.forcedDifficulty;
       this.maskService.hide();
     });
   }
@@ -63,7 +66,8 @@ export class GeneralComponent implements OnInit {
       persistent: this.persistent,
       drawingInMap: this.drawingInMap,
       headlessClients: this.headlessClients,
-      localClients: this.localClients
+      localClients: this.localClients,
+      forcedDifficulty: this.forcedDifficulty
     } as SaveGeneralProperties;
 
     this.serverGeneralService.saveGeneralProperties(saveGeneralProperties).subscribe(response => {

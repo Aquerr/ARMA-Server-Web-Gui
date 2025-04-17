@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.web.request;
 
 import lombok.Data;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 
 import java.util.List;
 
@@ -18,4 +19,5 @@ public class SaveGeneralProperties
     private boolean drawingInMap;
     private List<String> headlessClients;
     private List<String> localClients;
+    private Mission.Difficulty forcedDifficulty;
 }
