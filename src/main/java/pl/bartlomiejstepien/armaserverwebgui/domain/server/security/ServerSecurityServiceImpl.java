@@ -43,6 +43,7 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
                                         .build())
                         .toList())
                         .orElse(null))
+                .kickDuplicate(armaServerConfig.getKickDuplicate() == 1)
                 .build();
     }
 
@@ -70,6 +71,7 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
                             .build())
                     .toArray(VoteCmd[]::new))
                 .orElse(null));
+        armaServerConfig.setKickDuplicate(serverSecurityProperties.isKickDuplicate() ? 1 : 0);
         serverConfigStorage.saveServerConfig(armaServerConfig);
     }
 }

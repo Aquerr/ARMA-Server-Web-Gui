@@ -33,6 +33,7 @@ export interface SaveServerSecurityRequest {
   allowedLoadFileExtensions: string[];
   adminUUIDs: string[];
   allowedVoteCmds: VoteCmd[];
+  kickDuplicate: boolean;
 }
 
 export interface GetServerSecurityResponse {
@@ -46,6 +47,7 @@ export interface GetServerSecurityResponse {
   allowedLoadFileExtensions: string[];
   adminUUIDs: string[];
   allowedVoteCmds: VoteCmd[];
+  kickDuplicate: boolean;
 }
 
 export enum AllowedFilePatching {

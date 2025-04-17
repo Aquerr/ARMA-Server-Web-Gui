@@ -95,6 +95,9 @@ public class ArmaServerConfig
     @CfgProperty(name = "allowedVoteCmds[]", type = PropertyType.ARRAY_OF_NO_FIELDS_OBJECT)
     private VoteCmd[] allowedVoteCmds = {};
 
+    @CfgProperty(name = "kickduplicate", type = PropertyType.INTEGER)
+    private int kickDuplicate = 0;
+
     @CfgProperty(name = "kickTimeout[]", type = PropertyType.ARRAY_OF_NO_FIELDS_OBJECT)
     private KickTimeout[] kickTimeouts = {
             KickTimeout.builder().kickId(0).timeout(60).build(),

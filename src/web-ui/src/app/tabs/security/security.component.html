@@ -21,7 +21,7 @@
         style="width: 100%"
         labelText="Admins (steamID64)"
         toolTipText="Only these user ids can authenticate via #login command"
-        [control]="formService.getAdminUUIDs(form)"
+        [control]="formService.getAdminUUIDsControl(form)"
         [parent]="form"
       ></aswg-chip-form-input>
       <mat-form-field matTooltip="Enables/Disable BattlEye anti-cheat engine. Requires installed BattlEye on server and clients." matTooltipPosition="right">
@@ -31,6 +31,14 @@
           <mat-option [value]="false">No</mat-option>
         </mat-select>
         <mat-error *ngIf="hasFormError('battleEye', 'required')">This field is required</mat-error>
+      </mat-form-field>
+      <mat-form-field matTooltip="Make game not allow duplicate game IDs. Second player with an existing ID will be kicked automatically." matTooltipPosition="right">
+        <mat-label>Kick duplicate game IDs</mat-label>
+        <mat-select formControlName="kickDuplicate">
+          <mat-option [value]="true">Yes</mat-option>
+          <mat-option [value]="false">No</mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasFormError('kickDuplicate', 'required')">This field is required</mat-error>
       </mat-form-field>
       <mat-form-field matTooltip="Checks if player is connecting with modified/unsigned files or signed but not accepted signatures." matTooltipPosition="right">
         <mat-label>Verify Addons Signatures</mat-label>
@@ -53,14 +61,14 @@
         style="width: 100%;"
         labelText="Allowed Load File Extensions"
         toolTipText="Only allow files with listed extensions to be loaded via loadFile command. Not listing any extension means everything is allowed. Defining the setting as empty arrays means nothing is allowed."
-        [control]="formService.getAllowedLoadFileExtensions(form)"
+        [control]="formService.getAllowedLoadFileExtensionsControl(form)"
         [parent]="form"
       ></aswg-chip-form-input>
       <aswg-chip-form-input
         style="width: 100%;"
         labelText="File Patching Ignored Clients (steamID64)"
         toolTipText="Whitelisted clients ignore the rules defined by allowedFilePatching and verifySignatures, allowing them to join the server with any mods of their choice. Signature errors are still logged by the server upon connection."
-        [control]="formService.getFilePatchingIgnoredClients(form)"
+        [control]="formService.getFilePatchingIgnoredClientsControl(form)"
         [parent]="form"
       ></aswg-chip-form-input>
       <div>

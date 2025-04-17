@@ -24,7 +24,8 @@ export class SecurityFormService {
       filePatchingIgnoredClients: [[]],
       allowedLoadFileExtensions: [[]],
       adminUUIDs: [[]],
-      allowedVoteCmds: [[]]
+      allowedVoteCmds: [[]],
+      kickDuplicate: [false, [Validators.required]],
     });
   }
 
@@ -35,10 +36,11 @@ export class SecurityFormService {
     this.getBattleEyeControl(form).setValue(data.battleEye);
     this.getVerifySignaturesControl(form).setValue(data.verifySignatures);
     this.getAllowedFilePatchingControl(form).setValue(data.allowedFilePatching);
-    this.getFilePatchingIgnoredClients(form).setValue(data.filePatchingIgnoredClients);
-    this.getAllowedLoadFileExtensions(form).setValue(data.allowedLoadFileExtensions);
-    this.getAdminUUIDs(form).setValue(data.adminUUIDs);
-    this.getAllowedVoteCmds(form).setValue(data.allowedVoteCmds);
+    this.getFilePatchingIgnoredClientsControl(form).setValue(data.filePatchingIgnoredClients);
+    this.getAllowedLoadFileExtensionsControl(form).setValue(data.allowedLoadFileExtensions);
+    this.getAdminUUIDsControl(form).setValue(data.adminUUIDs);
+    this.getAllowedVoteCmdsControl(form).setValue(data.allowedVoteCmds);
+    this.getKickDuplicateControl(form).setValue(data.kickDuplicate);
   }
 
   get(form: FormGroup) {
@@ -49,50 +51,59 @@ export class SecurityFormService {
       battleEye: this.getBattleEyeControl(form).value,
       verifySignatures: this.getVerifySignaturesControl(form).value,
       allowedFilePatching: this.getAllowedFilePatchingControl(form).value,
-      filePatchingIgnoredClients: this.getFilePatchingIgnoredClients(form).value,
-      allowedLoadFileExtensions: this.getAllowedLoadFileExtensions(form).value,
-      adminUUIDs: this.getAdminUUIDs(form).value,
-      allowedVoteCmds: this.getAllowedVoteCmds(form).value
+      filePatchingIgnoredClients: this.getFilePatchingIgnoredClientsControl(form).value,
+      allowedLoadFileExtensions: this.getAllowedLoadFileExtensionsControl(form).value,
+      adminUUIDs: this.getAdminUUIDsControl(form).value,
+      allowedVoteCmds: this.getAllowedVoteCmdsControl(form).value,
+      kickDuplicate: this.getKickDuplicateControl(form).value
     } as SaveServerSecurityRequest;
   }
 
   getServerPasswordControl(form: FormGroup) {
-    return form.get('serverPassword') as AbstractControl;
+    return this.getControl(form, 'serverPassword');
   }
 
   getServerAdminPasswordControl(form: FormGroup) {
-    return form.get('serverAdminPassword') as AbstractControl;
+    return this.getControl(form, 'serverAdminPassword');
   }
 
   getServerCommandPasswordControl(form: FormGroup) {
-    return form.get('serverCommandPassword') as AbstractControl;
+    return this.getControl(form, 'serverCommandPassword');
   }
 
   getBattleEyeControl(form: FormGroup) {
-    return form.get('battleEye') as AbstractControl;
+    return this.getControl(form, 'battleEye');
   }
 
   getVerifySignaturesControl(form: FormGroup) {
-    return form.get('verifySignatures') as AbstractControl;
+    return this.getControl(form, 'verifySignatures');
   }
 
   getAllowedFilePatchingControl(form: FormGroup) {
-    return form.get('allowedFilePatching') as AbstractControl;
+    return this.getControl(form, 'allowedFilePatching');
   }
 
-  getFilePatchingIgnoredClients(form: FormGroup) {
-    return form.get('filePatchingIgnoredClients') as AbstractControl;
+  getFilePatchingIgnoredClientsControl(form: FormGroup) {
+    return this.getControl(form, 'filePatchingIgnoredClients');
   }
 
-  getAllowedLoadFileExtensions(form: FormGroup) {
-    return form.get('allowedLoadFileExtensions') as AbstractControl;
+  getAllowedLoadFileExtensionsControl(form: FormGroup) {
+    return this.getControl(form, 'allowedLoadFileExtensions');
   }
 
-  getAdminUUIDs(form: FormGroup) {
-    return form.get('adminUUIDs') as AbstractControl;
+  getAdminUUIDsControl(form: FormGroup) {
+    return this.getControl(form, 'adminUUIDs');
   }
 
-  getAllowedVoteCmds(form: FormGroup) {
-    return form.get('allowedVoteCmds') as AbstractControl;
+  getAllowedVoteCmdsControl(form: FormGroup) {
+    return this.getControl(form, 'allowedVoteCmds');
+  }
+
+  getKickDuplicateControl(form: FormGroup) {
+    return this.getControl(form, 'kickDuplicate');
+  }
+
+  private getControl(form: FormGroup, controlName: string) {
+    return form.get(controlName) as AbstractControl;
   }
 }

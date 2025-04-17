@@ -21,4 +21,5 @@ public class SaveServerSecurityRequest
     private List<String> allowedLoadFileExtensions;
     private List<String> adminUUIDs;
     private List<VoteCommand> allowedVoteCmds;
+    private boolean kickDuplicate;
 }

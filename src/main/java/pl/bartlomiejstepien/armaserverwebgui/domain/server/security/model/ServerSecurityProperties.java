@@ -22,6 +22,7 @@ public class ServerSecurityProperties
     private List<String> allowedLoadFileExtensions;
     private List<String> adminUUIDs;
     private List<VoteCommand> voteCommands;
+    private boolean kickDuplicate;
 
     @Getter
     public enum AllowedFilePatching

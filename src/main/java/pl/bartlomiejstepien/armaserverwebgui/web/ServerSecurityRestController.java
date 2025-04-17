@@ -49,6 +49,7 @@ public class ServerSecurityRestController
                 .allowedLoadFileExtensions(request.getAllowedLoadFileExtensions())
                 .adminUUIDs(request.getAdminUUIDs())
                 .voteCommands(request.getAllowedVoteCmds())
+                .kickDuplicate(request.isKickDuplicate())
                 .build();
     }
 
@@ -65,6 +66,7 @@ public class ServerSecurityRestController
                 .allowedLoadFileExtensions(properties.getAllowedLoadFileExtensions())
                 .adminUUIDs(properties.getAdminUUIDs())
                 .allowedVoteCmds(properties.getVoteCommands())
+                .kickDuplicate(properties.isKickDuplicate())
                 .build();
     }
 }

@@ -1,6 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
-import org.apache.http.client.methods.HttpHead;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -14,11 +13,9 @@ import org.springframework.util.MultiValueMap;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
-import pl.bartlomiejstepien.armaserverwebgui.web.response.ServerSecurityResponse;
 
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -85,6 +82,7 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
         armaServerConfig.setAllowedLoadFileExtensions(new String[]{"SQF"});
         armaServerConfig.setAdmins(new String[]{"12341235421321"});
         armaServerConfig.setAllowedVoteCmds(null);
+        armaServerConfig.setKickDuplicate(1);
         return armaServerConfig;
     }
 }
