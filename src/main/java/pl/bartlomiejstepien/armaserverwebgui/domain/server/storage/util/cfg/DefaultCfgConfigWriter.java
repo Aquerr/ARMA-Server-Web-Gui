@@ -51,7 +51,6 @@ public class DefaultCfgConfigWriter implements CfgConfigWriter
 
     private void writeFieldInFile(CfgWriteContext context) throws IllegalAccessException, IOException, ParsingException
     {
-        BufferedWriter bufferedWriter = context.getBufferedWriter();
         Field field = context.getCurrentField();
 
         CfgProperty cfgProperty = field.getAnnotation(CfgProperty.class);
@@ -65,6 +64,7 @@ public class DefaultCfgConfigWriter implements CfgConfigWriter
         if (cfgProperty.skipIfNull() && fieldValueAsString == null)
             return;
 
+        BufferedWriter bufferedWriter = context.getBufferedWriter();
         if (cfgProperty.isClass())
         {
             bufferedWriter.write(fieldValueAsString + ";");
