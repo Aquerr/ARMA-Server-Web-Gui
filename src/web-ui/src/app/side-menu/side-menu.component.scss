@@ -23,10 +23,10 @@ mat-icon {
 }
 
 @media (max-width: 800px) {
-    ::ng-deep .mdc-list-item__primary-text {
-      color: white !important;
-    }
-    mat-icon {
-      color: white !important;
-    }
+  ::ng-deep .mdc-list-item__primary-text {
+    color: white !important;
+  }
+  mat-icon {
+    color: white !important;
+  }
 }

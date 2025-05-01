@@ -4,11 +4,11 @@
   <div class="mission-settings">
     <mat-form-field>
       <mat-label>Name</mat-label>
-      <input matInput name="name" [(ngModel)]="name">
+      <input matInput name="name" [(ngModel)]="name" />
     </mat-form-field>
     <mat-form-field>
       <mat-label>Template</mat-label>
-      <input matInput name="template" [(ngModel)]="template">
+      <input matInput name="template" [(ngModel)]="template" />
     </mat-form-field>
 
     <mat-form-field>
@@ -27,7 +27,9 @@
     <ng-template #viewContainerRef></ng-template>
   </form>
   <div class="text-center">
-    <button class="center" mat-flat-button color="primary" (click)="createNewParameter(null, null)">+</button>
+    <button class="center" mat-flat-button color="primary" (click)="createNewParameter(null, null)">
+      +
+    </button>
   </div>
 </div>
 <div mat-dialog-actions>

@@ -48,5 +48,6 @@ public class DiscordSettingsController
                                   String serverStartMessage,
                                   String serverStopMessage,
                                   String serverUpdateMessage)
-    { }
+    {
+    }
 }

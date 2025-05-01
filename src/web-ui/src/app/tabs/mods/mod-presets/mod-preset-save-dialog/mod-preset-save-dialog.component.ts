@@ -1,11 +1,9 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-    selector: 'app-mod-preset-save-dialog',
-    templateUrl: './mod-preset-save-dialog.component.html',
-    styleUrls: ['./mod-preset-save-dialog.component.scss'],
-    standalone: false
+  selector: "app-mod-preset-save-dialog",
+  templateUrl: "./mod-preset-save-dialog.component.html",
+  styleUrls: ["./mod-preset-save-dialog.component.scss"],
+  standalone: false
 })
-export class ModPresetSaveDialogComponent {
-
-}
+export class ModPresetSaveDialogComponent {}

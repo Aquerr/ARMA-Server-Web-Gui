@@ -5,9 +5,7 @@
     </div>
     <div class="right-column">
       <div class="theme-container">
-        <button mat-icon-button
-                color="primary"
-                (click)="changeTheme()">
+        <button mat-icon-button color="primary" (click)="changeTheme()">
           <mat-icon matTooltip="Change Theme" *ngIf="!darkMode">nightlight</mat-icon>
           <mat-icon matTooltip="Change Theme" *ngIf="darkMode">light_mode</mat-icon>
         </button>
@@ -16,10 +14,7 @@
         <mat-icon [fontIcon]="'person'"></mat-icon>
         <span class="user-name" *ngIf="isAuthenticated()">{{ getUsername() }}</span>
       </div>
-      <button mat-icon-button
-              color="primary"
-              (click)="logout()"
-              *ngIf="isAuthenticated()">
+      <button mat-icon-button color="primary" (click)="logout()" *ngIf="isAuthenticated()">
         <mat-icon [fontIcon]="'logout'"></mat-icon>
       </button>
     </div>

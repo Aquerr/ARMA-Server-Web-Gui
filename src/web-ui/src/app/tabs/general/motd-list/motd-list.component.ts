@@ -1,21 +1,19 @@
-import {Component, OnInit} from '@angular/core';
-import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
+import { Component, OnInit } from "@angular/core";
+import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 
 @Component({
-    selector: 'app-motd-list',
-    templateUrl: './motd-list.component.html',
-    styleUrls: ['./motd-list.component.scss'],
-    standalone: false
+  selector: "app-motd-list",
+  templateUrl: "./motd-list.component.html",
+  styleUrls: ["./motd-list.component.scss"],
+  standalone: false
 })
 export class MotdListComponent implements OnInit {
-
   motd: MotdItem[] = [];
   motdInterval: number = 5;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   deleteMotdLine(motdLineIndex: number) {
     this.motd = this.motd.filter((value, index) => {
@@ -28,7 +26,7 @@ export class MotdListComponent implements OnInit {
   }
 
   pupulateModtList(motdList: string[]) {
-    this.motd = motdList.map(message => new MotdItem(message));
+    this.motd = motdList.map((message) => new MotdItem(message));
   }
 
   onReorderList(event: CdkDragDrop<string[]>) {
@@ -40,7 +38,7 @@ export class MotdListComponent implements OnInit {
   }
 
   getMotdMessages() {
-    return this.motd.map(item => item.message);
+    return this.motd.map((item) => item.message);
   }
 
   onItemUpdate(motdItem: MotdItem) {

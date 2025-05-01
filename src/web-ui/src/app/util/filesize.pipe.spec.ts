@@ -1,7 +1,7 @@
-import { FilesizePipe } from './filesize.pipe';
+import { FilesizePipe } from "./filesize.pipe";
 
-describe('FilesizePipe', () => {
-  it('create an instance', () => {
+describe("FilesizePipe", () => {
+  it("create an instance", () => {
     const pipe = new FilesizePipe();
     expect(pipe).toBeTruthy();
   });

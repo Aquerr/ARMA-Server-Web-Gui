@@ -1,18 +1,26 @@
 <div class="container">
   <h1>Server Status</h1>
   <div>
-    Status: <span [ngStyle]="isServerOffline() ? {'color': 'red'} : {'color': 'green'}">{{getServerStatus().statusText}}</span>
+    Status:
+    <span [ngStyle]="isServerOffline() ? { color: 'red' } : { color: 'green' }">{{
+      getServerStatus().statusText
+    }}</span>
   </div>
-  <div style="margin-top: 5px;">
-    <div style="display: flex;">
+  <div style="margin-top: 5px">
+    <div style="display: flex">
       <div *ngIf="canToggleServer()">
-        <div *ngIf="isServerOffline(); else serverOfflineBlock" style="display: flex; flex-direction: column;">
-          <mat-checkbox id="perform-update" [(ngModel)]="performUpdate" labelPosition="after">Perform Arma update during start?</mat-checkbox>
-          <button mat-flat-button color="primary" (click)="toggleServer()">{{'START'}}</button>
+        <div
+          *ngIf="isServerOffline(); else serverOfflineBlock"
+          style="display: flex; flex-direction: column"
+        >
+          <mat-checkbox id="perform-update" [(ngModel)]="performUpdate" labelPosition="after"
+            >Perform Arma update during start?</mat-checkbox
+          >
+          <button mat-flat-button color="primary" (click)="toggleServer()">{{ "START" }}</button>
         </div>
         <ng-template #serverOfflineBlock>
           <div>
-            <button mat-flat-button color="primary" (click)="toggleServer()">{{'STOP'}}</button>
+            <button mat-flat-button color="primary" (click)="toggleServer()">{{ "STOP" }}</button>
           </div>
         </ng-template>
       </div>

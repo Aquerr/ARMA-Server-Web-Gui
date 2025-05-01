@@ -11,9 +11,9 @@ public final class HttpUtils
         if (request == null)
             return null;
 
-        String xForwardedForHeader = request.getHeader("X-Forwarded-For");
-        if (xForwardedForHeader != null)
-            return xForwardedForHeader;
+        String xforwardedForHeader = request.getHeader("X-Forwarded-For");
+        if (xforwardedForHeader != null)
+            return xforwardedForHeader;
 
         return request.getRemoteAddr();
     }

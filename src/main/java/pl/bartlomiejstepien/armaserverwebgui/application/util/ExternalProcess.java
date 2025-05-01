@@ -1,12 +1,11 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.util;
 
-import lombok.extern.slf4j.Slf4j;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ProcessParameters;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import lombok.extern.slf4j.Slf4j;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ProcessParameters;
 
 @Slf4j
 public class ExternalProcess
@@ -41,16 +40,16 @@ public class ExternalProcess
             this.process.onExit()
                     .thenApplyAsync(Process::exitValue)
                     .thenApplyAsync(exitCode ->
-            {
-                if (exitCode == 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    throw new RuntimeException("Exit code: " + exitCode);
-                }
-            }).join();
+                    {
+                        if (exitCode == 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            throw new RuntimeException("Exit code: " + exitCode);
+                        }
+                    }).join();
         }
         catch (Exception exception)
         {
@@ -68,30 +67,38 @@ public class ExternalProcess
     {
         this.inputStreamThread = new Thread(() ->
         {
-            try {
+            try
+            {
                 final BufferedReader reader = new BufferedReader(
                         new InputStreamReader(process.getInputStream()));
                 String line;
-                while ((line = reader.readLine()) != null) {
+                while ((line = reader.readLine()) != null)
+                {
                     log.info(line);
                 }
                 reader.close();
-            } catch (final Exception e) {
+            }
+            catch (final Exception e)
+            {
                 log.error("Error", e);
             }
         });
 
         this.errorStreamThread = new Thread(() ->
         {
-            try {
+            try
+            {
                 final BufferedReader reader = new BufferedReader(
                         new InputStreamReader(process.getErrorStream()));
                 String line;
-                while ((line = reader.readLine()) != null) {
+                while ((line = reader.readLine()) != null)
+                {
                     log.error(line);
                 }
                 reader.close();
-            } catch (final Exception e) {
+            }
+            catch (final Exception e)
+            {
                 log.error("Error", e);
             }
         });

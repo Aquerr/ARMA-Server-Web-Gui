@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { ServerLoggingService } from './server-logging.service';
+import { ServerLoggingService } from "./server-logging.service";
 
-describe('ServerLoggingService', () => {
+describe("ServerLoggingService", () => {
   let service: ServerLoggingService;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ServerLoggingService', () => {
     service = TestBed.inject(ServerLoggingService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });

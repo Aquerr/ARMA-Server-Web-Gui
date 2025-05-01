@@ -1,12 +1,10 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter;
 
+import java.util.Collections;
+import java.util.List;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModPreset;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetEntity;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class ModPresetConverter
@@ -21,16 +19,6 @@ public class ModPresetConverter
                 .name(entity.getName())
                 .entries(convertToDtos(entries))
                 .build();
-    }
-
-    public List<ModPreset.Entry> convertToDtos(List<ModPresetEntity.EntryEntity> entries)
-    {
-        if (entries == null || entries.isEmpty())
-            return Collections.emptyList();
-
-        return entries.stream()
-                .map(this::convert)
-                .toList();
     }
 
     public ModPreset.Entry convert(ModPresetEntity.EntryEntity entryEntity)
@@ -57,16 +45,6 @@ public class ModPresetConverter
                 .build();
     }
 
-    public List<ModPresetEntity.EntryEntity> convertToEntities(List<ModPreset.Entry> entries)
-    {
-        if (entries == null || entries.isEmpty())
-            return Collections.emptyList();
-
-        return entries.stream()
-                .map(this::convert)
-                .toList();
-    }
-
     public ModPresetEntity.EntryEntity convert(ModPreset.Entry entry)
     {
         if (entry == null)
@@ -78,5 +56,25 @@ public class ModPresetConverter
                 .modId(entry.getModId())
                 .modPresetId(entry.getModPresetId())
                 .build();
+    }
+
+    public List<ModPreset.Entry> convertToDtos(List<ModPresetEntity.EntryEntity> entries)
+    {
+        if (entries == null || entries.isEmpty())
+            return Collections.emptyList();
+
+        return entries.stream()
+                .map(this::convert)
+                .toList();
+    }
+
+    public List<ModPresetEntity.EntryEntity> convertToEntities(List<ModPreset.Entry> entries)
+    {
+        if (entries == null || entries.isEmpty())
+            return Collections.emptyList();
+
+        return entries.stream()
+                .map(this::convert)
+                .toList();
     }
 }

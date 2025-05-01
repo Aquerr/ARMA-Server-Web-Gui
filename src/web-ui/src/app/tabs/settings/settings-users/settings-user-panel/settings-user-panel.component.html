@@ -1,9 +1,7 @@
 <mat-accordion>
   <mat-expansion-panel class="user-panel">
     <mat-expansion-panel-header>
-      <mat-panel-title>
-        <mat-icon>person</mat-icon>{{user.username}}
-      </mat-panel-title>
+      <mat-panel-title> <mat-icon>person</mat-icon>{{ user.username }} </mat-panel-title>
     </mat-expansion-panel-header>
 
     <div class="container">
@@ -11,7 +9,7 @@
         <form [formGroup]="form" class="fields">
           <mat-form-field>
             <mat-label>Username</mat-label>
-            <input matInput formControlName="username" type="text">
+            <input matInput formControlName="username" type="text" />
           </mat-form-field>
 
           @if (user.id) {
@@ -19,11 +17,11 @@
           } @else {
             <mat-form-field>
               <mat-label>Password</mat-label>
-              <input matInput formControlName="password" type="password" placeholder="<hidden>">
+              <input matInput formControlName="password" type="password" placeholder="<hidden>" />
             </mat-form-field>
           }
           <aswg-chip-form-input
-            style="width: 100%; margin-top: 1rem;"
+            style="width: 100%; margin-top: 1rem"
             labelText="Authorities"
             [control]="formService.getAuthoritiesControl(form)"
             [parent]="form"
@@ -41,7 +39,9 @@
       </div>
       <div class="panel-bottom-buttons">
         <button mat-icon-button (click)="save()"><mat-icon [fontIcon]="'save'"></mat-icon></button>
-        <button mat-icon-button (click)="delete()"><mat-icon [fontIcon]="'delete'"></mat-icon></button>
+        <button mat-icon-button (click)="delete()">
+          <mat-icon [fontIcon]="'delete'"></mat-icon>
+        </button>
       </div>
     </div>
   </mat-expansion-panel>

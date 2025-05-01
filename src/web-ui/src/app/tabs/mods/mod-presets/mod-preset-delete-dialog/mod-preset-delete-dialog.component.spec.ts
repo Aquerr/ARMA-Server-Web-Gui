@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ModPresetDeleteDialogComponent } from './mod-preset-delete-dialog.component';
+import { ModPresetDeleteDialogComponent } from "./mod-preset-delete-dialog.component";
 
-describe('ModPresetDeleteDialogComponent', () => {
+describe("ModPresetDeleteDialogComponent", () => {
   let component: ModPresetDeleteDialogComponent;
   let fixture: ComponentFixture<ModPresetDeleteDialogComponent>;
 
@@ -15,7 +15,7 @@ describe('ModPresetDeleteDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

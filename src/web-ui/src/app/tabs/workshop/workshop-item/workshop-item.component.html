@@ -1,28 +1,37 @@
 <div class="workshop-item-card">
   <div class="card-image">
-    <img [src]="workshopMod.previewUrl" alt="No Image">
+    <img [src]="workshopMod.previewUrl" alt="No Image" />
   </div>
   <div class="card-content">
-    <a target="_blank" [href]="workshopMod.modWorkshopUrl" style="text-decoration: none;">
-      <h2>{{workshopMod.title}}</h2>
+    <a target="_blank" [href]="workshopMod.modWorkshopUrl" style="text-decoration: none">
+      <h2>{{ workshopMod.title }}</h2>
     </a>
     <p>
-        {{prepareModDescription(workshopMod.description)}}
+      {{ prepareModDescription(workshopMod.description) }}
     </p>
     <div *ngIf="!workshopMod.isBeingInstalled">
-      <button *ngIf="canInstall" mat-flat-button color="primary" (click)="installMod(workshopMod)">Install</button>
-      <button *ngIf="!canInstall" mat-flat-button color="accent" (click)="deleteMod(workshopMod)">Delete</button>
+      <button *ngIf="canInstall" mat-flat-button color="primary" (click)="installMod(workshopMod)">
+        Install
+      </button>
+      <button *ngIf="!canInstall" mat-flat-button color="accent" (click)="deleteMod(workshopMod)">
+        Delete
+      </button>
     </div>
-    <div class="spinner" *ngIf="workshopMod.isBeingInstalled" style="position: relative; max-width: 30px; max-height: 30px; margin-top: 10px">
+    <div
+      class="spinner"
+      *ngIf="workshopMod.isBeingInstalled"
+      style="position: relative; max-width: 30px; max-height: 30px; margin-top: 10px"
+    >
       <ngx-spinner
-                   [name]="workshopMod.title"
-                   [fullScreen]="false"
-                   [size]="'default'"
-                   [color]="spinnerColor"
-                   [type]="'ball-clip-rotate-multiple'"
-                   [bdColor]="'transparent'">
+        [name]="workshopMod.title"
+        [fullScreen]="false"
+        [size]="'default'"
+        [color]="spinnerColor"
+        [type]="'ball-clip-rotate-multiple'"
+        [bdColor]="'transparent'"
+      >
       </ngx-spinner>
-      <span style="margin-left: 40px;">Installing...</span>
+      <span style="margin-left: 40px">Installing...</span>
     </div>
   </div>
 </div>

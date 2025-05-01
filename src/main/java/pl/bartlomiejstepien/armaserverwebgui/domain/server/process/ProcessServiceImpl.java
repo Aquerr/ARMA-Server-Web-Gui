@@ -1,22 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.process;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordIntegration;
-import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerIsAlreadyRunningException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerNotInstalledException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -38,6 +21,22 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordIntegration;
+import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerIsAlreadyRunningException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerNotInstalledException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 
 @Service
 @RequiredArgsConstructor
@@ -139,7 +138,8 @@ public class ProcessServiceImpl implements ProcessService
         ArmaServerParameters serverParameters = serverParametersGenerator.generateParameters();
         Path serverExecutablePath = Paths.get(serverParameters.getExecutablePath());
         if (Files.notExists(serverExecutablePath))
-            throw new ServerNotInstalledException(String.format("Server executable '%s' does not exist. Is the server installed?", serverExecutablePath.toAbsolutePath()));
+            throw new ServerNotInstalledException(String.format("Server executable '%s' does not exist. Is the server installed?",
+                    serverExecutablePath.toAbsolutePath()));
 
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(new File(serverParameters.getServerDirectory()));
@@ -156,7 +156,8 @@ public class ProcessServiceImpl implements ProcessService
             log.warn("Could not clear " + serverLogFileName);
         }
 
-        this.serverThread = new Thread(() -> {
+        this.serverThread = new Thread(() ->
+        {
             try
             {
                 Process process = processBuilder.start();
@@ -233,9 +234,11 @@ public class ProcessServiceImpl implements ProcessService
         }
 
 
-        ProcessHandle.of(pid).ifPresent(processHandle -> {
+        ProcessHandle.of(pid).ifPresent(processHandle ->
+        {
             processHandle.destroy();
-            processHandle.onExit().thenAccept(processHandle1 -> {
+            processHandle.onExit().thenAccept(processHandle1 ->
+            {
                 log.info("Server process stopped for pid={}", processHandle1.pid());
             });
 
@@ -280,7 +283,8 @@ public class ProcessServiceImpl implements ProcessService
         try
         {
             File serverLogsFile = getServerLogsFile();
-            if (!serverLogsFile.exists()) {
+            if (!serverLogsFile.exists())
+            {
                 return Collections.emptyList();
             }
             return Files.readAllLines(getServerLogsFile().toPath());
@@ -296,16 +300,20 @@ public class ProcessServiceImpl implements ProcessService
     {
         this.ioServerThread = new Thread(() ->
         {
-            try {
+            try
+            {
                 final BufferedReader reader = new BufferedReader(
                         new InputStreamReader(process.getInputStream()));
                 String line = null;
-                while ((line = reader.readLine()) != null) {
+                while ((line = reader.readLine()) != null)
+                {
                     SERVER_LOGGER.info(line);
                     CompletableFuture.runAsync(new SubmitLogTask(line));
                 }
                 reader.close();
-            } catch (final Exception e) {
+            }
+            catch (final Exception e)
+            {
                 e.printStackTrace();
                 log.error("Error", e);
             }
@@ -313,16 +321,20 @@ public class ProcessServiceImpl implements ProcessService
 
         this.ioServerErrorThread = new Thread(() ->
         {
-            try {
+            try
+            {
                 final BufferedReader reader = new BufferedReader(
                         new InputStreamReader(process.getErrorStream()));
                 String line = null;
-                while ((line = reader.readLine()) != null) {
+                while ((line = reader.readLine()) != null)
+                {
                     SERVER_LOGGER.info(line);
                     CompletableFuture.runAsync(new SubmitLogTask(line));
                 }
                 reader.close();
-            } catch (final Exception e) {
+            }
+            catch (final Exception e)
+            {
                 e.printStackTrace();
                 log.error("Error", e);
             }
@@ -337,9 +349,9 @@ public class ProcessServiceImpl implements ProcessService
     {
         File pidFile = getPidFile();
         pidFile.createNewFile();
-        try(FileWriter fileWriter = new FileWriter(pidFile, false);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            PrintWriter printWriter = new PrintWriter(bufferedWriter))
+        try (FileWriter fileWriter = new FileWriter(pidFile, false);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+             PrintWriter printWriter = new PrintWriter(bufferedWriter))
         {
             printWriter.print(pid);
         }
@@ -350,9 +362,9 @@ public class ProcessServiceImpl implements ProcessService
         File pidFile = getPidFile();
         if (!pidFile.exists())
             return 0;
-        try(FileReader fileReader = new FileReader(pidFile);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            Scanner scanner = new Scanner(bufferedReader))
+        try (FileReader fileReader = new FileReader(pidFile);
+             BufferedReader bufferedReader = new BufferedReader(fileReader);
+             Scanner scanner = new Scanner(bufferedReader))
         {
             return scanner.nextInt();
         }
@@ -381,7 +393,8 @@ public class ProcessServiceImpl implements ProcessService
 
         private void emitSseLog(String line)
         {
-            serverLogsEmitters.forEach(emitter -> {
+            serverLogsEmitters.forEach(emitter ->
+            {
                 try
                 {
                     emitter.send(line);

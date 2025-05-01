@@ -1,22 +1,12 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.security.jwt;
 
+import static java.util.Optional.ofNullable;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Service;
-import pl.bartlomiejstepien.armaserverwebgui.application.security.exception.BadAuthTokenException;
-import pl.bartlomiejstepien.armaserverwebgui.application.security.exception.AuthTokenExpiredException;
-import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.model.InvalidJwtTokenEntity;
-import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
-
-import javax.crypto.SecretKey;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -28,8 +18,17 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import static java.util.Optional.ofNullable;
+import javax.crypto.SecretKey;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Service;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.exception.AuthTokenExpiredException;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.exception.BadAuthTokenException;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.model.InvalidJwtTokenEntity;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 
 @Service
 @Slf4j
@@ -49,7 +48,8 @@ public class JwtService
     @Value("${aswg.security.jwt.expiration-time}")
     private Duration jwtExpirationTime;
 
-    static {
+    static
+    {
         BLACK_LISTED_JWTS_CLEARER_EXECUTOR_SERVICE.scheduleAtFixedRate(JwtService::clearBlacklistedJwts, 1, 1, TimeUnit.HOURS);
     }
 
@@ -137,5 +137,7 @@ public class JwtService
         }
     }
 
-    private record BlackListedJwt(String jwt, ZonedDateTime expirationTime) { }
+    private record BlackListedJwt(String jwt, ZonedDateTime expirationTime)
+    {
+    }
 }

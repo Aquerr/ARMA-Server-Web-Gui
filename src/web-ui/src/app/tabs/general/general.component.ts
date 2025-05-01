@@ -1,19 +1,18 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MaskService} from "../../service/mask.service";
-import {SaveGeneralProperties, ServerGeneralService} from "../../service/server-general.service";
-import {NotificationService} from "../../service/notification.service";
-import {MotdListComponent} from "./motd-list/motd-list.component";
-import {MissionDifficulty} from "../../model/mission.model";
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { MaskService } from "../../service/mask.service";
+import { SaveGeneralProperties, ServerGeneralService } from "../../service/server-general.service";
+import { NotificationService } from "../../service/notification.service";
+import { MotdListComponent } from "./motd-list/motd-list.component";
+import { MissionDifficulty } from "../../model/mission.model";
 
 @Component({
-    selector: 'app-general',
-    templateUrl: './general.component.html',
-    styleUrls: ['./general.component.scss'],
-    standalone: false
+  selector: "app-general",
+  templateUrl: "./general.component.html",
+  styleUrls: ["./general.component.scss"],
+  standalone: false
 })
 export class GeneralComponent implements OnInit {
-
-  @ViewChild('motdListComponent') motdListComponent!: MotdListComponent;
+  @ViewChild("motdListComponent") motdListComponent!: MotdListComponent;
 
   commandLineParams: string = "";
   serverDirectory: string = "";
@@ -27,14 +26,15 @@ export class GeneralComponent implements OnInit {
   localClients: string[] = [];
   forcedDifficulty: MissionDifficulty | null = null;
 
-  constructor(private readonly maskService: MaskService,
-              private readonly serverGeneralService: ServerGeneralService,
-              private readonly notificationService: NotificationService) {
-  }
+  constructor(
+    private readonly maskService: MaskService,
+    private readonly serverGeneralService: ServerGeneralService,
+    private readonly notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
     this.maskService.show();
-    this.serverGeneralService.getGeneralProperties().subscribe(response => {
+    this.serverGeneralService.getGeneralProperties().subscribe((response) => {
       this.commandLineParams = response.commandLineParams;
       this.serverDirectory = response.serverDirectory;
       this.modsDirectory = response.modsDirectory;
@@ -70,9 +70,12 @@ export class GeneralComponent implements OnInit {
       forcedDifficulty: this.forcedDifficulty
     } as SaveGeneralProperties;
 
-    this.serverGeneralService.saveGeneralProperties(saveGeneralProperties).subscribe(response => {
+    this.serverGeneralService.saveGeneralProperties(saveGeneralProperties).subscribe((response) => {
       this.maskService.hide();
-      this.notificationService.successNotification('General settings have been updated!', 'Success');
+      this.notificationService.successNotification(
+        "General settings have been updated!",
+        "Success"
+      );
     });
   }
 }

@@ -1,23 +1,23 @@
-import {Component, OnInit} from '@angular/core';
-import {MaskService} from "../../service/mask.service";
-import {NotificationService} from "../../service/notification.service";
-import {ServerDifficultyService} from "../../service/server-difficulty.service";
-import {DifficultyOptions, DifficultyProfile} from "../../model/difficulty-profile.model";
+import { Component, OnInit } from "@angular/core";
+import { MaskService } from "../../service/mask.service";
+import { NotificationService } from "../../service/notification.service";
+import { ServerDifficultyService } from "../../service/server-difficulty.service";
+import { DifficultyOptions, DifficultyProfile } from "../../model/difficulty-profile.model";
 
 @Component({
-    selector: 'app-difficulty',
-    templateUrl: './difficulty.component.html',
-    styleUrl: './difficulty.component.scss',
-    standalone: false
+  selector: "app-difficulty",
+  templateUrl: "./difficulty.component.html",
+  styleUrl: "./difficulty.component.scss",
+  standalone: false
 })
 export class DifficultyComponent implements OnInit {
-
   difficultyProfiles: DifficultyProfile[] = [];
 
-  constructor(private maskService: MaskService,
-              private difficultyService: ServerDifficultyService,
-              private notificationService: NotificationService) {
-  }
+  constructor(
+    private maskService: MaskService,
+    private difficultyService: ServerDifficultyService,
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
     this.reloadProfiles();
@@ -30,7 +30,7 @@ export class DifficultyComponent implements OnInit {
 
   saveAll() {
     this.maskService.show();
-    this.difficultyService.saveDifficulties(this.difficultyProfiles).subscribe(response => {
+    this.difficultyService.saveDifficulties(this.difficultyProfiles).subscribe((response) => {
       this.maskService.hide();
       this.notificationService.successNotification("Difficulty profiles has been saved!");
       this.reloadProfiles();
@@ -39,7 +39,7 @@ export class DifficultyComponent implements OnInit {
 
   private reloadProfiles() {
     this.maskService.show();
-    this.difficultyService.getDifficulties().subscribe(response => {
+    this.difficultyService.getDifficulties().subscribe((response) => {
       this.difficultyProfiles = response;
       this.maskService.hide();
     });
@@ -80,15 +80,15 @@ export class DifficultyComponent implements OnInit {
       aiLevelPreset: 0,
 
       skillAI: "0.5",
-      precisionAI: "0.5",
+      precisionAI: "0.5"
     } as DifficultyOptions;
 
-    return {name: "new", active: false, options: options} as DifficultyProfile;
+    return { name: "new", active: false, options: options } as DifficultyProfile;
   }
 
   onProfileActivate(difficultyProfile: DifficultyProfile) {
     if (!difficultyProfile.active) {
-      this.difficultyProfiles = this.difficultyProfiles.map(profile => {
+      this.difficultyProfiles = this.difficultyProfiles.map((profile) => {
         profile.active = false;
         return profile;
       });

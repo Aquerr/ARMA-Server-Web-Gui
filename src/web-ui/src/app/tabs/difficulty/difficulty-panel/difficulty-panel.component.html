@@ -3,26 +3,32 @@
     <mat-expansion-panel-header [ngClass]="difficultyProfile.active ? 'difficulty-active' : ''">
       <mat-panel-title class="editable">
         @if (editingTitle) {
-          <input matInput
-                 type="text"
-                 [(ngModel)]="difficultyProfile.name"
-                 (keydown)="onTitleKeyDown($event)"
-                  (click)="$event.stopPropagation()">
+          <input
+            matInput
+            type="text"
+            [(ngModel)]="difficultyProfile.name"
+            (keydown)="onTitleKeyDown($event)"
+            (click)="$event.stopPropagation()"
+          />
         } @else {
-          <span>{{difficultyProfile.name}}</span>
+          <span>{{ difficultyProfile.name }}</span>
           <span>
-            <mat-icon style="scale: 0.5" [fontIcon]="'edit_square'" (click)="editTitle($event)"></mat-icon>
+            <mat-icon
+              style="scale: 0.5"
+              [fontIcon]="'edit_square'"
+              (click)="editTitle($event)"
+            ></mat-icon>
           </span>
         }
       </mat-panel-title>
       <mat-panel-description>
-          <button mat-stroked-button
-                  class="active-button"
-                  (click)="toggleActive($event)">Active: {{difficultyProfile.active}}</button>
+        <button mat-stroked-button class="active-button" (click)="toggleActive($event)">
+          Active: {{ difficultyProfile.active }}
+        </button>
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="difficulty-panel-content">
-      <hr>
+      <hr />
       <div class="difficulty-panel-content-options">
         <div class="valued-options">
           <mat-form-field>
@@ -121,45 +127,74 @@
           @if (difficultyProfile.options.aiLevelPreset == 3) {
             <mat-form-field>
               <mat-label>AI Skill</mat-label>
-              <input matInput
-                     type="text"
-                     [(ngModel)]="difficultyProfile.options.skillAI"
-                     (keydown)="allowDecimals($event)"
-                     [placeholder]="'0.5'">
+              <input
+                matInput
+                type="text"
+                [(ngModel)]="difficultyProfile.options.skillAI"
+                (keydown)="allowDecimals($event)"
+                [placeholder]="'0.5'"
+              />
             </mat-form-field>
             <mat-form-field>
               <mat-label>AI Precision</mat-label>
-              <input matInput
-                     type="text"
-                     [(ngModel)]="difficultyProfile.options.precisionAI"
-                     (keydown)="allowDecimals($event)"
-                     [placeholder]="'0.5'">
+              <input
+                matInput
+                type="text"
+                [(ngModel)]="difficultyProfile.options.precisionAI"
+                (keydown)="allowDecimals($event)"
+                [placeholder]="'0.5'"
+              />
             </mat-form-field>
           }
-
         </div>
         <div class="toggle-options">
-          <mat-checkbox [(ngModel)]="difficultyProfile.options.reducedDamage">Reduced Damage</mat-checkbox>
-          <mat-checkbox [(ngModel)]="difficultyProfile.options.staminaBar">Stamina Bar</mat-checkbox>
-          <mat-checkbox [(ngModel)]="difficultyProfile.options.weaponCrosshair">Weapon Crosshair</mat-checkbox>
+          <mat-checkbox [(ngModel)]="difficultyProfile.options.reducedDamage"
+            >Reduced Damage</mat-checkbox
+          >
+          <mat-checkbox [(ngModel)]="difficultyProfile.options.staminaBar"
+            >Stamina Bar</mat-checkbox
+          >
+          <mat-checkbox [(ngModel)]="difficultyProfile.options.weaponCrosshair"
+            >Weapon Crosshair</mat-checkbox
+          >
           <mat-checkbox [(ngModel)]="difficultyProfile.options.visionAid">Vision Aid</mat-checkbox>
-          <mat-checkbox [(ngModel)]="difficultyProfile.options.cameraShake">Camera Shake</mat-checkbox>
-          <mat-checkbox [(ngModel)]="difficultyProfile.options.scoreTable">Score Table</mat-checkbox>
-          <mat-checkbox [(ngModel)]="difficultyProfile.options.deathMessages">Death Messages</mat-checkbox>
+          <mat-checkbox [(ngModel)]="difficultyProfile.options.cameraShake"
+            >Camera Shake</mat-checkbox
+          >
+          <mat-checkbox [(ngModel)]="difficultyProfile.options.scoreTable"
+            >Score Table</mat-checkbox
+          >
+          <mat-checkbox [(ngModel)]="difficultyProfile.options.deathMessages"
+            >Death Messages</mat-checkbox
+          >
           <mat-checkbox [(ngModel)]="difficultyProfile.options.vonId">VON ID</mat-checkbox>
 
-          <mat-checkbox [(ngModel)]="difficultyProfile.options.mapContentFriendly">Friendlies On Map</mat-checkbox>
-          <mat-checkbox [(ngModel)]="difficultyProfile.options.mapContentEnemy">Enemies On Map</mat-checkbox>
-          <mat-checkbox [(ngModel)]="difficultyProfile.options.mapContentMines">Mines On Map</mat-checkbox>
+          <mat-checkbox [(ngModel)]="difficultyProfile.options.mapContentFriendly"
+            >Friendlies On Map</mat-checkbox
+          >
+          <mat-checkbox [(ngModel)]="difficultyProfile.options.mapContentEnemy"
+            >Enemies On Map</mat-checkbox
+          >
+          <mat-checkbox [(ngModel)]="difficultyProfile.options.mapContentMines"
+            >Mines On Map</mat-checkbox
+          >
 
-          <mat-checkbox [(ngModel)]="difficultyProfile.options.autoReport">Automatic Reporting</mat-checkbox>
-          <mat-checkbox [(ngModel)]="difficultyProfile.options.multipleSaves">Multiple Saves</mat-checkbox>
+          <mat-checkbox [(ngModel)]="difficultyProfile.options.autoReport"
+            >Automatic Reporting</mat-checkbox
+          >
+          <mat-checkbox [(ngModel)]="difficultyProfile.options.multipleSaves"
+            >Multiple Saves</mat-checkbox
+          >
         </div>
       </div>
-      <hr>
+      <hr />
       <div class="difficulty-panel-content-buttons">
-        <button mat-icon-button (click)="saveDifficulty(difficultyProfile)"><mat-icon [fontIcon]="'save'"></mat-icon></button>
-        <button mat-icon-button (click)="deleteDifficulty(difficultyProfile)"><mat-icon [fontIcon]="'delete'"></mat-icon></button>
+        <button mat-icon-button (click)="saveDifficulty(difficultyProfile)">
+          <mat-icon [fontIcon]="'save'"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="deleteDifficulty(difficultyProfile)">
+          <mat-icon [fontIcon]="'delete'"></mat-icon>
+        </button>
       </div>
     </div>
   </mat-expansion-panel>

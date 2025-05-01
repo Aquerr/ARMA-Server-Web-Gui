@@ -1,16 +1,16 @@
-import {Component, OnDestroy, OnInit, signal} from '@angular/core';
-import {WorkshopMod} from '../../model/workshop.model';
-import {WorkshopService} from '../../service/workshop.service';
-import {FormControl} from '@angular/forms';
-import {ModInstallWebsocketService} from "./mod-install-websocket/mod-install-websocket.service";
-import {MaskService} from "../../service/mask.service";
-import {PageEvent} from "@angular/material/paginator";
+import { Component, OnDestroy, OnInit, signal } from "@angular/core";
+import { WorkshopMod } from "../../model/workshop.model";
+import { WorkshopService } from "../../service/workshop.service";
+import { FormControl } from "@angular/forms";
+import { ModInstallWebsocketService } from "./mod-install-websocket/mod-install-websocket.service";
+import { MaskService } from "../../service/mask.service";
+import { PageEvent } from "@angular/material/paginator";
 
 @Component({
-    selector: 'app-workshop',
-    templateUrl: './workshop.component.html',
-    styleUrls: ['./workshop.component.scss'],
-    standalone: false
+  selector: "app-workshop",
+  templateUrl: "./workshop.component.html",
+  styleUrls: ["./workshop.component.scss"],
+  standalone: false
 })
 export class WorkshopComponent implements OnInit, OnDestroy {
   workshopMods: WorkshopMod[] = [];
@@ -24,12 +24,14 @@ export class WorkshopComponent implements OnInit, OnDestroy {
   totalInstalledMods = signal(0);
   installedWorkshopModsToShow: WorkshopMod[] = [];
 
-  constructor(private readonly workshopService: WorkshopService,
-              private readonly maskService: MaskService,
-              private readonly modInstallWebsocketService: ModInstallWebsocketService) {
-    this.searchBoxControl = new FormControl<string>('');
-    this.modInstallWebsocketService.workShopModInstallStatus.subscribe(modInstallStatus => {
-      const workshopMod = this.workshopMods.find(mod => mod.fileId === modInstallStatus.fileId);
+  constructor(
+    private readonly workshopService: WorkshopService,
+    private readonly maskService: MaskService,
+    private readonly modInstallWebsocketService: ModInstallWebsocketService
+  ) {
+    this.searchBoxControl = new FormControl<string>("");
+    this.modInstallWebsocketService.workShopModInstallStatus.subscribe((modInstallStatus) => {
+      const workshopMod = this.workshopMods.find((mod) => mod.fileId === modInstallStatus.fileId);
       if (workshopMod) {
         workshopMod.isBeingInstalled = modInstallStatus.status != 100;
       }
@@ -46,8 +48,8 @@ export class WorkshopComponent implements OnInit, OnDestroy {
   }
 
   onSearchBoxKeyDown($event: KeyboardEvent) {
-    if ($event.code === 'Enter' || $event.code === 'NumpadEnter') {
-      this.searchWorkshop('', this.searchBoxControl.value)
+    if ($event.code === "Enter" || $event.code === "NumpadEnter") {
+      this.searchWorkshop("", this.searchBoxControl.value);
     }
   }
   nextPage() {
@@ -57,20 +59,28 @@ export class WorkshopComponent implements OnInit, OnDestroy {
   searchWorkshop(cursor: string, searchText: string) {
     this.maskService.show();
     this.lastSearchText = searchText;
-    this.workshopService.queryWorkshop({cursor: cursor, searchText: this.lastSearchText}).subscribe(response => {
-      this.nextCursor = response.nextCursor;
-      this.workshopMods = response.mods.map(mod => {
-        if (this.modsUnderInstallation.find(modUnderInstallation => modUnderInstallation.fileId === mod.fileId) !== undefined) {
-          mod.isBeingInstalled = true;
-        }
-        return mod;
+    this.workshopService
+      .queryWorkshop({ cursor: cursor, searchText: this.lastSearchText })
+      .subscribe((response) => {
+        this.nextCursor = response.nextCursor;
+        this.workshopMods = response.mods.map((mod) => {
+          if (
+            this.modsUnderInstallation.find(
+              (modUnderInstallation) => modUnderInstallation.fileId === mod.fileId
+            ) !== undefined
+          ) {
+            mod.isBeingInstalled = true;
+          }
+          return mod;
+        });
+        this.maskService.hide();
       });
-      this.maskService.hide();
-    });
   }
 
   canInstall(workshopMod: WorkshopMod) {
-    return this.installedWorkshopMods.find(mod => mod.fileId === workshopMod.fileId) === undefined;
+    return (
+      this.installedWorkshopMods.find((mod) => mod.fileId === workshopMod.fileId) === undefined
+    );
   }
 
   onModInstallDelete($event: any) {
@@ -78,14 +88,14 @@ export class WorkshopComponent implements OnInit, OnDestroy {
   }
 
   private reloadInstalledModList() {
-    this.workshopService.getInstalledWorkshopItems().subscribe(response => {
+    this.workshopService.getInstalledWorkshopItems().subscribe((response) => {
       this.installedWorkshopMods = response.mods;
-      this.modsUnderInstallation = response.modsUnderInstallation.map(request => {
+      this.modsUnderInstallation = response.modsUnderInstallation.map((request) => {
         return {
           fileId: request.fileId,
           title: request.modName,
           isBeingInstalled: true
-        } as WorkshopMod
+        } as WorkshopMod;
       });
 
       this.installedWorkshopMods.push(...this.modsUnderInstallation);

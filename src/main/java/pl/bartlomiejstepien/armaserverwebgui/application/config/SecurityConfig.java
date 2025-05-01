@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
+import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,8 +30,6 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtService
 import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.filter.JwtFilter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 
-import java.util.List;
-
 @EnableMethodSecurity
 @Configuration(proxyBeanMethods = false)
 public class SecurityConfig
@@ -51,7 +50,8 @@ public class SecurityConfig
                                                AswgAuthenticationEntryPoint aswgAuthenticationEntryPoint
         ) throws Exception
         {
-            http.authorizeHttpRequests(auths -> {
+            http.authorizeHttpRequests(auths ->
+                    {
                         auths.requestMatchers("/api/v1/auth").permitAll();
                         auths.requestMatchers("/api/v1/auth/logout").permitAll();
                         auths.requestMatchers("/api/v1/ws/**").permitAll();
@@ -75,7 +75,8 @@ public class SecurityConfig
                     .formLogin((AbstractHttpConfigurer::disable))
                     .httpBasic(AbstractHttpConfigurer::disable)
                     .authenticationManager(jwtAuthenticationManager)
-                    .exceptionHandling(exceptionHandlingSpec -> {
+                    .exceptionHandling(exceptionHandlingSpec ->
+                    {
                         exceptionHandlingSpec.accessDeniedHandler(new AccessDeniedHandlerImpl());
                         exceptionHandlingSpec.authenticationEntryPoint(aswgAuthenticationEntryPoint);
                     })
@@ -95,7 +96,13 @@ public class SecurityConfig
         public CorsConfigurationSource corsConfigurationSource()
         {
             CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-            corsConfiguration.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.HEAD.name(), HttpMethod.POST.name(), HttpMethod.DELETE.name(), HttpMethod.PUT.name()));
+            corsConfiguration.setAllowedMethods(List.of(
+                    HttpMethod.GET.name(),
+                    HttpMethod.HEAD.name(),
+                    HttpMethod.POST.name(),
+                    HttpMethod.DELETE.name(),
+                    HttpMethod.PUT.name())
+            );
             corsConfiguration.setAllowedOrigins(List.of("*"));
 
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -119,9 +126,10 @@ public class SecurityConfig
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception
         {
             return http.cors(Customizer.withDefaults())
-                            .authorizeHttpRequests(authorizeRequests -> {
-                               authorizeRequests.requestMatchers("/**").permitAll();
-                            })
+                    .authorizeHttpRequests(authorizeRequests ->
+                    {
+                        authorizeRequests.requestMatchers("/**").permitAll();
+                    })
                     .csrf(AbstractHttpConfigurer::disable)
                     .build();
         }
@@ -130,7 +138,13 @@ public class SecurityConfig
         public CorsConfigurationSource corsConfigurationSource()
         {
             CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-            corsConfiguration.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.HEAD.name(), HttpMethod.POST.name(), HttpMethod.DELETE.name(), HttpMethod.PUT.name()));
+            corsConfiguration.setAllowedMethods(List.of(
+                    HttpMethod.GET.name(),
+                    HttpMethod.HEAD.name(),
+                    HttpMethod.POST.name(),
+                    HttpMethod.DELETE.name(),
+                    HttpMethod.PUT.name())
+            );
             corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
 
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

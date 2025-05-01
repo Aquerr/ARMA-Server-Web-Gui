@@ -1,10 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg;
 
-import lombok.extern.slf4j.Slf4j;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgParser;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -12,6 +7,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgParser;
 
 @Slf4j
 public class DefaultCfgConfigWriter implements CfgConfigWriter
@@ -28,8 +27,8 @@ public class DefaultCfgConfigWriter implements CfgConfigWriter
             Files.createFile(file.toPath());
         }
 
-        try(FileWriter fileWriter = new FileWriter(file, false);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter))
+        try (FileWriter fileWriter = new FileWriter(file, false);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter))
         {
             saveConfig(new CfgWriteContext(bufferedWriter, instance, null, 0));
         }

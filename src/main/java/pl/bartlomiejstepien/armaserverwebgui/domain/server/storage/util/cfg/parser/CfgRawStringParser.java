@@ -8,7 +8,7 @@ public class CfgRawStringParser implements CfgSimpleParser<String>
     @Override
     public <T> T parse(String input, Class<T> clazz) throws ParsingException
     {
-        return (T)input.trim();
+        return (T) input.trim();
     }
 
     @Override

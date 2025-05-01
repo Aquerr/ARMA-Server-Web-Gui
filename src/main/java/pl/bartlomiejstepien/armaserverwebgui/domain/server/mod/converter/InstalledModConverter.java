@@ -21,6 +21,6 @@ public class InstalledModConverter
                 .title(installedModEntity.getName())
                 .previewUrl(installedModEntity.getPreviewUrl())
                 .modWorkshopUrl(workshopUrlBuilder.buildUrlForFileId(installedModEntity.getWorkshopFileId()))
-            .build();
+                .build();
     }
 }

@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { FileUploadMonitorService } from './file-upload-monitor.service';
+import { FileUploadMonitorService } from "./file-upload-monitor.service";
 
-describe('FileUploadMonitorService', () => {
+describe("FileUploadMonitorService", () => {
   let service: FileUploadMonitorService;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('FileUploadMonitorService', () => {
     service = TestBed.inject(FileUploadMonitorService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });

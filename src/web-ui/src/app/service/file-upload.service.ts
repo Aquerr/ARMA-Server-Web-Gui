@@ -1,21 +1,22 @@
-import {inject, Injectable} from '@angular/core';
-import {Observable, Subject, tap} from "rxjs";
-import {NotificationService} from "./notification.service";
-import {FileUploadMonitorService} from "./file-upload-monitor.service";
+import { inject, Injectable } from "@angular/core";
+import { Observable, Subject, tap } from "rxjs";
+import { NotificationService } from "./notification.service";
+import { FileUploadMonitorService } from "./file-upload-monitor.service";
 import { HttpEventType } from "@angular/common/http";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export abstract class FileUploadService {
-
-  fileUploadMonitorService: FileUploadMonitorService
+  fileUploadMonitorService: FileUploadMonitorService;
 
   public fileUploadedSubject!: Subject<File | null>;
 
-  protected constructor(protected notificationService: NotificationService,
-                        private allowedFileTypes: string[] = [],
-                        private allowedFileExtensions: string[] = []) {
+  protected constructor(
+    protected notificationService: NotificationService,
+    private allowedFileTypes: string[] = [],
+    private allowedFileExtensions: string[] = []
+  ) {
     this.fileUploadMonitorService = inject(FileUploadMonitorService);
 
     this.fileUploadedSubject = new Subject();
@@ -32,7 +33,9 @@ export abstract class FileUploadService {
 
   protected uploadFile(file: File, overwrite: boolean) {
     if (!this.isFileAllowed(file)) {
-      this.notificationService.errorNotification(`Wrong file type! Only ${this.allowedFileExtensions} files are supported!`);
+      this.notificationService.errorNotification(
+        `Wrong file type! Only ${this.allowedFileExtensions} files are supported!`
+      );
       return;
     }
 
@@ -41,39 +44,41 @@ export abstract class FileUploadService {
       return;
     }
 
-    return this.doUpload(file, overwrite).pipe(tap(this.fileUploadMonitorService.monitorFileUpload(file))).subscribe({
-      next: (response) => {
-        if (response.type == HttpEventType.Response) {
-          this.fileUploadedSubject.next(file);
+    return this.doUpload(file, overwrite)
+      .pipe(tap(this.fileUploadMonitorService.monitorFileUpload(file)))
+      .subscribe({
+        next: (response) => {
+          if (response.type == HttpEventType.Response) {
+            this.fileUploadedSubject.next(file);
+          }
+        },
+        error: (error) => {
+          this.fileUploadedSubject.next(null);
         }
-      },
-      error: (error) => {
-        this.fileUploadedSubject.next(null);
-      }
-    });
+      });
   }
 
   private isFileAllowed(file: File): boolean {
     const fileName = file.name.toLowerCase();
     const fileExtension = fileName.substring(fileName.lastIndexOf("."));
-    if (!this.allowedFileExtensions.includes("*")
-      && !this.allowedFileExtensions.includes(fileExtension)) {
+    if (
+      !this.allowedFileExtensions.includes("*") &&
+      !this.allowedFileExtensions.includes(fileExtension)
+    ) {
       return false;
     }
 
-    return this.allowedFileTypes.includes("*")
-      || this.allowedFileTypes.includes(file.type);
+    return this.allowedFileTypes.includes("*") || this.allowedFileTypes.includes(file.type);
   }
 
   protected abstract doUpload(file: File, overwrite: boolean): Observable<any>;
 
-  protected doAfterUpload(file: File | null) {};
+  protected doAfterUpload(file: File | null) {}
 }
 
-export interface UploadingFile
-{
-  fileName: string,
-  progress: number,
-  uploadedSize: number,
-  totalSize: number
+export interface UploadingFile {
+  fileName: string;
+  progress: number;
+  uploadedSize: number;
+  totalSize: number;
 }

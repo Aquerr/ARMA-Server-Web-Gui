@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +18,6 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.DifficultyService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.DifficultyProfile;
 import pl.bartlomiejstepien.armaserverwebgui.web.model.DifficultyProfileApiModel;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/difficulties")

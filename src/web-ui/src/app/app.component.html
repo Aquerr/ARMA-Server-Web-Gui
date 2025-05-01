@@ -1,10 +1,17 @@
 <div class="container" style="height: 100%">
   <ng-container *ngIf="isMobile; else desktopHeader">
-    <app-mobile-header class="row mb-4" (changeThemeEmit)="changeTheme()" [darkMode]="isDarkMode()"></app-mobile-header>
+    <app-mobile-header
+      class="row mb-4"
+      (changeThemeEmit)="changeTheme()"
+      [darkMode]="isDarkMode()"
+    ></app-mobile-header>
   </ng-container>
   <ng-template #desktopHeader>
-    <app-desktop-header class="desktop-header" (changeThemeEmit)="changeTheme()"
-                        [darkMode]="isDarkMode()"></app-desktop-header>
+    <app-desktop-header
+      class="desktop-header"
+      (changeThemeEmit)="changeTheme()"
+      [darkMode]="isDarkMode()"
+    ></app-desktop-header>
   </ng-template>
   <div class="side-menu-wrapper" *ngIf="!isMobile">
     <app-side-menu [darkMode]="isDarkMode()"></app-side-menu>

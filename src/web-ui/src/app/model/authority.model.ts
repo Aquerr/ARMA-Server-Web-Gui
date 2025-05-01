@@ -1,5 +1,4 @@
-export enum AswgAuthority
-{
+export enum AswgAuthority {
   SERVER_START_STOP = "SERVER_START_STOP",
   CONSOLE_LOGS_VIEW = "CONSOLE_LOGS_VIEW",
   GENERAL_SETTINGS_VIEW = "GENERAL_SETTINGS_VIEW",

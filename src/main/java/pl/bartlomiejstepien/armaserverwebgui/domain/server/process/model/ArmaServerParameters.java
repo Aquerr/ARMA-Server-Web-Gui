@@ -1,16 +1,15 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
-import org.springframework.util.StringUtils;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
-
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
+import org.springframework.util.StringUtils;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 
 @Getter
 @ToString

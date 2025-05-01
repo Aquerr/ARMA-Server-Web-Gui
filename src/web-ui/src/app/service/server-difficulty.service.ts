@@ -1,15 +1,14 @@
-import { Injectable } from '@angular/core';
-import {forkJoin, Observable} from "rxjs";
-import {DifficultyProfile} from "../model/difficulty-profile.model";
+import { Injectable } from "@angular/core";
+import { forkJoin, Observable } from "rxjs";
+import { DifficultyProfile } from "../model/difficulty-profile.model";
 import { HttpClient } from "@angular/common/http";
-import {API_BASE_URL} from "../../environments/environment";
+import { API_BASE_URL } from "../../environments/environment";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ServerDifficultyService {
-
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   getDifficulties(): Observable<DifficultyProfile[]> {
     return this.httpClient.get<DifficultyProfile[]>(API_BASE_URL + "/difficulties");
@@ -32,12 +31,14 @@ export class ServerDifficultyService {
   }
 
   saveDifficulties(difficultyProfiles: DifficultyProfile[]): Observable<any> {
-    return forkJoin(difficultyProfiles.map(profile => {
-      if (profile.id === 0 || profile.id === undefined) {
-        return this.createDifficulty(profile);
-      } else {
-        return this.updateDifficulty(profile.id, profile);
-      }
-    }));
+    return forkJoin(
+      difficultyProfiles.map((profile) => {
+        if (profile.id === 0 || profile.id === undefined) {
+          return this.createDifficulty(profile);
+        } else {
+          return this.updateDifficulty(profile.id, profile);
+        }
+      })
+    );
   }
 }

@@ -1,17 +1,16 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {AuthService} from "../service/auth.service";
-import {Router} from "@angular/router";
-import {MaskService} from "../service/mask.service";
-import {Observable, of} from "rxjs";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { AuthService } from "../service/auth.service";
+import { Router } from "@angular/router";
+import { MaskService } from "../service/mask.service";
+import { Observable, of } from "rxjs";
 
 @Component({
-    selector: 'app-desktop-header',
-    templateUrl: './desktop-header.component.html',
-    styleUrls: ['./desktop-header.component.scss'],
-    standalone: false
+  selector: "app-desktop-header",
+  templateUrl: "./desktop-header.component.html",
+  styleUrls: ["./desktop-header.component.scss"],
+  standalone: false
 })
 export class DesktopHeaderComponent {
-
   @Input()
   darkMode: boolean = true;
 
@@ -21,10 +20,11 @@ export class DesktopHeaderComponent {
   routerLinkClickEmitter: EventEmitter<string> = new EventEmitter();
   routePreCheck = new Map<string, (routerLink: string) => Observable<boolean>>();
 
-  constructor(private authService: AuthService,
-              private router: Router,
-              private maskService: MaskService) {
-  }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private maskService: MaskService
+  ) {}
 
   logout() {
     this.routerLinkClicked("/logout");
@@ -52,10 +52,10 @@ export class DesktopHeaderComponent {
     }
 
     preCheck(routerLink).subscribe({
-      next: canAccessLink => {
+      next: (canAccessLink) => {
         if (!canAccessLink) {
           this.maskService.hide();
-          return
+          return;
         }
 
         this.maskService.hide();
@@ -68,5 +68,4 @@ export class DesktopHeaderComponent {
   private canUseRouteDefault(): Observable<boolean> {
     return of(true);
   }
-
 }

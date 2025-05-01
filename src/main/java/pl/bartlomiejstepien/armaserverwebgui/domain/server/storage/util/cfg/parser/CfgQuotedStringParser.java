@@ -8,7 +8,7 @@ public class CfgQuotedStringParser implements CfgSimpleParser<String>
     @Override
     public <T> T parse(String text, Class<T> clazz) throws ParsingException
     {
-        return (T)text.trim().substring(1, text.lastIndexOf("\""));
+        return (T) text.trim().substring(1, text.lastIndexOf("\""));
     }
 
     @Override

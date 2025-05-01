@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
-import {Observable} from "rxjs";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-import {API_BASE_URL} from "../../environments/environment";
+import { API_BASE_URL } from "../../environments/environment";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ServerLoggingService {
-
   private readonly LOGGING_URL = `${API_BASE_URL}/logging/properties`;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   getLoggingSectionData(): Observable<LoggingProperties> {
     return this.httpClient.get<LoggingProperties>(this.LOGGING_URL);
@@ -26,13 +25,13 @@ export class ServerLoggingService {
 }
 
 export interface LoggingProperties {
-  logFile: string
+  logFile: string;
 }
 
 export interface SaveLoggingPropertiesRequest {
-  logFile: string
+  logFile: string;
 }
 
 export interface LatestServerLogs {
-  logs: string[]
+  logs: string[];
 }

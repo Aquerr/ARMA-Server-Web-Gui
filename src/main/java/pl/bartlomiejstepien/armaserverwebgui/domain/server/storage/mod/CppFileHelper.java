@@ -1,11 +1,10 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod;
 
-import lombok.extern.slf4j.Slf4j;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.DefaultCfgConfigReader;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
+import lombok.extern.slf4j.Slf4j;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.DefaultCfgConfigReader;
 
 @Slf4j
 public final class CppFileHelper
@@ -18,7 +17,7 @@ public final class CppFileHelper
         T instance = null;
         try
         {
-            instance = (T)clazz.getDeclaredConstructor().newInstance();
+            instance = (T) clazz.getDeclaredConstructor().newInstance();
         }
         catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
         {

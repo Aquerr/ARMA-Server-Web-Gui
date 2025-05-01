@@ -1,18 +1,18 @@
-import {EventEmitter, Injectable, Output} from '@angular/core';
-import {API_WS_BASE_URL} from "../../../../environments/environment";
-import {WorkShopModInstallStatus} from "../../../model/workshop.model";
+import { EventEmitter, Injectable, Output } from "@angular/core";
+import { API_WS_BASE_URL } from "../../../../environments/environment";
+import { WorkShopModInstallStatus } from "../../../model/workshop.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ModInstallWebsocketService {
-
   websocket!: WebSocket;
   isConnected: boolean = false;
 
-  @Output() workShopModInstallStatus: EventEmitter<WorkShopModInstallStatus> = new EventEmitter<WorkShopModInstallStatus>();
+  @Output() workShopModInstallStatus: EventEmitter<WorkShopModInstallStatus> =
+    new EventEmitter<WorkShopModInstallStatus>();
 
-  constructor() { }
+  constructor() {}
 
   connect() {
     if (this.websocket) {

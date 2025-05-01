@@ -4,5 +4,5 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgR
 
 public interface CfgClassParser extends CfgParser<CfgReadContext>
 {
-    
+
 }

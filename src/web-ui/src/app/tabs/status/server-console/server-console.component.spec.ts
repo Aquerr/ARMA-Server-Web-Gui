@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ServerConsoleComponent } from './server-console.component';
+import { ServerConsoleComponent } from "./server-console.component";
 
-describe('ServerConsoleComponent', () => {
+describe("ServerConsoleComponent", () => {
   let component: ServerConsoleComponent;
   let fixture: ComponentFixture<ServerConsoleComponent>;
 
@@ -15,7 +15,7 @@ describe('ServerConsoleComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -3,16 +3,15 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.converter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
-
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -50,7 +49,9 @@ public class MissionConverter
                     .template(entity.getTemplate())
                     .enabled(entity.isEnabled())
                     .difficulty(Mission.Difficulty.findOrDefault(entity.getDifficulty()))
-                    .parameters(objectMapper.readValue(entity.getParametersJson(), new TypeReference<>() {}))
+                    .parameters(objectMapper.readValue(entity.getParametersJson(), new TypeReference<>()
+                    {
+                    }))
                     .build();
         }
         catch (JsonProcessingException e)

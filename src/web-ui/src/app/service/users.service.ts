@@ -1,17 +1,16 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {API_BASE_URL} from "../../environments/environment";
-import {AswgAuthority} from "../model/authority.model";
+import { inject, Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { API_BASE_URL } from "../../environments/environment";
+import { AswgAuthority } from "../model/authority.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class UsersService {
-
   private readonly httpClient: HttpClient = inject(HttpClient);
 
-  constructor() { }
+  constructor() {}
 
   getUsers(): Observable<AswgUser[]> {
     return this.httpClient.get<AswgUser[]>(`${API_BASE_URL}/users`);
@@ -30,7 +29,9 @@ export class UsersService {
   }
 
   updatePassword(id: number, password: string) {
-    return this.httpClient.post(`${API_BASE_URL}/users/${id}/password-change`, {password: password})
+    return this.httpClient.post(`${API_BASE_URL}/users/${id}/password-change`, {
+      password: password
+    });
   }
 }
 

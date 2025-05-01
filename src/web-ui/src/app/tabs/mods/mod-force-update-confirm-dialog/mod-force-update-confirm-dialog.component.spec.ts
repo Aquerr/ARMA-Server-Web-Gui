@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ModForceUpdateConfirmDialogComponent } from './mod-force-update-confirm-dialog.component';
+import { ModForceUpdateConfirmDialogComponent } from "./mod-force-update-confirm-dialog.component";
 
-describe('ModForceUpdateConfirmDialogComponent', () => {
+describe("ModForceUpdateConfirmDialogComponent", () => {
   let component: ModForceUpdateConfirmDialogComponent;
   let fixture: ComponentFixture<ModForceUpdateConfirmDialogComponent>;
 
@@ -15,7 +15,7 @@ describe('ModForceUpdateConfirmDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

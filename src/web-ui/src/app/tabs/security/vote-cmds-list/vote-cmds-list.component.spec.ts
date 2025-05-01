@@ -1,23 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { VoteCmdsListComponent } from './vote-cmds-list.component';
+import { VoteCmdsListComponent } from "./vote-cmds-list.component";
 
-describe('VoteCmdsListComponent', () => {
+describe("VoteCmdsListComponent", () => {
   let component: VoteCmdsListComponent;
   let fixture: ComponentFixture<VoteCmdsListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [VoteCmdsListComponent]
-    })
-    .compileComponents();
-    
+    }).compileComponents();
+
     fixture = TestBed.createComponent(VoteCmdsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

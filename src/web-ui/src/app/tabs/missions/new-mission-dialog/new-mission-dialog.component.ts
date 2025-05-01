@@ -1,25 +1,25 @@
-import { Component } from '@angular/core';
-import {MatDialogRef} from "@angular/material/dialog";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import { Component } from "@angular/core";
+import { MatDialogRef } from "@angular/material/dialog";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 
 @Component({
-    selector: 'app-new-mission-dialog',
-    templateUrl: './new-mission-dialog.component.html',
-    styleUrl: './new-mission-dialog.component.scss',
-    standalone: false
+  selector: "app-new-mission-dialog",
+  templateUrl: "./new-mission-dialog.component.html",
+  styleUrl: "./new-mission-dialog.component.scss",
+  standalone: false
 })
 export class NewMissionDialogComponent {
-  missionType: 'BUILT_IN' | 'FILE' = 'BUILT_IN';
+  missionType: "BUILT_IN" | "FILE" = "BUILT_IN";
   file: File | null = null;
   form: FormGroup;
 
-  constructor(private dialogRef: MatDialogRef<NewMissionDialogComponent>,
-              formBuilder: FormBuilder) {
+  constructor(
+    private dialogRef: MatDialogRef<NewMissionDialogComponent>,
+    formBuilder: FormBuilder
+  ) {
     this.form = formBuilder.group({
-      name: new FormControl(''),
-      template: new FormControl(
-        '', [Validators.required, Validators.pattern("^\\S*$")]
-      )
+      name: new FormControl(""),
+      template: new FormControl("", [Validators.required, Validators.pattern("^\\S*$")])
     });
   }
 
@@ -32,12 +32,11 @@ export class NewMissionDialogComponent {
   }
 
   onFileSelected(event: Event) {
-    const target = (event.target as HTMLInputElement);
+    const target = event.target as HTMLInputElement;
 
-    if (!target.files)
-      return;
+    if (!target.files) return;
 
-    const file : File = target.files[0];
+    const file: File = target.files[0];
     if (file) {
       this.file = file;
     }
@@ -46,16 +45,13 @@ export class NewMissionDialogComponent {
   closeDialog() {
     if (this.missionType == "BUILT_IN") {
       this.form.markAllAsTouched();
-      if (!this.form.valid)
-        return;
+      if (!this.form.valid) return;
     }
 
-    this.dialogRef.close(
-      {
-        name: this.form.get('name')?.value,
-        template: this.form.get('template')?.value,
-        file: this.file
-      }
-    );
+    this.dialogRef.close({
+      name: this.form.get("name")?.value,
+      template: this.form.get("template")?.value,
+      file: this.file
+    });
   }
 }

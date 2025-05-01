@@ -1,23 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AswgChipFormInputComponent } from './aswg-chip-form-input.component';
+import { AswgChipFormInputComponent } from "./aswg-chip-form-input.component";
 
-describe('AswgChipFormInputComponent', () => {
+describe("AswgChipFormInputComponent", () => {
   let component: AswgChipFormInputComponent;
   let fixture: ComponentFixture<AswgChipFormInputComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AswgChipFormInputComponent]
-    })
-    .compileComponents();
-    
+    }).compileComponents();
+
     fixture = TestBed.createComponent(AswgChipFormInputComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

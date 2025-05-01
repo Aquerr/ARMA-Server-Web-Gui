@@ -1,12 +1,11 @@
 package pl.bartlomiejstepien.armaserverwebgui.web.response;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Value;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
-
-import java.util.List;
 
 @Value(staticConstructor = "of")
 @Builder
@@ -27,10 +26,10 @@ public class GeneralPropertiesResponse
     Mission.Difficulty forcedDifficulty;
 
     public static GeneralPropertiesResponse of(String serverDirectory,
-                                                          String modsDirectory,
-                                                          Integer port,
-                                                          ArmaServerParameters armaServerParameters,
-                                                          GeneralProperties generalProperties)
+                                               String modsDirectory,
+                                               Integer port,
+                                               ArmaServerParameters armaServerParameters,
+                                               GeneralProperties generalProperties)
     {
         return GeneralPropertiesResponse.builder()
                 .serverDirectory(serverDirectory)

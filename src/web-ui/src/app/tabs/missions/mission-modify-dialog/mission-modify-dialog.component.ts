@@ -1,30 +1,39 @@
-import {Component, ComponentRef, Inject, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
-import {MissionParameterComponent} from "./mission-parameter/mission-parameter.component";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Mission, MissionDifficulty, MissionParam} from "../../../model/mission.model";
-import {Subscription} from "rxjs";
+import {
+  Component,
+  ComponentRef,
+  Inject,
+  OnInit,
+  ViewChild,
+  ViewContainerRef
+} from "@angular/core";
+import { MissionParameterComponent } from "./mission-parameter/mission-parameter.component";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { Mission, MissionDifficulty, MissionParam } from "../../../model/mission.model";
+import { Subscription } from "rxjs";
 
 @Component({
-    selector: 'app-mission-modify-dialog',
-    templateUrl: './mission-modify-dialog.component.html',
-    styleUrls: ['./mission-modify-dialog.component.scss'],
-    standalone: false
+  selector: "app-mission-modify-dialog",
+  templateUrl: "./mission-modify-dialog.component.html",
+  styleUrls: ["./mission-modify-dialog.component.scss"],
+  standalone: false
 })
 export class MissionModifyDialogComponent implements OnInit {
+  @ViewChild("viewContainerRef", { read: ViewContainerRef, static: true })
+  viewContainerRef!: ViewContainerRef;
 
-  @ViewChild("viewContainerRef", {read: ViewContainerRef, static: true}) viewContainerRef!: ViewContainerRef;
-
-  name: string = '';
-  template: string = '';
+  name: string = "";
+  template: string = "";
   difficulty: MissionDifficulty = MissionDifficulty.REGULAR;
   parameters: MissionParam[] = [];
 
-  constructor(@Inject(MAT_DIALOG_DATA) public mission: Mission, public dialogRef: MatDialogRef<MissionModifyDialogComponent>) {
-  }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public mission: Mission,
+    public dialogRef: MatDialogRef<MissionModifyDialogComponent>
+  ) {}
 
   ngOnInit(): void {
     if (this.mission.parameters) {
-      this.mission.parameters.forEach(parameter => {
+      this.mission.parameters.forEach((parameter) => {
         this.createNewParameter(parameter.name, parameter.value);
       });
     }
@@ -47,7 +56,11 @@ export class MissionModifyDialogComponent implements OnInit {
     });
   }
 
-  removeParameter(parameter: MissionParam, componentRef: ComponentRef<MissionParameterComponent>, subscription: Subscription) {
+  removeParameter(
+    parameter: MissionParam,
+    componentRef: ComponentRef<MissionParameterComponent>,
+    subscription: Subscription
+  ) {
     subscription.unsubscribe();
     componentRef.destroy();
     const index = this.parameters.indexOf(parameter);

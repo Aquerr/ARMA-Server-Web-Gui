@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ModPresetSaveDialogComponent } from './mod-preset-save-dialog.component';
+import { ModPresetSaveDialogComponent } from "./mod-preset-save-dialog.component";
 
-describe('ModPresetSaveDialogComponent', () => {
+describe("ModPresetSaveDialogComponent", () => {
   let component: ModPresetSaveDialogComponent;
   let fixture: ComponentFixture<ModPresetSaveDialogComponent>;
 
@@ -15,7 +15,7 @@ describe('ModPresetSaveDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

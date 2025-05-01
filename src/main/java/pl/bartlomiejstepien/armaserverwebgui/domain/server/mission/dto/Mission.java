@@ -1,13 +1,12 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Stream;
 
 @Data
 @Builder

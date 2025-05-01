@@ -1,5 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
+import java.util.List;
+import java.util.Set;
 import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
@@ -7,9 +9,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMo
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
-
-import java.util.List;
-import java.util.Set;
 
 public interface ModService
 {

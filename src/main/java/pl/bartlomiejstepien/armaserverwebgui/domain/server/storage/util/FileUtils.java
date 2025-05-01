@@ -13,10 +13,12 @@ public final class FileUtils
 {
     public static boolean deleteFilesRecursively(final Path path, boolean followLinks)
     {
-        if (path == null) {
+        if (path == null)
+        {
             return false;
         }
-        if (!Files.exists(path)) {
+        if (!Files.exists(path))
+        {
             return false;
         }
 
@@ -24,7 +26,8 @@ public final class FileUtils
 
         try
         {
-            Files.walkFileTree(path, fileVisitOptions, Integer.MAX_VALUE, new SimpleFileVisitor<>() {
+            Files.walkFileTree(path, fileVisitOptions, Integer.MAX_VALUE, new SimpleFileVisitor<>()
+            {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
                 {
@@ -33,7 +36,8 @@ public final class FileUtils
                 }
 
                 @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException
+                {
                     Files.delete(dir);
                     return FileVisitResult.CONTINUE;
                 }

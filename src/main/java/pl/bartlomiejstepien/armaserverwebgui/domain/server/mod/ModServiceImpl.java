@@ -1,5 +1,14 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
+import static java.lang.String.format;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,16 +30,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static java.lang.String.format;
-
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -48,7 +47,7 @@ public class ModServiceImpl implements ModService
     @Transactional
     public void saveModFile(MultipartFile multipartFile, boolean overwrite)
     {
-        if(!overwrite && modFileStorage.doesModFileExists(multipartFile))
+        if (!overwrite && modFileStorage.doesModFileExists(multipartFile))
             throw new ModFileAlreadyExistsException();
 
         try
@@ -124,9 +123,9 @@ public class ModServiceImpl implements ModService
         List<InstalledModEntity> installedModEntities = installedModRepository.findAll();
         Set<InstalledModEntity> modsToActivate = enabledMods.stream()
                 .map(modView -> installedModEntities.stream()
-                    .filter(mod -> mod.getWorkshopFileId() == (modView.getWorkshopFileId()))
-                    .findFirst()
-                    .orElse(null))
+                        .filter(mod -> mod.getWorkshopFileId() == (modView.getWorkshopFileId()))
+                        .findFirst()
+                        .orElse(null))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
@@ -141,10 +140,10 @@ public class ModServiceImpl implements ModService
         modKeyService.clearServerKeys();
 
         modsToActivate.stream()
-                        .map(InstalledModEntity::getDirectoryPath)
-                        .map(Paths::get)
-                        .map(ModDirectory::from)
-                        .forEach(modKeyService::copyKeysForMod);
+                .map(InstalledModEntity::getDirectoryPath)
+                .map(Paths::get)
+                .map(ModDirectory::from)
+                .forEach(modKeyService::copyKeysForMod);
     }
 
     @Override

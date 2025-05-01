@@ -1,27 +1,39 @@
 <h4>Messages of the day</h4>
 <section class="motd-section">
   <div class="motd-list" cdkDropList (cdkDropListDropped)="onReorderList($event)">
-    <div cdkDrag class="motd-list-item" role="listitem" *ngFor="let motdItem of motd; let i = index" (dblclick)="onMotdItemDoubleClick(motdItem)">
-      <div class="motd-list-item-number">{{(i + 1)}}</div>
+    <div
+      cdkDrag
+      class="motd-list-item"
+      role="listitem"
+      *ngFor="let motdItem of motd; let i = index"
+      (dblclick)="onMotdItemDoubleClick(motdItem)"
+    >
+      <div class="motd-list-item-number">{{ i + 1 }}</div>
       <div class="motd-list-item-message" *ngIf="motdItem.editing; else notEditing">
         <form (ngSubmit)="onItemUpdate(motdItem)">
-          <input style="width: 100%;" [(ngModel)]="motdItem.message" [ngModelOptions]="{standalone: true}">
+          <input
+            style="width: 100%"
+            [(ngModel)]="motdItem.message"
+            [ngModelOptions]="{ standalone: true }"
+          />
         </form>
       </div>
       <ng-template #notEditing>
         <div class="motd-list-item-message">
-          {{motdItem.message}}
+          {{ motdItem.message }}
         </div>
       </ng-template>
       <span class="motd-list-item-delete" (click)="deleteMotdLine(i)">&#10006;</span>
     </div>
     <div>
-      <button mat-stroked-button color="primary" style="width: 100%;" (click)="addNewMotdLine()"><mat-icon [fontIcon]="'add_circle'"></mat-icon></button>
+      <button mat-stroked-button color="primary" style="width: 100%" (click)="addNewMotdLine()">
+        <mat-icon [fontIcon]="'add_circle'"></mat-icon>
+      </button>
     </div>
   </div>
   <mat-form-field class="motd-interval">
     <mat-label>Motd Interval</mat-label>
-    <input name="motd-interval" [(ngModel)]="motdInterval" matInput type="number" min="0">
+    <input name="motd-interval" [(ngModel)]="motdInterval" matInput type="number" min="0" />
   </mat-form-field>
 </section>
 <!--<mat-list class="mtod-list">-->

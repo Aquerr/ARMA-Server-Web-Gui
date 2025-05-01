@@ -8,7 +8,7 @@ public class CfgLongParser implements CfgSimpleParser<String>
     @Override
     public <T> T parse(String input, Class<T> clazz) throws ParsingException
     {
-        return (T)Long.valueOf(input.trim());
+        return (T) Long.valueOf(input.trim());
     }
 
     @Override

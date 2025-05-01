@@ -1,18 +1,17 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.network;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.KickTimeoutType;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.NetworkProperties;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.KickTimeout;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.NetworkConfig;
-
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.KickTimeoutType;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.NetworkProperties;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.KickTimeout;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.NetworkConfig;
 
 @Service
 @AllArgsConstructor
@@ -69,23 +68,23 @@ public class ServerNetworkServiceImpl implements ServerNetworkService
 
     private KickTimeout[] prepareKickTimeouts(NetworkProperties.KickTimeouts kickTimeouts)
     {
-        return new KickTimeout[]{
-            KickTimeout.builder()
-                    .kickId(KickTimeoutType.MANUAL_KICK.getKickId())
-                    .timeout(kickTimeouts.getManualKickTimeoutSeconds())
-                    .build(),
-            KickTimeout.builder()
-                    .kickId(KickTimeoutType.CONNECTIVITY_KICK.getKickId())
-                    .timeout(kickTimeouts.getConnectivityKickTimeoutSeconds())
-                    .build(),
-            KickTimeout.builder()
-                    .kickId(KickTimeoutType.BATTL_EYE_KICK.getKickId())
-                    .timeout(kickTimeouts.getBattlEyeKickTimeoutSeconds())
-                    .build(),
-            KickTimeout.builder()
-                    .kickId(KickTimeoutType.HARMLESS_KICK.getKickId())
-                    .timeout(kickTimeouts.getHarmlessKickTimeoutSeconds())
-                    .build()
+        return new KickTimeout[] {
+                KickTimeout.builder()
+                        .kickId(KickTimeoutType.MANUAL_KICK.getKickId())
+                        .timeout(kickTimeouts.getManualKickTimeoutSeconds())
+                        .build(),
+                KickTimeout.builder()
+                        .kickId(KickTimeoutType.CONNECTIVITY_KICK.getKickId())
+                        .timeout(kickTimeouts.getConnectivityKickTimeoutSeconds())
+                        .build(),
+                KickTimeout.builder()
+                        .kickId(KickTimeoutType.BATTL_EYE_KICK.getKickId())
+                        .timeout(kickTimeouts.getBattlEyeKickTimeoutSeconds())
+                        .build(),
+                KickTimeout.builder()
+                        .kickId(KickTimeoutType.HARMLESS_KICK.getKickId())
+                        .timeout(kickTimeouts.getHarmlessKickTimeoutSeconds())
+                        .build()
         };
     }
 

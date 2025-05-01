@@ -4,63 +4,68 @@
     <div class="fields">
       <mat-form-field class="width-35">
         <mat-label>Server directory</mat-label>
-        <input name="server-directory"
-               [(ngModel)]="serverDirectory"
-               matInput
-               type="text">
+        <input name="server-directory" [(ngModel)]="serverDirectory" matInput type="text" />
       </mat-form-field>
       <mat-form-field class="width-35">
         <mat-label>Mods directory</mat-label>
-        <input name="mods-directory"
-               [(ngModel)]="modsDirectory"
-               matInput
-               type="text"
-               matTooltip="Optional option. Specifies mods directory relative to server directory.
+        <input
+          name="mods-directory"
+          [(ngModel)]="modsDirectory"
+          matInput
+          type="text"
+          matTooltip="Optional option. Specifies mods directory relative to server directory.
                When empty (default), then mod folders will be located inside server root directory"
-               matTooltipPosition="right">
+          matTooltipPosition="right"
+        />
       </mat-form-field>
       <mat-form-field class="width-50">
         <mat-label>Hostname</mat-label>
-        <input name="hostname"
-               [(ngModel)]="hostname"
-               matInput
-               type="text"
-               matTooltip="Also determines the configuration profile used by the game"
-               matTooltipPosition="right">
+        <input
+          name="hostname"
+          [(ngModel)]="hostname"
+          matInput
+          type="text"
+          matTooltip="Also determines the configuration profile used by the game"
+          matTooltipPosition="right"
+        />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Port</mat-label>
-        <input name="port"
-               [(ngModel)]="port"
-               matInput
-               type="number"
-               min="0">
+        <input name="port" [(ngModel)]="port" matInput type="number" min="0" />
       </mat-form-field>
       <mat-form-field class="max-players-field">
         <mat-label>Max players</mat-label>
-        <input name="max-players"
-               [(ngModel)]="maxPlayers"
-               matInput
-               type="number"
-               min="0">
+        <input name="max-players" [(ngModel)]="maxPlayers" matInput type="number" min="0" />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Persistent</mat-label>
-        <mat-select [(ngModel)]="persistent" name="persistent" matTooltip="If yes then mission keeps running even when all players disconnect">
+        <mat-select
+          [(ngModel)]="persistent"
+          name="persistent"
+          matTooltip="If yes then mission keeps running even when all players disconnect"
+        >
           <mat-option [value]="true">Yes</mat-option>
           <mat-option [value]="false">No</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Drawing in map</mat-label>
-        <mat-select [(ngModel)]="drawingInMap" name="drawing-in-map" matTooltip="Enabled the ability to place markers and draw lines on map">
+        <mat-select
+          [(ngModel)]="drawingInMap"
+          name="drawing-in-map"
+          matTooltip="Enabled the ability to place markers and draw lines on map"
+        >
           <mat-option [value]="true">Yes</mat-option>
           <mat-option [value]="false">No</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Forced difficulty</mat-label>
-        <mat-select [(ngModel)]="forcedDifficulty" name="drawing-in-map" matTooltip="Enforces the selected difficulty on the server. Set to 'Empty' to make mission settings decide about the difficulty.">
+        <mat-select
+          [(ngModel)]="forcedDifficulty"
+          name="drawing-in-map"
+          matTooltip="Enforces the selected difficulty on the server. Set to 'Empty' to make mission settings decide about the difficulty."
+        >
           <mat-option [value]="null">Empty</mat-option>
           <mat-option [value]="'RECRUIT'">Recruit</mat-option>
           <mat-option [value]="'REGULAR'">Regular</mat-option>
@@ -84,7 +89,7 @@
     </section>
     <div>
       <mat-label>Current command-line params</mat-label>
-      <input class="command-line-params" disabled [value]="commandLineParams" type="text">
+      <input class="command-line-params" disabled [value]="commandLineParams" type="text" />
     </div>
   </div>
   <div class="button-container">

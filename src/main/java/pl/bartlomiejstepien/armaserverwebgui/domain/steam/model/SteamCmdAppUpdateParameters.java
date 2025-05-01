@@ -1,10 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam.model;
 
-import lombok.Builder;
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder

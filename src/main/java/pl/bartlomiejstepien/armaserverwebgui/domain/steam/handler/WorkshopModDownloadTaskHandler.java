@@ -1,10 +1,18 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam.handler;
 
+import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.application.util.ExternalProcess;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModFolderNameHelper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.WorkshopModInstallProgressWebsocketHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
@@ -14,7 +22,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirect
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModFileStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.dotnet.DotnetDateTimeUtils;
-import pl.bartlomiejstepien.armaserverwebgui.application.util.ExternalProcess;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamWebApiService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
@@ -25,14 +32,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopModInstallSteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.OffsetDateTime;
-
-import static java.lang.String.format;
-import static java.util.Optional.ofNullable;
 
 @Slf4j
 @Component
@@ -92,7 +91,10 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
 
     private Path buildModDirectoryPath(String modName)
     {
-        return Paths.get(this.aswgConfig.getServerDirectoryPath()).resolve(this.aswgConfig.getModsDirectoryPath()).resolve(modFolderNameHelper.buildFor(modName)).normalize();
+        return Paths.get(this.aswgConfig.getServerDirectoryPath())
+                .resolve(this.aswgConfig.getModsDirectoryPath())
+                .resolve(modFolderNameHelper.buildFor(modName))
+                .normalize();
     }
 
     private boolean shouldUpdateMod(ModDirectory modDirectory,
@@ -126,7 +128,7 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
      * Downloads the file and returns its path in the filesystem.
      *
      * @param fileId the id of the file to download.
-     * @param title the title of the mod.
+     * @param title  the title of the mod.
      * @return the path to the downloaded file.
      */
     private Path downloadModFromWorkshop(long fileId, String title) throws CouldNotDownloadWorkshopModException
@@ -217,9 +219,9 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
                 return path;
 
             return buildSteamAppsPath(Paths.get(userHomeDirectory)
-                        .resolve(".local")
-                        .resolve("share")
-                        .resolve("Steam"), fileId);
+                    .resolve(".local")
+                    .resolve("share")
+                    .resolve("Steam"), fileId);
         }
     }
 

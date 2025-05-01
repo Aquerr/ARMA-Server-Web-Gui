@@ -1,17 +1,15 @@
-import {Injectable} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ServerNetworkProperties} from "../../service/server-network.service";
+import { Injectable } from "@angular/core";
+import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ServerNetworkProperties } from "../../service/server-network.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class NetworkFormService {
-
   private readonly digitsRegex = /^\d+$/;
   private readonly decimalRegex = /^\d+(.\d+)?$/;
 
-  constructor(private readonly fb: FormBuilder) {
-  }
+  constructor(private readonly fb: FormBuilder) {}
 
   getForm(): FormGroup {
     return this.fb.group({
@@ -28,14 +26,26 @@ export class NetworkFormService {
       maxMsgSend: [128, [Validators.required, Validators.pattern(this.digitsRegex)]],
       maxSizeGuaranteed: [512, [Validators.required, Validators.pattern(this.digitsRegex)]],
       maxSizeNonGuaranteed: [256, [Validators.required, Validators.pattern(this.digitsRegex)]],
-      minErrorToSend: ['0.001', [Validators.required, Validators.pattern(this.decimalRegex)]],
-      minErrorToSendNear: ['0.01', [Validators.required, Validators.pattern(this.decimalRegex)]],
+      minErrorToSend: ["0.001", [Validators.required, Validators.pattern(this.decimalRegex)]],
+      minErrorToSendNear: ["0.01", [Validators.required, Validators.pattern(this.decimalRegex)]],
       maxCustomFileSize: [0, [Validators.required, Validators.pattern(this.digitsRegex)]],
       maxPacketSize: [1400, [Validators.required, Validators.pattern(this.digitsRegex)]],
-      manualKickTimeout: [60, [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]],
-      connectivityKickTimeout: [60, [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]],
-      battlEyeKickTimeout: [60, [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]],
-      harmlessKickTimeout: [60, [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]],
+      manualKickTimeout: [
+        60,
+        [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]
+      ],
+      connectivityKickTimeout: [
+        60,
+        [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]
+      ],
+      battlEyeKickTimeout: [
+        60,
+        [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]
+      ],
+      harmlessKickTimeout: [
+        60,
+        [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]
+      ]
     });
   }
 
@@ -58,7 +68,9 @@ export class NetworkFormService {
     this.getMaxCustomFileSize(form).setValue(data.maxCustomFileSize);
     this.getMaxPacketSize(form).setValue(data.maxPacketSize);
     this.getManualKickTimeout(form).setValue(data.kickTimeouts.manualKickTimeoutSeconds);
-    this.getConnectivityKickTimeout(form).setValue(data.kickTimeouts.connectivityKickTimeoutSeconds);
+    this.getConnectivityKickTimeout(form).setValue(
+      data.kickTimeouts.connectivityKickTimeoutSeconds
+    );
     this.getBattlEyeKickTimeout(form).setValue(data.kickTimeouts.battlEyeKickTimeoutSeconds);
     this.getHarmlessKickTimeout(form).setValue(data.kickTimeouts.harmlessKickTimeoutSeconds);
   }
@@ -86,92 +98,92 @@ export class NetworkFormService {
         manualKickTimeoutSeconds: this.getManualKickTimeout(form).value,
         connectivityKickTimeoutSeconds: this.getConnectivityKickTimeout(form).value,
         battlEyeKickTimeoutSeconds: this.getBattlEyeKickTimeout(form).value,
-        harmlessKickTimeoutSeconds: this.getHarmlessKickTimeout(form).value,
+        harmlessKickTimeoutSeconds: this.getHarmlessKickTimeout(form).value
       }
     } as ServerNetworkProperties;
   }
 
   getUpnpControl(form: FormGroup) {
-    return form.get('upnp') as AbstractControl;
+    return form.get("upnp") as AbstractControl;
   }
 
   getMaxPingControl(form: FormGroup) {
-    return form.get('maxPing') as AbstractControl;
+    return form.get("maxPing") as AbstractControl;
   }
 
   getLoopbackControl(form: FormGroup) {
-    return form.get('loopback') as AbstractControl;
+    return form.get("loopback") as AbstractControl;
   }
 
   getDisconnectTimeoutControl(form: FormGroup) {
-    return form.get('disconnectTimeout') as AbstractControl;
+    return form.get("disconnectTimeout") as AbstractControl;
   }
 
   getMaxDesyncControl(form: FormGroup) {
-    return form.get('maxDesync') as AbstractControl;
+    return form.get("maxDesync") as AbstractControl;
   }
 
   getMaxPacketLossControl(form: FormGroup) {
-    return form.get('maxPacketLoss') as AbstractControl;
+    return form.get("maxPacketLoss") as AbstractControl;
   }
 
   getEnablePlayerDiagControl(form: FormGroup) {
-    return form.get('enablePlayerDiag') as AbstractControl;
+    return form.get("enablePlayerDiag") as AbstractControl;
   }
 
   getSteamProtocolMaxDataSizeControl(form: FormGroup) {
-    return form.get('steamProtocolMaxDataSize') as AbstractControl;
+    return form.get("steamProtocolMaxDataSize") as AbstractControl;
   }
 
   getMinBandwidth(form: FormGroup) {
-    return form.get('minBandwidth') as AbstractControl;
+    return form.get("minBandwidth") as AbstractControl;
   }
 
   getMaxBandwidth(form: FormGroup) {
-    return form.get('maxBandwidth') as AbstractControl;
+    return form.get("maxBandwidth") as AbstractControl;
   }
 
   getMaxMsgSend(form: FormGroup) {
-    return form.get('maxMsgSend') as AbstractControl;
+    return form.get("maxMsgSend") as AbstractControl;
   }
 
   getMaxSizeGuaranteed(form: FormGroup) {
-    return form.get('maxSizeGuaranteed') as AbstractControl;
+    return form.get("maxSizeGuaranteed") as AbstractControl;
   }
 
   getMaxSizeNonGuaranteed(form: FormGroup) {
-    return form.get('maxSizeNonGuaranteed') as AbstractControl;
+    return form.get("maxSizeNonGuaranteed") as AbstractControl;
   }
 
   getMinErrorToSend(form: FormGroup) {
-    return form.get('minErrorToSend') as AbstractControl;
+    return form.get("minErrorToSend") as AbstractControl;
   }
 
   getMinErrorToSendNear(form: FormGroup) {
-    return form.get('minErrorToSendNear') as AbstractControl;
+    return form.get("minErrorToSendNear") as AbstractControl;
   }
 
   getMaxCustomFileSize(form: FormGroup) {
-    return form.get('maxCustomFileSize') as AbstractControl;
+    return form.get("maxCustomFileSize") as AbstractControl;
   }
 
   getMaxPacketSize(form: FormGroup) {
-    return form.get('maxPacketSize') as AbstractControl;
+    return form.get("maxPacketSize") as AbstractControl;
   }
 
   getManualKickTimeout(form: FormGroup) {
-    return form.get('manualKickTimeout') as AbstractControl;
+    return form.get("manualKickTimeout") as AbstractControl;
   }
 
   getConnectivityKickTimeout(form: FormGroup) {
-    return form.get('connectivityKickTimeout') as AbstractControl;
+    return form.get("connectivityKickTimeout") as AbstractControl;
   }
 
   getBattlEyeKickTimeout(form: FormGroup) {
-    return form.get('battlEyeKickTimeout') as AbstractControl;
+    return form.get("battlEyeKickTimeout") as AbstractControl;
   }
 
   getHarmlessKickTimeout(form: FormGroup) {
-    return form.get('harmlessKickTimeout') as AbstractControl;
+    return form.get("harmlessKickTimeout") as AbstractControl;
   }
 }

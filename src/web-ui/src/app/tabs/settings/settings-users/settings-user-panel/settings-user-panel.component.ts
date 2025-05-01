@@ -1,23 +1,22 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
-import {AswgUser} from "../../../../service/users.service";
-import {FormGroup} from "@angular/forms";
-import {EditUserFormService} from "./edit-user-form.service";
-import {AswgAuthority} from "../../../../model/authority.model";
-import {DialogService} from "../../../../service/dialog.service";
-import {PasswordChangeModalComponent} from "./password-change-modal/password-change-modal.component";
+import { Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import { AswgUser } from "../../../../service/users.service";
+import { FormGroup } from "@angular/forms";
+import { EditUserFormService } from "./edit-user-form.service";
+import { AswgAuthority } from "../../../../model/authority.model";
+import { DialogService } from "../../../../service/dialog.service";
+import { PasswordChangeModalComponent } from "./password-change-modal/password-change-modal.component";
 
 @Component({
-  selector: 'app-settings-user-panel',
-  templateUrl: './settings-user-panel.component.html',
-  styleUrl: './settings-user-panel.component.scss',
+  selector: "app-settings-user-panel",
+  templateUrl: "./settings-user-panel.component.html",
+  styleUrl: "./settings-user-panel.component.scss",
   standalone: false
 })
 export class SettingsUserPanelComponent implements OnInit {
-
   formService: EditUserFormService = inject(EditUserFormService);
   dialogService: DialogService = inject(DialogService);
 
-  @Input({required: true})
+  @Input({ required: true })
   user!: AswgUser;
 
   @Output()
@@ -38,7 +37,7 @@ export class SettingsUserPanelComponent implements OnInit {
 
   save(): void {
     this.form.markAllAsTouched();
-    if(this.form.valid) {
+    if (this.form.valid) {
       this.saved.emit(this.formService.asAswgUser(this.form));
     }
   }
@@ -52,8 +51,6 @@ export class SettingsUserPanelComponent implements OnInit {
   }
 
   showEditPasswordModal() {
-    this.dialogService.open(PasswordChangeModalComponent,
-      (dialogResult) => {
-    }, this.user)
+    this.dialogService.open(PasswordChangeModalComponent, (dialogResult) => {}, this.user);
   }
 }

@@ -1,5 +1,5 @@
 export interface ApplicationInfoResponse {
-  application: ApplicationInfo
+  application: ApplicationInfo;
 }
 
 export interface ApplicationInfo {

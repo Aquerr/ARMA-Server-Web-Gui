@@ -1,5 +1,4 @@
 .app-list-missions {
-
 }
 
 .mission-list-group {
@@ -9,7 +8,7 @@
   justify-content: space-between;
 }
 
-.mission-list{
+.mission-list {
   width: 100%;
   max-width: 100%;
 }
@@ -37,9 +36,10 @@
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 4px;
-  box-shadow: 0 5px 5px -3px #444c56,
-  0 8px 10px 1px rgba(0, 0, 0, 0.14),
-  0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 5px 5px -3px #444c56,
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
 .cdk-drag-placeholder {
@@ -88,7 +88,7 @@
   }
   .mission-list {
     width: auto;
-    margin-left: 0!important;
+    margin-left: 0 !important;
   }
   .mission-list-group {
     flex-direction: column;

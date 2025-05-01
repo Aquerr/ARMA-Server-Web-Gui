@@ -1,12 +1,11 @@
-import { Injectable } from '@angular/core';
-import {ModPreset, ModPresetEntry} from "../../../../model/mod.model";
+import { Injectable } from "@angular/core";
+import { ModPreset, ModPresetEntry } from "../../../../model/mod.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ModPresetParserService {
-
-  constructor() { }
+  constructor() {}
 
   processModPresetFile(result: string | ArrayBuffer | null): ModPreset | null {
     if (typeof result !== "string") {
@@ -24,12 +23,13 @@ export class ModPresetParserService {
       const modId = this.getModIdFromRow(row);
       const modTitle = this.getModTitleFromRow(row);
       if (modId != null && modTitle != null) {
-        mods.push({id: modId, name: modTitle});
+        mods.push({ id: modId, name: modTitle });
       }
     }
-    const presetName = html.querySelector('meta[name="arma:PresetName"]')?.getAttribute('content') ?? "custom";
+    const presetName =
+      html.querySelector('meta[name="arma:PresetName"]')?.getAttribute("content") ?? "custom";
 
-    return {name: presetName, entries: mods}
+    return { name: presetName, entries: mods };
   }
 
   private getModTitleFromRow(row: HTMLTableRowElement): string | null {
@@ -49,8 +49,7 @@ export class ModPresetParserService {
       const linkElement = cell.firstElementChild;
       if (linkElement != null && linkElement.getAttribute("data-type") == "Link") {
         const href = linkElement.getAttribute("href");
-        if (href == null)
-          return null;
+        if (href == null) return null;
         const id = href.substring(href.lastIndexOf("?id=") + 4, href.length);
         return Number(id);
       }

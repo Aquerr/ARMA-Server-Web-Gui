@@ -15,5 +15,5 @@ export interface ModPresetEntry {
 
 export interface ModPreset {
   name: string;
-  entries: ModPresetEntry[]
+  entries: ModPresetEntry[];
 }

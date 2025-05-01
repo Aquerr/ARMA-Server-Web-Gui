@@ -1,4 +1,4 @@
-import {VoteCmd} from "../../../../model/vote-cmd.model";
+import { VoteCmd } from "../../../../model/vote-cmd.model";
 
 export class CommandListItem {
   command: VoteCmd;

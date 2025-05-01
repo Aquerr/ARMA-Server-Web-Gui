@@ -13,14 +13,15 @@ public final class DotnetDateTimeUtils
         // Mask out kind and ticks
         int kind = Math.toIntExact((fromBytes >> 62) & 0x3);
         long ticks = fromBytes & 0x3FFF_FFFF_FFFF_FFFFL;
-        LocalDateTime cSharpEpoch = LocalDate.of(1, Month.JANUARY, 1).atStartOfDay();
+        LocalDateTime csharpEpoch = LocalDate.of(1, Month.JANUARY, 1).atStartOfDay();
         // 100 nanosecond units or 10^-7 seconds
         final int unitsPerSecond = 10_000_000;
         long seconds = ticks / unitsPerSecond;
         long nanos = (ticks % unitsPerSecond) * 100;
-        LocalDateTime localDateTime = cSharpEpoch.plusSeconds(seconds).plusNanos(nanos);
+        LocalDateTime localDateTime = csharpEpoch.plusSeconds(seconds).plusNanos(nanos);
 
-        if (kind > 2 || kind < 0) {
+        if (kind > 2 || kind < 0)
+        {
             throw new IllegalArgumentException("Invalid ticks kind: " + kind);
         }
 

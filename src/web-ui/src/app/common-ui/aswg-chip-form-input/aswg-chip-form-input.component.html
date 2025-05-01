@@ -1,28 +1,30 @@
-<mat-form-field style="width: 100%;" [matTooltip]="toolTipText" matTooltipPosition="right">
+<mat-form-field style="width: 100%" [matTooltip]="toolTipText" matTooltipPosition="right">
   <mat-label>{{ labelText }}</mat-label>
   <mat-chip-grid #chipGrid>
-    <mat-chip-row *ngFor="let item of getEntries()"
-                  [editable]="true"
-                  (edited)="editEntry(item, $event)"
-                  (removed)="removeEntry(item)"
-                  [aria-description]="'press enter to edit ' + item"
+    <mat-chip-row
+      *ngFor="let item of getEntries()"
+      [editable]="true"
+      (edited)="editEntry(item, $event)"
+      (removed)="removeEntry(item)"
+      [aria-description]="'press enter to edit ' + item"
     >
-      {{item}}
+      {{ item }}
       <button matChipRemove [attr.aria-label]="'remove ' + item">
         <mat-icon>cancel</mat-icon>
       </button>
     </mat-chip-row>
   </mat-chip-grid>
-  <input placeholder="New entry..."
-         [matChipInputFor]="chipGrid"
-         [matChipInputSeparatorKeyCodes]="[ENTER, COMMA]"
-         [matChipInputAddOnBlur]="true"
-         [matAutocomplete]="auto"
-         (matChipInputTokenEnd)="addEntry($event)"
+  <input
+    placeholder="New entry..."
+    [matChipInputFor]="chipGrid"
+    [matChipInputSeparatorKeyCodes]="[ENTER, COMMA]"
+    [matChipInputAddOnBlur]="true"
+    [matAutocomplete]="auto"
+    (matChipInputTokenEnd)="addEntry($event)"
   />
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
     @for (text of autocompleteFilteredList; track text) {
-      <mat-option [value]="text">{{text}}</mat-option>
+      <mat-option [value]="text">{{ text }}</mat-option>
     }
   </mat-autocomplete>
 </mat-form-field>

@@ -1,5 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -19,11 +23,6 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -56,7 +55,7 @@ public class UserRestController
     @HasPermissionUsersUpdate
     @PutMapping("/{id}")
     public void updateUser(@PathVariable("id") int userId,
-                                 @RequestBody UpdateUserRequest updateUserRequest)
+                           @RequestBody UpdateUserRequest updateUserRequest)
     {
         this.userService.updateUser(AswgUserWithPassword.builder()
                 .id(userId)
@@ -72,10 +71,11 @@ public class UserRestController
     @HasPermissionUsersDelete
     @DeleteMapping("/{id}")
     public void deleteUser(Authentication authentication,
-                                 @PathVariable("id") int userId)
+                           @PathVariable("id") int userId)
     {
-        if (authentication.getPrincipal() instanceof AswgUser aswgUser && aswgUser.getId() == userId) {
-                throw new IllegalArgumentException("Cannot delete self.");
+        if (authentication.getPrincipal() instanceof AswgUser aswgUser && aswgUser.getId() == userId)
+        {
+            throw new IllegalArgumentException("Cannot delete self.");
         }
 
         this.userService.deleteUser(userId);

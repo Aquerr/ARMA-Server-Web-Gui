@@ -1,15 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
-import lombok.extern.slf4j.Slf4j;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReadContext;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReflectionUtil;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgWriteContext;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.ClassName;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
-
 import java.io.BufferedReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -19,6 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReadContext;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReflectionUtil;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgWriteContext;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.ClassName;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
 
 @Slf4j
 public class CfgClassParserImpl implements CfgClassParser
@@ -31,11 +30,16 @@ public class CfgClassParserImpl implements CfgClassParser
         try
         {
             T instance = null;
-            if (Collection.class.isAssignableFrom(clazz)) {
-                instance = (T)new ArrayList<>();
-            } else if (Map.class.isAssignableFrom(clazz)) {
-                instance = (T)new HashMap<>();
-            } else {
+            if (Collection.class.isAssignableFrom(clazz))
+            {
+                instance = (T) new ArrayList<>();
+            }
+            else if (Map.class.isAssignableFrom(clazz))
+            {
+                instance = (T) new HashMap<>();
+            }
+            else
+            {
                 instance = clazz.getDeclaredConstructor().newInstance();
             }
 
@@ -46,7 +50,7 @@ public class CfgClassParserImpl implements CfgClassParser
             boolean endValue = false;
             while (bufferedReader.ready())
             {
-                char character = (char)bufferedReader.read();
+                char character = (char) bufferedReader.read();
 
                 if ('\n' == character)
                 {
@@ -91,14 +95,7 @@ public class CfgClassParserImpl implements CfgClassParser
                 {
                     if (!lastSymbolSlash)
                     {
-                        if (isString)
-                        {
-                            isString = false;
-                        }
-                        else
-                        {
-                            isString = true;
-                        }
+                        isString = !isString;
                     }
                     continue;
                 }
@@ -124,7 +121,8 @@ public class CfgClassParserImpl implements CfgClassParser
                     continue;
                 }
 
-                if (stringBuilder.toString().equals("};")) {
+                if (stringBuilder.toString().equals("};"))
+                {
                     break;
                 }
 
@@ -210,7 +208,8 @@ public class CfgClassParserImpl implements CfgClassParser
                 for (Field delcaredField : declaredFields)
                 {
                     stringBuilder.append(context.indentation());
-                    writeFieldValueToStringBuilder(new CfgWriteContext(context.getBufferedWriter(), instance, delcaredField, context.getIndentation()), stringBuilder);
+                    writeFieldValueToStringBuilder(new CfgWriteContext(context.getBufferedWriter(), instance, delcaredField, context.getIndentation()),
+                            stringBuilder);
                 }
             }
 
@@ -259,7 +258,7 @@ public class CfgClassParserImpl implements CfgClassParser
             {
                 Collection collection = (Collection<?>) instance;
 
-                var object = ((CfgClassParser)CfgFileHandler.PARSERS.get(PropertyType.CLASS)).parse(context, collection.getClass().arrayType());
+                var object = ((CfgClassParser) CfgFileHandler.PARSERS.get(PropertyType.CLASS)).parse(context, collection.getClass().arrayType());
 
                 ((Collection) instance).add(object);
                 return;
@@ -271,15 +270,18 @@ public class CfgClassParserImpl implements CfgClassParser
 
             if (Collection.class.isAssignableFrom(field.getType()))
             {
-                Collection collection = CfgFileHandler.CLASS_LIST_PARSER.parse(context, (Class<? extends Object>) ((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0]);
+                Collection collection = CfgFileHandler.CLASS_LIST_PARSER.parse(
+                        context,
+                        (Class<? extends Object>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0]
+                );
                 field.setAccessible(true);
                 field.set(instance, collection);
                 field.setAccessible(false);
                 return;
             }
-            else if(Map.class.isAssignableFrom(field.getType()))
+            else if (Map.class.isAssignableFrom(field.getType()))
             {
-                Map map = ((CfgClassParser)CfgFileHandler.PARSERS.get(PropertyType.CLASS)).parse(context, Map.class);
+                Map map = ((CfgClassParser) CfgFileHandler.PARSERS.get(PropertyType.CLASS)).parse(context, Map.class);
                 field.setAccessible(true);
                 field.set(instance, map);
                 field.setAccessible(false);

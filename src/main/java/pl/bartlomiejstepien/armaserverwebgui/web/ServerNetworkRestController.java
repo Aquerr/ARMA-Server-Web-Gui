@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionNetworkSettingsSave;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionNetworkSettingsView;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.NetworkProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.ServerNetworkService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.NetworkProperties;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.NetworkPropertiesRequest;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.NetworkPropertiesResponse;
 

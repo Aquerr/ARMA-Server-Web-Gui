@@ -1,16 +1,16 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {WorkshopService} from "../service/workshop.service";
-import {AuthService} from "../service/auth.service";
-import {Router} from "@angular/router";
-import {NotificationService} from "../service/notification.service";
-import {map, Observable, of, tap} from "rxjs";
-import {MaskService} from "../service/mask.service";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { WorkshopService } from "../service/workshop.service";
+import { AuthService } from "../service/auth.service";
+import { Router } from "@angular/router";
+import { NotificationService } from "../service/notification.service";
+import { map, Observable, of, tap } from "rxjs";
+import { MaskService } from "../service/mask.service";
 
 @Component({
-    selector: 'app-side-menu',
-    templateUrl: './side-menu.component.html',
-    styleUrls: ['./side-menu.component.scss'],
-    standalone: false
+  selector: "app-side-menu",
+  templateUrl: "./side-menu.component.html",
+  styleUrls: ["./side-menu.component.scss"],
+  standalone: false
 })
 export class SideMenuComponent {
   @Input()
@@ -26,14 +26,15 @@ export class SideMenuComponent {
   isWorkshopActive: boolean = false;
   routePreCheck = new Map<string, (routerLink: string) => Observable<boolean>>();
 
-  constructor(private router: Router,
-              private authService: AuthService,
-              private workshopService: WorkshopService,
-              private notificationService: NotificationService,
-              private maskService: MaskService) {
-
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private workshopService: WorkshopService,
+    private notificationService: NotificationService,
+    private maskService: MaskService
+  ) {
     if (this.authService.isAuthenticated()) {
-      this.workshopService.canUseWorkshop().subscribe(response => {
+      this.workshopService.canUseWorkshop().subscribe((response) => {
         this.isWorkshopActive = response.active;
       });
     }
@@ -64,10 +65,10 @@ export class SideMenuComponent {
     }
 
     preCheck(routerLink).subscribe({
-      next: canAccessLink => {
+      next: (canAccessLink) => {
         if (!canAccessLink) {
           this.maskService.hide();
-          return
+          return;
         }
 
         this.maskService.hide();
@@ -83,13 +84,17 @@ export class SideMenuComponent {
 
   private canUseWorkshopRoute(): Observable<boolean> {
     return this.workshopService.canUseWorkshop().pipe(
-      map(response => response.active),
+      map((response) => response.active),
       tap({
-        next: value => {
+        next: (value) => {
           if (!value) {
-            this.notificationService.warningNotification("Steam not installed on the server.", "Warning");
+            this.notificationService.warningNotification(
+              "Steam not installed on the server.",
+              "Warning"
+            );
           }
         }
-      }));
+      })
+    );
   }
 }

@@ -1,16 +1,17 @@
-import {Injectable} from '@angular/core';
-import {ServerMissionsService} from "../../../service/server-missions.service";
-import {NotificationService} from "../../../service/notification.service";
-import {Observable} from "rxjs";
-import {FileUploadService} from "../../../service/file-upload.service";
+import { Injectable } from "@angular/core";
+import { ServerMissionsService } from "../../../service/server-missions.service";
+import { NotificationService } from "../../../service/notification.service";
+import { Observable } from "rxjs";
+import { FileUploadService } from "../../../service/file-upload.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class MissionUploadService extends FileUploadService {
-
-  constructor(private missionService: ServerMissionsService,
-              notificationService: NotificationService) {
+  constructor(
+    private missionService: ServerMissionsService,
+    notificationService: NotificationService
+  ) {
     super(notificationService, ["*"], [".pbo"]);
   }
 

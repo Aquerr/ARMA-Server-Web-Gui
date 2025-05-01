@@ -2,15 +2,20 @@
   <h1>Difficulty</h1>
   <div class="difficulty-page-content">
     @for (difficultyProfile of difficultyProfiles; track difficultyProfile.name) {
-      <app-difficulty-panel [difficultyProfile]="difficultyProfile"
-                            (activated)="onProfileActivate($event)"
-                            (saved)="onProfileSave($event)"
-                            (deleted)="onProfileDelete($event)"></app-difficulty-panel>
+      <app-difficulty-panel
+        [difficultyProfile]="difficultyProfile"
+        (activated)="onProfileActivate($event)"
+        (saved)="onProfileSave($event)"
+        (deleted)="onProfileDelete($event)"
+      ></app-difficulty-panel>
     }
     <div>
-      <button class="difficulty-add-new" mat-stroked-button
-              color="primary"
-              (click)="addNewDifficulty()">
+      <button
+        class="difficulty-add-new"
+        mat-stroked-button
+        color="primary"
+        (click)="addNewDifficulty()"
+      >
         <mat-icon [fontIcon]="'add_circle'"></mat-icon>
       </button>
     </div>

@@ -1,9 +1,9 @@
-import {inject, Injectable} from "@angular/core";
-import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AswgUser} from "../../../../service/users.service";
+import { inject, Injectable } from "@angular/core";
+import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AswgUser } from "../../../../service/users.service";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root"
 })
 export class EditUserFormService {
   private readonly formBuilder: FormBuilder = inject(FormBuilder);
@@ -11,8 +11,8 @@ export class EditUserFormService {
   getForm(): FormGroup {
     return this.formBuilder.group({
       id: [null],
-      username: ['', Validators.required],
-      password: [''],
+      username: ["", Validators.required],
+      password: [""],
       locked: [false, Validators.required],
       authorities: [[]]
     });
@@ -37,22 +37,22 @@ export class EditUserFormService {
   }
 
   getIdControl(form: FormGroup): AbstractControl {
-    return form.get('id') as AbstractControl;
+    return form.get("id") as AbstractControl;
   }
 
   getUsernameControl(form: FormGroup): AbstractControl {
-    return form.get('username') as AbstractControl;
+    return form.get("username") as AbstractControl;
   }
 
   getPasswordControl(form: FormGroup): AbstractControl {
-    return form.get('password') as AbstractControl;
+    return form.get("password") as AbstractControl;
   }
 
   getLockedControl(form: FormGroup): AbstractControl {
-    return form.get('locked') as AbstractControl;
+    return form.get("locked") as AbstractControl;
   }
 
   getAuthoritiesControl(form: FormGroup): AbstractControl {
-    return form.get('authorities') as AbstractControl;
+    return form.get("authorities") as AbstractControl;
   }
 }

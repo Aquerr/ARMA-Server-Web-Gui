@@ -1,12 +1,11 @@
 package pl.bartlomiejstepien.armaserverwebgui.application;
 
-import org.springframework.http.HttpStatus;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.springframework.http.HttpStatus;
 
 @Documented
 @Target(value = ElementType.TYPE)
@@ -14,6 +13,8 @@ import java.lang.annotation.Target;
 public @interface ApiException
 {
     HttpStatus status();
+
     ApiExceptionCode code();
+
     String messageKey();
 }

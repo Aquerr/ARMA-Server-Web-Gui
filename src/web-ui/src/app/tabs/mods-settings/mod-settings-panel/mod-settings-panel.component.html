@@ -2,7 +2,7 @@
   <mat-expansion-panel class="mod-settings-panel" (opened)="onOpen()">
     <mat-expansion-panel-header [ngClass]="getActive() ? 'mod-settings-active' : ''">
       <mat-panel-title>
-        {{getName()}}
+        {{ getName() }}
       </mat-panel-title>
       <div class="text-center">
         <button mat-icon-button (click)="deleteClick($event)">
@@ -11,38 +11,40 @@
       </div>
       <mat-panel-description>
         <!-- Pokaż aktywność ustawień -->
-                <button mat-stroked-button
-                class="active-button"
-                (click)="toggleActive($event)">Active: {{getActive()}}</button>
+        <button mat-stroked-button class="active-button" (click)="toggleActive($event)">
+          Active: {{ getActive() }}
+        </button>
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-      <div class="container">
-        <div class="edit-mod-settings-page-content">
-          <form [formGroup]="form" class="fields">
-            <mat-form-field>
-              <mat-label>Name</mat-label>
-              <input matInput formControlName="name" type="text">
-            </mat-form-field>
-            <mat-form-field>
-              <mat-label>Active</mat-label>
-              <mat-select formControlName="active">
-                <mat-option [value]="true">True</mat-option>
-                <mat-option [value]="false">False</mat-option>
-              </mat-select>
-            </mat-form-field>
-              <mat-label>Content</mat-label>
-              <ngx-codejar highlighter="hljs"
-                           [highlightMethod]="highlightMethod"
-                           [code]="getContent()"
-                           (codeChange)="onCodeChange($event)"
-                           [showLineNumbers]="true"
-                           class="code"></ngx-codejar>
-          </form>
-        </div>
-        <div class="button-container">
-          <button mat-flat-button color="primary" (click)="save()">Save</button>
-        </div>
+    <div class="container">
+      <div class="edit-mod-settings-page-content">
+        <form [formGroup]="form" class="fields">
+          <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" type="text" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Active</mat-label>
+            <mat-select formControlName="active">
+              <mat-option [value]="true">True</mat-option>
+              <mat-option [value]="false">False</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-label>Content</mat-label>
+          <ngx-codejar
+            highlighter="hljs"
+            [highlightMethod]="highlightMethod"
+            [code]="getContent()"
+            (codeChange)="onCodeChange($event)"
+            [showLineNumbers]="true"
+            class="code"
+          ></ngx-codejar>
+        </form>
       </div>
+      <div class="button-container">
+        <button mat-flat-button color="primary" (click)="save()">Save</button>
+      </div>
+    </div>
   </mat-expansion-panel>
 </mat-accordion>

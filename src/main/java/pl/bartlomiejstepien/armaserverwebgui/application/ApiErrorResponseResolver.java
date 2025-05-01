@@ -16,7 +16,8 @@ public class ApiErrorResponseResolver
 
     public RestErrorResponse resolve(Throwable throwable)
     {
-        if (throwable.getClass().isAnnotationPresent(ApiException.class)) {
+        if (throwable.getClass().isAnnotationPresent(ApiException.class))
+        {
             ApiException apiException = throwable.getClass().getAnnotation(ApiException.class);
             return resolveRestErrorResponse(apiException);
         }
@@ -31,6 +32,10 @@ public class ApiErrorResponseResolver
 
     private RestErrorResponse resolveRestErrorResponse(ApiException apiException)
     {
-        return RestErrorResponse.of(messageService.resolveExceptionMessage(apiException.messageKey()), apiException.code().name(), apiException.status().value());
+        return RestErrorResponse.of(
+                messageService.resolveExceptionMessage(apiException.messageKey()),
+                apiException.code().name(),
+                apiException.status().value()
+        );
     }
 }

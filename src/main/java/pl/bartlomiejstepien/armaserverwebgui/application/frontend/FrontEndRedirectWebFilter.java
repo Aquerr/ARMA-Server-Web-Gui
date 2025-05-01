@@ -4,12 +4,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.io.IOException;
 
 @Component
 public class FrontEndRedirectWebFilter extends OncePerRequestFilter
@@ -27,7 +26,8 @@ public class FrontEndRedirectWebFilter extends OncePerRequestFilter
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
     {
         String path = request.getRequestURI();
-        if (isNotApiRequest(path)) {
+        if (isNotApiRequest(path))
+        {
             request.getRequestDispatcher("/index.html").forward(request, response);
         }
         filterChain.doFilter(request, response);

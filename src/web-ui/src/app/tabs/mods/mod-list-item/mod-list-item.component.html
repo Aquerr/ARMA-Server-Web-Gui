@@ -1,46 +1,55 @@
 <mat-accordion>
-  <mat-expansion-panel hideToggle
-                       [(expanded)]="expanded"
-                       class="mod-list-item-expansion-panel">
-    <mat-expansion-panel-header [collapsedHeight]="'4rem'" class="mod-list-item-expansion-panel-header"
-                                [ngStyle]="expanded ? {'background-color': 'var(--aswg-input-bg-color)'} : null"
+  <mat-expansion-panel hideToggle [(expanded)]="expanded" class="mod-list-item-expansion-panel">
+    <mat-expansion-panel-header
+      [collapsedHeight]="'4rem'"
+      class="mod-list-item-expansion-panel-header"
+      [ngStyle]="expanded ? { 'background-color': 'var(--aswg-input-bg-color)' } : null"
     >
       <mat-panel-title>
         <div>
           <div>
-            {{mod.name}}
+            {{ mod.name }}
           </div>
           <div>
-            <span style="filter: brightness(50%)">Last workshop update: {{mod.lastUpdateDateTime}}</span>
+            <span style="filter: brightness(50%)"
+              >Last workshop update: {{ mod.lastUpdateDateTime }}</span
+            >
           </div>
         </div>
       </mat-panel-title>
-      <mat-panel-description *ngIf="!mod.fileExists" class="mod-list-item-expansion-panel-header-description">
-        <mat-icon
-          matTooltip="Mod files seems to be missing"
-          [color]="'warn'">warning</mat-icon>
+      <mat-panel-description
+        *ngIf="!mod.fileExists"
+        class="mod-list-item-expansion-panel-header-description"
+      >
+        <mat-icon matTooltip="Mod files seems to be missing" [color]="'warn'">warning</mat-icon>
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="mod-list-item-inner-panel">
       <a class="image-wrapper" [href]="mod.workshopUrl" target="_blank">
-        <img [ngSrc]="mod.previewUrl" [width]="200" [height]="200" alt="No Image">
+        <img [ngSrc]="mod.previewUrl" [width]="200" [height]="200" alt="No Image" />
       </a>
       <div class="mod-list-item-inner-panel-actions">
         <div class="mod-list-item-inner-panel-actions-action">
-          <mat-checkbox [checked]="mod.serverMod" (change)="mod.serverMod = !mod.serverMod">Server Mod</mat-checkbox>
+          <mat-checkbox [checked]="mod.serverMod" (change)="mod.serverMod = !mod.serverMod"
+            >Server Mod</mat-checkbox
+          >
         </div>
-        <div class="mod-list-item-inner-panel-actions-action" style="justify-content: space-evenly;">
+        <div class="mod-list-item-inner-panel-actions-action" style="justify-content: space-evenly">
           <div class="mod-list-item-inner-panel-actions-action">
-            <button mat-icon-button
-                    matTooltip="Force update the mod"
-                    (click)="showForceUpdateConfirmationDialog(mod.workshopFileId, mod.name)">
+            <button
+              mat-icon-button
+              matTooltip="Force update the mod"
+              (click)="showForceUpdateConfirmationDialog(mod.workshopFileId, mod.name)"
+            >
               <mat-icon>update</mat-icon>
             </button>
           </div>
           <div class="mod-list-item-inner-panel-actions-action">
-            <button mat-icon-button
-                    matTooltip="Delete the mod"
-                    (click)="showModDeleteConfirmationDialog(mod.name)">
+            <button
+              mat-icon-button
+              matTooltip="Delete the mod"
+              (click)="showModDeleteConfirmationDialog(mod.name)"
+            >
               <mat-icon>delete</mat-icon>
             </button>
           </div>

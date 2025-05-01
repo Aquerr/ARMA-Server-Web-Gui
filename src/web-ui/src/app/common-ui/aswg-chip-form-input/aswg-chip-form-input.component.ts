@@ -1,20 +1,16 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import {
-  MatChipEditedEvent,
-  MatChipInputEvent,
-} from "@angular/material/chips";
-import {AbstractControl, FormGroup} from "@angular/forms";
-import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import { Component, Input, OnInit } from "@angular/core";
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import { MatChipEditedEvent, MatChipInputEvent } from "@angular/material/chips";
+import { AbstractControl, FormGroup } from "@angular/forms";
+import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
 
 @Component({
-    selector: 'aswg-chip-form-input',
-    templateUrl: './aswg-chip-form-input.component.html',
-    styleUrl: './aswg-chip-form-input.component.scss',
-    standalone: false
+  selector: "aswg-chip-form-input",
+  templateUrl: "./aswg-chip-form-input.component.html",
+  styleUrl: "./aswg-chip-form-input.component.scss",
+  standalone: false
 })
 export class AswgChipFormInputComponent implements OnInit {
-
   protected readonly ENTER = ENTER;
   protected readonly COMMA = COMMA;
 
@@ -42,7 +38,7 @@ export class AswgChipFormInputComponent implements OnInit {
   }
 
   addEntry(event: MatChipInputEvent) {
-    const value = (event.value || '').trim();
+    const value = (event.value || "").trim();
 
     if (value) {
       this.addValue(value);

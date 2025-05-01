@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionSecuritySettingsSave;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionSecuritySettingsView;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.ServerSecurityProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.ServerSecurityService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.ServerSecurityProperties;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.SaveServerSecurityRequest;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.ServerSecurityResponse;
 

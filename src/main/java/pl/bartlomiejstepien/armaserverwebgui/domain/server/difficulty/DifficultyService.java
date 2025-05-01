@@ -1,9 +1,8 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty;
 
+import java.util.List;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.DifficultyProfile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.DifficultyProfileEntity;
-
-import java.util.List;
 
 public interface DifficultyService
 {

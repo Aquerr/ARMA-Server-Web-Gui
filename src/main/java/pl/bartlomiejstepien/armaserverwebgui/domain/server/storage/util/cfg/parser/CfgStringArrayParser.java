@@ -1,11 +1,10 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgWriteContext;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgWriteContext;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
 
 public class CfgStringArrayParser implements CfgSimpleParser<String>
 {
@@ -30,7 +29,8 @@ public class CfgStringArrayParser implements CfgSimpleParser<String>
 
             if (('}' == character || ',' == character) && !isString)
             {
-                if (!stringBuilder.isEmpty()) {
+                if (!stringBuilder.isEmpty())
+                {
                     strings.add(stringBuilder.toString().trim());
                 }
                 stringBuilder.setLength(0);
@@ -42,7 +42,7 @@ public class CfgStringArrayParser implements CfgSimpleParser<String>
                 stringBuilder.append(character);
             }
         }
-        return (T)strings.toArray(new String[0]);
+        return (T) strings.toArray(new String[0]);
     }
 
     @Override
@@ -64,7 +64,8 @@ public class CfgStringArrayParser implements CfgSimpleParser<String>
                 stringBuilder.append(",");
         }
 
-        if (Array.getLength(value) > 0) {
+        if (Array.getLength(value) > 0)
+        {
             stringBuilder.append("\n");
         }
 

@@ -1,12 +1,11 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.List;
+import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 @Data
 @Builder

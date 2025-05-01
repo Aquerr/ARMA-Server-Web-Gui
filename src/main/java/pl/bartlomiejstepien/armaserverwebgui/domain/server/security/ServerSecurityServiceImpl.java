@@ -1,5 +1,8 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.security;
 
+import static java.util.Optional.ofNullable;
+
+import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.ServerSecurityProperties;
@@ -7,9 +10,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.VoteCo
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.VoteCmd;
-
-import java.util.Arrays;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -27,12 +27,13 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
                 .serverCommandPassword(armaServerConfig.getServerCommandPassword())
                 .battleEye(armaServerConfig.getBattleEye() == 1)
                 .verifySignatures(armaServerConfig.getVerifySignatures() == 2)
-                .allowedFilePatching(Optional.ofNullable(ServerSecurityProperties.AllowedFilePatching.findByConfigValue(armaServerConfig.getAllowedFilePatching()))
-                        .orElseThrow(() -> new RuntimeException("Could not find AllowedFilePatching for config value = " + armaServerConfig.getAllowedFilePatching())))
+                .allowedFilePatching(ofNullable(ServerSecurityProperties.AllowedFilePatching.findByConfigValue(armaServerConfig.getAllowedFilePatching()))
+                        .orElseThrow(() -> new RuntimeException("Could not find AllowedFilePatching for config value = "
+                                + armaServerConfig.getAllowedFilePatching())))
                 .filePatchingIgnoredClients(Arrays.stream(armaServerConfig.getFilePatchingExceptions()).toList())
                 .allowedLoadFileExtensions(Arrays.asList(armaServerConfig.getAllowedLoadFileExtensions()))
                 .adminUUIDs(Arrays.asList(armaServerConfig.getAdmins()))
-                .voteCommands(Optional.ofNullable(armaServerConfig.getAllowedVoteCmds())
+                .voteCommands(ofNullable(armaServerConfig.getAllowedVoteCmds())
                         .map(cmds -> Arrays.stream(cmds)
                                 .map(voteCmd -> VoteCommand.builder()
                                         .name(voteCmd.getCommandName())
@@ -41,7 +42,7 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
                                         .votingThreshold(voteCmd.getVotingThreshold())
                                         .percentageSideVotingThreshold(voteCmd.getPercentSideVotingThreshold())
                                         .build())
-                        .toList())
+                                .toList())
                         .orElse(null))
                 .kickDuplicate(armaServerConfig.getKickDuplicate() == 1)
                 .voteThreshold(armaServerConfig.getVoteThreshold())
@@ -62,16 +63,16 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
         armaServerConfig.setFilePatchingExceptions(serverSecurityProperties.getFilePatchingIgnoredClients().toArray(new String[0]));
         armaServerConfig.setAllowedLoadFileExtensions(serverSecurityProperties.getAllowedLoadFileExtensions().toArray(new String[0]));
         armaServerConfig.setAdmins(serverSecurityProperties.getAdminUUIDs().toArray(new String[0]));
-        armaServerConfig.setAllowedVoteCmds(Optional.ofNullable(serverSecurityProperties.getVoteCommands())
+        armaServerConfig.setAllowedVoteCmds(ofNullable(serverSecurityProperties.getVoteCommands())
                 .map(voteCommands -> voteCommands.stream()
-                    .map(voteCommand -> VoteCmd.builder()
-                            .commandName(voteCommand.getName())
-                            .preMissionStart(voteCommand.isAllowedPreMission())
-                            .postMissionStart(voteCommand.isAllowedPostMission())
-                            .votingThreshold(voteCommand.getVotingThreshold())
-                            .percentSideVotingThreshold(voteCommand.getPercentageSideVotingThreshold())
-                            .build())
-                    .toArray(VoteCmd[]::new))
+                        .map(voteCommand -> VoteCmd.builder()
+                                .commandName(voteCommand.getName())
+                                .preMissionStart(voteCommand.isAllowedPreMission())
+                                .postMissionStart(voteCommand.isAllowedPostMission())
+                                .votingThreshold(voteCommand.getVotingThreshold())
+                                .percentSideVotingThreshold(voteCommand.getPercentageSideVotingThreshold())
+                                .build())
+                        .toArray(VoteCmd[]::new))
                 .orElse(null));
         armaServerConfig.setKickDuplicate(serverSecurityProperties.isKickDuplicate() ? 1 : 0);
         armaServerConfig.setVoteThreshold(serverSecurityProperties.getVoteThreshold());

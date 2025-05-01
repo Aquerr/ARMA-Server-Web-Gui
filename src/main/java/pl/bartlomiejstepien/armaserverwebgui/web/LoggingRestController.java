@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,8 +17,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionLogsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.LoggingService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ProcessService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/logging")

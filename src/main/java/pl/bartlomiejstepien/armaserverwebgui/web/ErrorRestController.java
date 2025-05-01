@@ -17,6 +17,7 @@ public class ErrorRestController
 
     /**
      * Global REST exception handler
+     *
      * @param runtimeException the runtime exception
      * @return the {@link ResponseEntity}
      */

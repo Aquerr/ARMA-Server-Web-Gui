@@ -1,29 +1,26 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MissionUploadButtonComponent} from "./upload-mission/mission-upload-button.component";
-import {Subject, Subscription} from "rxjs";
-import {ServerMissionsService} from "../../service/server-missions.service";
-import {MaskService} from "../../service/mask.service";
-import {MatDialog} from "@angular/material/dialog";
-import {
-  MissionDeleteConfirmDialogComponent
-} from "./mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
-import {NotificationService} from "../../service/notification.service";
-import {MissionModifyDialogComponent} from "./mission-modify-dialog/mission-modify-dialog.component";
-import {Mission} from "../../model/mission.model";
-import {FormControl} from "@angular/forms";
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
-import {MissionUploadService} from "./service/mission-upload.service";
-import {NewMissionDialogComponent} from "./new-mission-dialog/new-mission-dialog.component";
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { MissionUploadButtonComponent } from "./upload-mission/mission-upload-button.component";
+import { Subject, Subscription } from "rxjs";
+import { ServerMissionsService } from "../../service/server-missions.service";
+import { MaskService } from "../../service/mask.service";
+import { MatDialog } from "@angular/material/dialog";
+import { MissionDeleteConfirmDialogComponent } from "./mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
+import { NotificationService } from "../../service/notification.service";
+import { MissionModifyDialogComponent } from "./mission-modify-dialog/mission-modify-dialog.component";
+import { Mission } from "../../model/mission.model";
+import { FormControl } from "@angular/forms";
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
+import { MissionUploadService } from "./service/mission-upload.service";
+import { NewMissionDialogComponent } from "./new-mission-dialog/new-mission-dialog.component";
 
 @Component({
-    selector: 'app-missions',
-    templateUrl: './missions.component.html',
-    styleUrls: ['./missions.component.scss'],
-    standalone: false
+  selector: "app-missions",
+  templateUrl: "./missions.component.html",
+  styleUrls: ["./missions.component.scss"],
+  standalone: false
 })
 export class MissionsComponent implements OnInit, OnDestroy {
-
-  @ViewChild('uploadMission') uploadMissionComponent!: MissionUploadButtonComponent;
+  @ViewChild("uploadMission") uploadMissionComponent!: MissionUploadButtonComponent;
 
   disabledMissions: Mission[] = [];
   enabledMissions: Mission[] = [];
@@ -35,25 +32,29 @@ export class MissionsComponent implements OnInit, OnDestroy {
   missionUploadSubscription!: Subscription;
   searchBoxControl!: FormControl;
 
-  constructor(private missionsService: ServerMissionsService,
-              private maskService: MaskService,
-              private notificationService: NotificationService,
-              private matDialog: MatDialog,
-              private missionUploadService: MissionUploadService) {
+  constructor(
+    private missionsService: ServerMissionsService,
+    private maskService: MaskService,
+    private notificationService: NotificationService,
+    private matDialog: MatDialog,
+    private missionUploadService: MissionUploadService
+  ) {
     this.reloadMissionsDataSubject = new Subject();
     this.reloadMissionDataSubscription = this.reloadMissionsDataSubject.subscribe(() => {
       this.reloadMissions();
     });
-    this.missionUploadSubscription = this.missionUploadService.fileUploadedSubject.subscribe((file) => {
-      if (file) {
-        this.reloadMissionsDataSubject.next(null);
+    this.missionUploadSubscription = this.missionUploadService.fileUploadedSubject.subscribe(
+      (file) => {
+        if (file) {
+          this.reloadMissionsDataSubject.next(null);
+        }
       }
-    });
+    );
   }
 
   ngOnInit(): void {
-    this.searchBoxControl = new FormControl('');
-    this.searchBoxControl.valueChanges.subscribe(value => {
+    this.searchBoxControl = new FormControl("");
+    this.searchBoxControl.valueChanges.subscribe((value) => {
       this.filterMissions(value);
     });
     this.reloadMissions();
@@ -70,7 +71,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   private reloadMissions(): void {
     this.maskService.show();
-    this.missionsService.getInstalledMissions().subscribe(response => {
+    this.missionsService.getInstalledMissions().subscribe((response) => {
       this.disabledMissions = response.disabledMissions;
       this.enabledMissions = response.enabledMissions;
       this.filteredDisabledMissions = [...this.disabledMissions];
@@ -81,12 +82,12 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   showMissionDeleteConfirmationDialog(missionTemplate: string): void {
     const dialogRef = this.matDialog.open(MissionDeleteConfirmDialogComponent, {
-      width: '250px',
-      enterAnimationDuration: '200ms',
-      exitAnimationDuration: '200ms'
+      width: "250px",
+      enterAnimationDuration: "200ms",
+      exitAnimationDuration: "200ms"
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.deleteMission(missionTemplate);
       }
@@ -95,7 +96,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   deleteMission(missionTemplate: string) {
     this.maskService.show();
-    this.missionsService.deleteMission(missionTemplate).subscribe(response => {
+    this.missionsService.deleteMission(missionTemplate).subscribe((response) => {
       this.maskService.hide();
       this.notificationService.successNotification("Mission has been deleted!");
       this.reloadMissionsDataSubject.next(null);
@@ -104,17 +105,19 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   save() {
     this.maskService.show();
-    this.missionsService.saveEnabledMissions({missions: this.enabledMissions}).subscribe(response => {
-      this.maskService.hide();
-      this.notificationService.successNotification('Active mission list saved!', 'Success');
-    });
+    this.missionsService
+      .saveEnabledMissions({ missions: this.enabledMissions })
+      .subscribe((response) => {
+        this.maskService.hide();
+        this.notificationService.successNotification("Active mission list saved!", "Success");
+      });
   }
 
   showMissionModifyDialog(mission: Mission) {
     const dialogRef = this.matDialog.open(MissionModifyDialogComponent, {
-      minWidth: '500px',
-      enterAnimationDuration: '200ms',
-      exitAnimationDuration: '200ms',
+      minWidth: "500px",
+      enterAnimationDuration: "200ms",
+      exitAnimationDuration: "200ms",
       data: mission
     });
 
@@ -126,16 +129,20 @@ export class MissionsComponent implements OnInit, OnDestroy {
   }
 
   filterMissions(searchPhrase: string) {
-    this.filteredEnabledMissions = this.enabledMissions.filter(mission => mission.template.toLowerCase().includes(searchPhrase.toLowerCase()));
-    this.filteredDisabledMissions = this.disabledMissions.filter(mission => mission.template.toLowerCase().includes(searchPhrase.toLowerCase()));
+    this.filteredEnabledMissions = this.enabledMissions.filter((mission) =>
+      mission.template.toLowerCase().includes(searchPhrase.toLowerCase())
+    );
+    this.filteredDisabledMissions = this.disabledMissions.filter((mission) =>
+      mission.template.toLowerCase().includes(searchPhrase.toLowerCase())
+    );
   }
 
   onMissionItemDropped(event: CdkDragDrop<Mission[]>) {
-    if (event.previousContainer === event.container){
+    if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       let movedMission = event.previousContainer.data[event.previousIndex];
-      if (event.previousContainer.id == 'enabled-missions-list') {
+      if (event.previousContainer.id == "enabled-missions-list") {
         this.enabledMissions.forEach((value, index) => {
           if (value == movedMission) this.enabledMissions.splice(index, 1);
         });
@@ -151,19 +158,19 @@ export class MissionsComponent implements OnInit, OnDestroy {
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex,
+        event.currentIndex
       );
     }
   }
 
   addNewMission() {
     const dialogRef = this.matDialog.open(NewMissionDialogComponent, {
-      width: '450px',
-      enterAnimationDuration: '200ms',
-      exitAnimationDuration: '200ms'
+      width: "450px",
+      enterAnimationDuration: "200ms",
+      exitAnimationDuration: "200ms"
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result.file) {
         this.onFileDropped(result.file);
       } else if (result.template) {
@@ -174,7 +181,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   private addBuiltInMission(name: string, template: string) {
     this.maskService.show();
-    this.missionsService.addTemplateMission(name, template).subscribe(response => {
+    this.missionsService.addTemplateMission(name, template).subscribe((response) => {
       this.maskService.hide();
       this.reloadMissions();
       this.notificationService.successNotification("Mission added!");
@@ -183,7 +190,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   private updateMission(mission: Mission) {
     this.maskService.show();
-    this.missionsService.updateMission(mission.id, mission).subscribe(response => {
+    this.missionsService.updateMission(mission.id, mission).subscribe((response) => {
       this.maskService.hide();
       this.notificationService.successNotification("Mission updated!");
     });

@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Value;
@@ -21,12 +22,10 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionUpdate;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionUpload;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionView;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
-import pl.bartlomiejstepien.armaserverwebgui.web.validator.MissionFileValidator;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.MissionService;
-
-import java.util.List;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
+import pl.bartlomiejstepien.armaserverwebgui.web.validator.MissionFileValidator;
 
 @RestController
 @RequestMapping("/api/v1/missions")
@@ -85,7 +84,7 @@ public class MissionRestController
     @HasPermissionMissionUpdate
     @PutMapping("/id/{id}")
     public void updateMission(@PathVariable("id") long id,
-                                    @RequestBody Mission mission)
+                              @RequestBody Mission mission)
     {
         this.missionService.updateMission(id, mission);
     }

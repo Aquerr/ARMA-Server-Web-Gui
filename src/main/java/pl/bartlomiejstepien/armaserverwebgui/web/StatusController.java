@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
+import java.util.List;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,10 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionServerStartStop;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ProcessService;
-
-import java.util.List;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
 
 @RestController
 @RequestMapping("/api/v1/status")
@@ -52,5 +51,7 @@ public class StatusController
         boolean performUpdate;
     }
 
-    public record StatusResponse(ServerStatus status, List<ArmaServerPlayer> playerList) { }
+    public record StatusResponse(ServerStatus status, List<ArmaServerPlayer> playerList)
+    {
+    }
 }

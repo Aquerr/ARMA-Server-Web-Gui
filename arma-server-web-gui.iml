@@ -10,6 +10,9 @@
       <excludeFolder url="file://$MODULE_DIR$/userconfig" />
     </content>
   </component>
+  <component name="CheckStyle-IDEA-Module" serialisationVersion="2">
+    <option name="activeLocationsIds" />
+  </component>
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
       <configuration />

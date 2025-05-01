@@ -1,14 +1,13 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.handler.GameUpdateTaskHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.handler.SteamTaskHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.handler.WorkshopModDownloadTaskHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamTask;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Configuration(proxyBeanMethods = false)
 public class SteamCmdConfig

@@ -1,17 +1,16 @@
-import { Injectable } from '@angular/core';
-import {Observable} from "rxjs";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-import {API_BASE_URL} from "../../environments/environment";
-import {ModSettings} from "../model/mod-settings.model";
+import { API_BASE_URL } from "../../environments/environment";
+import { ModSettings } from "../model/mod-settings.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ModSettingsService {
+  private readonly MOD_SETTINGS_ROOT_URL = `${API_BASE_URL}/mods/settings`;
 
-  private readonly MOD_SETTINGS_ROOT_URL = `${API_BASE_URL}/mods/settings`
-
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   getAllModSettings(): Observable<ModSettings[]> {
     return this.httpClient.get<ModSettings[]>(this.MOD_SETTINGS_ROOT_URL);
@@ -34,7 +33,9 @@ export class ModSettingsService {
   }
 
   saveModSettingsContent(id: number, content: string): Observable<any> {
-    return this.httpClient.put<any>(`${this.MOD_SETTINGS_ROOT_URL}/${id}/content`, {content: content} as ModSettingsContent);
+    return this.httpClient.put<any>(`${this.MOD_SETTINGS_ROOT_URL}/${id}/content`, {
+      content: content
+    } as ModSettingsContent);
   }
 
   createNewModSettings(modSettings: ModSettings) {

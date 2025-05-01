@@ -1,10 +1,19 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
+import static org.zalando.logbook.core.Conditions.contentType;
+import static org.zalando.logbook.core.Conditions.exclude;
+import static org.zalando.logbook.core.Conditions.requestTo;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ContainerNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Optional;
+import java.util.Set;
+import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -31,20 +40,10 @@ import org.zalando.logbook.servlet.LogbookFilter;
 import org.zalando.logbook.servlet.SecureLogbookFilter;
 import pl.bartlomiejstepien.armaserverwebgui.application.tracing.HttpTracingFields;
 
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.time.Duration;
-import java.util.Optional;
-import java.util.Set;
-
-import static org.zalando.logbook.core.Conditions.contentType;
-import static org.zalando.logbook.core.Conditions.exclude;
-import static org.zalando.logbook.core.Conditions.requestTo;
-
 @Configuration(proxyBeanMethods = false)
 public class LogbookConfig
 {
-    private static final String[] IGNORED_FILE_CONTENT = new String[]{"text/html", "text/css", "text/javascript", "application/javascript", "image/*"};
+    private static final String[] IGNORED_FILE_CONTENT = new String[] {"text/html", "text/css", "text/javascript", "application/javascript", "image/*"};
 
     @Bean
     public LogbookFilter logbookFilter(Logbook logbook)
@@ -97,8 +96,9 @@ public class LogbookConfig
                 if (foundJsonNode == null || foundJsonNode.isEmpty())
                     return body;
 
-                if (foundJsonNode.isContainerNode()) {
-                    ((ContainerNode<?>)foundJsonNode).removeAll();
+                if (foundJsonNode.isContainerNode())
+                {
+                    ((ContainerNode<?>) foundJsonNode).removeAll();
                 }
 
                 return objectMapper.writeValueAsString(objectNode);

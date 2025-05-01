@@ -25,7 +25,7 @@ class GeneralServiceImplTest
     private static final int MAX_PLAYERS = 10;
     private static final String PASSWORD = "test";
     private static final String LOG_FILE = "logFile";
-    private static final List<String> MOTD = Arrays.asList("testmod");
+    private static final List<String> MOTD = List.of("testmod");
 
     @Mock
     private ServerConfigStorage serverConfigStorage;

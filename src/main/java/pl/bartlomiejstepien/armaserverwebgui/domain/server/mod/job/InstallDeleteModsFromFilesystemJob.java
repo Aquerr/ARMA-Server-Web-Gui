@@ -1,5 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.job;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -9,11 +13,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.InstalledModEntit
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 @Component
 @AllArgsConstructor
@@ -110,7 +109,8 @@ public class InstallDeleteModsFromFilesystemJob
     private List<InstalledModEntity> findModsToDeleteFromDB(List<InstalledModEntity> databaseMods, List<FileSystemMod> fileSystemMods)
     {
         return databaseMods.stream()
-                .filter(installedDatabaseMod -> fileSystemMods.stream().noneMatch(fileSystemMod -> fileSystemMod.getWorkshopFileId() == installedDatabaseMod.getWorkshopFileId()))
+                .filter(installedDatabaseMod -> fileSystemMods.stream()
+                        .noneMatch(fileSystemMod -> fileSystemMod.getWorkshopFileId() == installedDatabaseMod.getWorkshopFileId()))
                 .toList();
     }
 }

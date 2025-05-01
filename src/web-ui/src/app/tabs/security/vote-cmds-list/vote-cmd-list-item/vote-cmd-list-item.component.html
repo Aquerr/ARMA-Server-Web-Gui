@@ -4,29 +4,50 @@
       <form matTooltip="Double-click to lock">
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input matInput [(ngModel)]="item.command.name" [ngModelOptions]="{standalone: true}" (keydown.enter)="onEnter()">
+          <input
+            matInput
+            [(ngModel)]="item.command.name"
+            [ngModelOptions]="{ standalone: true }"
+            (keydown.enter)="onEnter()"
+          />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Allowed Pre Mission</mat-label>
-          <mat-select [(ngModel)]="item.command.allowedPreMission" [ngModelOptions]="{standalone: true}">
+          <mat-select
+            [(ngModel)]="item.command.allowedPreMission"
+            [ngModelOptions]="{ standalone: true }"
+          >
             <mat-option [value]="true">Yes</mat-option>
             <mat-option [value]="false">No</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Allowed Post Mission</mat-label>
-          <mat-select [(ngModel)]="item.command.allowedPostMission" [ngModelOptions]="{standalone: true}">
+          <mat-select
+            [(ngModel)]="item.command.allowedPostMission"
+            [ngModelOptions]="{ standalone: true }"
+          >
             <mat-option [value]="true">Yes</mat-option>
             <mat-option [value]="false">No</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Voting Threshold</mat-label>
-          <input matInput [(ngModel)]="item.command.votingThreshold" [ngModelOptions]="{standalone: true}" (keydown.enter)="onEnter()">
+          <input
+            matInput
+            [(ngModel)]="item.command.votingThreshold"
+            [ngModelOptions]="{ standalone: true }"
+            (keydown.enter)="onEnter()"
+          />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Percentage Side Voting Threshold</mat-label>
-          <input matInput [(ngModel)]="item.command.percentageSideVotingThreshold" [ngModelOptions]="{standalone: true}" (keydown.enter)="onEnter()">
+          <input
+            matInput
+            [(ngModel)]="item.command.percentageSideVotingThreshold"
+            [ngModelOptions]="{ standalone: true }"
+            (keydown.enter)="onEnter()"
+          />
         </mat-form-field>
       </form>
     </div>
@@ -34,29 +55,37 @@
       <form matTooltip="Double-click to edit">
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input matInput [value]="item.command.name" [disabled]="true">
+          <input matInput [value]="item.command.name" [disabled]="true" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Allowed Pre Mission</mat-label>
-          <mat-select [(ngModel)]="item.command.allowedPreMission" [ngModelOptions]="{standalone: true}" [disabled]="true">
+          <mat-select
+            [(ngModel)]="item.command.allowedPreMission"
+            [ngModelOptions]="{ standalone: true }"
+            [disabled]="true"
+          >
             <mat-option [value]="true">Yes</mat-option>
             <mat-option [value]="false">No</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Allowed Post Mission</mat-label>
-          <mat-select [(ngModel)]="item.command.allowedPostMission" [ngModelOptions]="{standalone: true}" [disabled]="true">
+          <mat-select
+            [(ngModel)]="item.command.allowedPostMission"
+            [ngModelOptions]="{ standalone: true }"
+            [disabled]="true"
+          >
             <mat-option [value]="true">Yes</mat-option>
             <mat-option [value]="false">No</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Voting Threshold</mat-label>
-          <input matInput [value]="item.command.votingThreshold" [disabled]="true">
+          <input matInput [value]="item.command.votingThreshold" [disabled]="true" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Percentage Side Voting Threshold</mat-label>
-          <input matInput [value]="item.command.percentageSideVotingThreshold" [disabled]="true">
+          <input matInput [value]="item.command.percentageSideVotingThreshold" [disabled]="true" />
         </mat-form-field>
       </form>
       <div class="text-center">

@@ -1,5 +1,16 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty;
 
+import static pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgValueHelper.toInt;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -14,18 +25,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
 import pl.bartlomiejstepien.armaserverwebgui.repository.DifficultyProfileRepository;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
-import static pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgValueHelper.toInt;
 
 @Service
 @Slf4j
@@ -59,7 +58,8 @@ public class DifficultyServiceImpl implements DifficultyService
     public void postSetup()
     {
         if (Long.valueOf(0).equals(this.difficultyProfileRepository.count())
-                && this.difficultyProfileRepository.findByName(DEFAULT_PROFILE_NAME) == null) {
+                && this.difficultyProfileRepository.findByName(DEFAULT_PROFILE_NAME) == null)
+        {
             log.info("Default profile {} not found. Creating one...", DEFAULT_PROFILE_NAME);
             DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, DEFAULT_PROFILE_NAME, true);
             this.difficultyProfileRepository.save(difficultyProfileEntity);
@@ -135,7 +135,7 @@ public class DifficultyServiceImpl implements DifficultyService
 
         if (entity != null && !entity.getName().equals(difficultyProfile.getName()))
         {
-                deleteFile(entity.getName());
+            deleteFile(entity.getName());
         }
 
         entity = difficultyProfileRepository.findByName(difficultyProfile.getName()).orElse(null);
@@ -154,7 +154,8 @@ public class DifficultyServiceImpl implements DifficultyService
     public void deleteDifficultyProfile(int id)
     {
         difficultyProfileRepository.findById(id)
-                .map(difficultyProfileEntity -> {
+                .map(difficultyProfileEntity ->
+                {
                     deleteFile(difficultyProfileEntity.getName());
                     return difficultyProfileEntity;
                 })
@@ -165,7 +166,8 @@ public class DifficultyServiceImpl implements DifficultyService
     public void deleteDifficultyProfile(String name)
     {
         difficultyProfileRepository.findByName(name)
-                .map(difficultyProfileEntity -> {
+                .map(difficultyProfileEntity ->
+                {
                     deleteFile(name);
                     return difficultyProfileEntity;
                 })

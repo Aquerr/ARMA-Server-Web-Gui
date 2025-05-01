@@ -1,29 +1,31 @@
-import {Component, OnInit} from '@angular/core';
-import {ServerNetworkService} from '../../service/server-network.service';
-import {MaskService} from '../../service/mask.service';
-import {NotificationService} from '../../service/notification.service';
-import {NetworkFormService} from './network-form.service';
-import {FormGroup} from '@angular/forms';
+import { Component, OnInit } from "@angular/core";
+import { ServerNetworkService } from "../../service/server-network.service";
+import { MaskService } from "../../service/mask.service";
+import { NotificationService } from "../../service/notification.service";
+import { NetworkFormService } from "./network-form.service";
+import { FormGroup } from "@angular/forms";
 
 @Component({
-    selector: 'app-network',
-    templateUrl: './network.component.html',
-    styleUrls: ['./network.component.scss'],
-    standalone: false
+  selector: "app-network",
+  templateUrl: "./network.component.html",
+  styleUrls: ["./network.component.scss"],
+  standalone: false
 })
 export class NetworkComponent implements OnInit {
   form: FormGroup;
 
-  constructor(private readonly maskService: MaskService,
-              private readonly notificationService: NotificationService,
-              private readonly serverNetworkService: ServerNetworkService,
-              private readonly formService: NetworkFormService) {
+  constructor(
+    private readonly maskService: MaskService,
+    private readonly notificationService: NotificationService,
+    private readonly serverNetworkService: ServerNetworkService,
+    private readonly formService: NetworkFormService
+  ) {
     this.form = this.formService.getForm();
   }
 
   ngOnInit(): void {
     this.maskService.show();
-    this.serverNetworkService.getServerNetworkProperties().subscribe(response => {
+    this.serverNetworkService.getServerNetworkProperties().subscribe((response) => {
       this.formService.setForm(this.form, response);
       this.maskService.hide();
     });
@@ -37,11 +39,17 @@ export class NetworkComponent implements OnInit {
       this.serverNetworkService.saveServerNetworkProperties(request).subscribe({
         next: () => {
           this.maskService.hide();
-          this.notificationService.successNotification('Network settings have been updated!', 'Success');
+          this.notificationService.successNotification(
+            "Network settings have been updated!",
+            "Success"
+          );
         },
         error: () => {
           this.maskService.hide();
-          this.notificationService.errorNotification('Network settings have not been updated!', 'Error');
+          this.notificationService.errorNotification(
+            "Network settings have not been updated!",
+            "Error"
+          );
         }
       });
     }
@@ -53,13 +61,13 @@ export class NetworkComponent implements OnInit {
 
   allowDecimals(event: KeyboardEvent) {
     const target = event.target as HTMLInputElement;
-    target.value = target.value.replace(/[^.\d]/, '');
+    target.value = target.value.replace(/[^.\d]/, "");
     this.form.markAllAsTouched();
   }
 
   allowDigits(event: KeyboardEvent) {
     const target = event.target as HTMLInputElement;
-    target.value = target.value.replace(/\D+/, '');
+    target.value = target.value.replace(/\D+/, "");
     this.form.markAllAsTouched();
   }
 }

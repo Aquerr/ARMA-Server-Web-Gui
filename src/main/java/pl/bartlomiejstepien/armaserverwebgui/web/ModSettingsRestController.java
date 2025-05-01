@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +15,9 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModSettingsUpdate;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModSettingsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModSettingsService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettings;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettingsContent;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettingsHeader;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettings;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/mods/settings")
@@ -51,7 +50,7 @@ public class ModSettingsRestController
     @HasPermissionModSettingsUpdate
     @PutMapping("/{id}")
     public ModSettingsHeader updateModSettings(@PathVariable("id") long id,
-                                        @RequestBody ModSettings modSettings)
+                                               @RequestBody ModSettings modSettings)
     {
         modSettings.setId(id);
         return modSettingsService.saveModSettings(modSettings);

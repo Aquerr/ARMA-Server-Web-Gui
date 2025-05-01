@@ -1,15 +1,14 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
+import java.io.BufferedReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReadContext;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgWriteContext;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
-
-import java.io.BufferedReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class CfgClassListParser
 {
@@ -23,13 +22,13 @@ public class CfgClassListParser
         {
             while (bufferedReader.ready())
             {
-                char character = (char)bufferedReader.read();
+                char character = (char) bufferedReader.read();
                 if (character == '{')
                 {
                     CfgParser cfgParser = CfgFileHandler.PARSERS.get(PropertyType.CLASS);
 
                     Object instance = cfgParser.parse(context, clazz);
-                    arrayList.add((T)instance);
+                    arrayList.add((T) instance);
                 }
             }
         }

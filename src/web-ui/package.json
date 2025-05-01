@@ -7,7 +7,8 @@
     "build": "ng build",
     "prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -38,12 +39,16 @@
     "@angular/compiler-cli": "^19.0.5",
     "@types/highlight.js": "^9.12.4",
     "@types/jasmine": "^5.0.0",
+    "angular-eslint": "19.3.0",
+    "eslint": "^9.23.0",
     "jasmine-core": "^5.0.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.5.4"
+    "prettier": "3.5.3",
+    "typescript": "~5.5.4",
+    "typescript-eslint": "8.27.0"
   }
 }

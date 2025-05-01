@@ -1,17 +1,17 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgReflectionUtil;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgWriteContext;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.annotation.CfgProperty;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
-public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<String> {
+public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<String>
+{
 
     @Override
     public String parseToString(CfgWriteContext context, Object value) throws ParsingException
@@ -116,7 +116,7 @@ public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<String
                 else if (character == '{' && !insideObject)
                 {
                     insideObject = true;
-                    currentObject = (T)clazz.getComponentType().getDeclaredConstructor().newInstance();
+                    currentObject = (T) clazz.getComponentType().getDeclaredConstructor().newInstance();
                     continue;
                 }
 
@@ -154,7 +154,7 @@ public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<String
                 Array.set(result, i, objects.get(i));
             }
 
-            return (T)result;
+            return (T) result;
         }
         catch (Exception exception)
         {
@@ -173,13 +173,19 @@ public class CfgArrayClassFieldValuesParser<T> implements CfgSimpleParser<String
                 continue;
 
             Object value;
-            if (field.getType().isPrimitive()) {
+            if (field.getType().isPrimitive())
+            {
                 value = PrimitiveParser.parse(fieldValues.get(i), field.getType());
-            } else {
+            }
+            else
+            {
                 CfgSimpleParser cfgSimpleParser = (CfgSimpleParser) CfgFileHandler.PARSERS.get(field.getAnnotation(CfgProperty.class).type());
-                if (cfgSimpleParser instanceof CfgQuotedStringParser) {
+                if (cfgSimpleParser instanceof CfgQuotedStringParser)
+                {
                     value = cfgSimpleParser.parse("\"" + fieldValues.get(i) + "\"", String.class);
-                } else {
+                }
+                else
+                {
                     value = cfgSimpleParser.parse(fieldValues.get(i), String.class);
                 }
             }

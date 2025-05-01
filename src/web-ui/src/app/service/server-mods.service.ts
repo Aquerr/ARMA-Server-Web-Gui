@@ -1,37 +1,38 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { API_BASE_URL } from 'src/environments/environment';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { API_BASE_URL } from "src/environments/environment";
 import { Mod } from "../model/mod.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ServerModsService {
-
   private readonly MODS_URL = `${API_BASE_URL}/mods`;
   private readonly MODS_PRESETS_URL = `${API_BASE_URL}/mods-presets`;
   private readonly MODS_FILES_URL = `${API_BASE_URL}/mods-files`;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   uploadMod(formData: FormData): Observable<any> {
     return this.httpClient.post(this.MODS_FILES_URL, formData, {
       reportProgress: true,
-      observe: 'events'
+      observe: "events"
     });
   }
 
   checkModFilesExists(modFileName: string): Observable<DoesModExistsResponse> {
-    return this.httpClient.get<DoesModExistsResponse>(`${this.MODS_FILES_URL}/${modFileName}/exists`);
+    return this.httpClient.get<DoesModExistsResponse>(
+      `${this.MODS_FILES_URL}/${modFileName}/exists`
+    );
   }
 
-  getInstalledMods(): Observable<GetModsResponse>{
+  getInstalledMods(): Observable<GetModsResponse> {
     return this.httpClient.get<GetModsResponse>(this.MODS_URL);
   }
 
   deleteMod(modName: string): Observable<any> {
-    return this.httpClient.delete(`${this.MODS_URL}`, {body: {"name": modName}});
+    return this.httpClient.delete(`${this.MODS_URL}`, { body: { name: modName } });
   }
 
   saveEnabledMods(saveEnabledModsRequest: SaveEnabledModsRequest) {
@@ -39,7 +40,7 @@ export class ServerModsService {
   }
 
   manageMod(name: string) {
-    return this.httpClient.post(`${this.MODS_URL}/manage`, {name: name});
+    return this.httpClient.post(`${this.MODS_URL}/manage`, { name: name });
   }
 
   getModPresetsNames(): Observable<ModPresetNamesResponse> {
@@ -55,15 +56,20 @@ export class ServerModsService {
   }
 
   deletePreset(presetName: string): Observable<ModPresetDeleteResponse> {
-    return this.httpClient.delete<ModPresetDeleteResponse>(`${this.MODS_PRESETS_URL}/${presetName}`);
+    return this.httpClient.delete<ModPresetDeleteResponse>(
+      `${this.MODS_PRESETS_URL}/${presetName}`
+    );
   }
 
   savePreset(request: ModPresetSaveRequest): Observable<ModPresetSaveResponse> {
-    return this.httpClient.put<ModPresetSaveResponse>(`${this.MODS_PRESETS_URL}/${request.name}`, request);
+    return this.httpClient.put<ModPresetSaveResponse>(
+      `${this.MODS_PRESETS_URL}/${request.name}`,
+      request
+    );
   }
 }
 
-export interface GetModsResponse{
+export interface GetModsResponse {
   disabledMods: Mod[];
   enabledMods: Mod[];
   notManagedMods: Mod[];

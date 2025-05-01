@@ -5,20 +5,27 @@
     <div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%">
       <mat-form-field>
         <mat-label>Search mod...</mat-label>
-        <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mod...">
+        <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mod..." />
       </mat-form-field>
-      <div style="display: flex; flex-direction: row; gap: 10px;">
+      <div style="display: flex; flex-direction: row; gap: 10px">
         <button mat-button (click)="openModSettings()">Mod settings</button>
-        <app-mod-presets [mods]="enabledMods" (modPresetSelected)="onModPresetSelected($event)"></app-mod-presets>
+        <app-mod-presets
+          [mods]="enabledMods"
+          (modPresetSelected)="onModPresetSelected($event)"
+        ></app-mod-presets>
       </div>
     </div>
   </div>
 
   <div class="mod-list-group" cdkDropListGroup>
     <div class="mods-list">
-      <h2 class="mods-list-header">Disabled <span style="filter: brightness(50%)">({{disabledMods.length}})</span></h2>
+      <h2 class="mods-list-header">
+        Disabled <span style="filter: brightness(50%)">({{ disabledMods.length }})</span>
+      </h2>
       <div class="mod-list-buttons">
-        <button mat-button (click)="enableAllMods()">Enable all<mat-icon>arrow_forward</mat-icon></button>
+        <button mat-button (click)="enableAllMods()">
+          Enable all<mat-icon>arrow_forward</mat-icon>
+        </button>
       </div>
 
       <div class="list-container">
@@ -28,16 +35,27 @@
           class="list-container"
           [cdkDropListData]="filteredDisabledMods"
           [cdkDropListSortingDisabled]="true"
-          (cdkDropListDropped)="onModItemDragDrop($event)">
-          <div app-mod-list-item *ngFor="let mod of filteredDisabledMods" [mod]="mod" (onModDelete)="onModDelete($event)" cdkDrag></div>
+          (cdkDropListDropped)="onModItemDragDrop($event)"
+        >
+          <div
+            app-mod-list-item
+            *ngFor="let mod of filteredDisabledMods"
+            [mod]="mod"
+            (onModDelete)="onModDelete($event)"
+            cdkDrag
+          ></div>
         </div>
       </div>
     </div>
 
     <div class="mods-list">
-      <h2 class="mods-list-header">Enabled <span style="filter: brightness(50%)">({{enabledMods.length}})</span></h2>
+      <h2 class="mods-list-header">
+        Enabled <span style="filter: brightness(50%)">({{ enabledMods.length }})</span>
+      </h2>
       <div class="mod-list-buttons">
-        <button mat-button (click)="disableAllMods()">Disable all<mat-icon>arrow_backward</mat-icon></button>
+        <button mat-button (click)="disableAllMods()">
+          Disable all<mat-icon>arrow_backward</mat-icon>
+        </button>
       </div>
       <div class="list-container">
         <div
@@ -46,11 +64,18 @@
           class="list"
           [cdkDropListData]="filteredEnabledMods"
           [cdkDropListSortingDisabled]="true"
-          (cdkDropListDropped)="onModItemDragDrop($event)">
-          <div app-mod-list-item *ngFor="let mod of filteredEnabledMods" cdkDrag [mod]="mod" (onModDelete)="onModDelete($event)"></div>
+          (cdkDropListDropped)="onModItemDragDrop($event)"
+        >
+          <div
+            app-mod-list-item
+            *ngFor="let mod of filteredEnabledMods"
+            cdkDrag
+            [mod]="mod"
+            (onModDelete)="onModDelete($event)"
+          ></div>
         </div>
       </div>
-   </div>
+    </div>
   </div>
 
   @if (notManagedMods.length > 0) {
@@ -60,9 +85,11 @@
         <div class="not-managed-mod-list">
           @for (mod of notManagedMods; track mod.name) {
             <div class="not-managed-mod-list-item">
-              <div class="not-managed-mod-list-item-header">{{mod.name}}</div>
+              <div class="not-managed-mod-list-item-header">{{ mod.name }}</div>
               <div class="not-managed-mod-buttons">
-                <button mat-button (click)="registerNotManagedMod(mod)"><mat-icon fontIcon="settings"></mat-icon> Manage</button>
+                <button mat-button (click)="registerNotManagedMod(mod)">
+                  <mat-icon fontIcon="settings"></mat-icon> Manage
+                </button>
               </div>
             </div>
           }

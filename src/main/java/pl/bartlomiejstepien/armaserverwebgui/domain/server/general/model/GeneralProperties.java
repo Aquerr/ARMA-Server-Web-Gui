@@ -1,10 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
-
-import java.util.List;
 
 @Data
 @Builder

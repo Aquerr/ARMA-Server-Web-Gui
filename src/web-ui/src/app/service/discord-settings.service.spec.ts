@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { DiscordSettingsService } from './discord-settings.service';
+import { DiscordSettingsService } from "./discord-settings.service";
 
-describe('DiscordSettingsService', () => {
+describe("DiscordSettingsService", () => {
   let service: DiscordSettingsService;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('DiscordSettingsService', () => {
     service = TestBed.inject(DiscordSettingsService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });

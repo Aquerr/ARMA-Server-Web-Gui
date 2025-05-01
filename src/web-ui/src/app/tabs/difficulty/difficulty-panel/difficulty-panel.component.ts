@@ -1,18 +1,16 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {DifficultyProfile} from "../../../model/difficulty-profile.model";
-import {MaskService} from "../../../service/mask.service";
-import {ServerDifficultyService} from "../../../service/server-difficulty.service";
-import {NotificationService} from "../../../service/notification.service";
-import {MatDialog} from "@angular/material/dialog";
-import {
-  DifficultyDeleteConfirmDialogComponent
-} from "../difficulty-delete-confirm-dialog/difficulty-delete-confirm-dialog.component";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { DifficultyProfile } from "../../../model/difficulty-profile.model";
+import { MaskService } from "../../../service/mask.service";
+import { ServerDifficultyService } from "../../../service/server-difficulty.service";
+import { NotificationService } from "../../../service/notification.service";
+import { MatDialog } from "@angular/material/dialog";
+import { DifficultyDeleteConfirmDialogComponent } from "../difficulty-delete-confirm-dialog/difficulty-delete-confirm-dialog.component";
 
 @Component({
-    selector: 'app-difficulty-panel',
-    templateUrl: './difficulty-panel.component.html',
-    styleUrl: './difficulty-panel.component.scss',
-    standalone: false
+  selector: "app-difficulty-panel",
+  templateUrl: "./difficulty-panel.component.html",
+  styleUrl: "./difficulty-panel.component.scss",
+  standalone: false
 })
 export class DifficultyPanelComponent {
   @Input() difficultyProfile!: DifficultyProfile;
@@ -22,11 +20,12 @@ export class DifficultyPanelComponent {
 
   editingTitle: boolean = false;
 
-  constructor(private maskService: MaskService,
-              private difficultyService: ServerDifficultyService,
-              private notificationService: NotificationService,
-              private matDialog: MatDialog) {
-  }
+  constructor(
+    private maskService: MaskService,
+    private difficultyService: ServerDifficultyService,
+    private notificationService: NotificationService,
+    private matDialog: MatDialog
+  ) {}
 
   toggleActive(event: MouseEvent) {
     event.stopPropagation();
@@ -39,25 +38,32 @@ export class DifficultyPanelComponent {
 
   allowDigits(event: KeyboardEvent) {
     const number = event.key as unknown as number;
-    return number >= 0 && number <= 9 || this.isInputAllowedKey(event.key);
+    return (number >= 0 && number <= 9) || this.isInputAllowedKey(event.key);
   }
 
   isInputAllowedKey(key: string) {
-    return key === 'Backspace' || key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Tab' || key === 'Delete';
+    return (
+      key === "Backspace" ||
+      key === "ArrowLeft" ||
+      key === "ArrowRight" ||
+      key === "Tab" ||
+      key === "Delete"
+    );
   }
 
   deleteDifficulty(difficultyProfile: DifficultyProfile) {
     const dialogRef = this.matDialog.open(DifficultyDeleteConfirmDialogComponent, {
-      width: '250px',
-      enterAnimationDuration: '200ms',
-      exitAnimationDuration: '200ms'
+      width: "250px",
+      enterAnimationDuration: "200ms",
+      exitAnimationDuration: "200ms"
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        let identifier = difficultyProfile.id !== undefined ? difficultyProfile.id : difficultyProfile.name;
+        let identifier =
+          difficultyProfile.id !== undefined ? difficultyProfile.id : difficultyProfile.name;
         this.maskService.show();
-        this.difficultyService.deleteDifficulty(identifier).subscribe(response => {
+        this.difficultyService.deleteDifficulty(identifier).subscribe((response) => {
           this.maskService.hide();
           this.notificationService.successNotification("Difficulty profile has been deleted");
           this.deleted.emit(difficultyProfile);
@@ -68,7 +74,7 @@ export class DifficultyPanelComponent {
 
   saveDifficulty(difficultyProfile: DifficultyProfile) {
     this.maskService.show();
-    this.difficultyService.saveDifficulties([difficultyProfile]).subscribe(response => {
+    this.difficultyService.saveDifficulties([difficultyProfile]).subscribe((response) => {
       this.maskService.hide();
       this.notificationService.successNotification("Difficulty has been saved");
       this.saved.emit(difficultyProfile);
@@ -82,7 +88,7 @@ export class DifficultyPanelComponent {
 
   onTitleKeyDown(event: KeyboardEvent) {
     event.stopPropagation();
-    if (event.code === 'Enter') {
+    if (event.code === "Enter") {
       this.editingTitle = false;
     }
   }

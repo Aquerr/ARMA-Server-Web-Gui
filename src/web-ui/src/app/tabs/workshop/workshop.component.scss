@@ -13,7 +13,8 @@
 }
 
 @media (max-width: 800px) {
-  .container, .workshop-list {
+  .container,
+  .workshop-list {
     display: flex;
     flex-direction: column;
     align-items: center;

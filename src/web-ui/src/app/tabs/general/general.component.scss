@@ -37,7 +37,9 @@
     flex-direction: column;
   }
 
-  .server-directory-field, .hostname-field, .mat-mdc-form-field {
+  .server-directory-field,
+  .hostname-field,
+  .mat-mdc-form-field {
     width: 100% !important;
   }
 

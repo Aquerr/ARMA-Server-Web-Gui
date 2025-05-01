@@ -1,15 +1,14 @@
-import { Injectable } from '@angular/core';
-import {API_BASE_URL} from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Injectable } from "@angular/core";
+import { API_BASE_URL } from "../../environments/environment";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ServerNetworkService {
-
   private readonly NETWORK_URL = `${API_BASE_URL}/network`;
-  private readonly NETWORK_PROPERTIES_URL = `${this.NETWORK_URL}/properties`
+  private readonly NETWORK_PROPERTIES_URL = `${this.NETWORK_URL}/properties`;
 
   constructor(private readonly httpClient: HttpClient) {}
 
@@ -17,7 +16,9 @@ export class ServerNetworkService {
     return this.httpClient.get<ServerNetworkProperties>(this.NETWORK_PROPERTIES_URL);
   }
 
-  saveServerNetworkProperties(saveServerNetworkPropertiesRequest: ServerNetworkProperties): Observable<any> {
+  saveServerNetworkProperties(
+    saveServerNetworkPropertiesRequest: ServerNetworkProperties
+  ): Observable<any> {
     return this.httpClient.post(this.NETWORK_PROPERTIES_URL, saveServerNetworkPropertiesRequest);
   }
 }

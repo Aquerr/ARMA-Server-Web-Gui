@@ -24,7 +24,10 @@
   gap: 10px;
   border: 0 solid white;
   border-radius: 4px;
-  box-shadow: 0 2px 1px -1px #444c56, 0 1px 1px 0 #444c56, 0 1px 3px 0 #444c56;
+  box-shadow:
+    0 2px 1px -1px #444c56,
+    0 1px 1px 0 #444c56,
+    0 1px 3px 0 #444c56;
   overflow-y: hidden;
 }
 

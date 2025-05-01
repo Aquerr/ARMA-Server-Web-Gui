@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { DialogService } from './dialog.service';
+import { DialogService } from "./dialog.service";
 
-describe('DialogService', () => {
+describe("DialogService", () => {
   let service: DialogService;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('DialogService', () => {
     service = TestBed.inject(DialogService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });

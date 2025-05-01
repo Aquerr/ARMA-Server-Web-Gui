@@ -1,13 +1,12 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam;
 
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
-
 import java.util.List;
 import java.util.UUID;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
 public interface SteamService
 {

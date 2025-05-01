@@ -1,8 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model;
 
-import lombok.Value;
-
 import java.util.List;
+import lombok.Value;
 
 @Value(staticConstructor = "of")
 public class ModPresetSaveParams

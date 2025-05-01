@@ -1,14 +1,13 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg;
 
-import lombok.extern.slf4j.Slf4j;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgClassParser;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgClassParser;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
 
 @Slf4j
 public class DefaultCfgConfigReader implements CfgConfigReader
@@ -23,8 +22,8 @@ public class DefaultCfgConfigReader implements CfgConfigReader
             if (!file.exists())
                 return clazz.getDeclaredConstructor().newInstance();
 
-            try(FileReader fileReader = new FileReader(file);
-                BufferedReader bufferedReader = new BufferedReader(fileReader))
+            try (FileReader fileReader = new FileReader(file);
+                 BufferedReader bufferedReader = new BufferedReader(fileReader))
             {
                 return parse(new CfgReadContext(new StringBuilder(), bufferedReader, clazz), clazz);
             }

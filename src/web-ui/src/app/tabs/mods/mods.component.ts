@@ -1,23 +1,22 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subject, Subscription} from 'rxjs';
-import { MaskService } from 'src/app/service/mask.service';
-import {SaveEnabledModsRequest, ServerModsService} from 'src/app/service/server-mods.service';
-import {NotificationService} from "../../service/notification.service";
-import {Mod} from "../../model/mod.model";
-import {FormControl} from "@angular/forms";
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
-import {ModUploadService} from "./service/mod-upload.service";
-import {Router} from "@angular/router";
-import {DialogService} from "../../service/dialog.service";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Subject, Subscription } from "rxjs";
+import { MaskService } from "src/app/service/mask.service";
+import { SaveEnabledModsRequest, ServerModsService } from "src/app/service/server-mods.service";
+import { NotificationService } from "../../service/notification.service";
+import { Mod } from "../../model/mod.model";
+import { FormControl } from "@angular/forms";
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
+import { ModUploadService } from "./service/mod-upload.service";
+import { Router } from "@angular/router";
+import { DialogService } from "../../service/dialog.service";
 
 @Component({
-    selector: 'app-mods',
-    templateUrl: './mods.component.html',
-    styleUrls: ['./mods.component.scss'],
-    standalone: false
+  selector: "app-mods",
+  templateUrl: "./mods.component.html",
+  styleUrls: ["./mods.component.scss"],
+  standalone: false
 })
 export class ModsComponent implements OnInit, OnDestroy {
-
   reloadModsDataSubject: Subject<any>;
   reloadModsDataSubscription!: Subscription;
   modUploadSubscription!: Subscription;
@@ -30,13 +29,14 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   searchBoxControl!: FormControl;
 
-  constructor(private modService: ServerModsService,
-              private maskService: MaskService,
-              private notificationService: NotificationService,
-              private modUploadService: ModUploadService,
-              private router: Router,
-              private dialogService: DialogService) {
-
+  constructor(
+    private modService: ServerModsService,
+    private maskService: MaskService,
+    private notificationService: NotificationService,
+    private modUploadService: ModUploadService,
+    private router: Router,
+    private dialogService: DialogService
+  ) {
     this.reloadModsDataSubject = new Subject();
     this.reloadModsDataSubscription = this.reloadModsDataSubject.subscribe(() => {
       this.reloadMods();
@@ -49,8 +49,8 @@ export class ModsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.searchBoxControl = new FormControl('');
-    this.searchBoxControl.valueChanges.subscribe(value => {
+    this.searchBoxControl = new FormControl("");
+    this.searchBoxControl.valueChanges.subscribe((value) => {
       this.filterMods(value);
     });
     this.reloadMods();
@@ -63,7 +63,7 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   onFileDropped(file: File) {
     this.maskService.show();
-    this.modService.checkModFilesExists(file.name).subscribe(response => {
+    this.modService.checkModFilesExists(file.name).subscribe((response) => {
       this.maskService.hide();
       if (response.exists) {
         const onCloseCallback = (result: boolean) => {
@@ -71,7 +71,12 @@ export class ModsComponent implements OnInit, OnDestroy {
           this.modUploadService.uploadMod(file, true);
         };
 
-        this.dialogService.openCommonConfirmationDialog({question: `File for mod <strong>${file.name}</strong> already exists. <br>Do you want to overwrite it?`}, onCloseCallback);
+        this.dialogService.openCommonConfirmationDialog(
+          {
+            question: `File for mod <strong>${file.name}</strong> already exists. <br>Do you want to overwrite it?`
+          },
+          onCloseCallback
+        );
       } else {
         this.modUploadService.uploadMod(file);
       }
@@ -80,41 +85,49 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   private reloadMods() {
     this.maskService.show();
-    this.modService.getInstalledMods().subscribe(modsResponse => {
+    this.modService.getInstalledMods().subscribe((modsResponse) => {
       this.notManagedMods = modsResponse.notManagedMods;
       this.disabledMods = modsResponse.disabledMods;
       this.enabledMods = modsResponse.enabledMods;
-      this.filteredDisabledMods = [...this.disabledMods].sort((a, b) => a.name.localeCompare(b.name));
+      this.filteredDisabledMods = [...this.disabledMods].sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
       this.filteredEnabledMods = [...this.enabledMods].sort((a, b) => a.name.localeCompare(b.name));
       this.maskService.hide();
       if (this.notManagedMods.length > 0) {
-        this.notificationService.infoNotification("ASWG detected some new mods. Scroll to the bottom to see them.");
+        this.notificationService.infoNotification(
+          "ASWG detected some new mods. Scroll to the bottom to see them."
+        );
       }
     });
   }
 
   save() {
     this.maskService.show();
-    this.modService.saveEnabledMods({mods: this.enabledMods}).subscribe(response => {
+    this.modService.saveEnabledMods({ mods: this.enabledMods }).subscribe((response) => {
       this.maskService.hide();
-      this.notificationService.successNotification('Active mods list saved!', 'Success');
+      this.notificationService.successNotification("Active mods list saved!", "Success");
     });
   }
 
   private filterMods(searchPhrase: string) {
-    this.filteredEnabledMods = this.enabledMods.filter(mod => mod.name.toLowerCase().includes(searchPhrase.toLowerCase()));
-    this.filteredDisabledMods = this.disabledMods.filter(mod => mod.name.toLowerCase().includes(searchPhrase.toLowerCase()));
+    this.filteredEnabledMods = this.enabledMods.filter((mod) =>
+      mod.name.toLowerCase().includes(searchPhrase.toLowerCase())
+    );
+    this.filteredDisabledMods = this.disabledMods.filter((mod) =>
+      mod.name.toLowerCase().includes(searchPhrase.toLowerCase())
+    );
     this.sortModList(this.filteredEnabledMods);
     this.sortModList(this.filteredDisabledMods);
   }
 
   onModItemDragDrop(event: CdkDragDrop<Mod[]>) {
-    if (event.previousContainer === event.container){
+    if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       let movedMod = event.previousContainer.data[event.previousIndex];
       // let currentIndex: number;
-      if (event.previousContainer.id == 'enabled-mods-list') {
+      if (event.previousContainer.id == "enabled-mods-list") {
         this.removeModFromList(this.enabledMods, movedMod);
         this.disabledMods.push(movedMod);
       } else {
@@ -127,7 +140,7 @@ export class ModsComponent implements OnInit, OnDestroy {
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex,
+        event.currentIndex
       );
 
       this.sortModList(this.filteredDisabledMods);
@@ -156,20 +169,24 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   enableAllMods() {
     this.maskService.show();
-    this.modService.saveEnabledMods({mods: this.enabledMods.concat(this.disabledMods)}).subscribe(response => {
-      this.maskService.hide();
-      this.reloadMods();
-      this.notificationService.successNotification('Mods list updated!', 'Success');
-    });
+    this.modService
+      .saveEnabledMods({ mods: this.enabledMods.concat(this.disabledMods) })
+      .subscribe((response) => {
+        this.maskService.hide();
+        this.reloadMods();
+        this.notificationService.successNotification("Mods list updated!", "Success");
+      });
   }
 
   disableAllMods() {
     this.maskService.show();
-    this.modService.saveEnabledMods({mods: []} as SaveEnabledModsRequest).subscribe(response => {
-      this.maskService.hide();
-      this.reloadMods();
-      this.notificationService.successNotification('Mods list updated!', 'Success');
-    });
+    this.modService
+      .saveEnabledMods({ mods: [] } as SaveEnabledModsRequest)
+      .subscribe((response) => {
+        this.maskService.hide();
+        this.reloadMods();
+        this.notificationService.successNotification("Mods list updated!", "Success");
+      });
   }
 
   openModSettings() {
@@ -177,15 +194,18 @@ export class ModsComponent implements OnInit, OnDestroy {
   }
 
   registerNotManagedMod(mod: Mod) {
-    this.dialogService.openCommonConfirmationDialog({question: `Are you sure you want to add <strong>${mod.name}</strong> to managed mods?`}, dialogResult => {
-      if (dialogResult) {
-        this.maskService.show();
-        this.modService.manageMod(mod.name).subscribe(() => {
-          this.maskService.hide();
-          this.reloadMods();
-          this.notificationService.successNotification(`Mod ${mod.name} is not managed by ASWG`);
-        });
+    this.dialogService.openCommonConfirmationDialog(
+      { question: `Are you sure you want to add <strong>${mod.name}</strong> to managed mods?` },
+      (dialogResult) => {
+        if (dialogResult) {
+          this.maskService.show();
+          this.modService.manageMod(mod.name).subscribe(() => {
+            this.maskService.hide();
+            this.reloadMods();
+            this.notificationService.successNotification(`Mod ${mod.name} is not managed by ASWG`);
+          });
+        }
       }
-    });
+    );
   }
 }

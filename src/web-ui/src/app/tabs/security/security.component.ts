@@ -1,32 +1,34 @@
-import {Component, OnInit} from '@angular/core';
-import {AllowedFilePatching, ServerSecurityService} from "../../service/server-security.service";
-import {MaskService} from "../../service/mask.service";
-import {NotificationService} from "../../service/notification.service";
-import {SecurityFormService} from './security-form.service';
-import {FormGroup} from '@angular/forms';
-import {VoteCmd} from "../../model/vote-cmd.model";
+import { Component, OnInit } from "@angular/core";
+import { AllowedFilePatching, ServerSecurityService } from "../../service/server-security.service";
+import { MaskService } from "../../service/mask.service";
+import { NotificationService } from "../../service/notification.service";
+import { SecurityFormService } from "./security-form.service";
+import { FormGroup } from "@angular/forms";
+import { VoteCmd } from "../../model/vote-cmd.model";
 
 @Component({
-    selector: 'app-security',
-    templateUrl: './security.component.html',
-    styleUrls: ['./security.component.scss'],
-    standalone: false
+  selector: "app-security",
+  templateUrl: "./security.component.html",
+  styleUrls: ["./security.component.scss"],
+  standalone: false
 })
 export class SecurityComponent implements OnInit {
   public form: FormGroup;
 
   protected readonly AllowedFilePatching = AllowedFilePatching;
 
-  constructor(private readonly serverSecurityService: ServerSecurityService,
-              private readonly maskService: MaskService,
-              private readonly notificationService: NotificationService,
-              public formService: SecurityFormService) {
+  constructor(
+    private readonly serverSecurityService: ServerSecurityService,
+    private readonly maskService: MaskService,
+    private readonly notificationService: NotificationService,
+    public formService: SecurityFormService
+  ) {
     this.form = this.formService.getForm();
   }
 
   ngOnInit(): void {
     this.maskService.show();
-    this.serverSecurityService.getServerSecurity().subscribe(response => {
+    this.serverSecurityService.getServerSecurity().subscribe((response) => {
       this.formService.setForm(this.form, response);
       this.maskService.hide();
     });
@@ -55,6 +57,6 @@ export class SecurityComponent implements OnInit {
   }
 
   setVoteCmds($event: VoteCmd[]) {
-    this.form.get('allowedVoteCmds')?.setValue($event);
+    this.form.get("allowedVoteCmds")?.setValue($event);
   }
 }

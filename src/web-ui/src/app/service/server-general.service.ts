@@ -1,18 +1,19 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import {API_BASE_URL} from "../../environments/environment";
-import {Observable, of, throwError} from "rxjs";
-import {PermissionService} from "./permission.service";
-import {AswgAuthority} from "../model/authority.model";
-import {MissionDifficulty} from "../model/mission.model";
+import { API_BASE_URL } from "../../environments/environment";
+import { Observable, of, throwError } from "rxjs";
+import { PermissionService } from "./permission.service";
+import { AswgAuthority } from "../model/authority.model";
+import { MissionDifficulty } from "../model/mission.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ServerGeneralService {
-
-  constructor(private readonly httpClient: HttpClient,
-              private readonly permissionService: PermissionService) { }
+  constructor(
+    private readonly httpClient: HttpClient,
+    private readonly permissionService: PermissionService
+  ) {}
 
   getGeneralProperties(): Observable<GeneralProperties> {
     if (!this.permissionService.hasAllAuthorities([AswgAuthority.GENERAL_SETTINGS_VIEW], true))

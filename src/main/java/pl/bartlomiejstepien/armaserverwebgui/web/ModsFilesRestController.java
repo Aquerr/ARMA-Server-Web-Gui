@@ -1,5 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
+import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -15,9 +17,6 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.ModFileValidator;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/mods-files")
@@ -54,5 +53,7 @@ public class ModsFilesRestController
         return new DoesModExists(modService.checkModFileExists(modName));
     }
 
-    public record DoesModExists(boolean exists){}
+    public record DoesModExists(boolean exists)
+    {
+    }
 }

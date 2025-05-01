@@ -5,19 +5,18 @@ import io.github.aquerr.steamwebapiclient.request.PublishedFileDetailsRequest;
 import io.github.aquerr.steamwebapiclient.request.WorkShopQueryFilesRequest;
 import io.github.aquerr.steamwebapiclient.response.PublishedFileDetailsResponse;
 import io.github.aquerr.steamwebapiclient.response.WorkShopQueryResponse;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
-
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -64,7 +63,8 @@ public class SteamWebApiService
         try
         {
             log.info("Fetching workshop mod info for mod id: {}", modId);
-            WorkshopMod workshopMod = Optional.ofNullable(this.steamWebApiClient.getSteamRemoteStorageClient().getPublishedFileDetails(new PublishedFileDetailsRequest(List.of(modId))))
+            WorkshopMod workshopMod = Optional.ofNullable(this.steamWebApiClient.getSteamRemoteStorageClient()
+                            .getPublishedFileDetails(new PublishedFileDetailsRequest(List.of(modId))))
                     .map(PublishedFileDetailsResponse::getResponse)
                     .map(PublishedFileDetailsResponse.QueryFilesResponse::getPublishedFileDetails)
                     .filter(list -> !list.isEmpty())

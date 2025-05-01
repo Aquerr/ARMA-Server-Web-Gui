@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { ServerNetworkService } from './server-network.service';
+import { ServerNetworkService } from "./server-network.service";
 
-describe('ServerNetworkService', () => {
+describe("ServerNetworkService", () => {
   let service: ServerNetworkService;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ServerNetworkService', () => {
     service = TestBed.inject(ServerNetworkService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });

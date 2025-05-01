@@ -1,14 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import {API_BASE_URL} from "../../environments/environment";
-import {Observable} from "rxjs";
-import {VoteCmd} from "../model/vote-cmd.model";
+import { API_BASE_URL } from "../../environments/environment";
+import { Observable } from "rxjs";
+import { VoteCmd } from "../model/vote-cmd.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ServerSecurityService {
-
   private readonly SECURITY_URL = `${API_BASE_URL}/security`;
 
   constructor(private readonly httpClient: HttpClient) {}
@@ -55,7 +54,7 @@ export interface GetServerSecurityResponse {
 }
 
 export enum AllowedFilePatching {
-  NOT_ALLOWED = 'NOT_ALLOWED',
-  ALLOWED_FOR_HEADLESS_CLIENTS = 'ALLOWED_FOR_HEADLESS_CLIENTS',
-  ALLOWED_FOR_ALL_CLIENTS = 'ALLOWED_FOR_ALL_CLIENTS'
+  NOT_ALLOWED = "NOT_ALLOWED",
+  ALLOWED_FOR_HEADLESS_CLIENTS = "ALLOWED_FOR_HEADLESS_CLIENTS",
+  ALLOWED_FOR_ALL_CLIENTS = "ALLOWED_FOR_ALL_CLIENTS"
 }

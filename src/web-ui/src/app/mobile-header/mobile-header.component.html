@@ -1,8 +1,12 @@
 <nav class="navbar navbar-dark aswg-bg-blue">
   <div class="container-mobile-fluid">
     <div class="hamburger-icon">
-      <mat-icon class="hamburger-icon" (click)="toggleSideMenu()" *ngIf="!sideMenuExpanded">menu</mat-icon>
-      <mat-icon class="hamburger-icon" (click)="toggleSideMenu()" *ngIf="sideMenuExpanded">close</mat-icon>
+      <mat-icon class="hamburger-icon" (click)="toggleSideMenu()" *ngIf="!sideMenuExpanded"
+        >menu</mat-icon
+      >
+      <mat-icon class="hamburger-icon" (click)="toggleSideMenu()" *ngIf="sideMenuExpanded"
+        >close</mat-icon
+      >
     </div>
     <a class="navbar-brand" routerLink="/general">ASWG</a>
     <div class="username-container">
@@ -12,6 +16,11 @@
   </div>
 
   <div class="mobile-side-menu" *ngIf="sideMenuExpanded">
-    <app-side-menu [isMobile]="true" [darkMode]="darkMode" (routerLinkClickEmitter)="closeSideMenu()" (changeThemeEmit)="changeTheme()"></app-side-menu>
+    <app-side-menu
+      [isMobile]="true"
+      [darkMode]="darkMode"
+      (routerLinkClickEmitter)="closeSideMenu()"
+      (changeThemeEmit)="changeTheme()"
+    ></app-side-menu>
   </div>
 </nav>

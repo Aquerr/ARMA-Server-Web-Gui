@@ -1,18 +1,17 @@
-import {Injectable} from "@angular/core";
-import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ModSettings} from "../../../model/mod-settings.model";
+import { Injectable } from "@angular/core";
+import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ModSettings } from "../../../model/mod-settings.model";
 
 @Injectable({
   providedIn: "root"
 })
 export class EditModsSettingsFormService {
-  constructor(private readonly formBuilder: FormBuilder) {
-  }
+  constructor(private readonly formBuilder: FormBuilder) {}
 
   getForm(): FormGroup {
     return this.formBuilder.group({
       id: [null],
-      name: ['', Validators.required],
+      name: ["", Validators.required],
       active: [true, Validators.required],
       content: [null]
     });
@@ -39,18 +38,18 @@ export class EditModsSettingsFormService {
   }
 
   getIdControl(form: FormGroup) {
-    return form.get('id') as AbstractControl;
+    return form.get("id") as AbstractControl;
   }
 
   getNameControl(form: FormGroup) {
-    return form.get('name') as AbstractControl;
+    return form.get("name") as AbstractControl;
   }
 
   getActiveControl(form: FormGroup) {
-    return form.get('active') as AbstractControl;
+    return form.get("active") as AbstractControl;
   }
 
   getContentControl(form: FormGroup) {
-    return form.get('content') as AbstractControl;
+    return form.get("content") as AbstractControl;
   }
 }

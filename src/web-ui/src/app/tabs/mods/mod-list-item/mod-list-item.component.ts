@@ -1,40 +1,39 @@
-import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {Mod} from "../../../model/mod.model";
-import {ModDeleteConfirmDialogComponent} from "../mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
-import {MaskService} from "../../../service/mask.service";
-import {ServerModsService} from "../../../service/server-mods.service";
-import {
-  ModForceUpdateConfirmDialogComponent
-} from "../mod-force-update-confirm-dialog/mod-force-update-confirm-dialog.component";
-import {WorkshopService} from "../../../service/workshop.service";
-import {NotificationService} from "../../../service/notification.service";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Mod } from "../../../model/mod.model";
+import { ModDeleteConfirmDialogComponent } from "../mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { MaskService } from "../../../service/mask.service";
+import { ServerModsService } from "../../../service/server-mods.service";
+import { ModForceUpdateConfirmDialogComponent } from "../mod-force-update-confirm-dialog/mod-force-update-confirm-dialog.component";
+import { WorkshopService } from "../../../service/workshop.service";
+import { NotificationService } from "../../../service/notification.service";
 
 @Component({
-    selector: '[app-mod-list-item]',
-    templateUrl: './mod-list-item.component.html',
-    styleUrls: ['./mod-list-item.component.scss'],
-    standalone: false
+  selector: "[app-mod-list-item]",
+  templateUrl: "./mod-list-item.component.html",
+  styleUrls: ["./mod-list-item.component.scss"],
+  standalone: false
 })
 export class ModListItemComponent {
-
   @Input() mod!: Mod;
   @Output() onModDelete: EventEmitter<Mod> = new EventEmitter<Mod>();
   expanded: boolean = false;
-  constructor(private matDialog: MatDialog,
-              private maskService: MaskService,
-              private modService: ServerModsService,
-              private workshopService: WorkshopService,
-              private notificationService: NotificationService) {}
+  constructor(
+    private matDialog: MatDialog,
+    private maskService: MaskService,
+    private modService: ServerModsService,
+    private workshopService: WorkshopService,
+    private notificationService: NotificationService
+  ) {}
 
   showModDeleteConfirmationDialog(modName: string) {
     const dialogRef = this.matDialog.open(ModDeleteConfirmDialogComponent, {
-      width: '250px',
-      enterAnimationDuration: '200ms',
-      exitAnimationDuration: '200ms'
+      width: "250px",
+      enterAnimationDuration: "200ms",
+      exitAnimationDuration: "200ms"
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.deleteMod(modName);
       }
@@ -43,7 +42,7 @@ export class ModListItemComponent {
 
   deleteMod(modName: string) {
     this.maskService.show();
-    this.modService.deleteMod(modName).subscribe(response => {
+    this.modService.deleteMod(modName).subscribe((response) => {
       this.maskService.hide();
       this.onModDelete.next(this.mod);
     });
@@ -51,12 +50,12 @@ export class ModListItemComponent {
 
   showForceUpdateConfirmationDialog(fileId: number, modName: string) {
     const dialogRef = this.matDialog.open(ModForceUpdateConfirmDialogComponent, {
-      width: '250px',
-      enterAnimationDuration: '200ms',
-      exitAnimationDuration: '200ms'
+      width: "250px",
+      enterAnimationDuration: "200ms",
+      exitAnimationDuration: "200ms"
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.forceUpdateMod(fileId, modName);
       }
@@ -65,7 +64,7 @@ export class ModListItemComponent {
 
   private forceUpdateMod(modId: number, modName: string) {
     this.maskService.show();
-    this.workshopService.installMod(modId, modName).subscribe(response => {
+    this.workshopService.installMod(modId, modName).subscribe((response) => {
       this.maskService.hide();
       this.notificationService.infoNotification("Mod update scheduled");
     });

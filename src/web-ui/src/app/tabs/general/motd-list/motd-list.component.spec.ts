@@ -1,23 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { MotdListComponent } from './motd-list.component';
+import { MotdListComponent } from "./motd-list.component";
 
-describe('MotdListComponent', () => {
+describe("MotdListComponent", () => {
   let component: MotdListComponent;
   let fixture: ComponentFixture<MotdListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MotdListComponent ]
-    })
-    .compileComponents();
+      declarations: [MotdListComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MotdListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

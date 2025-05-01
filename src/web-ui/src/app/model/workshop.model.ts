@@ -23,12 +23,12 @@ export interface InstalledWorkshopItemsResponse {
 }
 
 export class WorkshopMod {
-  description: string = '';
+  description: string = "";
   fileId: number = 0;
   isBeingInstalled: boolean = false;
-  modWorkshopUrl: string = '';
-  previewUrl: string = '';
-  title: string = '';
+  modWorkshopUrl: string = "";
+  previewUrl: string = "";
+  title: string = "";
 }
 
 export interface WorkShopModInstallStatus {

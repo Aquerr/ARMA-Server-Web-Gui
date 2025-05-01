@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
-import {NgxSpinnerService} from "ngx-spinner";
+import { Injectable } from "@angular/core";
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class MaskService {
-
   constructor(private spinnerService: NgxSpinnerService) {}
 
   show(): void {

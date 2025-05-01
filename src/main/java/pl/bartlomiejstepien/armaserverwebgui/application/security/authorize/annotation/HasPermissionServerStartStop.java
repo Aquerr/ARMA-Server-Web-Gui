@@ -1,10 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)

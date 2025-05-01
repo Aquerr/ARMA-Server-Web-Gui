@@ -9,25 +9,36 @@
       </mat-select>
     </mat-form-field>
 
-    @if (missionType == 'BUILT_IN') {
+    @if (missionType == "BUILT_IN") {
       <form [formGroup]="form" class="content">
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input matInput formControlName="name">
+          <input matInput formControlName="name" />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Template</mat-label>
-          <input matInput formControlName="template">
+          <input matInput formControlName="template" />
         </mat-form-field>
       </form>
     }
 
-    @if (missionType == 'FILE') {
-      <div class="upload-drop-zone" appDragAndDropFile (fileDropped)="onFileDropped($event)" (click)="fileInput.click()">
-        <input style="display: none;" type="file" #fileInput (change)="onFileSelected($event)" accept=".pbo">
+    @if (missionType == "FILE") {
+      <div
+        class="upload-drop-zone"
+        appDragAndDropFile
+        (fileDropped)="onFileDropped($event)"
+        (click)="fileInput.click()"
+      >
+        <input
+          style="display: none"
+          type="file"
+          #fileInput
+          (change)="onFileSelected($event)"
+          accept=".pbo"
+        />
         <div>
           @if (file !== null) {
-            <span>{{file.name}}</span>
+            <span>{{ file.name }}</span>
           } @else {
             <mat-icon>upload</mat-icon>
           }

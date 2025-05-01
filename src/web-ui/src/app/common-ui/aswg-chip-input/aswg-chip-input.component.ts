@@ -1,18 +1,14 @@
-import {Component, Input} from '@angular/core';
-import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import {
-  MatChipEditedEvent,
-  MatChipInputEvent
-} from "@angular/material/chips";
+import { Component, Input } from "@angular/core";
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import { MatChipEditedEvent, MatChipInputEvent } from "@angular/material/chips";
 
 @Component({
-    selector: 'aswg-chip-input',
-    templateUrl: './aswg-chip-input.component.html',
-    styleUrl: './aswg-chip-input.component.scss',
-    standalone: false
+  selector: "aswg-chip-input",
+  templateUrl: "./aswg-chip-input.component.html",
+  styleUrl: "./aswg-chip-input.component.scss",
+  standalone: false
 })
 export class AswgChipInputComponent {
-
   protected readonly ENTER = ENTER;
   protected readonly COMMA = COMMA;
 
@@ -45,7 +41,7 @@ export class AswgChipInputComponent {
   }
 
   addEntry(event: MatChipInputEvent) {
-    const value = (event.value || '').trim();
+    const value = (event.value || "").trim();
 
     if (value) {
       this.list.push(value);

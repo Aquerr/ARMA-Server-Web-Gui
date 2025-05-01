@@ -1,23 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DesktopHeaderComponent } from './desktop-header.component';
+import { DesktopHeaderComponent } from "./desktop-header.component";
 
-describe('HeaderComponent', () => {
+describe("HeaderComponent", () => {
   let component: DesktopHeaderComponent;
   let fixture: ComponentFixture<DesktopHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DesktopHeaderComponent ]
-    })
-    .compileComponents();
+      declarations: [DesktopHeaderComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DesktopHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

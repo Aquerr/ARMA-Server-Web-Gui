@@ -5,9 +5,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordMessage;
 
-import java.net.http.HttpRequest;
-import java.nio.charset.StandardCharsets;
-
 public class DiscordWebhookHandler
 {
     private final String webhookUrl;

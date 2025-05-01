@@ -1,27 +1,27 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ServerLoggingService} from "../../../service/server-logging.service";
-import {API_BASE_URL} from "../../../../environments/environment";
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { ServerLoggingService } from "../../../service/server-logging.service";
+import { API_BASE_URL } from "../../../../environments/environment";
 import FetchEventSource from "fetch-event-source";
-import {AuthService} from "../../../service/auth.service";
-import {Observable} from "rxjs";
+import { AuthService } from "../../../service/auth.service";
+import { Observable } from "rxjs";
 
 @Component({
-    selector: 'app-server-console',
-    templateUrl: './server-console.component.html',
-    styleUrls: ['./server-console.component.scss'],
-    standalone: false
+  selector: "app-server-console",
+  templateUrl: "./server-console.component.html",
+  styleUrls: ["./server-console.component.scss"],
+  standalone: false
 })
 export class ServerConsoleComponent implements OnInit, OnDestroy {
-
-  @ViewChild('console') private console!: ElementRef;
+  @ViewChild("console") private console!: ElementRef;
 
   logs = "";
 
   eventSource!: FetchEventSource;
 
-  constructor(private serverLoggingService: ServerLoggingService,
-              private authService: AuthService) {}
-
+  constructor(
+    private serverLoggingService: ServerLoggingService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.initWithLatestLogs();
@@ -35,8 +35,7 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
   }
 
   private awaitForLogs() {
-    if (!this.authService.isAuthenticated())
-      return;
+    if (!this.authService.isAuthenticated()) return;
 
     const headers = new Headers();
     headers.set("Authorization", "Bearer " + this.authService.getAuthToken() || "");
@@ -46,24 +45,24 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
     });
 
     this.fetchEventSource(this.eventSource).subscribe({
-      next: value => {
+      next: (value) => {
         this.logs += value + "\n";
         this.scrollConsoleToBottom();
       },
-      error: err => {
+      error: (err) => {
         console.error(err);
       }
     });
   }
 
   fetchEventSource(eventSource: FetchEventSource): Observable<string> {
-    return new Observable(observer => {
-      eventSource.onmessage = event => {
+    return new Observable((observer) => {
+      eventSource.onmessage = (event) => {
         observer.next(event?.data);
-      }
-      eventSource.onerror = event => {
+      };
+      eventSource.onerror = (event) => {
         observer.error(event?.message);
-      }
+      };
     });
   }
 
@@ -72,11 +71,10 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
   }
 
   private initWithLatestLogs() {
-    if (!this.authService.isAuthenticated())
-      return;
+    if (!this.authService.isAuthenticated()) return;
 
-    this.serverLoggingService.getLatestServerLogs().subscribe(response => {
-      response.logs.forEach(log => this.logs += log + "\n");
+    this.serverLoggingService.getLatestServerLogs().subscribe((response) => {
+      response.logs.forEach((log) => (this.logs += log + "\n"));
       this.scrollConsoleToBottom();
     });
   }

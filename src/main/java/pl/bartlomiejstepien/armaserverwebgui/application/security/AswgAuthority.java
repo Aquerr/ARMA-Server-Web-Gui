@@ -1,9 +1,8 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.security;
 
-import lombok.Getter;
-
 import java.util.Arrays;
 import java.util.Optional;
+import lombok.Getter;
 
 @Getter
 public enum AswgAuthority
@@ -41,8 +40,7 @@ public enum AswgAuthority
     MOD_PRESETS_VIEW("MOD_PRESETS_VIEW"),
     MOD_PRESETS_ADD("MOD_PRESETS_ADD"),
     MOD_PRESETS_DELETE("MOD_PRESETS_DELETE"),
-    MOD_PRESETS_SELECT("MOD_PRESETS_SELECT")
-    ;
+    MOD_PRESETS_SELECT("MOD_PRESETS_SELECT");
 
     private final String code;
 

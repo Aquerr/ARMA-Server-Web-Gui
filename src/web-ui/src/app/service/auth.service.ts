@@ -1,34 +1,43 @@
-import { Injectable } from '@angular/core';
-import {map, Observable} from "rxjs";
+import { Injectable } from "@angular/core";
+import { map, Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-import {API_BASE_URL} from "../../environments/environment";
-import {JwtTokenResponse} from "../model/jwt.model";
-import {AswgAuthority} from "../model/authority.model";
+import { API_BASE_URL } from "../../environments/environment";
+import { JwtTokenResponse } from "../model/jwt.model";
+import { AswgAuthority } from "../model/authority.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
-export class AuthService  {
-
+export class AuthService {
   private static readonly STORAGE_USERNAME_KEY = "username";
   private static readonly STORAGE_AUTH_TOKEN_KEY = "auth-token";
   private static readonly STORAGE_AUTHORITIES_KEY = "authorities";
 
-  constructor(private readonly httpClient: HttpClient) {
-
-  }
+  constructor(private readonly httpClient: HttpClient) {}
 
   authenticate(username: string, password: string): Observable<any> {
-    return this.httpClient.post<JwtTokenResponse>(API_BASE_URL + '/auth', {username, password},
-      {
-        observe: "response"
-      })
-      .pipe(map(userData => {
-        sessionStorage.setItem(AuthService.STORAGE_USERNAME_KEY, username);
-        sessionStorage.setItem(AuthService.STORAGE_AUTH_TOKEN_KEY, (userData.body?.jwt ? userData.body?.jwt : ''));
-        sessionStorage.setItem(AuthService.STORAGE_AUTHORITIES_KEY, JSON.stringify(userData.body?.authorities || []));
-        return userData;
-      }));
+    return this.httpClient
+      .post<JwtTokenResponse>(
+        API_BASE_URL + "/auth",
+        { username, password },
+        {
+          observe: "response"
+        }
+      )
+      .pipe(
+        map((userData) => {
+          sessionStorage.setItem(AuthService.STORAGE_USERNAME_KEY, username);
+          sessionStorage.setItem(
+            AuthService.STORAGE_AUTH_TOKEN_KEY,
+            userData.body?.jwt ? userData.body?.jwt : ""
+          );
+          sessionStorage.setItem(
+            AuthService.STORAGE_AUTHORITIES_KEY,
+            JSON.stringify(userData.body?.authorities || [])
+          );
+          return userData;
+        })
+      );
   }
 
   isAuthenticated(): boolean {
@@ -43,12 +52,11 @@ export class AuthService  {
   }
 
   logout(): void {
-    this.httpClient.post(`${API_BASE_URL}/auth/logout`, null)
-      .subscribe({
-        complete: () => {
-          this.clearAuth();
-        }
-      });
+    this.httpClient.post(`${API_BASE_URL}/auth/logout`, null).subscribe({
+      complete: () => {
+        this.clearAuth();
+      }
+    });
   }
 
   getUsername(): string | null {
@@ -61,10 +69,10 @@ export class AuthService  {
 
   getAuthorities(): AswgAuthority[] {
     const authoritiesString = sessionStorage.getItem(AuthService.STORAGE_AUTHORITIES_KEY);
-    if (!authoritiesString)
-      return [];
+    if (!authoritiesString) return [];
 
-    return (JSON.parse(authoritiesString) as string[])
-      .map(authority => authority as AswgAuthority);
+    return (JSON.parse(authoritiesString) as string[]).map(
+      (authority) => authority as AswgAuthority
+    );
   }
 }

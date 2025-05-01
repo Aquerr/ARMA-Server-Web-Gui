@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ModPresetItemComponent } from './mod-preset-item.component';
+import { ModPresetItemComponent } from "./mod-preset-item.component";
 
-describe('ModPresetItemComponent', () => {
+describe("ModPresetItemComponent", () => {
   let component: ModPresetItemComponent;
   let fixture: ComponentFixture<ModPresetItemComponent>;
 
@@ -15,7 +15,7 @@ describe('ModPresetItemComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

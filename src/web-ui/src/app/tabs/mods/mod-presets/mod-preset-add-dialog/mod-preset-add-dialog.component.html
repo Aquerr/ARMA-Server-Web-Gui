@@ -3,8 +3,15 @@
   <form [formGroup]="form">
     <mat-form-field>
       <mat-label>Preset Name</mat-label>
-      <input formControlName="modPresetName" matInput type="text" (keydown)="onEnterClick($event)">
-      <mat-error *ngIf="hasFormError('modPresetName', 'required')">This field is required</mat-error>
+      <input
+        formControlName="modPresetName"
+        matInput
+        type="text"
+        (keydown)="onEnterClick($event)"
+      />
+      <mat-error *ngIf="hasFormError('modPresetName', 'required')"
+        >This field is required</mat-error
+      >
     </mat-form-field>
   </form>
 </div>

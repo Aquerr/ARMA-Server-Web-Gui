@@ -1,13 +1,12 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 @Component({
-    selector: 'app-mod-preset-item',
-    templateUrl: './mod-preset-item.component.html',
-    styleUrls: ['./mod-preset-item.component.scss'],
-    standalone: false
+  selector: "app-mod-preset-item",
+  templateUrl: "./mod-preset-item.component.html",
+  styleUrls: ["./mod-preset-item.component.scss"],
+  standalone: false
 })
 export class ModPresetItemComponent {
-
   @Input("presetName") presetName: string = "";
 
   @Output("presetSelected") presetSelectedEmitter = new EventEmitter<string>();

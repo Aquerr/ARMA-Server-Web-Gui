@@ -1,10 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg;
 
+import java.io.BufferedReader;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.BufferedReader;
 
 @Data
 @NoArgsConstructor

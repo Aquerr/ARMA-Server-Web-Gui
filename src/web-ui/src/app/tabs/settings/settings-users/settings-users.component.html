@@ -2,15 +2,11 @@
   <h1>Users Settings</h1>
   <div class="">
     @for (user of users(); track $index) {
-      <app-settings-user-panel [user]="user"
-                              (deleted)="delete($event)"
-                              (saved)="save($event)">
+      <app-settings-user-panel [user]="user" (deleted)="delete($event)" (saved)="save($event)">
       </app-settings-user-panel>
     }
     <div>
-      <button class="user-add-new" mat-stroked-button
-              color="primary"
-              (click)="addUser()">
+      <button class="user-add-new" mat-stroked-button color="primary" (click)="addUser()">
         <mat-icon [fontIcon]="'add_circle'"></mat-icon>
       </button>
     </div>

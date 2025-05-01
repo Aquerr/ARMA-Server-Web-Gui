@@ -1,33 +1,32 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ModSettings} from "../../../model/mod-settings.model";
-import {ModSettingsService} from "../../../service/mod-settings.service";
-import {FormGroup} from "@angular/forms";
-import {EditModsSettingsFormService} from "./edit-mods-settings-form.service";
-import {MaskService} from "../../../service/mask.service";
-import {CodeJarContainer} from "ngx-codejar";
-import hljs from 'highlight.js';
-import {NotificationService} from "../../../service/notification.service";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { ModSettings } from "../../../model/mod-settings.model";
+import { ModSettingsService } from "../../../service/mod-settings.service";
+import { FormGroup } from "@angular/forms";
+import { EditModsSettingsFormService } from "./edit-mods-settings-form.service";
+import { MaskService } from "../../../service/mask.service";
+import { CodeJarContainer } from "ngx-codejar";
+import hljs from "highlight.js";
+import { NotificationService } from "../../../service/notification.service";
 
 @Component({
-    selector: 'app-mod-settings-panel',
-    templateUrl: './mod-settings-panel.component.html',
-    styleUrl: './mod-settings-panel.component.scss',
-    standalone: false
+  selector: "app-mod-settings-panel",
+  templateUrl: "./mod-settings-panel.component.html",
+  styleUrl: "./mod-settings-panel.component.scss",
+  standalone: false
 })
 export class ModSettingsPanelComponent implements OnInit {
-
-  @Input({required: true}) modSettings!: ModSettings;
+  @Input({ required: true }) modSettings!: ModSettings;
   @Output("deleted") modSettingsDeleted = new EventEmitter<number>();
   @Output("activated") modSettingsActivated = new EventEmitter<ModSettings>();
 
   public form!: FormGroup;
 
-  constructor(private readonly modSettingsService: ModSettingsService,
-              public readonly formService: EditModsSettingsFormService,
-              private readonly maskService: MaskService,
-              private readonly notificationService: NotificationService) {
-
-  }
+  constructor(
+    private readonly modSettingsService: ModSettingsService,
+    public readonly formService: EditModsSettingsFormService,
+    private readonly maskService: MaskService,
+    private readonly notificationService: NotificationService
+  ) {}
 
   ngOnInit() {
     this.form = this.formService.getForm();
@@ -37,7 +36,7 @@ export class ModSettingsPanelComponent implements OnInit {
   onOpen() {
     if (!this.getContent() && this.modSettings.id) {
       this.maskService.show();
-      this.modSettingsService.getModSettingsContent(this.modSettings.id).subscribe(response => {
+      this.modSettingsService.getModSettingsContent(this.modSettings.id).subscribe((response) => {
         this.formService.setContentControl(this.form, response.content);
         this.maskService.hide();
       });
@@ -49,19 +48,23 @@ export class ModSettingsPanelComponent implements OnInit {
     if (this.form.valid) {
       this.maskService.show();
       if (this.getId()) {
-        this.modSettingsService.updateModSettings(this.getId(), this.formService.asModSettings(this.form)).subscribe(response => {
-          this.maskService.hide();
-          this.notificationService.successNotification("Settings have been updated!");
-        });
+        this.modSettingsService
+          .updateModSettings(this.getId(), this.formService.asModSettings(this.form))
+          .subscribe((response) => {
+            this.maskService.hide();
+            this.notificationService.successNotification("Settings have been updated!");
+          });
       } else {
-        this.modSettingsService.createNewModSettings(this.formService.asModSettings(this.form)).subscribe(response => {
-          this.modSettings = {
-            ...this.modSettings,
-            id: response.id
-          }
-          this.maskService.hide();
-          this.notificationService.successNotification("Settings have been added!");
-        });
+        this.modSettingsService
+          .createNewModSettings(this.formService.asModSettings(this.form))
+          .subscribe((response) => {
+            this.modSettings = {
+              ...this.modSettings,
+              id: response.id
+            };
+            this.maskService.hide();
+            this.notificationService.successNotification("Settings have been added!");
+          });
       }
     }
   }
@@ -96,7 +99,7 @@ export class ModSettingsPanelComponent implements OnInit {
   highlightMethod(editor: CodeJarContainer) {
     if (editor.textContent !== null && editor.textContent !== undefined) {
       editor.innerHTML = hljs.highlight(editor.textContent, {
-        language: 'sql'
+        language: "sql"
       }).value;
     }
   }
