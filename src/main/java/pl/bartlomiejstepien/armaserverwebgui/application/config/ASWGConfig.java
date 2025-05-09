@@ -58,6 +58,10 @@ public class ASWGConfig
 
     private static final String SERVER_BRANCH = "aswg.server.branch";
 
+    // Unsafe
+    private static final String UNSAFE_OVERWRITE_SERVER_STARTUP_PARAMS_ENABLED_PROPERTY = "aswg.server.unsafe.startup-params.overwrite.web-edit.enabled";
+    private static final String UNSAFE_OVERWRITE_SERVER_STARTUP_PARAMS_VALUE = "aswg.server.unsafe.startup-params.overwrite.value";
+
     @Value("${aswg.default-user.username:}")
     private String username;
     @Value("${aswg.default-user.password:}")
@@ -102,6 +106,7 @@ public class ASWGConfig
     private String serverBranch;
 
     private final DiscordProperties discordProperties;
+    private final UnsafeProperties unsafeProperties;
 
     @EventListener(ApplicationReadyEvent.class)
     public void onEnvironmentPreparedEvent() throws IOException
@@ -163,7 +168,24 @@ public class ASWGConfig
 
         configurationProperties.setProperty(VANILLA_MISSIONS_IMPORTER, String.valueOf(this.vanillaMissionsImporter));
         configurationProperties.setProperty(SERVER_BRANCH, String.valueOf(this.serverBranch));
+
+        // Unsafe
+        configurationProperties.setProperty(UNSAFE_OVERWRITE_SERVER_STARTUP_PARAMS_ENABLED_PROPERTY,
+                String.valueOf(this.unsafeProperties.isOverwriteStartupParamsWebEditEnabled()));
+        configurationProperties.setProperty(UNSAFE_OVERWRITE_SERVER_STARTUP_PARAMS_VALUE,
+                this.unsafeProperties.getOverwriteStartupParamsValue());
+
         return configurationProperties;
+    }
+
+    @Data
+    @Component
+    public static class UnsafeProperties
+    {
+        @Value("${" + UNSAFE_OVERWRITE_SERVER_STARTUP_PARAMS_ENABLED_PROPERTY + ":false}")
+        private boolean overwriteStartupParamsWebEditEnabled;
+        @Value("${" + UNSAFE_OVERWRITE_SERVER_STARTUP_PARAMS_VALUE + ":}")
+        private String overwriteStartupParamsValue;
     }
 
     @Data

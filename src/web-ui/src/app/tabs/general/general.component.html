@@ -87,12 +87,20 @@
     <section class="motd-section">
       <app-motd-list #motdListComponent></app-motd-list>
     </section>
-    <div>
-      <mat-label>Current command-line params</mat-label>
-      <textarea class="command-line-params" disabled [textContent]="commandLineParams" style="resize: none;"></textarea>
-    </div>
+    <section class="command-line-params-section">
+      <mat-label>Current command-line parameters</mat-label>
+      <div class="command-line-params-wrapper">
+        <textarea class="command-line-params" disabled [textContent]="formatCommandLineParams(commandLineParams)" style="resize: none;"></textarea>
+        @if (canOverwriteCommandLineParams) {
+          <button mat-flat-button color="primary" (click)="overrideCommandLineParams()">Overwrite</button>
+        }
+      </div>
+    </section>
   </div>
-  <div class="button-container">
-    <button mat-flat-button color="primary" (click)="save()">Save</button>
+  <hr>
+  <div class="buttons-section-bottom">
+    <div>
+      <button mat-flat-button color="primary" (click)="save()">Save</button>
+    </div>
   </div>
 </div>

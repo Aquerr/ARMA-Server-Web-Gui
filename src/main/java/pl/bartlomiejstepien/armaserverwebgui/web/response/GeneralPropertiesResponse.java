@@ -15,6 +15,7 @@ public class GeneralPropertiesResponse
     String serverDirectory;
     String modsDirectory;
     String commandLineParams;
+    boolean canOverwriteCommandLineParams;
     String hostname;
     int port;
     int maxPlayers;
@@ -30,12 +31,14 @@ public class GeneralPropertiesResponse
                                                String modsDirectory,
                                                Integer port,
                                                ArmaServerParameters armaServerParameters,
+                                               boolean canOverwriteCommandLineParams,
                                                GeneralProperties generalProperties)
     {
         return GeneralPropertiesResponse.builder()
                 .serverDirectory(serverDirectory)
                 .modsDirectory(modsDirectory)
                 .commandLineParams(armaServerParameters.asString())
+                .canOverwriteCommandLineParams(canOverwriteCommandLineParams)
                 .port(port)
                 .hostname(generalProperties.getHostname())
                 .maxPlayers(generalProperties.getMaxPlayers())

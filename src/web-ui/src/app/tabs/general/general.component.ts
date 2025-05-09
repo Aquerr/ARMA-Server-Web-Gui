@@ -4,6 +4,11 @@ import { SaveGeneralProperties, ServerGeneralService } from "../../service/serve
 import { NotificationService } from "../../service/notification.service";
 import { MotdListComponent } from "./motd-list/motd-list.component";
 import { MissionDifficulty } from "../../model/mission.model";
+import {UnsafeService} from "../../service/unsafe.service";
+import {
+  OverwriteCommandlineParamsModalComponent
+} from "./unsafe/overwrite-commandline-params-modal/overwrite-commandline-params-modal.component";
+import {DialogService} from "../../service/dialog.service";
 
 @Component({
   selector: "app-general",
@@ -15,6 +20,7 @@ export class GeneralComponent implements OnInit {
   @ViewChild("motdListComponent") motdListComponent!: MotdListComponent;
 
   commandLineParams: string = "";
+  canOverwriteCommandLineParams: boolean = false;
   serverDirectory: string = "";
   modsDirectory: string = "";
   hostname: string = "";
@@ -29,27 +35,14 @@ export class GeneralComponent implements OnInit {
   constructor(
     private readonly maskService: MaskService,
     private readonly serverGeneralService: ServerGeneralService,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
+    private readonly unsafeService: UnsafeService,
+    private readonly dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
     this.maskService.show();
-    this.serverGeneralService.getGeneralProperties().subscribe((response) => {
-      this.commandLineParams = response.commandLineParams;
-      this.serverDirectory = response.serverDirectory;
-      this.modsDirectory = response.modsDirectory;
-      this.port = response.port;
-      this.hostname = response.hostname;
-      this.maxPlayers = response.maxPlayers;
-      this.motdListComponent.pupulateModtList(response.motd);
-      this.motdListComponent.motdInterval = response.motdInterval;
-      this.persistent = response.persistent;
-      this.drawingInMap = response.drawingInMap;
-      this.headlessClients = response.headlessClients;
-      this.localClients = response.localClients;
-      this.forcedDifficulty = response.forcedDifficulty;
-      this.maskService.hide();
-    });
+    this.reloadGeneralProperties();
   }
 
   save() {
@@ -77,5 +70,53 @@ export class GeneralComponent implements OnInit {
         "Success"
       );
     });
+  }
+
+  private reloadGeneralProperties() {
+    this.serverGeneralService.getGeneralProperties().subscribe((response) => {
+      this.commandLineParams = response.commandLineParams;
+      this.canOverwriteCommandLineParams = response.canOverwriteCommandLineParams;
+      this.serverDirectory = response.serverDirectory;
+      this.modsDirectory = response.modsDirectory;
+      this.port = response.port;
+      this.hostname = response.hostname;
+      this.maxPlayers = response.maxPlayers;
+      this.motdListComponent.pupulateModtList(response.motd);
+      this.motdListComponent.motdInterval = response.motdInterval;
+      this.persistent = response.persistent;
+      this.drawingInMap = response.drawingInMap;
+      this.headlessClients = response.headlessClients;
+      this.localClients = response.localClients;
+      this.forcedDifficulty = response.forcedDifficulty;
+      this.maskService.hide();
+    });
+  }
+
+  public overrideCommandLineParams() {
+
+    const onCloseCallback = (result: boolean) => {
+      if (!result) return;
+
+      const closeCallback = (result: string) => {
+        if (result == "null")
+          return;
+
+        this.maskService.show();
+        this.unsafeService.overwriteStartupParams(result).subscribe((response) => {
+          this.maskService.hide();
+          this.notificationService.successNotification("Updated commandline parameters");
+          this.reloadGeneralProperties();
+        });
+      };
+      this.dialogService.open(OverwriteCommandlineParamsModalComponent, closeCallback, this.commandLineParams, {
+        width: "550px"
+      });
+    };
+    this.dialogService.openCommonConfirmationDialog({question: "This is an unsafe feature. It is advised to not edit the command line directly. Are you sure you want to continue?"}, onCloseCallback);
+
+  }
+
+  formatCommandLineParams(commandLineParams: string) {
+    return commandLineParams.replace(/\s/g, "\n");
   }
 }

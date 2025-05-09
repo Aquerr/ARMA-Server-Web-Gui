@@ -8,6 +8,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUt
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,8 @@ public class ArmaServerParameters
 
     private final String serverDirectory;
 
+    private String overrideParameters;
+
     public String asString()
     {
         return String.join(" ", asList());
@@ -40,6 +43,11 @@ public class ArmaServerParameters
 
     public List<String> asList()
     {
+        if (StringUtils.hasText(overrideParameters))
+        {
+            return Arrays.stream(overrideParameters.split(" ")).toList();
+        }
+
         List<String> args = new ArrayList<>();
         if (!SystemUtils.isWindows())
         {
@@ -66,7 +74,7 @@ public class ArmaServerParameters
         }
 
         args.add("-port=" + port);
-        args.add("\"-cfg= " + networkConfigPath + "\"");
+        args.add("\"-cfg=" + networkConfigPath + "\"");
         args.add("\"-config=" + serverConfigPath + "\"");
 
         if (SystemUtils.isWindows())

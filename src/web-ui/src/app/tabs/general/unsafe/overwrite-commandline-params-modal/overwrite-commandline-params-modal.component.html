@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Overwrite commandline parameters</h1>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field style="width: 100%">
+      <mat-label>Parameters</mat-label>
+      <textarea rows="5" matInput name="parameters" type="text" formControlName="parameters"></textarea>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="confirm()">Confirm</button>
+  <button mat-button [mat-dialog-close]="'null'" cdkFocusInitial>Cancel</button>
+</div>

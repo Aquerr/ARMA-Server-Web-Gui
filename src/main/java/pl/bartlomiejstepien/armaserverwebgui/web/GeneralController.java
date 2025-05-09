@@ -34,6 +34,7 @@ public class GeneralController
                 this.aswgConfig.getModsDirectoryPath(),
                 this.aswgConfig.getServerPort(),
                 armaServerParametersGenerator.generateParameters(),
+                this.aswgConfig.getUnsafeProperties().isOverwriteStartupParamsWebEditEnabled(),
                 this.generalService.getGeneralProperties()
         );
     }

@@ -50,6 +50,7 @@ export interface GeneralProperties {
   serverDirectory: string;
   modsDirectory: string;
   commandLineParams: string;
+  canOverwriteCommandLineParams: boolean;
   port: number;
   hostname: string;
   maxPlayers: number;

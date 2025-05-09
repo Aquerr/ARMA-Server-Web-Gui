@@ -12,10 +12,24 @@
   margin-bottom: 1rem;
 }
 
+.command-line-params-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.command-line-params-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  gap: 5px;
+}
+
 .command-line-params {
   color: black;
-  width: 100%;
-  overflow-x: scroll;
+  width: 90%;
+  text-overflow: ellipsis;
+  height: 4rem;
 }
 
 @media (max-width: 800px) {
@@ -43,7 +57,7 @@
     width: 100% !important;
   }
 
-  .button-container {
+  .buttons-section-bottom {
     display: flex;
     align-items: center;
     justify-content: center;

@@ -55,6 +55,7 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
                 .collect(Collectors.toSet());
 
         return ArmaServerParameters.builder()
+                .overrideParameters(aswgConfig.getUnsafeProperties().getOverwriteStartupParamsValue())
                 .profileName(difficultyService.getActiveDifficultyProfile())
                 .customModSettings(modSettingsService.getModSettingsWithoutContents().stream().anyMatch(ModSettingsHeader::isActive))
                 .serverDirectory(aswgConfig.getServerDirectoryPath())
