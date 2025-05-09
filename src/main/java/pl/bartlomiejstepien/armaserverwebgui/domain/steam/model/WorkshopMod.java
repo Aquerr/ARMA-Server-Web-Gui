@@ -1,9 +1,10 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam.model;
 
-import java.time.OffsetDateTime;
-import java.util.List;
 import lombok.Builder;
 import lombok.Data;
+
+import java.time.OffsetDateTime;
+import java.util.List;
 
 @Builder
 @Data

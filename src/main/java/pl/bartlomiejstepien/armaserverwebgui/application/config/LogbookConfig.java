@@ -1,27 +1,21 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
-import static org.zalando.logbook.core.Conditions.contentType;
-import static org.zalando.logbook.core.Conditions.exclude;
-import static org.zalando.logbook.core.Conditions.requestTo;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ContainerNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.io.IOException;
-import java.time.Duration;
-import java.util.Optional;
-import java.util.Set;
-import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpHeaders;
@@ -37,24 +31,31 @@ import org.zalando.logbook.core.DefaultCorrelationId;
 import org.zalando.logbook.core.ResponseFilters;
 import org.zalando.logbook.json.JsonBodyFilters;
 import org.zalando.logbook.servlet.LogbookFilter;
-import org.zalando.logbook.servlet.SecureLogbookFilter;
 import pl.bartlomiejstepien.armaserverwebgui.application.tracing.HttpTracingFields;
+
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Optional;
+import java.util.Set;
+import javax.annotation.Nullable;
+
+import static org.zalando.logbook.core.Conditions.contentType;
+import static org.zalando.logbook.core.Conditions.exclude;
+import static org.zalando.logbook.core.Conditions.requestTo;
 
 @Configuration(proxyBeanMethods = false)
 public class LogbookConfig
 {
     private static final String[] IGNORED_FILE_CONTENT = new String[] {"text/html", "text/css", "text/javascript", "application/javascript", "image/*"};
 
+    @Order(value = Ordered.HIGHEST_PRECEDENCE)
     @Bean
-    public LogbookFilter logbookFilter(Logbook logbook)
+    public FilterRegistrationBean<LogbookFilter> logbookFilterFilterRegistrationBean(Logbook logbook)
     {
-        return new LogbookFilter(logbook);
-    }
-
-    @Bean
-    public SecureLogbookFilter secureLogbookFilter(Logbook logbook)
-    {
-        return new SecureLogbookFilter(logbook);
+        FilterRegistrationBean<LogbookFilter> registrationBean = new FilterRegistrationBean<>(new LogbookFilter(logbook));
+        registrationBean.setName("logbookFilter");
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return registrationBean;
     }
 
     @Bean

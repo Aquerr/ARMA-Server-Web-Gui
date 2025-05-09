@@ -1,5 +1,12 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,12 +16,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 
 /**
  * A service used to copy Mod Keys to Server keys directory.

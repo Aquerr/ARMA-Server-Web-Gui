@@ -1,9 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.network;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.KickTimeoutType;
@@ -12,6 +8,11 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.Server
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.KickTimeout;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.NetworkConfig;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor

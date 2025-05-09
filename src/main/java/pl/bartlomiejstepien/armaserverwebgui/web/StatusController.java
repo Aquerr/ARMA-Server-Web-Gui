@@ -1,6 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
-import java.util.List;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +11,8 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ProcessService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/status")

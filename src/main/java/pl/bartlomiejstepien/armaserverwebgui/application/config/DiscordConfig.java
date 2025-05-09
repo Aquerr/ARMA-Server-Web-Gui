@@ -1,7 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Map;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +18,8 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.ServerStarte
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.ServerStartingMessageCreator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.ServerStoppedMessageCreator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.ServerUpdatedMessageCreator;
+
+import java.util.Map;
 
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty("aswg.discord.webhook.enabled")

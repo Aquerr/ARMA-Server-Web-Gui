@@ -1,5 +1,22 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.process;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordIntegration;
+import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerIsAlreadyRunningException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerNotInstalledException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,22 +38,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordIntegration;
-import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerIsAlreadyRunningException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerNotInstalledException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 
 @Service
 @RequiredArgsConstructor

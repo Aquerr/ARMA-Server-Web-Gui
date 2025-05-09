@@ -1,5 +1,16 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.data.util.Lazy;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModSettingsEntity;
+import pl.bartlomiejstepien.armaserverwebgui.repository.ModSettingsRepository;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,16 +22,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.data.util.Lazy;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModSettingsEntity;
-import pl.bartlomiejstepien.armaserverwebgui.repository.ModSettingsRepository;
 
 @Slf4j
 @Component

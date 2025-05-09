@@ -1,10 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.security.Principal;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +17,11 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.UserProfileResponse;
 import pl.bartlomiejstepien.armaserverwebgui.web.util.HttpUtils;
+
+import java.security.Principal;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/auth")

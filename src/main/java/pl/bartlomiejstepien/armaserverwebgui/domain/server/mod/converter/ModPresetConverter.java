@@ -1,10 +1,11 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter;
 
-import java.util.Collections;
-import java.util.List;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModPreset;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetEntity;
+
+import java.util.Collections;
+import java.util.List;
 
 @Component
 public class ModPresetConverter

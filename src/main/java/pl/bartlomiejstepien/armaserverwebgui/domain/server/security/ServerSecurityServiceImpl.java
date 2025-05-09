@@ -1,8 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.security;
 
-import static java.util.Optional.ofNullable;
-
-import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.ServerSecurityProperties;
@@ -10,6 +7,10 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.VoteCo
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.VoteCmd;
+
+import java.util.Arrays;
+
+import static java.util.Optional.ofNullable;
 
 @Service
 @AllArgsConstructor

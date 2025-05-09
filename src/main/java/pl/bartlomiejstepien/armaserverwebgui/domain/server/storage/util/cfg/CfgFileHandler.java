@@ -1,8 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgArrayClassFieldValuesParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgClassListParser;
@@ -14,6 +11,10 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.pars
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgRawStringParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgStringArrayParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type.PropertyType;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 @AllArgsConstructor
 public class CfgFileHandler

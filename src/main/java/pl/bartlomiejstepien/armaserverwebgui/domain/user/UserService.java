@@ -1,8 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.user;
 
-import java.util.List;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
+
+import java.util.List;
 
 public interface UserService
 {

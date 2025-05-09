@@ -1,12 +1,13 @@
 package pl.bartlomiejstepien.armaserverwebgui.repository;
 
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
+
+import java.util.List;
 
 @Repository
 public interface MissionRepository extends JpaRepository<MissionEntity, Long>

@@ -1,8 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.security;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.Optional;
-import lombok.Getter;
 
 @Getter
 public enum AswgAuthority

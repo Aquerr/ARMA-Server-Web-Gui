@@ -1,7 +1,8 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam.model;
 
-import java.util.UUID;
 import lombok.Value;
+
+import java.util.UUID;
 
 @Value
 public class QueuedSteamTask

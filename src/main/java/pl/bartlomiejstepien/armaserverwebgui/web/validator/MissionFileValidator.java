@@ -1,9 +1,10 @@
 package pl.bartlomiejstepien.armaserverwebgui.web.validator;
 
-import java.util.Optional;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.web.exception.NotAllowedFileTypeException;
+
+import java.util.Optional;
 
 @Component
 public class MissionFileValidator implements Validator<MultipartFile>

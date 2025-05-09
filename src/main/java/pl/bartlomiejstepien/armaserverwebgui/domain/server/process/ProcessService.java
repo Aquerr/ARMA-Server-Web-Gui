@@ -1,9 +1,10 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.process;
 
-import java.util.List;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
+
+import java.util.List;
 
 public interface ProcessService
 {

@@ -4,13 +4,17 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+
 @Component
+@Order(value = Ordered.HIGHEST_PRECEDENCE + 1)
 public class FrontEndRedirectWebFilter extends OncePerRequestFilter
 {
     private boolean isNotApiRequest(String uri)
@@ -29,6 +33,7 @@ public class FrontEndRedirectWebFilter extends OncePerRequestFilter
         if (isNotApiRequest(path))
         {
             request.getRequestDispatcher("/index.html").forward(request, response);
+            return;
         }
         filterChain.doFilter(request, response);
     }

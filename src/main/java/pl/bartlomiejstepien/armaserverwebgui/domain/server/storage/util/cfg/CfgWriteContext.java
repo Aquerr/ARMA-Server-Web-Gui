@@ -1,10 +1,11 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg;
 
-import java.io.BufferedWriter;
-import java.lang.reflect.Field;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.BufferedWriter;
+import java.lang.reflect.Field;
 
 @Data
 @NoArgsConstructor

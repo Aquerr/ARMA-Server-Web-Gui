@@ -5,10 +5,6 @@ import io.github.aquerr.steamwebapiclient.request.PublishedFileDetailsRequest;
 import io.github.aquerr.steamwebapiclient.request.WorkShopQueryFilesRequest;
 import io.github.aquerr.steamwebapiclient.response.PublishedFileDetailsResponse;
 import io.github.aquerr.steamwebapiclient.response.WorkShopQueryResponse;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,6 +13,11 @@ import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.Nullable;
 
 @Slf4j
 @Service

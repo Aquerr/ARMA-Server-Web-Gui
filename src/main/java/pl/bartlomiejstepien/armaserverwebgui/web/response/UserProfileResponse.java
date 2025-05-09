@@ -1,8 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.web.response;
 
+import lombok.Data;
+
 import java.time.OffsetDateTime;
 import java.util.Set;
-import lombok.Data;
 
 @Data
 public class UserProfileResponse

@@ -1,6 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +17,8 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModSettingsServic
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettings;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettingsContent;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModSettingsHeader;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/mods/settings")

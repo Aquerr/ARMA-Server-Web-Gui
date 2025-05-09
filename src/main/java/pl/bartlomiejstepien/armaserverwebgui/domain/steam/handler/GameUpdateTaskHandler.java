@@ -1,7 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam.handler;
 
-import java.nio.file.Paths;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,6 +12,9 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPath
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamTaskHandleException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamCmdAppUpdateParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamTask;
+
+import java.nio.file.Paths;
+import java.util.Optional;
 
 @Slf4j
 @Component

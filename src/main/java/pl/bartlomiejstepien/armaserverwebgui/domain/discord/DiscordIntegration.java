@@ -1,9 +1,10 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.discord;
 
-import java.util.Map;
-import java.util.Optional;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.DiscordMessageCreator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
+
+import java.util.Map;
+import java.util.Optional;
 
 public class DiscordIntegration
 {

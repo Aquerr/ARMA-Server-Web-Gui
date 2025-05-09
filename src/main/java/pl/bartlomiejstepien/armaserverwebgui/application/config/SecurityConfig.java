@@ -1,6 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
-import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,18 +16,17 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
-import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.zalando.logbook.servlet.LogbookFilter;
-import pl.bartlomiejstepien.armaserverwebgui.application.frontend.FrontEndRedirectWebFilter;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthenticationEntryPoint;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtAuthenticationManager;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtService;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.filter.JwtFilter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
+
+import java.util.List;
 
 @EnableMethodSecurity
 @Configuration(proxyBeanMethods = false)
@@ -44,10 +42,8 @@ public class SecurityConfig
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http,
                                                AuthenticationManager jwtAuthenticationManager,
-                                               LogbookFilter logbookFilter,
-                                               JwtFilter jwtFilter,
-                                               FrontEndRedirectWebFilter frontEndRedirectWebFilter,
-                                               AswgAuthenticationEntryPoint aswgAuthenticationEntryPoint
+                                               AswgAuthenticationEntryPoint aswgAuthenticationEntryPoint,
+                                               JwtService jwtService
         ) throws Exception
         {
             http.authorizeHttpRequests(auths ->
@@ -69,9 +65,7 @@ public class SecurityConfig
                     .anonymous(AbstractHttpConfigurer::disable)
                     .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .logout(AbstractHttpConfigurer::disable)
-                    .addFilterAfter(jwtFilter, LogoutFilter.class)
-                    .addFilterBefore(logbookFilter, JwtFilter.class)
-                    .addFilterAfter(frontEndRedirectWebFilter, AnonymousAuthenticationFilter.class)
+                    .addFilterAfter(new JwtFilter(jwtService, jwtAuthenticationManager), LogoutFilter.class)
                     .formLogin((AbstractHttpConfigurer::disable))
                     .httpBasic(AbstractHttpConfigurer::disable)
                     .authenticationManager(jwtAuthenticationManager)

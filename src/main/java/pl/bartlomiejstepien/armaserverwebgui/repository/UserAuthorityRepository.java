@@ -1,14 +1,15 @@
 package pl.bartlomiejstepien.armaserverwebgui.repository;
 
 import jakarta.persistence.EntityManager;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.AuthorityEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.UserAuthorityEntity;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor

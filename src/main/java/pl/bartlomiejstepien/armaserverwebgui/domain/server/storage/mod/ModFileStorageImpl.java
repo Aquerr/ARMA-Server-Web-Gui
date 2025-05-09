@@ -1,6 +1,19 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod;
 
-import static java.lang.String.format;
+import lombok.extern.slf4j.Slf4j;
+import net.lingala.zip4j.ZipFile;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileSystemUtils;
+import org.springframework.web.multipart.MultipartFile;
+import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModFolderNameHelper;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.FileUtils;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
+import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,20 +31,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import lombok.extern.slf4j.Slf4j;
-import net.lingala.zip4j.ZipFile;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.FileSystemUtils;
-import org.springframework.web.multipart.MultipartFile;
-import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModFolderNameHelper;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.FileUtils;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
-import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
+
+import static java.lang.String.format;
 
 @Slf4j
 @Repository

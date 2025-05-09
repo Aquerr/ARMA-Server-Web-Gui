@@ -1,6 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Value;
@@ -17,6 +16,8 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQuer
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.WorkshopQueryRequest;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/workshop")

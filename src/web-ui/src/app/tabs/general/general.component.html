@@ -89,7 +89,7 @@
     </section>
     <div>
       <mat-label>Current command-line params</mat-label>
-      <input class="command-line-params" disabled [value]="commandLineParams" type="text" />
+      <textarea class="command-line-params" disabled [textContent]="commandLineParams" style="resize: none;"></textarea>
     </div>
   </div>
   <div class="button-container">

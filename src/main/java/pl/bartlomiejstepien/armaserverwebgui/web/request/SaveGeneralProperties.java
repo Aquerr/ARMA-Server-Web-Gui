@@ -1,8 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.web.request;
 
-import java.util.List;
 import lombok.Data;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
+
+import java.util.List;
 
 @Data
 public class SaveGeneralProperties

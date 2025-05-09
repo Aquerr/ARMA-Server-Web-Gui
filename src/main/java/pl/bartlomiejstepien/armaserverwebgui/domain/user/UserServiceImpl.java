@@ -1,11 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.user;
 
-import java.time.OffsetDateTime;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -22,6 +16,13 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.AswgUserEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.AuthorityEntity;
 import pl.bartlomiejstepien.armaserverwebgui.repository.UserAuthorityRepository;
 import pl.bartlomiejstepien.armaserverwebgui.repository.UserRepository;
+
+import java.time.OffsetDateTime;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
