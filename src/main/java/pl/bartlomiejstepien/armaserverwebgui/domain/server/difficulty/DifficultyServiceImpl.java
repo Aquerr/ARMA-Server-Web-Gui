@@ -35,8 +35,7 @@ public class DifficultyServiceImpl implements DifficultyService
     private static final String PROFILE_SUFFIX = ".Arma3Profile";
 
     private final DifficultyProfileRepository difficultyProfileRepository;
-    private final Lazy<Path> windowsProfilesDirectory;
-    private final Lazy<Path> linuxProfilesDirectory;
+    private final Lazy<Path> profilesDirectory;
     private final CfgFileHandler cfgFileHandler;
     private final ASWGConfig aswgConfig;
 
@@ -48,18 +47,24 @@ public class DifficultyServiceImpl implements DifficultyService
         this.cfgFileHandler = cfgFileHandler;
         this.difficultyProfileRepository = difficultyProfileRepository;
 
-        this.windowsProfilesDirectory = Lazy.of(() -> Paths.get(aswgConfig.getServerDirectoryPath()).resolve("aswg_profiles"));
-        this.linuxProfilesDirectory = Lazy.of(() -> Paths.get(System.getProperty("user.home"))
-                .resolve(".local")
-                .resolve("share")
-                .resolve("Arma 3 - Other Profiles"));
+        if (SystemUtils.isWindows())
+        {
+            this.profilesDirectory = Lazy.of(() -> Paths.get(aswgConfig.getServerDirectoryPath()).resolve("aswg_profiles"));
+        }
+        else
+        {
+            this.profilesDirectory = Lazy.of(() -> Paths.get(System.getProperty("user.home"))
+                    .resolve(".local")
+                    .resolve("share")
+                    .resolve("Arma 3 - Other Profiles"));
+        }
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void postSetup()
     {
         if (Long.valueOf(0).equals(this.difficultyProfileRepository.count())
-                && this.difficultyProfileRepository.findByName(DEFAULT_PROFILE_NAME) == null)
+                && this.difficultyProfileRepository.findByName(DEFAULT_PROFILE_NAME).isEmpty())
         {
             log.info("Default profile {} not found. Creating one...", DEFAULT_PROFILE_NAME);
             DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, DEFAULT_PROFILE_NAME, true);
@@ -81,18 +86,19 @@ public class DifficultyServiceImpl implements DifficultyService
 
     private void scanDifficultyProfilesDirectoryForNewProfiles()
     {
-        Path difficultiesDirectoryPath = resolveDifficultyDirectoryPath();
+        Path difficultiesDirectoryPath = this.profilesDirectory.get();
         if (!Files.exists(difficultiesDirectoryPath))
             return;
 
-        List<String> fileNames = Arrays.stream(difficultiesDirectoryPath.toFile().list())
+        List<String> profileDirNames = Arrays.stream(difficultiesDirectoryPath.toFile().list())
                 .filter(Objects::nonNull)
+                .filter(profileName -> Files.exists(resolveDifficultyPath(profileName)))
                 .toList();
 
         List<String> existingProfileNames = difficultyProfileRepository.findAll().stream()
                 .map(DifficultyProfileEntity::getName)
                 .toList();
-        List<String> newDifficultyProfiles = fileNames.stream()
+        List<String> newDifficultyProfiles = profileDirNames.stream()
                 .filter(name -> !existingProfileNames.contains(name))
                 .toList();
 
@@ -177,16 +183,7 @@ public class DifficultyServiceImpl implements DifficultyService
 
     private void deleteFile(String difficultyName)
     {
-        File profilesDir;
-        if (SystemUtils.isWindows())
-        {
-            profilesDir = windowsProfilesDirectory.get().toFile();
-        }
-        else
-        {
-            profilesDir = linuxProfilesDirectory.get().toFile();
-        }
-
+        File profilesDir = profilesDirectory.get().toFile();
         File[] files = profilesDir.listFiles();
         if (files == null)
             return;
@@ -232,21 +229,9 @@ public class DifficultyServiceImpl implements DifficultyService
 
     private Path resolveDifficultyPath(String difficultyName)
     {
-        return resolveDifficultyDirectoryPath()
+        return this.profilesDirectory.get()
                 .resolve(difficultyName)
                 .resolve(difficultyName + PROFILE_SUFFIX);
-    }
-
-    private Path resolveDifficultyDirectoryPath()
-    {
-        if (SystemUtils.isWindows())
-        {
-            return windowsProfilesDirectory.get();
-        }
-        else
-        {
-            return linuxProfilesDirectory.get();
-        }
     }
 
     private DifficultyConfig map(DifficultyProfile difficultyProfile)
