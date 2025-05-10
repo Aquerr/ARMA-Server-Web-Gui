@@ -1,14 +1,44 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
-import { MatChipEditedEvent, MatChipInputEvent } from "@angular/material/chips";
+import {
+  MatChipEditedEvent,
+  MatChipGrid,
+  MatChipInput,
+  MatChipInputEvent, MatChipRemove,
+  MatChipRow
+} from "@angular/material/chips";
 import { AbstractControl, FormGroup } from "@angular/forms";
-import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+  MatAutocompleteTrigger,
+  MatOption
+} from "@angular/material/autocomplete";
+import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatIcon } from "@angular/material/icon";
+import { MatTooltip } from "@angular/material/tooltip";
+import { NgForOf } from "@angular/common";
+import { MatInput } from "@angular/material/input";
 
 @Component({
   selector: "aswg-chip-form-input",
   templateUrl: "./aswg-chip-form-input.component.html",
   styleUrl: "./aswg-chip-form-input.component.scss",
-  standalone: false
+  standalone: true,
+  imports: [
+    MatFormField,
+    MatChipGrid,
+    MatChipRow,
+    MatIcon,
+    MatChipInput,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption,
+    MatLabel,
+    MatTooltip,
+    MatChipRemove,
+    NgForOf
+  ]
 })
 export class AswgChipFormInputComponent implements OnInit {
   protected readonly ENTER = ENTER;

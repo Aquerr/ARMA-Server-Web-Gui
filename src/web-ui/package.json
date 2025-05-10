@@ -37,6 +37,7 @@
     "@angular-devkit/build-angular": "^19.0.6",
     "@angular/cli": "^19.0.6",
     "@angular/compiler-cli": "^19.0.5",
+    "@stylistic/eslint-plugin-ts": "^4.2.0",
     "@types/highlight.js": "^9.12.4",
     "@types/jasmine": "^5.0.0",
     "angular-eslint": "19.3.0",

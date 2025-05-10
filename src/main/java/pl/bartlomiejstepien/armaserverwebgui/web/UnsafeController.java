@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionSecuritySettingsSave;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionUnsafeOverwriteStartupParams;
 
 @ConditionalOnProperty(
         value = "aswg.server.unsafe.startup-params.overwrite.web-edit.enabled",
@@ -21,7 +21,7 @@ public class UnsafeController
 {
     private final ASWGConfig aswgConfig;
 
-    @HasPermissionSecuritySettingsSave
+    @HasPermissionUnsafeOverwriteStartupParams
     @PostMapping("/startup-params")
     public void overwriteStartupParams(@RequestBody StartupParamsOverwriteRequest request)
     {

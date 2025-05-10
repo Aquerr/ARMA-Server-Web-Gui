@@ -3,12 +3,17 @@ import { AswgUser, UsersService } from "../../../service/users.service";
 import { MaskService } from "../../../service/mask.service";
 import { NotificationService } from "../../../service/notification.service";
 import { DialogService } from "../../../service/dialog.service";
+import { MatIcon } from "@angular/material/icon";
+import { SettingsUserPanelComponent } from "./settings-user-panel/settings-user-panel.component";
+import { MatButtonModule } from "@angular/material/button";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: "app-settings-users",
   templateUrl: "./settings-users.component.html",
   styleUrl: "./settings-users.component.scss",
-  standalone: false
+  standalone: true,
+  imports: [MatIcon, FormsModule, MatButtonModule, SettingsUserPanelComponent]
 })
 export class SettingsUsersComponent implements OnInit {
   private readonly maskService: MaskService = inject(MaskService);

@@ -1,16 +1,43 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { AswgUser } from "../../../../service/users.service";
-import { FormGroup } from "@angular/forms";
+import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { EditUserFormService } from "./edit-user-form.service";
 import { AswgAuthority } from "../../../../model/authority.model";
 import { DialogService } from "../../../../service/dialog.service";
 import { PasswordChangeModalComponent } from "./password-change-modal/password-change-modal.component";
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle
+} from "@angular/material/expansion";
+import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatIcon } from "@angular/material/icon";
+import { MatOption, MatSelect } from "@angular/material/select";
+import { AswgChipFormInputComponent } from "../../../../common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
+import { MatInput } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
   selector: "app-settings-user-panel",
   templateUrl: "./settings-user-panel.component.html",
   styleUrl: "./settings-user-panel.component.scss",
-  standalone: false
+  standalone: true,
+  imports: [
+    MatLabel,
+    ReactiveFormsModule,
+    MatExpansionPanelTitle,
+    MatExpansionPanelHeader,
+    MatExpansionPanel,
+    MatAccordion,
+    MatIcon,
+    MatSelect,
+    MatOption,
+    AswgChipFormInputComponent,
+    MatFormField,
+    MatInput,
+    MatButtonModule
+  ]
 })
 export class SettingsUserPanelComponent implements OnInit {
   formService: EditUserFormService = inject(EditUserFormService);

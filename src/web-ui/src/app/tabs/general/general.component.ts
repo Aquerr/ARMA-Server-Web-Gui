@@ -4,11 +4,11 @@ import { SaveGeneralProperties, ServerGeneralService } from "../../service/serve
 import { NotificationService } from "../../service/notification.service";
 import { MotdListComponent } from "./motd-list/motd-list.component";
 import { MissionDifficulty } from "../../model/mission.model";
-import {UnsafeService} from "../../service/unsafe.service";
-import {
-  OverwriteCommandlineParamsModalComponent
-} from "./unsafe/overwrite-commandline-params-modal/overwrite-commandline-params-modal.component";
-import {DialogService} from "../../service/dialog.service";
+import { UnsafeService } from "../../service/unsafe.service";
+import { OverwriteCommandlineParamsModalComponent } from "./unsafe/overwrite-commandline-params-modal/overwrite-commandline-params-modal.component";
+import { DialogService } from "../../service/dialog.service";
+import { PermissionService } from "../../service/permission.service";
+import { AswgAuthority } from "../../model/authority.model";
 
 @Component({
   selector: "app-general",
@@ -33,6 +33,7 @@ export class GeneralComponent implements OnInit {
   forcedDifficulty: MissionDifficulty | null = null;
 
   constructor(
+    private readonly permissionsService: PermissionService,
     private readonly maskService: MaskService,
     private readonly serverGeneralService: ServerGeneralService,
     private readonly notificationService: NotificationService,
@@ -93,13 +94,11 @@ export class GeneralComponent implements OnInit {
   }
 
   public overrideCommandLineParams() {
-
     const onCloseCallback = (result: boolean) => {
       if (!result) return;
 
       const closeCallback = (result: string) => {
-        if (result == "null")
-          return;
+        if (result == "null") return;
 
         this.maskService.show();
         this.unsafeService.overwriteStartupParams(result).subscribe((response) => {
@@ -108,15 +107,32 @@ export class GeneralComponent implements OnInit {
           this.reloadGeneralProperties();
         });
       };
-      this.dialogService.open(OverwriteCommandlineParamsModalComponent, closeCallback, this.commandLineParams, {
-        width: "550px"
-      });
+      this.dialogService.open(
+        OverwriteCommandlineParamsModalComponent,
+        closeCallback,
+        this.commandLineParams,
+        {
+          width: "550px"
+        }
+      );
     };
-    this.dialogService.openCommonConfirmationDialog({question: "This is an unsafe feature. It is advised to not edit the command line directly. Are you sure you want to continue?"}, onCloseCallback);
-
+    this.dialogService.openCommonConfirmationDialog(
+      {
+        question:
+          "This is an unsafe feature. It is advised to not edit the command line directly. Are you sure you want to continue?"
+      },
+      onCloseCallback
+    );
   }
 
-  formatCommandLineParams(commandLineParams: string) {
+  public formatCommandLineParams(commandLineParams: string) {
     return commandLineParams.replace(/\s/g, "\n");
+  }
+
+  public hasOverwriteCommandLineParamsPermission() {
+    return this.permissionsService.hasAllAuthorities(
+      [AswgAuthority.UNSAFE_OVERWRITE_STARTUP_PARAMS],
+      false
+    );
   }
 }

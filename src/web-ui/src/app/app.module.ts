@@ -69,19 +69,14 @@ import { DifficultyDeleteConfirmDialogComponent } from "./tabs/difficulty/diffic
 import { NewMissionDialogComponent } from "./tabs/missions/new-mission-dialog/new-mission-dialog.component";
 import { FilesizePipe } from "./util/filesize.pipe";
 import { FileUploadSnackBarComponent } from "./common-ui/file-upload-snack-bar/file-upload-snack-bar.component";
-import { ModsSettingsComponent } from "./tabs/mods-settings/mods-settings.component";
-import { ModSettingsPanelComponent } from "./tabs/mods-settings/mod-settings-panel/mod-settings-panel.component";
 import { NgxCodeJarComponent } from "ngx-codejar";
 import { CommonConfirmDialogComponent } from "./common-ui/common-confirm-dialog/common-confirm-dialog.component";
 import { AswgChipInputComponent } from "./common-ui/aswg-chip-input/aswg-chip-input.component";
-import { AswgChipFormInputComponent } from "./common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
 import { MatPaginator } from "@angular/material/paginator";
-import { SettingsUserPanelComponent } from "./tabs/settings/settings-users/settings-user-panel/settings-user-panel.component";
-import { SettingsUsersComponent } from "./tabs/settings/settings-users/settings-users.component";
-import { SettingsDiscordComponent } from "./tabs/settings/settings-discord/settings-discord.component";
 import { MatAutocomplete, MatAutocompleteTrigger } from "@angular/material/autocomplete";
 import { PasswordChangeModalComponent } from "./tabs/settings/settings-users/settings-user-panel/password-change-modal/password-change-modal.component";
 import { DesktopHeaderComponent } from "./desktop-header/desktop-header.component";
+import { AswgChipFormInputComponent } from "./common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
 
 @NgModule({
   declarations: [
@@ -128,15 +123,8 @@ import { DesktopHeaderComponent } from "./desktop-header/desktop-header.componen
     NewMissionDialogComponent,
     FileUploadSnackBarComponent,
     FilesizePipe,
-    ModsSettingsComponent,
-    ModSettingsPanelComponent,
-    ModSettingsPanelComponent,
     CommonConfirmDialogComponent,
     AswgChipInputComponent,
-    AswgChipFormInputComponent,
-    SettingsUsersComponent,
-    SettingsUserPanelComponent,
-    SettingsDiscordComponent,
     PasswordChangeModalComponent
   ],
   bootstrap: [AppComponent],
@@ -171,8 +159,10 @@ import { DesktopHeaderComponent } from "./desktop-header/desktop-header.componen
     NgxCodeJarComponent,
     MatPaginator,
     MatAutocomplete,
-    MatAutocompleteTrigger
+    MatAutocompleteTrigger,
+    AswgChipFormInputComponent
   ],
+  exports: [],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true },
     provideHttpClient(withInterceptorsFromDi())

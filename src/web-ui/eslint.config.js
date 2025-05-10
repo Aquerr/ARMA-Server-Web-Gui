@@ -2,6 +2,7 @@
 const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
+const stylistic = require("@stylistic/eslint-plugin-ts")
 
 module.exports = tseslint.config(
   {
@@ -10,10 +11,12 @@ module.exports = tseslint.config(
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
       ...tseslint.configs.stylistic,
-      ...angular.configs.tsRecommended
+      ...angular.configs.tsRecommended,
+      ...stylistic.configs.all
     ],
     processor: angular.processInlineTemplates,
     rules: {
+      "@stylistic/ts/indent": ['error', 2],
       "@angular-eslint/directive-selector": [
         "error",
         {

@@ -5,12 +5,14 @@ import { MaskService } from "../../service/mask.service";
 import { NotificationService } from "../../service/notification.service";
 import { DialogService } from "../../service/dialog.service";
 import { ModSettingsPanelComponent } from "./mod-settings-panel/mod-settings-panel.component";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: "app-mods-settings",
   templateUrl: "./mods-settings.component.html",
   styleUrl: "./mods-settings.component.scss",
-  standalone: false
+  standalone: true,
+  imports: [MatIcon, ModSettingsPanelComponent]
 })
 export class ModsSettingsComponent {
   modSettingsList: ModSettings[] = [];

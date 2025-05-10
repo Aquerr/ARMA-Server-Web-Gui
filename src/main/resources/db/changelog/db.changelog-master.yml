@@ -11,4 +11,6 @@ databaseChangeLog:
       path: db/changelog/005-invalid-jwt-token/
   - includeAll:
       path: db/changelog/006-aswg-user/
+  - includeAll:
+      path: db/changelog/007-overwrite-startup-params-authority/
 

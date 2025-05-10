@@ -1,18 +1,42 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ModSettings } from "../../../model/mod-settings.model";
 import { ModSettingsService } from "../../../service/mod-settings.service";
-import { FormGroup } from "@angular/forms";
+import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { EditModsSettingsFormService } from "./edit-mods-settings-form.service";
 import { MaskService } from "../../../service/mask.service";
-import { CodeJarContainer } from "ngx-codejar";
+import { CodeJarContainer, NgxCodeJarComponent } from "ngx-codejar";
 import hljs from "highlight.js";
 import { NotificationService } from "../../../service/notification.service";
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelDescription,
+  MatExpansionPanelTitle
+} from "@angular/material/expansion";
+import { MatIcon } from "@angular/material/icon";
+import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatOption, MatSelect } from "@angular/material/select";
+import { NgClass } from "@angular/common";
 
 @Component({
   selector: "app-mod-settings-panel",
   templateUrl: "./mod-settings-panel.component.html",
   styleUrl: "./mod-settings-panel.component.scss",
-  standalone: false
+  standalone: true,
+  imports: [
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelTitle,
+    MatIcon,
+    MatExpansionPanelDescription,
+    MatFormField,
+    ReactiveFormsModule,
+    MatSelect,
+    MatOption,
+    MatLabel,
+    NgxCodeJarComponent,
+    NgClass
+  ]
 })
 export class ModSettingsPanelComponent implements OnInit {
   @Input({ required: true }) modSettings!: ModSettings;
