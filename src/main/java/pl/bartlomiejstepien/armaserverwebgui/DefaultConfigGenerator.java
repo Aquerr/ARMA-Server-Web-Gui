@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
@@ -15,10 +16,13 @@ import java.nio.file.StandardOpenOption;
 @Configuration(proxyBeanMethods = false)
 public class DefaultConfigGenerator
 {
+    @Value("${aswg.config.dir:.}")
+    private String configDirPath;
+
     @PostConstruct
     public void postConstruct() throws IOException
     {
-        Path configFilePath = Paths.get(".").resolve("aswg-config.properties");
+        Path configFilePath = Paths.get(this.configDirPath).resolve("aswg-config.properties");
         if (Files.exists(configFilePath))
             return;
 

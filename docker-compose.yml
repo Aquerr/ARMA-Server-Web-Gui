@@ -1,0 +1,14 @@
+services:
+  arma-server-web-gui:
+    image: aquerr/arma-server-web-gui
+    restart: unless-stopped
+    ports:
+      - "8085:8085"
+    environment:
+      ASWG_MODSDIRECTORYPATH: mods
+      ASWG_CONFIG_DIR: config
+    volumes:
+      - /config:/aswg/config
+      - /mods:/aswg/mods
+      - /mpmissions:/aswg/mpmissions
+      - /aswg_profiles:/aswg/aswg_profiles
