@@ -1,0 +1,64 @@
+FROM maven:3.9.9-eclipse-temurin-21 as builder
+
+COPY . .
+
+RUN mvn install -U -Djgitver.skip=true
+
+FROM cm2network/steamcmd as runner
+
+USER root
+
+LABEL maintainer=Aquerr
+
+# Intall JRE
+
+ENV LANG="en_US.UTF-8"
+ENV LANGUAGE="en_US:en"
+ENV LC_ALL="en_US.UTF-8"
+
+RUN apt-get -y update \
+    && apt-get install -y wget apt-transport-https \
+    && apt-get install -y gnupg2 \
+    && wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null \
+    && echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list \
+    && apt-get -y update \
+    && apt-get install -y temurin-21-jre
+
+RUN /bin/sh -c set -eux \
+    && echo "Verifying install ..." \
+    && echo "java --version" \
+    && java --version \
+    && echo "Complete."
+
+# Intall ASWG
+
+RUN groupadd --gid 1001 aswg \
+    && useradd --home-dir /home/aswg --create-home --uid 1001 --gid 1001 aswg \
+    && usermod -a -G steam aswg \
+    && mkdir /aswg \
+    && mkdir /aswg/config \
+    && mkdir /aswg/arma-server/mods \
+    && chown aswg:aswg -R /aswg \
+    && chmod g+rwx -R /home/steam/
+
+WORKDIR /aswg
+
+COPY --from=builder target/arma-server-web-gui-*.jar /aswg/aswg.jar
+
+# ASWG Properties
+ENV ASWG_STEAMCMD_PATH="/home/steam/steamcmd/steamcmd.sh"
+
+ENV ASWG_MODSDIRECTORYPATH="./mods"
+ENV ASWG_SERVERDIRECTORYPATH="./arma-server"
+ENV ASWG_CONFIG_DIR="./config"
+
+HEALTHCHECK --interval=2m --timeout=3s \
+  CMD curl -f http://localhost:8085/api/v1/actuator/health || exit 1
+
+VOLUME /aswg/config
+
+EXPOSE 8085/tcp
+
+USER aswg:aswg
+
+ENTRYPOINT ["java", "-jar", "/aswg/aswg.jar"]

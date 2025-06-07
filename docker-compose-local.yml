@@ -2,15 +2,12 @@ services:
   arma-server-web-gui:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     restart: unless-stopped
+    user: "1001:1001"
     ports:
       - "8085:8085"
-    environment:
-      ASWG_MODSDIRECTORYPATH: mods
-      ASWG_CONFIG_DIR: config
     volumes:
-      - /config:/aswg/config
-      - /mods:/aswg/mods
-      - /mpmissions:/aswg/mpmissions
-      - /aswg_profiles:/aswg/aswg_profiles
+      - /aswg_docker/arma-server:/aswg/arma-server
+      - /aswg_docker/config:/aswg/config
+      - /aswg_docker/aswg_profiles:/aswg/aswg_profiles

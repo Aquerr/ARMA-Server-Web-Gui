@@ -4,11 +4,7 @@ services:
     restart: unless-stopped
     ports:
       - "8085:8085"
-    environment:
-      ASWG_MODSDIRECTORYPATH: mods
-      ASWG_CONFIG_DIR: config
     volumes:
+      - /arma-server:/aswg/arma-server
       - /config:/aswg/config
-      - /mods:/aswg/mods
-      - /mpmissions:/aswg/mpmissions
       - /aswg_profiles:/aswg/aswg_profiles
