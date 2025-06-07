@@ -1,39 +1,41 @@
-FROM cm2network/steamcmd as runner
+FROM eclipse-temurin:21-jre as runner
 
 USER root
 
 LABEL maintainer=Aquerr
 
-# Intall JRE
-
-ENV LANG="en_US.UTF-8"
-ENV LANGUAGE="en_US:en"
-ENV LC_ALL="en_US.UTF-8"
+# Intall SteamCMD
 
 RUN apt-get -y update \
-    && apt-get install -y wget apt-transport-https \
-    && apt-get install -y gnupg2 \
-    && wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null \
-    && echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list \
-    && apt-get -y update \
-    && apt-get install -y temurin-21-jre
+    && apt-get -y install lib32gcc-s1 \
+    && mkdir /steamcmd \
+    && cd /steamcmd \
+    && curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
 
-RUN /bin/sh -c set -eux \
-    && echo "Verifying install ..." \
-    && echo "java --version" \
-    && java --version \
-    && echo "Complete."
+#RUN apt-get -y update \
+#    && apt-get install -y wget apt-transport-https \
+#    && apt-get install -y gnupg2 \
+#    && wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null \
+#    && echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list \
+#    && apt-get -y update \
+#    && apt-get install -y temurin-21-jre
+#
+#RUN /bin/sh -c set -eux \
+#    && echo "Verifying install ..." \
+#    && echo "java --version" \
+#    && java --version \
+#    && echo "Complete."
 
 # Intall ASWG
 
 RUN groupadd --gid 1001 aswg \
     && useradd --home-dir /home/aswg --create-home --uid 1001 --gid 1001 aswg \
-    && usermod -a -G steam aswg \
     && mkdir /aswg \
     && mkdir /aswg/config \
+    && mkdir /aswg/arma-server/ \
     && mkdir /aswg/arma-server/mods \
     && chown aswg:aswg -R /aswg \
-    && chmod g+rwx -R /home/steam/
+    && chown aswg:aswg -R /steamcmd
 
 WORKDIR /aswg
 
@@ -41,16 +43,22 @@ COPY ./target/arma-server-web-gui-*.jar /aswg/aswg.jar
 
 # ASWG Properties
 
-ENV ASWG_STEAMCMD_PATH="/home/steam/steamcmd/steamcmd.sh"
+ENV ASWG_STEAMCMD_PATH="/steamcmd/steamcmd.sh"
 
 ENV ASWG_MODSDIRECTORYPATH="./mods"
 ENV ASWG_SERVERDIRECTORYPATH="./arma-server"
 ENV ASWG_CONFIG_DIR="./config"
 
+ENV LANG="en_US.UTF-8"
+ENV LANGUAGE="en_US:en"
+ENV LC_ALL="en_US.UTF-8"
+
 HEALTHCHECK --interval=2m --timeout=3s \
   CMD curl -f http://localhost:8085/api/v1/actuator/health || exit 1
 
 VOLUME /aswg/arma-server
+VOLUME /aswg/data
+VOLUME /aswg/config
 
 EXPOSE 8085/tcp
 
