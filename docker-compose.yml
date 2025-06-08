@@ -1,5 +1,5 @@
 services:
-  arma-server-web-gui:
+  aswg:
     container_name: aswg
     image: aquerr/arma-server-web-gui
     restart: on-failure:3
@@ -9,8 +9,7 @@ services:
       - "2302-2306:2302-2306/udp"
     volumes:
       - arma-server:/aswg/arma-server
-      - /aswg/config:/aswg/config
-      - /aswg/data:/aswg/data
-
+      - ./aswg_docker/data:/aswg/data
+      - ./aswg_docker/config:/aswg/config
 volumes:
   arma-server:

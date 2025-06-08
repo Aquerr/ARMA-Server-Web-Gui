@@ -40,9 +40,7 @@ ENV LC_ALL="en_US.UTF-8"
 HEALTHCHECK --interval=2m --timeout=5s --retries=3 \
   CMD curl -f http://localhost:8085/api/v1/actuator/health || exit 1
 
-VOLUME /aswg/arma-server
-VOLUME /aswg/data
-VOLUME /aswg/config
+VOLUME ["/aswg/arma-server", "/aswg/data", "/aswg/config"]
 
 EXPOSE 8085/tcp
 EXPOSE 2302-2306/udp

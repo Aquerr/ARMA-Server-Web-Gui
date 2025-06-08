@@ -16,3 +16,4 @@ aswg-config.properties
 *.db
 /aswg_profiles
 /server
+/aswg_docker

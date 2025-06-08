@@ -1,6 +1,8 @@
 aswg_profiles
 logs
 server
-target
+#target
 userconfig
 .idea
+data
+aswg_docker
