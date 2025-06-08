@@ -6,13 +6,14 @@ import { NotificationService } from "../../service/notification.service";
 import { DialogService } from "../../service/dialog.service";
 import { ModSettingsPanelComponent } from "./mod-settings-panel/mod-settings-panel.component";
 import { MatIcon } from "@angular/material/icon";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-mods-settings",
   templateUrl: "./mods-settings.component.html",
   styleUrl: "./mods-settings.component.scss",
   standalone: true,
-  imports: [MatIcon, ModSettingsPanelComponent]
+  imports: [MatIcon, ModSettingsPanelComponent, MatButton]
 })
 export class ModsSettingsComponent {
   modSettingsList: ModSettings[] = [];
