@@ -142,8 +142,9 @@ public class ProcessServiceImpl implements ProcessService
             throw new ServerNotInstalledException(String.format("Server executable '%s' does not exist. Is the server installed?",
                     serverExecutablePath.toAbsolutePath()));
 
+        log.info("Server Directory: {}", serverParameters.getServerDirectory());
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.directory(new File(serverParameters.getServerDirectory()));
+        processBuilder.directory(Paths.get(".").resolve(serverParameters.getServerDirectory()).toFile());
         processBuilder.command(serverParameters.asList());
 
         log.info("Starting server process with params: {}", serverParameters.asList());
@@ -378,7 +379,7 @@ public class ProcessServiceImpl implements ProcessService
 
     private File getServerLogsFile()
     {
-        return Paths.get(aswgConfig.getServerDirectoryPath()).resolve(this.logsLocation).resolve(serverLogFileName).toFile();
+        return Paths.get(this.logsLocation).resolve(serverLogFileName).toFile();
     }
 
     @lombok.Value

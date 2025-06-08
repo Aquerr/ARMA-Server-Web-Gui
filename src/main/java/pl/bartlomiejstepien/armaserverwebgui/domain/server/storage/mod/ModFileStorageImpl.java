@@ -181,6 +181,7 @@ public class ModFileStorageImpl implements ModFileStorage
                     || (Files.isSymbolicLink(modDirectory.getPath()) && !Files.readSymbolicLink(modDirectory.getPath()).equals(steamCmdModFolderPath)))
             {
                 Files.deleteIfExists(modDirectory.getPath());
+                Files.createDirectories(modDirectory.getPath().getParent());
                 Files.createSymbolicLink(modDirectory.getPath(), steamCmdModFolderPath);
             }
             normalizeEachFileNameInFolderRecursively(modDirectory.getPath());

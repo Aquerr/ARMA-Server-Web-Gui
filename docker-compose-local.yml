@@ -1,0 +1,18 @@
+services:
+  aswg:
+    container_name: aswg
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    restart: on-failure:3
+    user: "1001:1001"
+    ports:
+      - "8085:8085/tcp"
+      - "2302-2306:2302-2306/udp"
+    volumes:
+      - arma-server:/aswg/arma-server
+      - ./aswg_docker/data:/aswg/data
+      - ./aswg_docker/config:/aswg/config
+
+volumes:
+  arma-server:

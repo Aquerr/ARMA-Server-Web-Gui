@@ -9,14 +9,15 @@ import hljs from "highlight.js";
 import { NotificationService } from "../../../service/notification.service";
 import {
   MatAccordion,
-  MatExpansionPanel,
-  MatExpansionPanelDescription,
-  MatExpansionPanelTitle
+  MatExpansionModule,
+  MatExpansionPanelDescription
 } from "@angular/material/expansion";
 import { MatIcon } from "@angular/material/icon";
-import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatFormFieldModule, MatLabel } from "@angular/material/form-field";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { NgClass } from "@angular/common";
+import { MatButton, MatIconButton } from "@angular/material/button";
+import { MatInput } from "@angular/material/input";
 
 @Component({
   selector: "app-mod-settings-panel",
@@ -24,18 +25,20 @@ import { NgClass } from "@angular/common";
   styleUrl: "./mod-settings-panel.component.scss",
   standalone: true,
   imports: [
+    MatFormFieldModule,
     MatAccordion,
-    MatExpansionPanel,
-    MatExpansionPanelTitle,
+    MatExpansionModule,
     MatIcon,
     MatExpansionPanelDescription,
-    MatFormField,
     ReactiveFormsModule,
     MatSelect,
     MatOption,
     MatLabel,
     NgxCodeJarComponent,
-    NgClass
+    NgClass,
+    MatIconButton,
+    MatInput,
+    MatButton
   ]
 })
 export class ModSettingsPanelComponent implements OnInit {
