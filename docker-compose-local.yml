@@ -1,13 +1,18 @@
 services:
-  arma-server-web-gui:
+  aswg:
+    container_name: aswg
     build:
       context: .
-      dockerfile: Dockerfile.local
-    restart: unless-stopped
+      dockerfile: Dockerfile.prod
+    restart: on-failure:3
     user: "1001:1001"
     ports:
-      - "8085:8085"
+      - "8085:8085/tcp"
+      - "2302-2306:2302-2306/udp"
     volumes:
-      - /aswg_docker/arma-server:/aswg/arma-server
-      - /aswg_docker/config:/aswg/config
-      - /aswg_docker/aswg_profiles:/aswg/aswg_profiles
+      - arma-server:/aswg/arma-server
+      - ./aswg_docker/data:/aswg/data
+      - ./aswg_docker/config:/aswg/config
+
+volumes:
+  arma-server:

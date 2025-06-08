@@ -137,7 +137,7 @@ public class ProcessServiceImpl implements ProcessService
     private void startServerProcess()
     {
         ArmaServerParameters serverParameters = serverParametersGenerator.generateParameters();
-        Path serverExecutablePath = Paths.get(serverParameters.getServerDirectory()).resolve(serverParameters.getExecutablePath());
+        Path serverExecutablePath = Paths.get(serverParameters.getExecutablePath());
         if (Files.notExists(serverExecutablePath))
             throw new ServerNotInstalledException(String.format("Server executable '%s' does not exist. Is the server installed?",
                     serverExecutablePath.toAbsolutePath()));

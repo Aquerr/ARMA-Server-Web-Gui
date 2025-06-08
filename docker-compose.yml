@@ -1,10 +1,16 @@
 services:
   arma-server-web-gui:
+    container_name: aswg
     image: aquerr/arma-server-web-gui
-    restart: unless-stopped
+    restart: on-failure:3
+    user: "1001:1001"
     ports:
-      - "8085:8085"
+      - "8085:8085/tcp"
+      - "2302-2306:2302-2306/udp"
     volumes:
-      - /arma-server:/aswg/arma-server
-      - /config:/aswg/config
-      - /aswg_profiles:/aswg/aswg_profiles
+      - arma-server:/aswg/arma-server
+      - /aswg/config:/aswg/config
+      - /aswg/data:/aswg/data
+
+volumes:
+  arma-server:

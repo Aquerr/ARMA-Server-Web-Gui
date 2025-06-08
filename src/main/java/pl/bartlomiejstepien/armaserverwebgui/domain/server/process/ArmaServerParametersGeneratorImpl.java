@@ -15,6 +15,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerE
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ServerFiles;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -58,10 +59,10 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
                 .overrideParameters(aswgConfig.getUnsafeProperties().getOverwriteStartupParamsValue())
                 .profileName(difficultyService.getActiveDifficultyProfile())
                 .customModSettings(modSettingsService.getModSettingsWithoutContents().stream().anyMatch(ModSettingsHeader::isActive))
-                .serverDirectory(aswgConfig.getServerDirectoryPath())
-                .networkConfigPath(ServerFiles.NETWORK_CONFIG)
-                .serverConfigPath(ServerFiles.SERVER_CONFIG)
-                .executablePath(serverExecToUse)
+                .serverDirectory(Paths.get(aswgConfig.getServerDirectoryPath()).toAbsolutePath().toString())
+                .networkConfigPath(Paths.get(aswgConfig.getServerDirectoryPath()).resolve(ServerFiles.NETWORK_CONFIG).toAbsolutePath().toString())
+                .serverConfigPath(Paths.get(aswgConfig.getServerDirectoryPath()).resolve(ServerFiles.SERVER_CONFIG).toAbsolutePath().toString())
+                .executablePath(Paths.get(aswgConfig.getServerDirectoryPath()).resolve(serverExecToUse).toAbsolutePath().toString())
                 .port(aswgConfig.getServerPort())
                 .mods(modsDirs)
                 .serverMods(serverModsDirs)
