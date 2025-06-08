@@ -21,6 +21,7 @@ Check the feature list below to get to know more.
 * Fast setup
 * Windows support
 * Linux support (currently tested on Ubuntu)
+* [Docker support](https://hub.docker.com/r/aquerr/arma-server-web-gui)
 * Server Console + Player list
 * Editing of server configuration
 * Mods management
@@ -38,6 +39,10 @@ Check the feature list below to get to know more.
 
 # Setup
 
+ASWG can be setup manually on a system or via Docker.
+
+## Manual Setup
+
 ### Installation:
 - Install JRE 21
 - [Install Arma Server in desired directory](https://community.bistudio.com/wiki/Arma_3:_Dedicated_Server).
@@ -50,6 +55,12 @@ Check the feature list below to get to know more.
 - Extra: If you want to use steam workshop and download mods automatically, configure steamcmd properties.
 
 For SteamCMD installation check [SteamCMD wiki](https://developer.valvesoftware.com/wiki/SteamCMD).
+
+## Docker setup
+
+Docker image can be found [here](https://hub.docker.com/r/aquerr/arma-server-web-gui)
+
+Sample docker compose can be found [here](https://github.com/Aquerr/ARMA-Server-Web-Gui/blob/main/docker-compose.yml)
 
 # Building
 
