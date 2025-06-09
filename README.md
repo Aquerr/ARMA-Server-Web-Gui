@@ -1,6 +1,7 @@
 # ASWG - Arma Server Web Gui
 
 ![License](https://img.shields.io/github/license/aquerr/arma-server-web-gui.svg?label=License)
+![Docker Image Version](https://img.shields.io/docker/v/aquerr/arma-server-web-gui?label=Docker%20Image)
 [![Discord](https://img.shields.io/discord/447076657698963466.svg?color=blue&label=Discord&logo=Discord&logoColor=white)](https://discord.gg/Zg3rWta)
 
 ## General
