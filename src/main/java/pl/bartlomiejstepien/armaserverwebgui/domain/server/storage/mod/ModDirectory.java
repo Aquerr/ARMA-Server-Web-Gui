@@ -5,6 +5,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -83,7 +84,7 @@ public class ModDirectory
     {
         try
         {
-            return Files.walk(this.path)
+            return Files.walk(this.path, FileVisitOption.FOLLOW_LINKS)
                     .map(Path::toFile)
                     .filter(File::isFile)
                     .mapToLong(File::length)
