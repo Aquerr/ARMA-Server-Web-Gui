@@ -11,17 +11,17 @@
             {{ mod.name }}
           </div>
           <div>
-            <span style="filter: brightness(50%)"
-              >Last workshop update: {{ mod.lastUpdateDateTime }}</span
-            >
+            <span style="filter: brightness(50%)">Last workshop update: {{ mod.lastUpdateDateTime }}</span>
           </div>
         </div>
       </mat-panel-title>
       <mat-panel-description
-        *ngIf="!mod.fileExists"
         class="mod-list-item-expansion-panel-header-description"
       >
-        <mat-icon matTooltip="Mod files seems to be missing" [color]="'warn'">warning</mat-icon>
+        <div>
+          <span style="filter: brightness(50%)">{{ mod.sizeBytes | filesize }}</span>
+        </div>
+        <mat-icon *ngIf="!mod.fileExists" matTooltip="Mod files seems to be missing" [color]="'warn'" style="margin-left: 10px">warning</mat-icon>
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="mod-list-item-inner-panel">

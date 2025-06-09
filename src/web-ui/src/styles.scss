@@ -242,6 +242,10 @@ input::placeholder {
   color: var(--aswg-primary-text-color) !important;
 }
 
+.mat-expansion-panel-header-description {
+  color: var(--aswg-primary-text-color) !important;
+}
+
 .mat-mdc-icon-button {
   --mat-mdc-button-persistent-ripple-color: var(--aswg-primary-text-color) !important;
   --mat-mdc-button-ripple-color: rgba(0, 0, 0, 0.1) !important;

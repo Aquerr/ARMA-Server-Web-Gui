@@ -6,6 +6,7 @@ export interface Mod {
   workshopUrl: string;
   fileExists: boolean;
   lastUpdateDateTime: string;
+  sizeBytes: number;
 }
 
 export interface ModPresetEntry {
