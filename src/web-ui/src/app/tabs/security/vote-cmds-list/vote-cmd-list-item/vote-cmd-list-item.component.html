@@ -1,57 +1,58 @@
 <mat-card class="vote-cmd-list-item" (dblclick)="doubleClick()">
   <mat-card-content>
-    <div class="" *ngIf="item.editing; else notEditing">
-      <form matTooltip="Double-click to lock">
-        <mat-form-field>
-          <mat-label>Name</mat-label>
-          <input
-            matInput
-            [(ngModel)]="item.command.name"
-            [ngModelOptions]="{ standalone: true }"
-            (keydown.enter)="onEnter()"
-          />
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Allowed Pre Mission</mat-label>
-          <mat-select
-            [(ngModel)]="item.command.allowedPreMission"
-            [ngModelOptions]="{ standalone: true }"
-          >
-            <mat-option [value]="true">Yes</mat-option>
-            <mat-option [value]="false">No</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Allowed Post Mission</mat-label>
-          <mat-select
-            [(ngModel)]="item.command.allowedPostMission"
-            [ngModelOptions]="{ standalone: true }"
-          >
-            <mat-option [value]="true">Yes</mat-option>
-            <mat-option [value]="false">No</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Voting Threshold</mat-label>
-          <input
-            matInput
-            [(ngModel)]="item.command.votingThreshold"
-            [ngModelOptions]="{ standalone: true }"
-            (keydown.enter)="onEnter()"
-          />
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Percentage Side Voting Threshold</mat-label>
-          <input
-            matInput
-            [(ngModel)]="item.command.percentageSideVotingThreshold"
-            [ngModelOptions]="{ standalone: true }"
-            (keydown.enter)="onEnter()"
-          />
-        </mat-form-field>
-      </form>
-    </div>
-    <ng-template #notEditing>
+    @if (item.editing) {
+      <div class="">
+        <form matTooltip="Double-click to lock">
+          <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              [(ngModel)]="item.command.name"
+              [ngModelOptions]="{ standalone: true }"
+              (keydown.enter)="onEnter()"
+              />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Allowed Pre Mission</mat-label>
+            <mat-select
+              [(ngModel)]="item.command.allowedPreMission"
+              [ngModelOptions]="{ standalone: true }"
+              >
+              <mat-option [value]="true">Yes</mat-option>
+              <mat-option [value]="false">No</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Allowed Post Mission</mat-label>
+            <mat-select
+              [(ngModel)]="item.command.allowedPostMission"
+              [ngModelOptions]="{ standalone: true }"
+              >
+              <mat-option [value]="true">Yes</mat-option>
+              <mat-option [value]="false">No</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Voting Threshold</mat-label>
+            <input
+              matInput
+              [(ngModel)]="item.command.votingThreshold"
+              [ngModelOptions]="{ standalone: true }"
+              (keydown.enter)="onEnter()"
+              />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Percentage Side Voting Threshold</mat-label>
+            <input
+              matInput
+              [(ngModel)]="item.command.percentageSideVotingThreshold"
+              [ngModelOptions]="{ standalone: true }"
+              (keydown.enter)="onEnter()"
+              />
+          </mat-form-field>
+        </form>
+      </div>
+    } @else {
       <form matTooltip="Double-click to edit">
         <mat-form-field>
           <mat-label>Name</mat-label>
@@ -63,7 +64,7 @@
             [(ngModel)]="item.command.allowedPreMission"
             [ngModelOptions]="{ standalone: true }"
             [disabled]="true"
-          >
+            >
             <mat-option [value]="true">Yes</mat-option>
             <mat-option [value]="false">No</mat-option>
           </mat-select>
@@ -74,7 +75,7 @@
             [(ngModel)]="item.command.allowedPostMission"
             [ngModelOptions]="{ standalone: true }"
             [disabled]="true"
-          >
+            >
             <mat-option [value]="true">Yes</mat-option>
             <mat-option [value]="false">No</mat-option>
           </mat-select>
@@ -93,6 +94,6 @@
           <mat-icon>delete</mat-icon>
         </button>
       </div>
-    </ng-template>
+    }
   </mat-card-content>
 </mat-card>

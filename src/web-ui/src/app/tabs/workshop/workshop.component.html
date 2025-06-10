@@ -9,14 +9,15 @@
   <div class="workshop">
     <h2>Workshop mods</h2>
     <div class="workshop-list">
-      <app-workshop-item
-        *ngFor="let workshopMod of workshopMods"
-        [workshopMod]="workshopMod"
-        [canInstall]="canInstall(workshopMod)"
-        (onModInstallDelete)="onModInstallDelete($event)"
-        class="workshop-list-item"
-      >
-      </app-workshop-item>
+      @for (workshopMod of workshopMods; track workshopMod) {
+        <app-workshop-item
+          [workshopMod]="workshopMod"
+          [canInstall]="canInstall(workshopMod)"
+          (onModInstallDelete)="onModInstallDelete($event)"
+          class="workshop-list-item"
+          >
+        </app-workshop-item>
+      }
       <div>
         <button class="float-end" mat-flat-button color="primary" (click)="nextPage()">
           Next Page
@@ -28,26 +29,31 @@
   <div class="installed-mods">
     <h2>Installed mods</h2>
     <div class="installed-mods-list">
-      <app-workshop-item
-        *ngFor="let installedWorkshopMod of installedWorkshopModsToShow"
-        [workshopMod]="installedWorkshopMod"
-        [canInstall]="false"
-        (onModInstallDelete)="onModInstallDelete($event)"
-        class="workshop-list-item"
-      >
-      </app-workshop-item>
-      <div *ngIf="installedWorkshopMods.length == 0">
-        <span>No workshop items are installed. :(</span>
-      </div>
-      <div *ngIf="installedWorkshopMods.length > 0">
-        <mat-paginator
-          (page)="changePage($event)"
-          [length]="totalInstalledMods()"
-          [pageSize]="10"
-          [pageSizeOptions]="[10, 20, 30, 40, 50, totalInstalledMods()]"
-          aria-label="Select page"
-        ></mat-paginator>
-      </div>
+      @for (installedWorkshopMod of installedWorkshopModsToShow; track installedWorkshopMod) {
+        <app-workshop-item
+          [workshopMod]="installedWorkshopMod"
+          [canInstall]="false"
+          (onModInstallDelete)="onModInstallDelete($event)"
+          class="workshop-list-item"
+          >
+        </app-workshop-item>
+      }
+      @if (installedWorkshopMods.length == 0) {
+        <div>
+          <span>No workshop items are installed. :(</span>
+        </div>
+      }
+      @if (installedWorkshopMods.length > 0) {
+        <div>
+          <mat-paginator
+            (page)="changePage($event)"
+            [length]="totalInstalledMods()"
+            [pageSize]="10"
+            [pageSizeOptions]="[10, 20, 30, 40, 50, totalInstalledMods()]"
+            aria-label="Select page"
+          ></mat-paginator>
+        </div>
+      }
     </div>
   </div>
 </div>

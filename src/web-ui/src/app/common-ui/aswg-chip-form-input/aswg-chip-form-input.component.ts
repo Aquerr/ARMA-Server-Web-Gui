@@ -17,7 +17,7 @@ import {
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
-import { NgForOf } from "@angular/common";
+
 import { MatInput } from "@angular/material/input";
 
 @Component({
@@ -36,9 +36,8 @@ import { MatInput } from "@angular/material/input";
     MatOption,
     MatLabel,
     MatTooltip,
-    MatChipRemove,
-    NgForOf
-  ]
+    MatChipRemove
+]
 })
 export class AswgChipFormInputComponent implements OnInit {
   protected readonly ENTER = ENTER;

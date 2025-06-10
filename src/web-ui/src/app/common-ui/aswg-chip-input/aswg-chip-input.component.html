@@ -1,24 +1,25 @@
 <mat-form-field style="width: 100%" [matTooltip]="toolTipText" matTooltipPosition="right">
   <mat-label>{{ labelText }}</mat-label>
   <mat-chip-grid #chipGrid>
-    <mat-chip-row
-      *ngFor="let item of list"
-      [editable]="true"
-      (edited)="editEntry(item, $event)"
-      (removed)="removeEntry(item)"
-      [aria-description]="'press enter to edit ' + item"
-    >
-      {{ item }}
-      <button matChipRemove [attr.aria-label]="'remove ' + item">
-        <mat-icon>cancel</mat-icon>
-      </button>
-    </mat-chip-row>
+    @for (item of list; track item) {
+      <mat-chip-row
+        [editable]="true"
+        (edited)="editEntry(item, $event)"
+        (removed)="removeEntry(item)"
+        [aria-description]="'press enter to edit ' + item"
+        >
+        {{ item }}
+        <button matChipRemove [attr.aria-label]="'remove ' + item">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+    }
     <input
       placeholder="New entry..."
       [matChipInputFor]="chipGrid"
       [matChipInputSeparatorKeyCodes]="[ENTER, COMMA]"
       [matChipInputAddOnBlur]="true"
       (matChipInputTokenEnd)="addEntry($event)"
-    />
+      />
   </mat-chip-grid>
 </mat-form-field>

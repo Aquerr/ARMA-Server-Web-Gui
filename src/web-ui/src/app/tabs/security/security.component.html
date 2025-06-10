@@ -6,142 +6,160 @@
         class="server-password"
         matTooltip="Password required to connect to server"
         matTooltipPosition="right"
-      >
+        >
         <mat-label>Password</mat-label>
         <input formControlName="serverPassword" matInput type="text" />
-        <mat-error *ngIf="hasFormError('serverPassword', 'required')"
-          >This field is required</mat-error
-        >
-      </mat-form-field>
-      <mat-form-field
-        class="server-admin-password"
-        matTooltip="Password for admin login access"
-        matTooltipPosition="right"
-      >
-        <mat-label>Admin Password</mat-label>
-        <input formControlName="serverAdminPassword" matInput type="text" />
-        <mat-error *ngIf="hasFormError('serverAdminPassword', 'required')"
-          >This field is required</mat-error
-        >
-      </mat-form-field>
-      <mat-form-field
-        class="server-command-password"
-        matTooltip="Password for server-side scripting through 'serverCommand'"
-        matTooltipPosition="right"
-      >
-        <mat-label>Command Password</mat-label>
-        <input formControlName="serverCommandPassword" matInput type="text" />
-        <mat-error *ngIf="hasFormError('serverCommandPassword', 'required')"
-          >This field is required</mat-error
-        >
-      </mat-form-field>
-      <aswg-chip-form-input
-        style="width: 100%"
-        labelText="Admins (steamID64)"
-        toolTipText="Only these user ids can authenticate via #login command"
-        [control]="formService.getAdminUUIDsControl(form)"
-        [parent]="form"
-      ></aswg-chip-form-input>
-      <mat-form-field
-        matTooltip="Enables/Disable BattlEye anti-cheat engine. Requires installed BattlEye on server and clients."
-        matTooltipPosition="right"
-      >
-        <mat-label>BattleEye</mat-label>
-        <mat-select formControlName="battleEye">
-          <mat-option [value]="true">Yes</mat-option>
-          <mat-option [value]="false">No</mat-option>
-        </mat-select>
-        <mat-error *ngIf="hasFormError('battleEye', 'required')">This field is required</mat-error>
-      </mat-form-field>
-      <mat-form-field
-        matTooltip="Make game not allow duplicate game IDs. Second player with an existing ID will be kicked automatically."
-        matTooltipPosition="right"
-      >
-        <mat-label>Kick duplicate game IDs</mat-label>
-        <mat-select formControlName="kickDuplicate">
-          <mat-option [value]="true">Yes</mat-option>
-          <mat-option [value]="false">No</mat-option>
-        </mat-select>
-        <mat-error *ngIf="hasFormError('kickDuplicate', 'required')"
-          >This field is required</mat-error
-        >
-      </mat-form-field>
-      <mat-form-field
-        matTooltip="Checks if player is connecting with modified/unsigned files or signed but not accepted signatures."
-        matTooltipPosition="right"
-      >
-        <mat-label>Verify Addons Signatures</mat-label>
-        <mat-select formControlName="verifySignatures">
-          <mat-option [value]="true">Yes</mat-option>
-          <mat-option [value]="false">No</mat-option>
-        </mat-select>
-        <mat-error *ngIf="hasFormError('verifySignatures', 'required')"
-          >This field is required</mat-error
-        >
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Allowed File Patching</mat-label>
-        <mat-select formControlName="allowedFilePatching">
-          <mat-option [value]="AllowedFilePatching.NOT_ALLOWED">NOT ALLOWED</mat-option>
-          <mat-option [value]="AllowedFilePatching.ALLOWED_FOR_HEADLESS_CLIENTS"
-            >ALLOWED FOR HEADLESS CLIENTS</mat-option
-          >
-          <mat-option [value]="AllowedFilePatching.ALLOWED_FOR_ALL_CLIENTS"
-            >ALLOWED FOR ALL CLIENTS</mat-option
-          >
-        </mat-select>
-        <mat-error *ngIf="hasFormError('allowedFilePatching', 'required')"
-          >This field is required</mat-error
-        >
-      </mat-form-field>
-      <aswg-chip-form-input
-        style="width: 100%"
-        labelText="Allowed Load File Extensions"
-        toolTipText="Only allow files with listed extensions to be loaded via loadFile command. Not listing any extension means everything is allowed. Defining the setting as empty arrays means nothing is allowed."
-        [control]="formService.getAllowedLoadFileExtensionsControl(form)"
-        [parent]="form"
-      ></aswg-chip-form-input>
-      <aswg-chip-form-input
-        style="width: 100%"
-        labelText="File Patching Ignored Clients (steamID64)"
-        toolTipText="Whitelisted clients ignore the rules defined by allowedFilePatching and verifySignatures, allowing them to join the server with any mods of their choice. Signature errors are still logged by the server upon connection."
-        [control]="formService.getFilePatchingIgnoredClientsControl(form)"
-        [parent]="form"
-      ></aswg-chip-form-input>
-      <mat-form-field
-        matTooltip="Percentage of votes needed to confirm a vote. 0.3 = 30%"
-        matTooltipPosition="right"
-      >
-        <mat-label>Vote Threshold</mat-label>
-        <input formControlName="voteThreshold" matInput type="text" />
-        <mat-error *ngIf="hasFormError('voteThreshold', 'required')"
-          >This field is required</mat-error
-        >
-      </mat-form-field>
-      <mat-form-field
-        matTooltip="Start mission-voting when X number of players connect."
-        matTooltipPosition="right"
-      >
-        <mat-label>Vote Mission Players</mat-label>
-        <input formControlName="voteMissionPlayers" matInput type="text" />
-        <mat-error *ngIf="hasFormError('voteMissionPlayers', 'required')"
-          >This field is required</mat-error
-        >
-      </mat-form-field>
-      <div>
-        <mat-label
-          matTooltip="Players can use this commands to vote for e.g. mission change"
+        @if (hasFormError('serverPassword', 'required')) {
+          <mat-error
+            >This field is required</mat-error
+            >
+          }
+        </mat-form-field>
+        <mat-form-field
+          class="server-admin-password"
+          matTooltip="Password for admin login access"
           matTooltipPosition="right"
-          >Allowed Vote Commands</mat-label
-        >
-        <app-vote-cmds-list
-          [formGroup]="form"
-          (listChanged)="setVoteCmds($event)"
-        ></app-vote-cmds-list>
-      </div>
-    </div>
-  </div>
-  <div class="security-save-container">
-    <button mat-flat-button color="primary" (click)="save()">Save</button>
-  </div>
-</form>
+          >
+          <mat-label>Admin Password</mat-label>
+          <input formControlName="serverAdminPassword" matInput type="text" />
+          @if (hasFormError('serverAdminPassword', 'required')) {
+            <mat-error
+              >This field is required</mat-error
+              >
+            }
+          </mat-form-field>
+          <mat-form-field
+            class="server-command-password"
+            matTooltip="Password for server-side scripting through 'serverCommand'"
+            matTooltipPosition="right"
+            >
+            <mat-label>Command Password</mat-label>
+            <input formControlName="serverCommandPassword" matInput type="text" />
+            @if (hasFormError('serverCommandPassword', 'required')) {
+              <mat-error
+                >This field is required</mat-error
+                >
+              }
+            </mat-form-field>
+            <aswg-chip-form-input
+              style="width: 100%"
+              labelText="Admins (steamID64)"
+              toolTipText="Only these user ids can authenticate via #login command"
+              [control]="formService.getAdminUUIDsControl(form)"
+              [parent]="form"
+            ></aswg-chip-form-input>
+            <mat-form-field
+              matTooltip="Enables/Disable BattlEye anti-cheat engine. Requires installed BattlEye on server and clients."
+              matTooltipPosition="right"
+              >
+              <mat-label>BattleEye</mat-label>
+              <mat-select formControlName="battleEye">
+                <mat-option [value]="true">Yes</mat-option>
+                <mat-option [value]="false">No</mat-option>
+              </mat-select>
+              @if (hasFormError('battleEye', 'required')) {
+                <mat-error>This field is required</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field
+              matTooltip="Make game not allow duplicate game IDs. Second player with an existing ID will be kicked automatically."
+              matTooltipPosition="right"
+              >
+              <mat-label>Kick duplicate game IDs</mat-label>
+              <mat-select formControlName="kickDuplicate">
+                <mat-option [value]="true">Yes</mat-option>
+                <mat-option [value]="false">No</mat-option>
+              </mat-select>
+              @if (hasFormError('kickDuplicate', 'required')) {
+                <mat-error
+                  >This field is required</mat-error
+                  >
+                }
+              </mat-form-field>
+              <mat-form-field
+                matTooltip="Checks if player is connecting with modified/unsigned files or signed but not accepted signatures."
+                matTooltipPosition="right"
+                >
+                <mat-label>Verify Addons Signatures</mat-label>
+                <mat-select formControlName="verifySignatures">
+                  <mat-option [value]="true">Yes</mat-option>
+                  <mat-option [value]="false">No</mat-option>
+                </mat-select>
+                @if (hasFormError('verifySignatures', 'required')) {
+                  <mat-error
+                    >This field is required</mat-error
+                    >
+                  }
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Allowed File Patching</mat-label>
+                  <mat-select formControlName="allowedFilePatching">
+                    <mat-option [value]="AllowedFilePatching.NOT_ALLOWED">NOT ALLOWED</mat-option>
+                    <mat-option [value]="AllowedFilePatching.ALLOWED_FOR_HEADLESS_CLIENTS"
+                      >ALLOWED FOR HEADLESS CLIENTS</mat-option
+                      >
+                      <mat-option [value]="AllowedFilePatching.ALLOWED_FOR_ALL_CLIENTS"
+                        >ALLOWED FOR ALL CLIENTS</mat-option
+                        >
+                      </mat-select>
+                      @if (hasFormError('allowedFilePatching', 'required')) {
+                        <mat-error
+                          >This field is required</mat-error
+                          >
+                        }
+                      </mat-form-field>
+                      <aswg-chip-form-input
+                        style="width: 100%"
+                        labelText="Allowed Load File Extensions"
+                        toolTipText="Only allow files with listed extensions to be loaded via loadFile command. Not listing any extension means everything is allowed. Defining the setting as empty arrays means nothing is allowed."
+                        [control]="formService.getAllowedLoadFileExtensionsControl(form)"
+                        [parent]="form"
+                      ></aswg-chip-form-input>
+                      <aswg-chip-form-input
+                        style="width: 100%"
+                        labelText="File Patching Ignored Clients (steamID64)"
+                        toolTipText="Whitelisted clients ignore the rules defined by allowedFilePatching and verifySignatures, allowing them to join the server with any mods of their choice. Signature errors are still logged by the server upon connection."
+                        [control]="formService.getFilePatchingIgnoredClientsControl(form)"
+                        [parent]="form"
+                      ></aswg-chip-form-input>
+                      <mat-form-field
+                        matTooltip="Percentage of votes needed to confirm a vote. 0.3 = 30%"
+                        matTooltipPosition="right"
+                        >
+                        <mat-label>Vote Threshold</mat-label>
+                        <input formControlName="voteThreshold" matInput type="text" />
+                        @if (hasFormError('voteThreshold', 'required')) {
+                          <mat-error
+                            >This field is required</mat-error
+                            >
+                          }
+                        </mat-form-field>
+                        <mat-form-field
+                          matTooltip="Start mission-voting when X number of players connect."
+                          matTooltipPosition="right"
+                          >
+                          <mat-label>Vote Mission Players</mat-label>
+                          <input formControlName="voteMissionPlayers" matInput type="text" />
+                          @if (hasFormError('voteMissionPlayers', 'required')) {
+                            <mat-error
+                              >This field is required</mat-error
+                              >
+                            }
+                          </mat-form-field>
+                          <div>
+                            <mat-label
+                              matTooltip="Players can use this commands to vote for e.g. mission change"
+                              matTooltipPosition="right"
+                              >Allowed Vote Commands</mat-label
+                              >
+                              <app-vote-cmds-list
+                                [formGroup]="form"
+                                (listChanged)="setVoteCmds($event)"
+                              ></app-vote-cmds-list>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="security-save-container">
+                          <button mat-flat-button color="primary" (click)="save()">Save</button>
+                        </div>
+                      </form>

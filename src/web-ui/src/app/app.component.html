@@ -1,28 +1,33 @@
 <div class="container" style="height: 100%">
-  <ng-container *ngIf="isMobile; else desktopHeader">
+  @if (isMobile) {
     <app-mobile-header
       class="row mb-4"
       (changeThemeEmit)="changeTheme()"
       [darkMode]="isDarkMode()"
     ></app-mobile-header>
-  </ng-container>
-  <ng-template #desktopHeader>
+  } @else {
     <app-desktop-header
       class="desktop-header"
       (changeThemeEmit)="changeTheme()"
       [darkMode]="isDarkMode()"
     ></app-desktop-header>
-  </ng-template>
-  <div class="side-menu-wrapper" *ngIf="!isMobile">
-    <app-side-menu [darkMode]="isDarkMode()"></app-side-menu>
-    <ng-container [ngTemplateOutlet]="footer" *ngIf="!isMobile"></ng-container>
-  </div>
+  }
+  @if (!isMobile) {
+    <div class="side-menu-wrapper">
+      <app-side-menu [darkMode]="isDarkMode()"></app-side-menu>
+      @if (!isMobile) {
+        <ng-container [ngTemplateOutlet]="footer"></ng-container>
+      }
+    </div>
+  }
   <div class="router-wrapper">
     <div class="router-section">
       <div class="content">
         <router-outlet></router-outlet>
       </div>
-      <ng-container [ngTemplateOutlet]="footer" *ngIf="isMobile"></ng-container>
+      @if (isMobile) {
+        <ng-container [ngTemplateOutlet]="footer"></ng-container>
+      }
     </div>
   </div>
 </div>

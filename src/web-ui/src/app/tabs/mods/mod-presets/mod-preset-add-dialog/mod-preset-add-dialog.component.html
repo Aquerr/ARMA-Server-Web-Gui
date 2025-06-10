@@ -8,14 +8,16 @@
         matInput
         type="text"
         (keydown)="onEnterClick($event)"
-      />
-      <mat-error *ngIf="hasFormError('modPresetName', 'required')"
-        >This field is required</mat-error
-      >
-    </mat-form-field>
-  </form>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="closeDialog()">Create</button>
-  <button mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
-</div>
+        />
+      @if (hasFormError('modPresetName', 'required')) {
+        <mat-error
+          >This field is required</mat-error
+          >
+        }
+      </mat-form-field>
+    </form>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="closeDialog()">Create</button>
+    <button mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
+  </div>

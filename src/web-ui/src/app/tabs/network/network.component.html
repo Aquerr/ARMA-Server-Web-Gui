@@ -6,29 +6,33 @@
         <mat-form-field
           matTooltip="Adding this option will force server into LAN mode."
           matTooltipPosition="right"
-        >
+          >
           <mat-label>Loopback</mat-label>
           <mat-select formControlName="loopback">
             <mat-option [value]="true">Yes</mat-option>
             <mat-option [value]="false">No</mat-option>
           </mat-select>
-          <mat-error *ngIf="hasFormError('loopback', 'required')">This field is required</mat-error>
+          @if (hasFormError('loopback', 'required')) {
+            <mat-error>This field is required</mat-error>
+          }
         </mat-form-field>
         <mat-form-field
           matTooltip="Automatically creates port mapping on UPNP/IGD enabled router. This option allows to create a server behind NAT (the router must have public IP and support UPNP/IGD protocol)."
           matTooltipPosition="right"
-        >
+          >
           <mat-label>Upnp</mat-label>
           <mat-select formControlName="upnp">
             <mat-option [value]="true">Yes</mat-option>
             <mat-option [value]="false">No</mat-option>
           </mat-select>
-          <mat-error *ngIf="hasFormError('upnp', 'required')">This field is required</mat-error>
+          @if (hasFormError('upnp', 'required')) {
+            <mat-error>This field is required</mat-error>
+          }
         </mat-form-field>
         <mat-form-field
           matTooltip="Max ping value until server kick the user"
           matTooltipPosition="right"
-        >
+          >
           <mat-label>Max Ping</mat-label>
           <input
             name="maxping"
@@ -36,8 +40,10 @@
             matInput
             min="0"
             (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('maxPing', 'required')">This field is required</mat-error>
+            />
+          @if (hasFormError('maxPing', 'required')) {
+            <mat-error>This field is required</mat-error>
+          }
         </mat-form-field>
         <mat-form-field>
           <mat-label>Disconnect Timeout</mat-label>
@@ -47,342 +53,414 @@
             matInput
             min="5"
             (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('disconnectTimeout', 'min')">Minimum value is 5</mat-error>
-          <mat-error *ngIf="hasFormError('disconnectTimeout', 'required')"
-            >This field is required</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="Max desync value until server kick the user"
-          matTooltipPosition="right"
-        >
-          <mat-label>Max Desync</mat-label>
-          <input
-            name="maxDesync"
-            formControlName="maxDesync"
-            matInput
-            min="0"
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('maxDesync', 'required')"
-            >This field is required</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="Max packetloss value until server kick the user"
-          matTooltipPosition="right"
-        >
-          <mat-label>Max Packet Loss</mat-label>
-          <input
-            name="maxPacketLoss"
-            formControlName="maxPacketLoss"
-            matInput
-            min="0"
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('maxPacketLoss', 'required')"
-            >This field is required</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="Logs players' bandwidth and desync info every 60 seconds, as well as 'network message is pending' owner identity."
-          matTooltipPosition="right"
-        >
-          <mat-label>Enable Players' Bandwidth Diagnostics</mat-label>
-          <mat-select formControlName="enablePlayerDiag">
-            <mat-option [value]="true">Yes</mat-option>
-            <mat-option [value]="false">No</mat-option>
-          </mat-select>
-          <mat-error *ngIf="hasFormError('enablePlayerDiag', 'required')"
-            >This field is required</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="Limit for maximum Steam Query packet length. Increasing this value is dangerous as it can cause Arma 3 server to send UDP packets of a size larger than the MTU. This will cause UDP packets to be fragmented which is not supported by some older routers. But increasing this will fix the modlist length limit in Arma 3: Launcher."
-          matTooltipPosition="right"
-        >
-          <mat-label>Steam Protocol Max Data Size</mat-label>
-          <input
-            name="steamProtocolMaxDataSize"
-            formControlName="steamProtocolMaxDataSize"
-            matInput
-            min="0"
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('steamProtocolMaxDataSize', 'required')"
-            >This field is required</mat-error
-          >
-        </mat-form-field>
-      </div>
-    </div>
+            />
+          @if (hasFormError('disconnectTimeout', 'min')) {
+            <mat-error>Minimum value is 5</mat-error>
+          }
+          @if (hasFormError('disconnectTimeout', 'required')) {
+            <mat-error
+              >This field is required</mat-error
+              >
+            }
+          </mat-form-field>
+          <mat-form-field
+            matTooltip="Max desync value until server kick the user"
+            matTooltipPosition="right"
+            >
+            <mat-label>Max Desync</mat-label>
+            <input
+              name="maxDesync"
+              formControlName="maxDesync"
+              matInput
+              min="0"
+              (keyup)="allowDigits($event)"
+              />
+            @if (hasFormError('maxDesync', 'required')) {
+              <mat-error
+                >This field is required</mat-error
+                >
+              }
+            </mat-form-field>
+            <mat-form-field
+              matTooltip="Max packetloss value until server kick the user"
+              matTooltipPosition="right"
+              >
+              <mat-label>Max Packet Loss</mat-label>
+              <input
+                name="maxPacketLoss"
+                formControlName="maxPacketLoss"
+                matInput
+                min="0"
+                (keyup)="allowDigits($event)"
+                />
+              @if (hasFormError('maxPacketLoss', 'required')) {
+                <mat-error
+                  >This field is required</mat-error
+                  >
+                }
+              </mat-form-field>
+              <mat-form-field
+                matTooltip="Logs players' bandwidth and desync info every 60 seconds, as well as 'network message is pending' owner identity."
+                matTooltipPosition="right"
+                >
+                <mat-label>Enable Players' Bandwidth Diagnostics</mat-label>
+                <mat-select formControlName="enablePlayerDiag">
+                  <mat-option [value]="true">Yes</mat-option>
+                  <mat-option [value]="false">No</mat-option>
+                </mat-select>
+                @if (hasFormError('enablePlayerDiag', 'required')) {
+                  <mat-error
+                    >This field is required</mat-error
+                    >
+                  }
+                </mat-form-field>
+                <mat-form-field
+                  matTooltip="Limit for maximum Steam Query packet length. Increasing this value is dangerous as it can cause Arma 3 server to send UDP packets of a size larger than the MTU. This will cause UDP packets to be fragmented which is not supported by some older routers. But increasing this will fix the modlist length limit in Arma 3: Launcher."
+                  matTooltipPosition="right"
+                  >
+                  <mat-label>Steam Protocol Max Data Size</mat-label>
+                  <input
+                    name="steamProtocolMaxDataSize"
+                    formControlName="steamProtocolMaxDataSize"
+                    matInput
+                    min="0"
+                    (keyup)="allowDigits($event)"
+                    />
+                  @if (hasFormError('steamProtocolMaxDataSize', 'required')) {
+                    <mat-error
+                      >This field is required</mat-error
+                      >
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
 
-    <div class="network-properties">
-      <hr />
-      <h1>Network Performance</h1>
-      <div class="properties-flex">
-        <mat-form-field
-          matTooltip="Bandwidth the server is guaranteed to have (in bps). This value helps server to estimate bandwidth available. Increasing it to too optimistic values can increase lag and CPU load, as too many messages will be sent but discarded."
-          matTooltipPosition="right"
-        >
-          <mat-label>Min Bandwidth</mat-label>
-          <input
-            name="minBandwidth"
-            formControlName="minBandwidth"
-            matInput
-            min="0"
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('minBandwidth', 'required')"
-            >This field is required</mat-error
-          >
-          <mat-error *ngIf="hasFormError('minBandwidth', 'pattern')"
-            >Only digits are permitted</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="Bandwidth the server is guaranteed to never have (in bps). This value helps the server to estimate bandwidth available."
-          matTooltipPosition="right"
-        >
-          <mat-label>Max Bandwidth</mat-label>
-          <input
-            name="maxBandwidth"
-            formControlName="maxBandwidth"
-            matInput
-            min="0"
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('maxBandwidth', 'required')"
-            >This field is required</mat-error
-          >
-          <mat-error *ngIf="hasFormError('maxBandwidth', 'pattern')"
-            >Only digits are permitted</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Max Msg Send</mat-label>
-          <input
-            name="maxMsgSend"
-            formControlName="maxMsgSend"
-            matInput
-            min="0"
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('maxMsgSend', 'required')"
-            >This field is required</mat-error
-          >
-          <mat-error *ngIf="hasFormError('maxMsgSend', 'pattern')"
-            >Only digits are permitted</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="Maximum size (payload) of guaranteed packet in bytes (without headers). Small messages are packed to larger packets (aggregate messages). Guaranteed packets (aggregate messages) are used for non-repetitive events like shooting."
-          matTooltipPosition="right"
-        >
-          <mat-label>Max Size Guaranteed</mat-label>
-          <input
-            name="maxSizeGuaranteed"
-            formControlName="maxSizeGuaranteed"
-            matInput
-            min="0"
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('maxSizeGuaranteed', 'required')"
-            >This field is required</mat-error
-          >
-          <mat-error *ngIf="hasFormError('maxSizeGuaranteed', 'pattern')"
-            >Only digits are permitted</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="Maximum size (payload) of non-guaranteed packet in bytes (without headers). Small messages are packed to larger packets (aggregate messages). Non-guaranteed packets (aggregate messages) are used for repetitive updates like soldier or vehicle position. Increasing this value may improve bandwidth requirement, but it may increase lag."
-          matTooltipPosition="right"
-        >
-          <mat-label>Max Size Non Guaranteed</mat-label>
-          <input
-            name="maxSizeNonGuaranteed"
-            formControlName="maxSizeNonGuaranteed"
-            matInput
-            min="0"
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('maxSizeNonGuaranteed', 'required')"
-            >This field is required</mat-error
-          >
-          <mat-error *ngIf="hasFormError('maxSizeNonGuaranteed', 'pattern')"
-            >Only digits are permitted</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="Minimal error to send updates across network. Using a smaller value can make units observed by binoculars or sniper rifle to move smoother at the trade off of increased network traffic."
-          matTooltipPosition="right"
-        >
-          <mat-label>Min Error To Send</mat-label>
-          <input
-            name="minErrorToSend"
-            formControlName="minErrorToSend"
-            matInput
-            type="text"
-            (keyup)="allowDecimals($event)"
-          />
-          <mat-error *ngIf="hasFormError('minErrorToSend', 'required')"
-            >This field is required</mat-error
-          >
-          <mat-error *ngIf="hasFormError('minErrorToSend', 'pattern')"
-            >Only digits are permitted</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="Minimal error to send updates across network for near units. Using larger value can reduce traffic sent for near units. Used to control client to server traffic as well."
-          matTooltipPosition="right"
-        >
-          <mat-label>Min Error To Send Near</mat-label>
-          <input
-            name="minErrorToSendNear"
-            formControlName="minErrorToSendNear"
-            matInput
-            type="text"
-            (keyup)="allowDecimals($event)"
-          />
-          <mat-error *ngIf="hasFormError('minErrorToSendNear', 'required')"
-            >This field is required</mat-error
-          >
-          <mat-error *ngIf="hasFormError('minErrorToSendNear', 'pattern')"
-            >Only digits are permitted</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="Users with custom face or custom sound larger than THIS size are kicked when trying to connect."
-          matTooltipPosition="right"
-        >
-          <mat-label>Max Custom File Size</mat-label>
-          <input
-            name="maxCustomFileSize"
-            formControlName="maxCustomFileSize"
-            matInput
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('maxCustomFileSize', 'required')"
-            >This field is required</mat-error
-          >
-          <mat-error *ngIf="hasFormError('maxCustomFileSize', 'pattern')"
-            >Only digits are permitted</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="Maximal size of packet sent over network."
-          matTooltipPosition="right"
-        >
-          <mat-label>Max Packet Size</mat-label>
-          <input
-            name="maxPacketSize"
-            formControlName="maxPacketSize"
-            matInput
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('maxPacketSize', 'required')"
-            >This field is required</mat-error
-          >
-          <mat-error *ngIf="hasFormError('maxPacketSize', 'pattern')"
-            >Only digits are permitted</mat-error
-          >
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="network-properties">
-      <hr />
-      <h1 matTooltip="Determines how long until kicked player can return to game in seconds">
-        Kick Timeouts
-      </h1>
-      <div class="properties-flex">
-        <mat-form-field
-          matTooltip="For vote kick, admin kick, bruteforce detection etc. -1 = unitl mission end, -2 = unitl server restart"
-        >
-          <mat-label>Manual kick timeout</mat-label>
-          <input
-            name="manualKickTimeout"
-            formControlName="manualKickTimeout"
-            matInput
-            min="-2"
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('manualKickTimeout', 'min')"
-            >Minimum value is -2</mat-error
-          >
-          <mat-error *ngIf="hasFormError('manualKickTimeout', 'required')"
-            >This field is required</mat-error
-          >
-          <mat-error *ngIf="hasFormError('manualKickTimeout', 'pattern')"
-            >Only digits are permitted</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="For ping, timeout, packetloss, desync. -1 = unitl mission end, -2 = unitl server restart"
-        >
-          <mat-label>Connectivity kick timeout</mat-label>
-          <input
-            name="connectivityKickTimeout"
-            formControlName="connectivityKickTimeout"
-            matInput
-            min="-2"
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('connectivityKickTimeout', 'min')"
-            >Minimum value is -2</mat-error
-          >
-          <mat-error *ngIf="hasFormError('connectivityKickTimeout', 'required')"
-            >This field is required</mat-error
-          >
-          <mat-error *ngIf="hasFormError('connectivityKickTimeout', 'pattern')"
-            >Only digits are permitted</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="For BattlEye kick. -1 = unitl mission end, -2 = unitl server restart"
-        >
-          <mat-label>BattlEye kick timeout</mat-label>
-          <input
-            name="battlEyeKickTimeout"
-            formControlName="battlEyeKickTimeout"
-            matInput
-            min="-2"
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('battlEyeKickTimeout', 'min')"
-            >Minimum value is -2</mat-error
-          >
-          <mat-error *ngIf="hasFormError('battlEyeKickTimeout', 'required')"
-            >This field is required</mat-error
-          >
-          <mat-error *ngIf="hasFormError('battlEyeKickTimeout', 'pattern')"
-            >Only digits are permitted</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field
-          matTooltip="For wrong addons, steam timeout or checks, singatures, content etc. -1 = unitl mission end, -2 = unitl server restart"
-        >
-          <mat-label>Harmless kick timeout</mat-label>
-          <input
-            name="harmlessKickTimeout"
-            formControlName="harmlessKickTimeout"
-            matInput
-            min="-2"
-            (keyup)="allowDigits($event)"
-          />
-          <mat-error *ngIf="hasFormError('harmlessKickTimeout', 'min')"
-            >Minimum value is -2</mat-error
-          >
-          <mat-error *ngIf="hasFormError('harmlessKickTimeout', 'required')"
-            >This field is required</mat-error
-          >
-          <mat-error *ngIf="hasFormError('harmlessKickTimeout', 'pattern')"
-            >Only digits are permitted</mat-error
-          >
-        </mat-form-field>
-      </div>
-    </div>
-  </div>
-  <div>
-    <button mat-flat-button color="primary" (click)="save()">Save</button>
-  </div>
-</form>
+              <div class="network-properties">
+                <hr />
+                <h1>Network Performance</h1>
+                <div class="properties-flex">
+                  <mat-form-field
+                    matTooltip="Bandwidth the server is guaranteed to have (in bps). This value helps server to estimate bandwidth available. Increasing it to too optimistic values can increase lag and CPU load, as too many messages will be sent but discarded."
+                    matTooltipPosition="right"
+                    >
+                    <mat-label>Min Bandwidth</mat-label>
+                    <input
+                      name="minBandwidth"
+                      formControlName="minBandwidth"
+                      matInput
+                      min="0"
+                      (keyup)="allowDigits($event)"
+                      />
+                    @if (hasFormError('minBandwidth', 'required')) {
+                      <mat-error
+                        >This field is required</mat-error
+                        >
+                      }
+                      @if (hasFormError('minBandwidth', 'pattern')) {
+                        <mat-error
+                          >Only digits are permitted</mat-error
+                          >
+                        }
+                      </mat-form-field>
+                      <mat-form-field
+                        matTooltip="Bandwidth the server is guaranteed to never have (in bps). This value helps the server to estimate bandwidth available."
+                        matTooltipPosition="right"
+                        >
+                        <mat-label>Max Bandwidth</mat-label>
+                        <input
+                          name="maxBandwidth"
+                          formControlName="maxBandwidth"
+                          matInput
+                          min="0"
+                          (keyup)="allowDigits($event)"
+                          />
+                        @if (hasFormError('maxBandwidth', 'required')) {
+                          <mat-error
+                            >This field is required</mat-error
+                            >
+                          }
+                          @if (hasFormError('maxBandwidth', 'pattern')) {
+                            <mat-error
+                              >Only digits are permitted</mat-error
+                              >
+                            }
+                          </mat-form-field>
+                          <mat-form-field>
+                            <mat-label>Max Msg Send</mat-label>
+                            <input
+                              name="maxMsgSend"
+                              formControlName="maxMsgSend"
+                              matInput
+                              min="0"
+                              (keyup)="allowDigits($event)"
+                              />
+                            @if (hasFormError('maxMsgSend', 'required')) {
+                              <mat-error
+                                >This field is required</mat-error
+                                >
+                              }
+                              @if (hasFormError('maxMsgSend', 'pattern')) {
+                                <mat-error
+                                  >Only digits are permitted</mat-error
+                                  >
+                                }
+                              </mat-form-field>
+                              <mat-form-field
+                                matTooltip="Maximum size (payload) of guaranteed packet in bytes (without headers). Small messages are packed to larger packets (aggregate messages). Guaranteed packets (aggregate messages) are used for non-repetitive events like shooting."
+                                matTooltipPosition="right"
+                                >
+                                <mat-label>Max Size Guaranteed</mat-label>
+                                <input
+                                  name="maxSizeGuaranteed"
+                                  formControlName="maxSizeGuaranteed"
+                                  matInput
+                                  min="0"
+                                  (keyup)="allowDigits($event)"
+                                  />
+                                @if (hasFormError('maxSizeGuaranteed', 'required')) {
+                                  <mat-error
+                                    >This field is required</mat-error
+                                    >
+                                  }
+                                  @if (hasFormError('maxSizeGuaranteed', 'pattern')) {
+                                    <mat-error
+                                      >Only digits are permitted</mat-error
+                                      >
+                                    }
+                                  </mat-form-field>
+                                  <mat-form-field
+                                    matTooltip="Maximum size (payload) of non-guaranteed packet in bytes (without headers). Small messages are packed to larger packets (aggregate messages). Non-guaranteed packets (aggregate messages) are used for repetitive updates like soldier or vehicle position. Increasing this value may improve bandwidth requirement, but it may increase lag."
+                                    matTooltipPosition="right"
+                                    >
+                                    <mat-label>Max Size Non Guaranteed</mat-label>
+                                    <input
+                                      name="maxSizeNonGuaranteed"
+                                      formControlName="maxSizeNonGuaranteed"
+                                      matInput
+                                      min="0"
+                                      (keyup)="allowDigits($event)"
+                                      />
+                                    @if (hasFormError('maxSizeNonGuaranteed', 'required')) {
+                                      <mat-error
+                                        >This field is required</mat-error
+                                        >
+                                      }
+                                      @if (hasFormError('maxSizeNonGuaranteed', 'pattern')) {
+                                        <mat-error
+                                          >Only digits are permitted</mat-error
+                                          >
+                                        }
+                                      </mat-form-field>
+                                      <mat-form-field
+                                        matTooltip="Minimal error to send updates across network. Using a smaller value can make units observed by binoculars or sniper rifle to move smoother at the trade off of increased network traffic."
+                                        matTooltipPosition="right"
+                                        >
+                                        <mat-label>Min Error To Send</mat-label>
+                                        <input
+                                          name="minErrorToSend"
+                                          formControlName="minErrorToSend"
+                                          matInput
+                                          type="text"
+                                          (keyup)="allowDecimals($event)"
+                                          />
+                                        @if (hasFormError('minErrorToSend', 'required')) {
+                                          <mat-error
+                                            >This field is required</mat-error
+                                            >
+                                          }
+                                          @if (hasFormError('minErrorToSend', 'pattern')) {
+                                            <mat-error
+                                              >Only digits are permitted</mat-error
+                                              >
+                                            }
+                                          </mat-form-field>
+                                          <mat-form-field
+                                            matTooltip="Minimal error to send updates across network for near units. Using larger value can reduce traffic sent for near units. Used to control client to server traffic as well."
+                                            matTooltipPosition="right"
+                                            >
+                                            <mat-label>Min Error To Send Near</mat-label>
+                                            <input
+                                              name="minErrorToSendNear"
+                                              formControlName="minErrorToSendNear"
+                                              matInput
+                                              type="text"
+                                              (keyup)="allowDecimals($event)"
+                                              />
+                                            @if (hasFormError('minErrorToSendNear', 'required')) {
+                                              <mat-error
+                                                >This field is required</mat-error
+                                                >
+                                              }
+                                              @if (hasFormError('minErrorToSendNear', 'pattern')) {
+                                                <mat-error
+                                                  >Only digits are permitted</mat-error
+                                                  >
+                                                }
+                                              </mat-form-field>
+                                              <mat-form-field
+                                                matTooltip="Users with custom face or custom sound larger than THIS size are kicked when trying to connect."
+                                                matTooltipPosition="right"
+                                                >
+                                                <mat-label>Max Custom File Size</mat-label>
+                                                <input
+                                                  name="maxCustomFileSize"
+                                                  formControlName="maxCustomFileSize"
+                                                  matInput
+                                                  (keyup)="allowDigits($event)"
+                                                  />
+                                                @if (hasFormError('maxCustomFileSize', 'required')) {
+                                                  <mat-error
+                                                    >This field is required</mat-error
+                                                    >
+                                                  }
+                                                  @if (hasFormError('maxCustomFileSize', 'pattern')) {
+                                                    <mat-error
+                                                      >Only digits are permitted</mat-error
+                                                      >
+                                                    }
+                                                  </mat-form-field>
+                                                  <mat-form-field
+                                                    matTooltip="Maximal size of packet sent over network."
+                                                    matTooltipPosition="right"
+                                                    >
+                                                    <mat-label>Max Packet Size</mat-label>
+                                                    <input
+                                                      name="maxPacketSize"
+                                                      formControlName="maxPacketSize"
+                                                      matInput
+                                                      (keyup)="allowDigits($event)"
+                                                      />
+                                                    @if (hasFormError('maxPacketSize', 'required')) {
+                                                      <mat-error
+                                                        >This field is required</mat-error
+                                                        >
+                                                      }
+                                                      @if (hasFormError('maxPacketSize', 'pattern')) {
+                                                        <mat-error
+                                                          >Only digits are permitted</mat-error
+                                                          >
+                                                        }
+                                                      </mat-form-field>
+                                                    </div>
+                                                  </div>
+                                                  <div class="network-properties">
+                                                    <hr />
+                                                    <h1 matTooltip="Determines how long until kicked player can return to game in seconds">
+                                                      Kick Timeouts
+                                                    </h1>
+                                                    <div class="properties-flex">
+                                                      <mat-form-field
+                                                        matTooltip="For vote kick, admin kick, bruteforce detection etc. -1 = unitl mission end, -2 = unitl server restart"
+                                                        >
+                                                        <mat-label>Manual kick timeout</mat-label>
+                                                        <input
+                                                          name="manualKickTimeout"
+                                                          formControlName="manualKickTimeout"
+                                                          matInput
+                                                          min="-2"
+                                                          (keyup)="allowDigits($event)"
+                                                          />
+                                                        @if (hasFormError('manualKickTimeout', 'min')) {
+                                                          <mat-error
+                                                            >Minimum value is -2</mat-error
+                                                            >
+                                                          }
+                                                          @if (hasFormError('manualKickTimeout', 'required')) {
+                                                            <mat-error
+                                                              >This field is required</mat-error
+                                                              >
+                                                            }
+                                                            @if (hasFormError('manualKickTimeout', 'pattern')) {
+                                                              <mat-error
+                                                                >Only digits are permitted</mat-error
+                                                                >
+                                                              }
+                                                            </mat-form-field>
+                                                            <mat-form-field
+                                                              matTooltip="For ping, timeout, packetloss, desync. -1 = unitl mission end, -2 = unitl server restart"
+                                                              >
+                                                              <mat-label>Connectivity kick timeout</mat-label>
+                                                              <input
+                                                                name="connectivityKickTimeout"
+                                                                formControlName="connectivityKickTimeout"
+                                                                matInput
+                                                                min="-2"
+                                                                (keyup)="allowDigits($event)"
+                                                                />
+                                                              @if (hasFormError('connectivityKickTimeout', 'min')) {
+                                                                <mat-error
+                                                                  >Minimum value is -2</mat-error
+                                                                  >
+                                                                }
+                                                                @if (hasFormError('connectivityKickTimeout', 'required')) {
+                                                                  <mat-error
+                                                                    >This field is required</mat-error
+                                                                    >
+                                                                  }
+                                                                  @if (hasFormError('connectivityKickTimeout', 'pattern')) {
+                                                                    <mat-error
+                                                                      >Only digits are permitted</mat-error
+                                                                      >
+                                                                    }
+                                                                  </mat-form-field>
+                                                                  <mat-form-field
+                                                                    matTooltip="For BattlEye kick. -1 = unitl mission end, -2 = unitl server restart"
+                                                                    >
+                                                                    <mat-label>BattlEye kick timeout</mat-label>
+                                                                    <input
+                                                                      name="battlEyeKickTimeout"
+                                                                      formControlName="battlEyeKickTimeout"
+                                                                      matInput
+                                                                      min="-2"
+                                                                      (keyup)="allowDigits($event)"
+                                                                      />
+                                                                    @if (hasFormError('battlEyeKickTimeout', 'min')) {
+                                                                      <mat-error
+                                                                        >Minimum value is -2</mat-error
+                                                                        >
+                                                                      }
+                                                                      @if (hasFormError('battlEyeKickTimeout', 'required')) {
+                                                                        <mat-error
+                                                                          >This field is required</mat-error
+                                                                          >
+                                                                        }
+                                                                        @if (hasFormError('battlEyeKickTimeout', 'pattern')) {
+                                                                          <mat-error
+                                                                            >Only digits are permitted</mat-error
+                                                                            >
+                                                                          }
+                                                                        </mat-form-field>
+                                                                        <mat-form-field
+                                                                          matTooltip="For wrong addons, steam timeout or checks, singatures, content etc. -1 = unitl mission end, -2 = unitl server restart"
+                                                                          >
+                                                                          <mat-label>Harmless kick timeout</mat-label>
+                                                                          <input
+                                                                            name="harmlessKickTimeout"
+                                                                            formControlName="harmlessKickTimeout"
+                                                                            matInput
+                                                                            min="-2"
+                                                                            (keyup)="allowDigits($event)"
+                                                                            />
+                                                                          @if (hasFormError('harmlessKickTimeout', 'min')) {
+                                                                            <mat-error
+                                                                              >Minimum value is -2</mat-error
+                                                                              >
+                                                                            }
+                                                                            @if (hasFormError('harmlessKickTimeout', 'required')) {
+                                                                              <mat-error
+                                                                                >This field is required</mat-error
+                                                                                >
+                                                                              }
+                                                                              @if (hasFormError('harmlessKickTimeout', 'pattern')) {
+                                                                                <mat-error
+                                                                                  >Only digits are permitted</mat-error
+                                                                                  >
+                                                                                }
+                                                                              </mat-form-field>
+                                                                            </div>
+                                                                          </div>
+                                                                        </div>
+                                                                        <div>
+                                                                          <button mat-flat-button color="primary" (click)="save()">Save</button>
+                                                                        </div>
+                                                                      </form>

@@ -7,20 +7,24 @@
   </div>
 </div>
 <div>
-  <div *ngFor="let file of getUploadingFiles(); index as i">
-    <div style="display: flex; flex-direction: column">
-      <mat-label>{{ file.fileName }}</mat-label>
-      <mat-label style="filter: brightness(75%)">{{
-        (file.uploadedSize | filesize) + "/" + (file.totalSize | filesize)
-      }}</mat-label>
+  @for (file of getUploadingFiles(); track file; let i = $index) {
+    <div>
+      <div style="display: flex; flex-direction: column">
+        <mat-label>{{ file.fileName }}</mat-label>
+        <mat-label style="filter: brightness(75%)">{{
+          (file.uploadedSize | filesize) + "/" + (file.totalSize | filesize)
+        }}</mat-label>
+      </div>
+      <mat-progress-bar
+        class="mt-2"
+        mode="buffer"
+        [value]="file.progress"
+        [bufferValue]="file.totalSize"
+        >
+      </mat-progress-bar>
+      @if (i < getUploadingFiles().length - 1) {
+        <hr />
+      }
     </div>
-    <mat-progress-bar
-      class="mt-2"
-      mode="buffer"
-      [value]="file.progress"
-      [bufferValue]="file.totalSize"
-    >
-    </mat-progress-bar>
-    <hr *ngIf="i < getUploadingFiles().length - 1" />
-  </div>
+  }
 </div>

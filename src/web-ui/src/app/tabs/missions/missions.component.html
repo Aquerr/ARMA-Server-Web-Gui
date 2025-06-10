@@ -20,36 +20,37 @@
         class="list"
         [cdkDropListSortingDisabled]="false"
         (cdkDropListDropped)="onMissionItemDropped($event)"
-      >
-        <div
-          class="list-item-container"
-          *ngFor="let mission of this.filteredDisabledMissions"
-          cdkDrag
         >
-          <div style="flex: 72%; display: flex; flex-direction: column">
-            <span style="font-weight: bold">{{ getMissionNameForDisplay(mission) }}</span>
-            <span>Difficulty: {{ mission.difficulty }}</span>
-            <span style="filter: brightness(50%)">Template: {{ mission.template }}</span>
-          </div>
-          <div class="text-center" style="flex: 14%">
-            <button
-              mat-icon-button
-              matTooltip="Configure parameters"
-              (click)="showMissionModifyDialog(mission)"
+        @for (mission of this.filteredDisabledMissions; track mission) {
+          <div
+            class="list-item-container"
+            cdkDrag
             >
-              <mat-icon>settings</mat-icon>
-            </button>
+            <div style="flex: 72%; display: flex; flex-direction: column">
+              <span style="font-weight: bold">{{ getMissionNameForDisplay(mission) }}</span>
+              <span>Difficulty: {{ mission.difficulty }}</span>
+              <span style="filter: brightness(50%)">Template: {{ mission.template }}</span>
+            </div>
+            <div class="text-center" style="flex: 14%">
+              <button
+                mat-icon-button
+                matTooltip="Configure parameters"
+                (click)="showMissionModifyDialog(mission)"
+                >
+                <mat-icon>settings</mat-icon>
+              </button>
+            </div>
+            <div class="text-center" style="flex: 14%">
+              <button
+                mat-icon-button
+                matTooltip="Delete the mission"
+                (click)="showMissionDeleteConfirmationDialog(mission.template)"
+                >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </div>
-          <div class="text-center" style="flex: 14%">
-            <button
-              mat-icon-button
-              matTooltip="Delete the mission"
-              (click)="showMissionDeleteConfirmationDialog(mission.template)"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </div>
+        }
       </div>
     </div>
     <div class="mission-list" style="margin-left: 1rem">
@@ -61,36 +62,37 @@
         class="list"
         [cdkDropListSortingDisabled]="false"
         (cdkDropListDropped)="onMissionItemDropped($event)"
-      >
-        <div
-          class="list-item-container"
-          *ngFor="let mission of this.filteredEnabledMissions"
-          cdkDrag
         >
-          <div style="flex: 72%; display: flex; flex-direction: column">
-            <span style="font-weight: bold">{{ getMissionNameForDisplay(mission) }}</span>
-            <span>Difficulty: {{ mission.difficulty }}</span>
-            <span style="filter: brightness(50%)">Template: {{ mission.template }}</span>
-          </div>
-          <div class="text-center" style="flex: 14%">
-            <button
-              mat-icon-button
-              matTooltip="Configure parameters"
-              (click)="showMissionModifyDialog(mission)"
+        @for (mission of this.filteredEnabledMissions; track mission) {
+          <div
+            class="list-item-container"
+            cdkDrag
             >
-              <mat-icon>settings</mat-icon>
-            </button>
+            <div style="flex: 72%; display: flex; flex-direction: column">
+              <span style="font-weight: bold">{{ getMissionNameForDisplay(mission) }}</span>
+              <span>Difficulty: {{ mission.difficulty }}</span>
+              <span style="filter: brightness(50%)">Template: {{ mission.template }}</span>
+            </div>
+            <div class="text-center" style="flex: 14%">
+              <button
+                mat-icon-button
+                matTooltip="Configure parameters"
+                (click)="showMissionModifyDialog(mission)"
+                >
+                <mat-icon>settings</mat-icon>
+              </button>
+            </div>
+            <div class="text-center" style="flex: 14%">
+              <button
+                mat-icon-button
+                matTooltip="Delete the mission"
+                (click)="showMissionDeleteConfirmationDialog(mission.template)"
+                >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </div>
-          <div class="text-center" style="flex: 14%">
-            <button
-              mat-icon-button
-              matTooltip="Delete the mission"
-              (click)="showMissionDeleteConfirmationDialog(mission.template)"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </div>
+        }
       </div>
     </div>
   </div>

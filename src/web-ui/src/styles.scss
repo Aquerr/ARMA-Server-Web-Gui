@@ -17,54 +17,54 @@
     --aswg-primary-color
   ) !important;
   --mat-badge-background-color: var(--aswg-primary-color) !important;
-  --mdc-circular-progress-active-indicator-color: var(--aswg-primary-color) !important;
-  --mdc-icon-button-icon-color: var(--aswg-primary-color) !important;
-  --mdc-outlined-button-label-text-color: var(--aswg-primary-color) !important;
-  --mdc-protected-button-container-color: var(--aswg-primary-color) !important;
-  --mdc-filled-button-container-color: var(--aswg-primary-color) !important;
-  --mdc-text-button-label-text-color: var(--aswg-primary-color) !important;
-  --mdc-checkbox-selected-focus-state-layer-color: var(--aswg-primary-color) !important;
-  --mdc-checkbox-selected-hover-state-layer-color: var(--aswg-primary-color) !important;
-  --mdc-checkbox-selected-pressed-state-layer-color: var(--aswg-primary-color) !important;
-  --mdc-checkbox-selected-focus-icon-color: var(--aswg-primary-color) !important;
-  --mdc-checkbox-selected-hover-icon-color: var(--aswg-primary-color) !important;
-  --mdc-checkbox-selected-icon-color: var(--aswg-primary-color) !important;
-  --mdc-checkbox-selected-pressed-icon-color: var(--aswg-primary-color) !important;
-  --mat-tab-header-with-background-background-color: var(--aswg-primary-color) !important;
-  --mat-tab-header-active-focus-label-text-color: var(--aswg-primary-color) !important;
-  --mat-tab-header-active-hover-label-text-color: var(--aswg-primary-color) !important;
-  --mat-tab-header-active-focus-indicator-color: var(--aswg-primary-color) !important;
-  --mat-tab-header-active-hover-indicator-color: var(--aswg-primary-color) !important;
-  --mat-tab-header-active-label-text-color: var(--aswg-primary-color) !important;
-  --mat-tab-header-active-ripple-color: var(--aswg-primary-color) !important;
-  --mat-tab-header-inactive-ripple-color: var(--aswg-primary-color) !important;
-  --mdc-tab-indicator-active-indicator-color: var(--aswg-primary-color) !important;
-  --mdc-radio-selected-focus-icon-color: var(--aswg-primary-color) !important;
-  --mdc-radio-selected-hover-icon-color: var(--aswg-primary-color) !important;
-  --mdc-radio-selected-icon-color: var(--aswg-primary-color) !important;
-  --mdc-radio-selected-pressed-icon-color: var(--aswg-primary-color) !important;
-  --mdc-slider-with-tick-marks-inactive-container-color: var(--aswg-primary-color) !important;
+  --mat-progress-spinner-active-indicator-color: var(--aswg-primary-color) !important;
+  --mat-icon-button-icon-color: var(--aswg-primary-color) !important;
+  --mat-button-outlined-label-text-color: var(--aswg-primary-color) !important;
+  --mat-button-protected-container-color: var(--aswg-primary-color) !important;
+  --mat-button-filled-container-color: var(--aswg-primary-color) !important;
+  --mat-button-text-label-text-color: var(--aswg-primary-color) !important;
+  --mat-checkbox-selected-focus-state-layer-color: var(--aswg-primary-color) !important;
+  --mat-checkbox-selected-hover-state-layer-color: var(--aswg-primary-color) !important;
+  --mat-checkbox-selected-pressed-state-layer-color: var(--aswg-primary-color) !important;
+  --mat-checkbox-selected-focus-icon-color: var(--aswg-primary-color) !important;
+  --mat-checkbox-selected-hover-icon-color: var(--aswg-primary-color) !important;
+  --mat-checkbox-selected-icon-color: var(--aswg-primary-color) !important;
+  --mat-checkbox-selected-pressed-icon-color: var(--aswg-primary-color) !important;
+  --mat-tab-with-background-background-color: var(--aswg-primary-color) !important;
+  --mat-tab-active-focus-label-text-color: var(--aswg-primary-color) !important;
+  --mat-tab-active-hover-label-text-color: var(--aswg-primary-color) !important;
+  --mat-tab-active-focus-indicator-color: var(--aswg-primary-color) !important;
+  --mat-tab-active-hover-indicator-color: var(--aswg-primary-color) !important;
+  --mat-tab-active-label-text-color: var(--aswg-primary-color) !important;
+  --mat-tab-active-ripple-color: var(--aswg-primary-color) !important;
+  --mat-tab-inactive-ripple-color: var(--aswg-primary-color) !important;
+  --mat-tab-active-indicator-color: var(--aswg-primary-color) !important;
+  --mat-radio-selected-focus-icon-color: var(--aswg-primary-color) !important;
+  --mat-radio-selected-hover-icon-color: var(--aswg-primary-color) !important;
+  --mat-radio-selected-icon-color: var(--aswg-primary-color) !important;
+  --mat-radio-selected-pressed-icon-color: var(--aswg-primary-color) !important;
+  --mat-slider-with-tick-marks-inactive-container-color: var(--aswg-primary-color) !important;
   --mat-mdc-slider-ripple-color: var(--aswg-primary-color) !important;
-  --mdc-slider-handle-color: var(--aswg-primary-color) !important;
-  --mdc-slider-focus-handle-color: var(--aswg-primary-color) !important;
-  --mdc-slider-hover-handle-color: var(--aswg-primary-color) !important;
-  --mdc-slider-active-track-color: var(--aswg-primary-color) !important;
-  --mdc-slider-inactive-track-color: var(--aswg-primary-color) !important;
+  --mat-slider-handle-color: var(--aswg-primary-color) !important;
+  --mat-slider-focus-handle-color: var(--aswg-primary-color) !important;
+  --mat-slider-hover-handle-color: var(--aswg-primary-color) !important;
+  --mat-slider-active-track-color: var(--aswg-primary-color) !important;
+  --mat-slider-inactive-track-color: var(--aswg-primary-color) !important;
   --mat-radio-checked-ripple-color: var(--aswg-primary-color) !important;
-  --mdc-chip-elevated-container-color: var(--aswg-primary-color) !important;
-  --mdc-chip-elevated-disabled-container-color: var(--aswg-primary-color) !important;
-  --mdc-outlined-text-field-caret-color: var(--aswg-primary-color) !important;
-  --mdc-outlined-text-field-focus-outline-color: var(--aswg-primary-color) !important;
-  --mdc-filled-text-field-caret-color: var(--aswg-primary-color) !important;
-  --mdc-filled-text-field-focus-active-indicator-color: var(--aswg-primary-color) !important;
-  --mdc-linear-progress-active-indicator-color: var(--aswg-primary-color) !important;
+  --mat-chip-elevated-container-color: var(--aswg-primary-color) !important;
+  --mat-chip-elevated-disabled-container-color: var(--aswg-primary-color) !important;
+  --mat-form-field-outlined-caret-color: var(--aswg-primary-color) !important;
+  --mat-form-field-outlined-focus-outline-color: var(--aswg-primary-color) !important;
+  --mat-form-field-filled-caret-color: var(--aswg-primary-color) !important;
+  --mat-form-field-filled-focus-active-indicator-color: var(--aswg-primary-color) !important;
+  --mat-progress-bar-active-indicator-color: var(--aswg-primary-color) !important;
   --mat-option-selected-state-label-text-color: var(--aswg-primary-color) !important;
   --mat-divider-color: #444c56 !important;
   --mat-divider-vertical-color: #444c56 !important;
   --mat-menu-item-label-text-color: var(--aswg-primary-color) !important;
   --mat-menu-container-color: var(--aswg-bg-primary-bg-color) !important;
-  --mdc-elevated-card-container-color: var(--aswg-input-bg-color) !important;
-  --mdc-filled-text-field-disabled-label-text-color: var(--aswg-primary-text-color) !important;
+  --mat-card-elevated-container-color: var(--aswg-input-bg-color) !important;
+  --mat-form-field-filled-disabled-label-text-color: var(--aswg-primary-text-color) !important;
   --mat-select-panel-background-color: var(--aswg-bg-primary-bg-color) !important;
   --mat-paginator-container-background-color: var(--aswg-bg-primary-bg-color) !important;
   --mat-paginator-container-text-color: var(--aswg-primary-text-color) !important;
@@ -77,7 +77,7 @@ a {
 }
 
 .mat-mdc-raised-button.mat-unthemed {
-  --mdc-protected-button-container-color: var(--aswg-primary-color) !important;
+  --mat-button-protected-container-color: var(--aswg-primary-color) !important;
 }
 
 .mdc-text-field--disabled {
@@ -120,11 +120,11 @@ a {
 }
 
 .mat-mdc-progress-spinner {
-  --mdc-circular-progress-active-indicator-color: var(--aswg-primary-color);
+  --mat-progress-spinner-active-indicator-color: var(--aswg-primary-color);
 }
 
 .mat-mdc-unelevated-button.mat-primary {
-  --mdc-filled-button-container-color: var(--aswg-primary-color) !important;
+  --mat-button-filled-container-color: var(--aswg-primary-color) !important;
 }
 
 .mat-mdc-outlined-button:not(:disabled) {
@@ -144,8 +144,8 @@ a {
 
 .mat-mdc-fab.mat-primary,
 .mat-mdc-mini-fab.mat-primary {
-  --mdc-fab-container-color: var(--aswg-primary-color) !important;
-  --mdc-fab-small-container-color: var(--aswg-primary-color) !important;
+  --mat-fab-container-color: var(--aswg-primary-color) !important;
+  --mat-fab-small-container-color: var(--aswg-primary-color) !important;
 }
 
 .mdc-list-item__primary-text {
@@ -252,8 +252,8 @@ input::placeholder {
 }
 
 .mat-mdc-progress-bar {
-  --mdc-linear-progress-active-indicator-color: var(--aswg-primary-color) !important;
-  --mdc-linear-progress-track-color: rgba(109, 109, 109, 0.25) !important;
+  --mat-progress-bar-active-indicator-color: var(--aswg-primary-color) !important;
+  --mat-progress-bar-track-color: rgba(109, 109, 109, 0.25) !important;
 }
 
 .cdk-global-scrollblock {

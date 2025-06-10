@@ -9,7 +9,7 @@
         matInput
         type="text"
         (keydown)="$event.code === 'Enter' ? login() : null"
-      />
+        />
     </mat-form-field>
     <mat-form-field>
       <mat-label>Password</mat-label>
@@ -19,10 +19,12 @@
         matInput
         [type]="'password'"
         (keydown)="onKeyDown($event)"
-      />
+        />
     </mat-form-field>
   </form>
-  <p style="color: red" *ngIf="errorMessage">{{ errorMessage }}</p>
+  @if (errorMessage) {
+    <p style="color: red">{{ errorMessage }}</p>
+  }
   <div>
     <button mat-flat-button color="primary" (click)="login()" [disabled]="form.invalid">
       Log in

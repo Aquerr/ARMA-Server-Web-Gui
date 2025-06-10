@@ -4,7 +4,7 @@
       [collapsedHeight]="'4rem'"
       class="mod-list-item-expansion-panel-header"
       [ngStyle]="expanded ? { 'background-color': 'var(--aswg-input-bg-color)' } : null"
-    >
+      >
       <mat-panel-title>
         <div>
           <div>
@@ -17,11 +17,13 @@
       </mat-panel-title>
       <mat-panel-description
         class="mod-list-item-expansion-panel-header-description"
-      >
+        >
         <div>
           <span style="filter: brightness(50%)">{{ mod.sizeBytes | filesize }}</span>
         </div>
-        <mat-icon *ngIf="!mod.fileExists" matTooltip="Mod files seems to be missing" [color]="'warn'" style="margin-left: 10px">warning</mat-icon>
+        @if (!mod.fileExists) {
+          <mat-icon matTooltip="Mod files seems to be missing" [color]="'warn'" style="margin-left: 10px">warning</mat-icon>
+        }
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="mod-list-item-inner-panel">
@@ -32,29 +34,29 @@
         <div class="mod-list-item-inner-panel-actions-action">
           <mat-checkbox [checked]="mod.serverMod" (change)="mod.serverMod = !mod.serverMod"
             >Server Mod</mat-checkbox
-          >
-        </div>
-        <div class="mod-list-item-inner-panel-actions-action" style="justify-content: space-evenly">
-          <div class="mod-list-item-inner-panel-actions-action">
-            <button
-              mat-icon-button
-              matTooltip="Force update the mod"
-              (click)="showForceUpdateConfirmationDialog(mod.workshopFileId, mod.name)"
             >
-              <mat-icon>update</mat-icon>
-            </button>
           </div>
-          <div class="mod-list-item-inner-panel-actions-action">
-            <button
-              mat-icon-button
-              matTooltip="Delete the mod"
-              (click)="showModDeleteConfirmationDialog(mod.name)"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
+          <div class="mod-list-item-inner-panel-actions-action" style="justify-content: space-evenly">
+            <div class="mod-list-item-inner-panel-actions-action">
+              <button
+                mat-icon-button
+                matTooltip="Force update the mod"
+                (click)="showForceUpdateConfirmationDialog(mod.workshopFileId, mod.name)"
+                >
+                <mat-icon>update</mat-icon>
+              </button>
+            </div>
+            <div class="mod-list-item-inner-panel-actions-action">
+              <button
+                mat-icon-button
+                matTooltip="Delete the mod"
+                (click)="showModDeleteConfirmationDialog(mod.name)"
+                >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </mat-expansion-panel>
-</mat-accordion>
+    </mat-expansion-panel>
+  </mat-accordion>

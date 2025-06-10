@@ -8,24 +8,26 @@
   </div>
   <div style="margin-top: 5px">
     <div style="display: flex">
-      <div *ngIf="canToggleServer()">
-        <div
-          *ngIf="isServerOffline(); else serverOfflineBlock"
-          style="display: flex; flex-direction: column"
-        >
-          <mat-checkbox id="perform-update" [(ngModel)]="performUpdate" labelPosition="after"
-            >Perform Arma update during start?</mat-checkbox
-          >
-          <button mat-flat-button color="primary" (click)="toggleServer()">{{ "START" }}</button>
-        </div>
-        <ng-template #serverOfflineBlock>
-          <div>
-            <button mat-flat-button color="primary" (click)="toggleServer()">{{ "STOP" }}</button>
+      @if (canToggleServer()) {
+        <div>
+          @if (isServerOffline()) {
+            <div
+              style="display: flex; flex-direction: column"
+              >
+              <mat-checkbox id="perform-update" [(ngModel)]="performUpdate" labelPosition="after"
+                >Perform Arma update during start?</mat-checkbox
+                >
+                <button mat-flat-button color="primary" (click)="toggleServer()">{{ "START" }}</button>
+              </div>
+            } @else {
+              <div>
+                <button mat-flat-button color="primary" (click)="toggleServer()">{{ "STOP" }}</button>
+              </div>
+            }
           </div>
-        </ng-template>
+        }
       </div>
     </div>
+    <app-server-console></app-server-console>
+    <app-player-list #playerListComponent></app-player-list>
   </div>
-  <app-server-console></app-server-console>
-  <app-player-list #playerListComponent></app-player-list>
-</div>

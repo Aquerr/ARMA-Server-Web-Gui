@@ -9,29 +9,36 @@
     <p>
       {{ prepareModDescription(workshopMod.description) }}
     </p>
-    <div *ngIf="!workshopMod.isBeingInstalled">
-      <button *ngIf="canInstall" mat-flat-button color="primary" (click)="installMod(workshopMod)">
-        Install
-      </button>
-      <button *ngIf="!canInstall" mat-flat-button color="accent" (click)="deleteMod(workshopMod)">
-        Delete
-      </button>
-    </div>
-    <div
-      class="spinner"
-      *ngIf="workshopMod.isBeingInstalled"
-      style="position: relative; max-width: 30px; max-height: 30px; margin-top: 10px"
-    >
-      <ngx-spinner
-        [name]="workshopMod.title"
-        [fullScreen]="false"
-        [size]="'default'"
-        [color]="spinnerColor"
-        [type]="'ball-clip-rotate-multiple'"
-        [bdColor]="'transparent'"
-      >
-      </ngx-spinner>
-      <span style="margin-left: 40px">Installing...</span>
-    </div>
+    @if (!workshopMod.isBeingInstalled) {
+      <div>
+        @if (canInstall) {
+          <button mat-flat-button color="primary" (click)="installMod(workshopMod)">
+            Install
+          </button>
+        }
+        @if (!canInstall) {
+          <button mat-flat-button color="accent" (click)="deleteMod(workshopMod)">
+            Delete
+          </button>
+        }
+      </div>
+    }
+    @if (workshopMod.isBeingInstalled) {
+      <div
+        class="spinner"
+        style="position: relative; max-width: 30px; max-height: 30px; margin-top: 10px"
+        >
+        <ngx-spinner
+          [name]="workshopMod.title"
+          [fullScreen]="false"
+          [size]="'default'"
+          [color]="spinnerColor"
+          [type]="'ball-clip-rotate-multiple'"
+          [bdColor]="'transparent'"
+          >
+        </ngx-spinner>
+        <span style="margin-left: 40px">Installing...</span>
+      </div>
+    }
   </div>
 </div>

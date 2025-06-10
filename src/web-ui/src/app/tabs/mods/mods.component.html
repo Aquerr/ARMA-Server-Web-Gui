@@ -36,14 +36,15 @@
           [cdkDropListData]="filteredDisabledMods"
           [cdkDropListSortingDisabled]="true"
           (cdkDropListDropped)="onModItemDragDrop($event)"
-        >
-          <div
-            app-mod-list-item
-            *ngFor="let mod of filteredDisabledMods"
-            [mod]="mod"
-            (onModDelete)="onModDelete($event)"
-            cdkDrag
-          ></div>
+          >
+          @for (mod of filteredDisabledMods; track mod) {
+            <div
+              app-mod-list-item
+              [mod]="mod"
+              (onModDelete)="onModDelete($event)"
+              cdkDrag
+            ></div>
+          }
         </div>
       </div>
     </div>
@@ -65,14 +66,15 @@
           [cdkDropListData]="filteredEnabledMods"
           [cdkDropListSortingDisabled]="true"
           (cdkDropListDropped)="onModItemDragDrop($event)"
-        >
-          <div
-            app-mod-list-item
-            *ngFor="let mod of filteredEnabledMods"
-            cdkDrag
-            [mod]="mod"
-            (onModDelete)="onModDelete($event)"
-          ></div>
+          >
+          @for (mod of filteredEnabledMods; track mod) {
+            <div
+              app-mod-list-item
+              cdkDrag
+              [mod]="mod"
+              (onModDelete)="onModDelete($event)"
+            ></div>
+          }
         </div>
       </div>
     </div>

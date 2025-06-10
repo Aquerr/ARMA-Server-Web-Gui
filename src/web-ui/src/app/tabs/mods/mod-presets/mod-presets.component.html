@@ -1,13 +1,14 @@
 <div class="mod-preset-menu-button">
   <button mat-button [matMenuTriggerFor]="presetMenu">Mod presets</button>
   <mat-menu #presetMenu [class]="'aswg-menu-default'">
-    <app-mod-preset-item
-      *ngFor="let preset of modPresets"
-      [presetName]="preset"
-      (presetSelected)="onPresetSelect($event)"
-      (presetDeleted)="onPresetDelete($event)"
-      (presetSaved)="onPresetSaved($event)"
-    ></app-mod-preset-item>
+    @for (preset of modPresets; track preset) {
+      <app-mod-preset-item
+        [presetName]="preset"
+        (presetSelected)="onPresetSelect($event)"
+        (presetDeleted)="onPresetDelete($event)"
+        (presetSaved)="onPresetSaved($event)"
+      ></app-mod-preset-item>
+    }
     <mat-divider></mat-divider>
     <button mat-menu-item (click)="newPresetClick()">New preset...</button>
     <mat-divider></mat-divider>
@@ -17,7 +18,7 @@
       #presetFileInput
       (change)="modPresetImport($event)"
       accept="text/html"
-    />
+      />
     <button mat-menu-item (click)="presetImportClick()">Import preset...</button>
   </mat-menu>
 </div>

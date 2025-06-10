@@ -15,7 +15,7 @@ edit-mod-settings-page-content {
 }
 
 .edit-mod-settings-add-new {
-  border-radius: var(--mdc-outlined-button-container-shape);
+  border-radius: var(--mat-button-outlined-container-shape);
   width: 100%;
 }
 
@@ -29,7 +29,7 @@ edit-mod-settings-page-content {
   border: 1px black solid;
   color: var(--aswg-primary-text-color) !important;
   width: 8rem;
-  border-radius: var(--mdc-outlined-button-container-shape) !important;
+  border-radius: var(--mat-button-outlined-container-shape) !important;
 }
 
 .code {

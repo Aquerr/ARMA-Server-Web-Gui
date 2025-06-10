@@ -53,9 +53,6 @@ public class SecurityConfig
                         auths.requestMatchers("/api/v1/ws/**").permitAll();
                         auths.requestMatchers("/api/v1/actuator/info").permitAll();
                         auths.requestMatchers("/api/v1/actuator/health").permitAll();
-                        auths.requestMatchers("/api/v1/actuator/env").permitAll();
-                        auths.requestMatchers("/api/v1/actuator/configprops").permitAll();
-                        auths.requestMatchers("/api/v1/actuator/**").permitAll();
                         auths.requestMatchers(ANT_PATTERN_ALL_API_ENDPOINTS).authenticated();
                         auths.requestMatchers("/ws/**").permitAll();
                         auths.requestMatchers("/static/**").permitAll();
