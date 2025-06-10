@@ -11,13 +11,9 @@
       (changeThemeEmit)="changeTheme()"
       [darkMode]="isDarkMode()"
     ></app-desktop-header>
-  }
-  @if (!isMobile) {
     <div class="side-menu-wrapper">
       <app-side-menu [darkMode]="isDarkMode()"></app-side-menu>
-      @if (!isMobile) {
-        <ng-container [ngTemplateOutlet]="footer"></ng-container>
-      }
+      <ng-container [ngTemplateOutlet]="footer"></ng-container>
     </div>
   }
   <div class="router-wrapper">
