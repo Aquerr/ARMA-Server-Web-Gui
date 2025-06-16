@@ -50,7 +50,7 @@
 
   .not-managed-mod-list-item-header {
     display: flex;
-    align-items: center;
+    flex-direction: column;
   }
 }
 

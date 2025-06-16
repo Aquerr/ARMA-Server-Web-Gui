@@ -18,6 +18,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.NotManagedModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 
 import java.util.HashSet;
@@ -68,7 +69,7 @@ public class ModsRestController
     {
         List<ModView> disabledMods;
         List<ModView> enabledMods;
-        List<ModView> notManagedMods;
+        List<NotManagedModView> notManagedMods;
 
         private static GetModsResponse of(ModsView modsView)
         {

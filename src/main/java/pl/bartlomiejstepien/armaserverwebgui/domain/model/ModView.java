@@ -2,14 +2,14 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.OffsetDateTime;
 
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ModView
@@ -23,5 +23,5 @@ public class ModView
     private long sizeBytes;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private OffsetDateTime lastUpdateDateTime;
+    private OffsetDateTime lastWorkshopUpdateDateTime;
 }

@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.NotManagedModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.InstalledModConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModWorkshopUrlBuilder;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
@@ -240,7 +241,7 @@ public class ModServiceImpl implements ModService
                 .map(mod -> asModView(mod, fileSystemMods))
                 .toList();
 
-        List<ModView> notManagedMods = findNotManagedMods(fileSystemMods, installedModEntities).stream()
+        List<NotManagedModView> notManagedMods = findNotManagedMods(fileSystemMods, installedModEntities).stream()
                 .map(this::asModView)
                 .toList();
 
@@ -250,15 +251,16 @@ public class ModServiceImpl implements ModService
         return modsView;
     }
 
-    private ModView asModView(FileSystemMod fileSystemMod)
+    private NotManagedModView asModView(FileSystemMod fileSystemMod)
     {
-        return ModView.builder()
+        return NotManagedModView.builder()
                 .workshopFileId(fileSystemMod.getWorkshopFileId())
                 .name(fileSystemMod.getName())
                 .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(fileSystemMod.getWorkshopFileId()))
                 .fileExists(fileSystemMod.isValid())
                 .sizeBytes(fileSystemMod.getModDirectory().getSizeBytes())
-                .lastUpdateDateTime(fileSystemMod.getLastUpdated())
+                .lastWorkshopUpdateDateTime(fileSystemMod.getLastUpdated())
+                .directoryName(fileSystemMod.getModDirectory().getDirectoryName())
                 .build();
     }
 
@@ -275,7 +277,7 @@ public class ModServiceImpl implements ModService
                         .findFirst()
                         .map(mod -> mod.getModDirectory().getSizeBytes())
                         .orElse(0L))
-                .lastUpdateDateTime(modEntity.getLastWorkshopUpdate())
+                .lastWorkshopUpdateDateTime(modEntity.getLastWorkshopUpdate())
                 .build();
     }
 }

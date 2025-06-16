@@ -3,7 +3,7 @@ import { Subject, Subscription } from "rxjs";
 import { MaskService } from "src/app/service/mask.service";
 import { SaveEnabledModsRequest, ServerModsService } from "src/app/service/server-mods.service";
 import { NotificationService } from "../../service/notification.service";
-import { Mod } from "../../model/mod.model";
+import { Mod, NotManagedMod } from "../../model/mod.model";
 import { FormControl } from "@angular/forms";
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
 import { ModUploadService } from "./service/mod-upload.service";
@@ -21,7 +21,7 @@ export class ModsComponent implements OnInit, OnDestroy {
   reloadModsDataSubscription!: Subscription;
   modUploadSubscription!: Subscription;
 
-  notManagedMods: Mod[] = [];
+  notManagedMods: NotManagedMod[] = [];
   disabledMods: Mod[] = [];
   enabledMods: Mod[] = [];
   filteredDisabledMods: Mod[] = [];

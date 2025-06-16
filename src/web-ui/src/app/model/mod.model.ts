@@ -5,8 +5,12 @@ export interface Mod {
   previewUrl: string;
   workshopUrl: string;
   fileExists: boolean;
-  lastUpdateDateTime: string;
+  lastWorkshopUpdateDateTime: string;
   sizeBytes: number;
+}
+
+export interface NotManagedMod extends Mod {
+  directoryName: string;
 }
 
 export interface ModPresetEntry {

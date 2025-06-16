@@ -87,7 +87,14 @@
         <div class="not-managed-mod-list">
           @for (mod of notManagedMods; track mod.name) {
             <div class="not-managed-mod-list-item">
-              <div class="not-managed-mod-list-item-header">{{ mod.name }}</div>
+              <div class="not-managed-mod-list-item-header">
+                <div>
+                  {{ mod.name }}
+                </div>
+                <div style="filter: brightness(50%)">
+                  Directory: {{ mod.directoryName }}
+                </div>
+              </div>
               <div class="not-managed-mod-buttons">
                 <button mat-button (click)="registerNotManagedMod(mod)">
                   <mat-icon fontIcon="settings"></mat-icon> Manage

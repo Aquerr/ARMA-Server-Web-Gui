@@ -13,5 +13,5 @@ public class ModsView
 {
     private List<ModView> disabledMods;
     private List<ModView> enabledMods;
-    private List<ModView> notManagedMods;
+    private List<NotManagedModView> notManagedMods;
 }
