@@ -88,7 +88,8 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
         else
         {
             // If mod directory exists (because it was uploaded manually) then we replace it with steam folder to make updates easier.
-            if (Files.exists(modDirectory.getPath().toAbsolutePath()) && !Files.isSymbolicLink(modDirectory.getPath().toAbsolutePath())) {
+            if (Files.exists(modDirectory.getPath().toAbsolutePath()) && !Files.isSymbolicLink(modDirectory.getPath().toAbsolutePath()))
+            {
                 FileUtils.deleteFilesRecursively(modDirectory.getPath().toAbsolutePath(), false);
             }
 

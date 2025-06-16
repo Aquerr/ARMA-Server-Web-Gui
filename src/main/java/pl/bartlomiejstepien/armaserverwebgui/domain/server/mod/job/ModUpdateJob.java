@@ -29,6 +29,12 @@ public class ModUpdateJob
             return;
         }
 
+        if (!this.steamService.isSteamCmdInstalled())
+        {
+            log.warn("Steamcmd is not installed yet mod update is enabled. Fix this issue by properly configuring steamcmd.");
+            return;
+        }
+
         log.info("Executing Mod Update Job");
         modService.getInstalledMods()
                 .forEach(this::scheduleModUpdate);
