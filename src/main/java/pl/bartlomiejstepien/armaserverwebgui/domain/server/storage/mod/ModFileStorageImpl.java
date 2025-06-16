@@ -248,7 +248,7 @@ public class ModFileStorageImpl implements ModFileStorage
             return null;
         }
 
-        String directoryPath = file.getPath();
+        String directoryPath = file.getAbsolutePath();
         return FileSystemMod.from(Paths.get(directoryPath));
     }
 
