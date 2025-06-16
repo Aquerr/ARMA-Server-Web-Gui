@@ -13,6 +13,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopMod
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.MetaCppFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModFileStorage;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.FileUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.dotnet.DotnetDateTimeUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamUtils;
@@ -86,6 +87,11 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
         }
         else
         {
+            // If mod directory exists (because it was uploaded manually) then we replace it with steam folder to make updates easier.
+            if (Files.exists(modDirectory.getPath().toAbsolutePath()) && !Files.isSymbolicLink(modDirectory.getPath().toAbsolutePath())) {
+                FileUtils.deleteFilesRecursively(modDirectory.getPath().toAbsolutePath(), false);
+            }
+
             this.modFileStorage.linkModFolderToSteamCmdModFolder(steamCmdModFolderPath, modDirectory);
         }
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 75));

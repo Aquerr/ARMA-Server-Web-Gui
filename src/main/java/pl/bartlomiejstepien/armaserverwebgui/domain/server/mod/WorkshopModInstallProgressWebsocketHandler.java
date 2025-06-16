@@ -46,6 +46,7 @@ public class WorkshopModInstallProgressWebsocketHandler extends TextWebSocketHan
             TextMessage textMessage = convertToWebSocketMessage(status);
             try
             {
+                log.info("Publishing installation status {} to session {}", status, session.getId());
                 session.sendMessage(textMessage);
             }
             catch (IOException e)
