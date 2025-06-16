@@ -20,6 +20,6 @@ public enum ApiExceptionCode
 
     PRESET_NOT_FOUND,
 
-
-    STEAM_CMD_NOT_INSTALLED
+    STEAM_API_KEY_MISSING,
+    STEAM_CMD_NOT_INSTALLED,
 }
