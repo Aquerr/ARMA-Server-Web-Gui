@@ -30,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
@@ -64,7 +65,10 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
         WorkshopMod workshopMod = this.steamWebApiService.getWorkshopMod(task.getFileId());
         InstalledModEntity installedModEntity = this.installedModRepository.findByWorkshopFileId(task.getFileId()).orElse(null);
 
-        ModDirectory modDirectory = ModDirectory.from(buildModDirectoryPath(task.getTitle()));
+        ModDirectory modDirectory = ModDirectory.from(buildModDirectoryPath(Optional.ofNullable(installedModEntity)
+                .map(InstalledModEntity::getModDirectoryName)
+                .orElse(task.getTitle())));
+
         log.info("Prepared mod directory: {}", modDirectory.getPath());
 
         if (!shouldUpdateMod(modDirectory, workshopMod, installedModEntity, task.isForced()))
@@ -86,7 +90,7 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
         }
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 75));
 
-        saveModInDatabase(task.getFileId(), task.getTitle(), modDirectory, workshopMod);
+        saveModInDatabase(task.getFileId(), modDirectory.getModName(), modDirectory, workshopMod);
         publishMessage(new WorkshopModInstallationStatus(task.getFileId(), 100));
     }
 
@@ -184,7 +188,7 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
             installedModBuilder.workshopFileId(publishedFileIdToUse);
         }
 
-        installedModBuilder.name(ofNullable(modDirectory.getMetaCppFile()).map(MetaCppFile::getName).orElse(modName));
+        installedModBuilder.name(modName);
         installedModBuilder.directoryPath(modDirectory.getPath().toAbsolutePath().toString());
         installedModBuilder.previewUrl(ofNullable(workshopMod).map(WorkshopMod::getPreviewUrl).orElse(null));
         installedModBuilder.lastWorkshopUpdate(ofNullable(workshopMod).map(WorkshopMod::getLastUpdate)
