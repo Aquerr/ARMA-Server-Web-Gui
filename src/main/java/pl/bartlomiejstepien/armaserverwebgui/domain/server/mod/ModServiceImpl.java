@@ -181,7 +181,7 @@ public class ModServiceImpl implements ModService
 
     private void startManagingMod(FileSystemMod fileSystemMod)
     {
-        Path normalizedModPath = this.modFileStorage.renameModFolderToLowerCaseWithUnderscores(fileSystemMod.getModDirectory().getPath());
+        Path normalizedModPath = this.modFileStorage.renameModFolderToLowerCaseWithUnderscores(fileSystemMod.getModDirectory().getPath().toAbsolutePath());
         this.modFileStorage.normalizeEachFileNameInFolderRecursively(normalizedModPath);
 
         FileSystemMod correctedFileSystemMod = findNotManagedMods().stream()
