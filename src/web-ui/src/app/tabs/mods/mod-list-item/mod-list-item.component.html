@@ -5,13 +5,14 @@
       class="mod-list-item-expansion-panel-header"
       [ngStyle]="expanded ? { 'background-color': 'var(--aswg-input-bg-color)' } : null"
       >
-      <mat-panel-title>
+      <mat-panel-title class="mod-list-item-expansion-panel-title">
         <div>
           <div>
             {{ mod.name }}
           </div>
-          <div>
-            <span style="filter: brightness(50%)">Last workshop update: {{ mod.lastUpdateDateTime }}</span>
+          <div style="filter: brightness(50%)">
+            <span>Last workshop update: </span>
+            <span>{{ mod.lastUpdateDateTime }}</span>
           </div>
         </div>
       </mat-panel-title>

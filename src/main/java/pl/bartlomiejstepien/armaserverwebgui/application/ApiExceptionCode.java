@@ -16,6 +16,7 @@ public enum ApiExceptionCode
 
     MOD_ALREADY_EXISTS,
     MOD_NOT_FOUND,
+    MOD_ID_CANNOT_BE_ZERO,
 
     PRESET_NOT_FOUND,
 

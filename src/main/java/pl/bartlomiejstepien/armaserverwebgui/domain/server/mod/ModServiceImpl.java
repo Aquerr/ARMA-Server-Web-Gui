@@ -11,6 +11,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.InstalledModConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModWorkshopUrlBuilder;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModIdCannotBeZeroException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.NotManagedModNotFoundException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
@@ -191,6 +192,9 @@ public class ModServiceImpl implements ModService
 
         if (correctedFileSystemMod == null)
             throw new NotManagedModNotFoundException();
+
+        if (correctedFileSystemMod.getWorkshopFileId() == 0)
+            throw new ModIdCannotBeZeroException();
 
         saveToDB(installedModEntityHelper.toEntity(correctedFileSystemMod));
     }
