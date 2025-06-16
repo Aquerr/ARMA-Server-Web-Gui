@@ -20,7 +20,7 @@
         class="mod-list-item-expansion-panel-header-description"
         >
         <div>
-          <span style="filter: brightness(50%)">{{ mod.sizeBytes | filesize }}</span>
+          <span style="filter: brightness(50%); white-space: nowrap;">{{ mod.sizeBytes | filesize }}</span>
         </div>
         @if (!mod.fileExists) {
           <mat-icon matTooltip="Mod files seems to be missing" [color]="'warn'" style="margin-left: 10px">warning</mat-icon>
