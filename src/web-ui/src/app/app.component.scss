@@ -27,7 +27,12 @@
   flex-direction: column;
   justify-content: space-between;
   width: 280px;
-  height: 100%;
+  height: auto;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-top: 2.5rem;
   background-color: var(--aswg-bg-primary-bg-color);
 }
 
