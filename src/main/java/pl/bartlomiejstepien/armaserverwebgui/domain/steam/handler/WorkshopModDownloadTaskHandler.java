@@ -216,6 +216,10 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
 
     private Path buildWorkshopModDownloadPath(long fileId)
     {
+        String customWorkshopDownloadsPath = this.aswgConfig.getSteamCmdWorkshopDownloadsPath();
+        if (StringUtils.hasText(customWorkshopDownloadsPath))
+            return resolveWorkshopModPath(Paths.get(customWorkshopDownloadsPath), fileId);
+
         if (SystemUtils.isWindows())
         {
             return buildSteamAppsPath(Paths.get(aswgConfig.getSteamCmdPath())
@@ -239,10 +243,15 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
 
     private Path buildSteamAppsPath(Path basePath, long fileId)
     {
-        return basePath
+        return resolveWorkshopModPath(basePath
                 .resolve("steamapps")
                 .resolve("workshop")
-                .resolve("content")
+                .resolve("content"), fileId);
+    }
+
+    private Path resolveWorkshopModPath(Path basePath, long fileId)
+    {
+        return basePath
                 .resolve(String.valueOf(SteamUtils.ARMA_APP_ID))
                 .resolve(String.valueOf(fileId));
     }

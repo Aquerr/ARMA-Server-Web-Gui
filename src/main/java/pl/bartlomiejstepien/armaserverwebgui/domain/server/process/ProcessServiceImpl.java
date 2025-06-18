@@ -49,7 +49,7 @@ public class ProcessServiceImpl implements ProcessService
 
     private final SteamService steamService;
     private final ArmaServerParametersGenerator serverParametersGenerator;
-    private final Optional<DiscordIntegration> discordIntegration;
+    private final DiscordIntegration discordIntegration;
 
     private final ASWGConfig aswgConfig;
 
@@ -115,11 +115,11 @@ public class ProcessServiceImpl implements ProcessService
 
             if (performUpdate)
             {
-                trySendDiscordMessage(MessageKind.SERVER_UPDATED);
+                sendDiscordMessage(MessageKind.SERVER_UPDATED);
                 tryUpdateArmaServer();
             }
 
-            trySendDiscordMessage(MessageKind.SERVER_STARTED);
+            sendDiscordMessage(MessageKind.SERVER_STARTED);
             startServerProcess();
         }
         catch (Exception exception)
@@ -129,9 +129,9 @@ public class ProcessServiceImpl implements ProcessService
         }
     }
 
-    private void trySendDiscordMessage(MessageKind messageKind)
+    private void sendDiscordMessage(MessageKind messageKind)
     {
-        discordIntegration.ifPresent(di -> di.sendMessage(messageKind));
+        discordIntegration.sendMessage(messageKind);
     }
 
     private void startServerProcess()
@@ -269,7 +269,7 @@ public class ProcessServiceImpl implements ProcessService
         {
             throw new RuntimeException("Could not save server pid.", e);
         }
-        trySendDiscordMessage(MessageKind.SERVER_STOPPED);
+        sendDiscordMessage(MessageKind.SERVER_STOPPED);
     }
 
     @Override

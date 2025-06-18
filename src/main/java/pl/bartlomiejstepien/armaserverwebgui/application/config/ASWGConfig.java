@@ -32,6 +32,7 @@ public class ASWGConfig
     private static final String USERNAME_PROPERTY = "aswg.default-user.username";
     private static final String PASSWORD_PROPERTY = "aswg.default-user.password";
     private static final String RESET_DEFAULT_USER = "aswg.default-user.reset";
+    private static final String STEAMCMD_WORKSHOP_DOWNLOADS_PATH = "aswg.steamcmd.workshop.downloads-path";
     private static final String STEAMCMD_PATH_PROPERTY = "aswg.steamcmd.path";
     private static final String STEAMCMD_USERNAME_PROPERTY = "aswg.steamcmd.username";
     private static final String STEAMCMD_PASSWORD_PROPERTY = "aswg.steamcmd.password";
@@ -75,6 +76,8 @@ public class ASWGConfig
     @Value("${" + MODS_DIRECTORY_PATH_PROPERTY + ":}")
     private String modsDirectoryPath;
 
+    @Value("${" + STEAMCMD_WORKSHOP_DOWNLOADS_PATH + ":}")
+    private String steamCmdWorkshopDownloadsPath;
     @Value("${" + STEAMCMD_PATH_PROPERTY + ":}")
     private String steamCmdPath;
     @Value("${" + STEAMCMD_USERNAME_PROPERTY + ":}")
@@ -148,6 +151,7 @@ public class ASWGConfig
         configurationProperties.setProperty(RESET_DEFAULT_USER, String.valueOf(this.resetDefaultUser));
         configurationProperties.setProperty(STEAMCMD_PATH_PROPERTY, this.steamCmdPath);
         configurationProperties.setProperty(SERVER_PORT_PROPERTY, String.valueOf(this.serverPort));
+        configurationProperties.setProperty(STEAMCMD_WORKSHOP_DOWNLOADS_PATH, this.steamCmdWorkshopDownloadsPath);
         configurationProperties.setProperty(STEAM_API_KEY_PROPERTY, this.steamApiKey);
         configurationProperties.setProperty(STEAMCMD_USERNAME_PROPERTY, this.steamCmdUsername);
         configurationProperties.setProperty(STEAMCMD_PASSWORD_PROPERTY, this.steamCmdPassword);
