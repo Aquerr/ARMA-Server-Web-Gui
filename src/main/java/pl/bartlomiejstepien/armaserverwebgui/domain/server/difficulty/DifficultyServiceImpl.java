@@ -6,6 +6,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.util.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileSystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.DifficultyProfile;
@@ -105,7 +106,7 @@ public class DifficultyServiceImpl implements DifficultyService
         for (String name : newDifficultyProfiles)
         {
             DifficultyConfig difficultyConfig = readDifficultyFile(name);
-            DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, name, true);
+            DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, name, false);
             this.difficultyProfileRepository.save(difficultyProfileEntity);
             saveToFile(map(difficultyConfig, difficultyProfileEntity));
         }
@@ -134,6 +135,7 @@ public class DifficultyServiceImpl implements DifficultyService
     }
 
     @Override
+    @Transactional
     public DifficultyProfileEntity saveDifficultyProfile(DifficultyProfile difficultyProfile)
     {
         DifficultyProfileEntity entity = Optional.ofNullable(difficultyProfile.getId())
@@ -143,6 +145,18 @@ public class DifficultyServiceImpl implements DifficultyService
         if (entity != null && !entity.getName().equals(difficultyProfile.getName()))
         {
             deleteFile(entity.getName());
+        }
+
+        // Deactivate the currently active profile if this one is set to active
+        if (difficultyProfile.isActive())
+        {
+            DifficultyProfileEntity activeProfile = difficultyProfileRepository.findFirstByActiveTrue().orElse(null);
+            if (activeProfile != null
+                    && !activeProfile.getId().equals(difficultyProfile.getId()))
+            {
+                activeProfile.setActive(false);
+                difficultyProfileRepository.save(activeProfile);
+            }
         }
 
         entity = difficultyProfileRepository.findByName(difficultyProfile.getName()).orElse(null);
