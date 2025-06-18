@@ -1,7 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +21,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.ServerUpdate
 import java.util.Map;
 
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnProperty("aswg.discord.webhook.enabled")
 public class DiscordConfig
 {
     @Bean
@@ -84,10 +82,11 @@ public class DiscordConfig
 
     @Bean
     public DiscordIntegration discordIntegration(
+            ASWGConfig.DiscordProperties discordProperties,
             DiscordWebhookHandler discordWebhookHandler,
             Map<MessageKind, DiscordMessageCreator> discordMessageCreators)
     {
-        return new DiscordIntegration(discordWebhookHandler, discordMessageCreators);
+        return new DiscordIntegration(discordProperties, discordWebhookHandler, discordMessageCreators);
     }
 
     @Bean

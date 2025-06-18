@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.DiscordMessageCreator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordMessage;
@@ -19,8 +20,9 @@ import static org.mockito.Mockito.verify;
 class DiscordIntegrationTest
 {
     @Mock
+    private ASWGConfig.DiscordProperties discordProperties;
+    @Mock
     private DiscordWebhookHandler discordWebhookHandler;
-
     @Mock
     private DiscordMessageCreator messageCreator;
 
@@ -33,7 +35,8 @@ class DiscordIntegrationTest
         Map<MessageKind, DiscordMessageCreator> messageCreators = Map.of(
                 MessageKind.SERVER_STARTED, messageCreator
         );
-        discordIntegration = new DiscordIntegration(discordWebhookHandler, messageCreators);
+        given(discordProperties.isEnabled()).willReturn(true);
+        discordIntegration = new DiscordIntegration(discordProperties, discordWebhookHandler, messageCreators);
     }
 
     @Test
