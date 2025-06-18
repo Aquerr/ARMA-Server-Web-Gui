@@ -110,17 +110,16 @@ public class ModFileStorageImpl implements ModFileStorage
     }
 
     @Override
-    public void deleteFileSystemMod(String modName)
+    public void deleteFileSystemMod(String directoryName)
     {
-        final String modFolderName = this.modFolderNameHelper.buildFor(modName);
         final File[] files = this.modDirectory.get().toFile().listFiles();
         if (files != null)
         {
             for (final File file : files)
             {
-                if (file.getName().equals(modFolderName))
+                if (file.getName().equals(directoryName))
                 {
-                    log.info("Deleting mod: {}", modName);
+                    log.info("Deleting mod: {}", directoryName);
                     FileUtils.deleteFilesRecursively(file.toPath(), true);
                     break;
                 }
@@ -152,7 +151,7 @@ public class ModFileStorageImpl implements ModFileStorage
     @Override
     public InstalledModEntity getInstalledMod(String modName)
     {
-        return this.installedModRepository.findByName(modName).orElse(null);
+        return this.installedModRepository.findFirstByName(modName).orElse(null);
     }
 
     @Override

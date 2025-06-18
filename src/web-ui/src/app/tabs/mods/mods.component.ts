@@ -213,4 +213,20 @@ export class ModsComponent implements OnInit, OnDestroy {
   setFileDragged(isFileDragged: boolean) {
     this.isFileDragged = isFileDragged;
   }
+
+  deleteNotManagedMod(mod: NotManagedMod) {
+    this.dialogService.openCommonConfirmationDialog(
+      { question: `Are you sure you want to delete the folder for <strong>${mod.name}</strong>?` },
+        (dialogResult) => {
+          if (dialogResult) {
+            this.maskService.show();
+            this.modService.deleteNotManagedMod(mod.directoryName).subscribe(() => {
+              this.maskService.hide();
+              this.reloadMods();
+              this.notificationService.successNotification(`Mod directory for ${mod.name} has been deleted!`);
+            });
+          }
+        }
+    );
+  }
 }

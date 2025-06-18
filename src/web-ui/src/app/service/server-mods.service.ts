@@ -67,6 +67,10 @@ export class ServerModsService {
       request
     );
   }
+
+  deleteNotManagedMod(directoryName: string) {
+    return this.httpClient.delete(`${this.MODS_URL}/not-managed`, { body: { directoryName: directoryName } });
+  }
 }
 
 export interface GetModsResponse {

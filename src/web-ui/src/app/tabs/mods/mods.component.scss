@@ -54,6 +54,12 @@
   }
 }
 
+.not-managed-mod-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
 .not-managed-mod-buttons .mat-icon {
   color: white !important;
 }

@@ -40,4 +40,6 @@ public interface ModService
     void manageMod(String name);
 
     List<FileSystemMod> findNotManagedMods();
+
+    void deleteNotManagedMod(String name);
 }

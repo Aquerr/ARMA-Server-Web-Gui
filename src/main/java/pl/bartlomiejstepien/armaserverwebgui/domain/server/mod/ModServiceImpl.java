@@ -12,6 +12,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.model.NotManagedModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.InstalledModConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModWorkshopUrlBuilder;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModIdAlreadyRegisteredException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModIdCannotBeZeroException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.NotManagedModNotFoundException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
@@ -120,6 +121,12 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
+    public void deleteNotManagedMod(String directoryName)
+    {
+        this.modFileStorage.deleteFileSystemMod(directoryName);
+    }
+
+    @Override
     @Transactional
     public void saveEnabledModList(Set<EnabledMod> enabledMods)
     {
@@ -196,6 +203,8 @@ public class ModServiceImpl implements ModService
 
         if (correctedFileSystemMod.getWorkshopFileId() == 0)
             throw new ModIdCannotBeZeroException();
+        if (this.installedModRepository.findByWorkshopFileId(correctedFileSystemMod.getWorkshopFileId()).isPresent())
+            throw new ModIdAlreadyRegisteredException();
 
         saveToDB(installedModEntityHelper.toEntity(correctedFileSystemMod));
     }
@@ -219,7 +228,7 @@ public class ModServiceImpl implements ModService
     private void saveModInDatabase(Path modDirectoryPath)
     {
         ModDirectory modDirectory = ModDirectory.from(modDirectoryPath);
-        InstalledModEntity installedModEntity = installedModRepository.findByName(modDirectory.getModName()).orElse(null);
+        InstalledModEntity installedModEntity = installedModRepository.findFirstByName(modDirectory.getModName()).orElse(null);
         if (installedModEntity != null)
             return;
 

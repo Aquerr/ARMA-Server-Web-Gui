@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface InstalledModRepository extends JpaRepository<InstalledModEntity, Long>
 {
-    Optional<InstalledModEntity> findByName(String name);
+    Optional<InstalledModEntity> findFirstByName(String name);
 
     Optional<InstalledModEntity> findByWorkshopFileId(Long id);
 

@@ -64,6 +64,14 @@ public class ModsRestController
         return ResponseEntity.ok().build();
     }
 
+    @HasPermissionModsDelete
+    @DeleteMapping("/not-managed")
+    public ResponseEntity<?> deleteNotManagedMod(@RequestBody DeleteNotManagedModRequest request)
+    {
+        this.modService.deleteNotManagedMod(request.getDirectoryName());
+        return ResponseEntity.ok().build();
+    }
+
     @Value(staticConstructor = "of")
     public static class GetModsResponse
     {
@@ -91,6 +99,12 @@ public class ModsRestController
     public static class DeleteModRequest
     {
         String name;
+    }
+
+    @Data
+    public static class DeleteNotManagedModRequest
+    {
+        String directoryName;
     }
 
     @Data

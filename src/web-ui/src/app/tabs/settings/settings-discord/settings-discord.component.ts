@@ -4,17 +4,25 @@ import { DiscordSettingsFormService } from "./discord-settings-form.service";
 import { DiscordSettingsService } from "../../../service/discord-settings.service";
 import { MaskService } from "../../../service/mask.service";
 import { NotificationService } from "../../../service/notification.service";
-import { MatFormField, MatLabel } from "@angular/material/form-field";
-import { MatOption, MatSelect } from "@angular/material/select";
-import { MatInput } from "@angular/material/input";
 import { MatButton } from "@angular/material/button";
+import { MatFormField, MatInput } from "@angular/material/input";
+import { MatOption, MatSelect } from "@angular/material/select";
+import { MatLabel } from "@angular/material/form-field";
 
 @Component({
   selector: "app-settings-discord",
   templateUrl: "./settings-discord.component.html",
   styleUrl: "./settings-discord.component.scss",
-  standalone: true,
-  imports: [MatFormField, MatLabel, MatInput, MatFormField, MatButton, MatSelect, MatOption, ReactiveFormsModule]
+  imports: [
+    MatFormField,
+    MatButton,
+    ReactiveFormsModule,
+    MatInput,
+    MatFormField,
+    MatSelect,
+    MatLabel,
+    MatOption,
+  ]
 })
 export class SettingsDiscordComponent implements OnInit {
   public form!: FormGroup;
