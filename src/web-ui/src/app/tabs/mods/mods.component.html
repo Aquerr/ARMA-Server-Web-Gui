@@ -1,118 +1,133 @@
-<div appDragAndDropFile (fileDropped)="onFileDropped($event)" class="app-mods-tab">
+<div appDragAndDropFile
+     (fileDropped)="onFileDropped($event)"
+     (fileDragged)="setFileDragged($event)"
+     [dropZoneElement]="dropZone"
+     class="app-mods-tab">
+
   <h1>Mods</h1>
 
-  <div class="fields">
-    <div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%">
-      <mat-form-field>
-        <mat-label>Search mod...</mat-label>
-        <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mod..." />
-      </mat-form-field>
-      <div style="display: flex; flex-direction: row; gap: 10px">
-        <button mat-button (click)="openModSettings()">Mod settings</button>
-        <app-mod-presets
-          [mods]="enabledMods"
-          (modPresetSelected)="onModPresetSelected($event)"
-        ></app-mod-presets>
-      </div>
-    </div>
-  </div>
+  <ng-template #dropZone>
+    <div app-drag-and-drop-overlay></div>
+  </ng-template>
 
-  <div class="mod-list-group" cdkDropListGroup>
-    <div class="mods-list">
-      <h2 class="mods-list-header">
-        Disabled <span style="filter: brightness(50%)">({{ disabledMods.length }})</span>
-      </h2>
-      <div class="mod-list-buttons">
-        <button mat-button (click)="enableAllMods()">
-          Enable all<mat-icon>arrow_forward</mat-icon>
-        </button>
-      </div>
-
-      <div class="list-container">
-        <div
-          id="disabled-mods-list"
-          cdkDropList
-          class="list-container"
-          [cdkDropListData]="filteredDisabledMods"
-          [cdkDropListSortingDisabled]="true"
-          (cdkDropListDropped)="onModItemDragDrop($event)"
-          >
-          @for (mod of filteredDisabledMods; track mod) {
-            <div
-              app-mod-list-item
-              [mod]="mod"
-              (onModDelete)="onModDelete($event)"
-              cdkDrag
-            ></div>
-          }
-        </div>
-      </div>
-    </div>
-
-    <div class="mods-list">
-      <h2 class="mods-list-header">
-        Enabled <span style="filter: brightness(50%)">({{ enabledMods.length }})</span>
-      </h2>
-      <div class="mod-list-buttons">
-        <button mat-button (click)="disableAllMods()">
-          Disable all<mat-icon>arrow_backward</mat-icon>
-        </button>
-      </div>
-      <div class="list-container">
-        <div
-          id="enabled-mods-list"
-          cdkDropList
-          class="list"
-          [cdkDropListData]="filteredEnabledMods"
-          [cdkDropListSortingDisabled]="true"
-          (cdkDropListDropped)="onModItemDragDrop($event)"
-          >
-          @for (mod of filteredEnabledMods; track mod) {
-            <div
-              app-mod-list-item
-              cdkDrag
-              [mod]="mod"
-              (onModDelete)="onModDelete($event)"
-            ></div>
-          }
-        </div>
-      </div>
-    </div>
-  </div>
-
-  @if (notManagedMods.length > 0) {
-    <div style="margin-top: 3rem">
-      <h2>Detected not managed mods</h2>
-      <div>
-        <div class="not-managed-mod-list">
-          @for (mod of notManagedMods; track mod.name) {
-            <div class="not-managed-mod-list-item">
-              <div class="not-managed-mod-list-item-header">
-                <div>
-                  {{ mod.name }}
-                </div>
-                <div style="filter: brightness(50%)">
-                  Directory: {{ mod.directoryName }}
-                </div>
-              </div>
-              <div class="not-managed-mod-buttons">
-                <button mat-button (click)="registerNotManagedMod(mod)">
-                  <mat-icon fontIcon="settings"></mat-icon> Manage
-                </button>
-              </div>
-            </div>
-          }
-        </div>
-      </div>
-    </div>
+  @if (isFileDragged) {
+    <ng-container [ngTemplateOutlet]="dropZone"></ng-container>
   }
 
-  <div class="buttons-section-bottom">
-    <div>
-      <button mat-flat-button color="primary" (click)="save()">Save</button>
+  <div [ngClass]="isFileDragged ? ['pointer-events-none', 'display-none'] : []">
+    <div class="fields">
+      <div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%">
+        <mat-form-field>
+          <mat-label>Search mod...</mat-label>
+          <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mod..." />
+        </mat-form-field>
+        <div style="display: flex; flex-direction: row; gap: 10px">
+          <button mat-button (click)="openModSettings()">Mod settings</button>
+          <app-mod-presets
+            [mods]="enabledMods"
+            (modPresetSelected)="onModPresetSelected($event)"
+          ></app-mod-presets>
+        </div>
+      </div>
     </div>
-    <div>
-      <app-upload-mod (fileSelected)="onFileDropped($event)"></app-upload-mod>
+
+    <div class="mod-list-group" cdkDropListGroup>
+      <div class="mods-list">
+        <h2 class="mods-list-header">
+          Disabled <span style="filter: brightness(50%)">({{ disabledMods.length }})</span>
+        </h2>
+        <div class="mod-list-buttons">
+          <button mat-button (click)="enableAllMods()">
+            Enable all<mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+
+        <div class="list-container">
+          <div
+            id="disabled-mods-list"
+            cdkDropList
+            class="list-container"
+            [cdkDropListData]="filteredDisabledMods"
+            [cdkDropListSortingDisabled]="true"
+            (cdkDropListDropped)="onModItemDragDrop($event)"
+          >
+            @for (mod of filteredDisabledMods; track mod) {
+              <div
+                app-mod-list-item
+                [mod]="mod"
+                (onModDelete)="onModDelete($event)"
+                cdkDrag
+              ></div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="mods-list">
+        <h2 class="mods-list-header">
+          Enabled <span style="filter: brightness(50%)">({{ enabledMods.length }})</span>
+        </h2>
+        <div class="mod-list-buttons">
+          <button mat-button (click)="disableAllMods()">
+            Disable all<mat-icon>arrow_backward</mat-icon>
+          </button>
+        </div>
+        <div class="list-container">
+          <div
+            id="enabled-mods-list"
+            cdkDropList
+            class="list"
+            [cdkDropListData]="filteredEnabledMods"
+            [cdkDropListSortingDisabled]="true"
+            (cdkDropListDropped)="onModItemDragDrop($event)"
+          >
+            @for (mod of filteredEnabledMods; track mod) {
+              <div
+                app-mod-list-item
+                cdkDrag
+                [mod]="mod"
+                (onModDelete)="onModDelete($event)"
+              ></div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if (notManagedMods.length > 0) {
+      <div style="margin-top: 3rem">
+        <h2>Detected not managed mods</h2>
+        <div>
+          <div class="not-managed-mod-list">
+            @for (mod of notManagedMods; track mod.name) {
+              <div class="not-managed-mod-list-item">
+                <div class="not-managed-mod-list-item-header">
+                  <div>
+                    {{ mod.name }}
+                  </div>
+                  <div style="filter: brightness(50%)">
+                    Directory: {{ mod.directoryName }}
+                  </div>
+                </div>
+                <div class="not-managed-mod-buttons">
+                  <button mat-button (click)="registerNotManagedMod(mod)">
+                    <mat-icon fontIcon="settings"></mat-icon> Manage
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <div class="buttons-section-bottom">
+      <div>
+        <button mat-flat-button color="primary" (click)="save()">Save</button>
+      </div>
+      <div>
+        <app-upload-mod (fileSelected)="onFileDropped($event)"></app-upload-mod>
+      </div>
     </div>
   </div>
 </div>

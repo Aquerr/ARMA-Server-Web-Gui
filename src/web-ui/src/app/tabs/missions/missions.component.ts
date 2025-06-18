@@ -31,6 +31,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
   reloadMissionDataSubscription!: Subscription;
   missionUploadSubscription!: Subscription;
   searchBoxControl!: FormControl;
+  isFileDragged: boolean = false;
 
   constructor(
     private missionsService: ServerMissionsService,
@@ -198,5 +199,9 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   getMissionNameForDisplay(mission: Mission) {
     return mission.name || mission.template;
+  }
+
+  setFileDragged(isFileDragged: boolean) {
+    this.isFileDragged = isFileDragged;
   }
 }

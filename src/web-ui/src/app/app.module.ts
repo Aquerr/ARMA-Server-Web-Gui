@@ -26,7 +26,6 @@ import { MatButtonModule } from "@angular/material/button";
 import { ToastrModule } from "ngx-toastr";
 import { MatIconModule } from "@angular/material/icon";
 import { MissionUploadButtonComponent } from "./tabs/missions/upload-mission/mission-upload-button.component";
-import { DragAndDropFileDirective } from "./common-ui/directive/drag-and-drop-file.directive";
 import { MatTableModule } from "@angular/material/table";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { SecurityComponent } from "./tabs/security/security.component";
@@ -35,7 +34,6 @@ import { MissionDeleteConfirmDialogComponent } from "./tabs/missions/mission-del
 import { MotdListComponent } from "./tabs/general/motd-list/motd-list.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { StatusComponent } from "./tabs/status/status.component";
-import { AswgDragDropListComponent } from "./common-ui/aswg-drag-drop-list/aswg-drag-drop-list.component";
 import { ModUploadButtonComponent } from "./tabs/mods/mod-upload-button/mod-upload-button.component";
 import { ModDeleteConfirmDialogComponent } from "./tabs/mods/mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
 import { MatSelectModule } from "@angular/material/select";
@@ -77,6 +75,8 @@ import { MatAutocomplete, MatAutocompleteTrigger } from "@angular/material/autoc
 import { PasswordChangeModalComponent } from "./tabs/settings/settings-users/settings-user-panel/password-change-modal/password-change-modal.component";
 import { DesktopHeaderComponent } from "./desktop-header/desktop-header.component";
 import { AswgChipFormInputComponent } from "./common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
+import { DragDropOverlay } from "./common-ui/drag-and-drop-overlay/drag-and-drop-overlay.component";
+import { DragAndDropFileDirective } from "./common-ui/directive/drag-and-drop-file.directive";
 
 @NgModule({
   declarations: [
@@ -92,14 +92,12 @@ import { AswgChipFormInputComponent } from "./common-ui/aswg-chip-form-input/asw
     LoginComponent,
     AswgSpinnerComponent,
     MissionUploadButtonComponent,
-    DragAndDropFileDirective,
     SecurityComponent,
     VoteCmdListItemComponent,
     VoteCmdsListComponent,
     MissionDeleteConfirmDialogComponent,
     MotdListComponent,
     StatusComponent,
-    AswgDragDropListComponent,
     ModUploadButtonComponent,
     ModDeleteConfirmDialogComponent,
     MissionModifyDialogComponent,
@@ -160,7 +158,9 @@ import { AswgChipFormInputComponent } from "./common-ui/aswg-chip-form-input/asw
     MatPaginator,
     MatAutocomplete,
     MatAutocompleteTrigger,
-    AswgChipFormInputComponent
+    AswgChipFormInputComponent,
+    DragDropOverlay,
+    DragAndDropFileDirective
   ],
   exports: [],
   providers: [

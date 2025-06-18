@@ -28,6 +28,7 @@ export class ModsComponent implements OnInit, OnDestroy {
   filteredEnabledMods: Mod[] = [];
 
   searchBoxControl!: FormControl;
+  isFileDragged: boolean = false;
 
   constructor(
     private modService: ServerModsService,
@@ -207,5 +208,9 @@ export class ModsComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  setFileDragged(isFileDragged: boolean) {
+    this.isFileDragged = isFileDragged;
   }
 }

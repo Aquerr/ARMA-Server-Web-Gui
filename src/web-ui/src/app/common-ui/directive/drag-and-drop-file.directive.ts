@@ -1,27 +1,58 @@
-import { Directive, ElementRef, EventEmitter, HostListener, Output } from "@angular/core";
+import {
+  Directive,
+  EventEmitter,
+  HostListener, Input,
+  Output, TemplateRef
+} from "@angular/core";
 
 @Directive({
   selector: "[appDragAndDropFile]",
-  standalone: false
+  standalone: true
 })
 export class DragAndDropFileDirective {
+
+  @Input() dropZoneElement!: TemplateRef<any>;
+
+  @Output() fileDragged = new EventEmitter<boolean>();
   @Output() fileDropped: EventEmitter<File> = new EventEmitter<File>();
 
-  constructor(private hostElement: ElementRef) {}
+  constructor() {}
 
-  @HostListener("dragover", ["$event"]) onDragOver(event: DragEvent) {
+  @HostListener("dragover", ["$event"])
+  onDragOver(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
   }
 
-  @HostListener("dragleave", ["$event"]) onDragLeave(event: DragEvent) {
+  @HostListener("dragenter", ["$event"])
+  onDragEnter(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
+
+    if (event.dataTransfer?.items
+      && event.dataTransfer?.items.length > 0
+      && event.dataTransfer?.items[0].kind === "file") {
+      this.fileDragged.emit(true);
+    }
   }
 
-  @HostListener("drop", ["$event"]) onDrop(event: DragEvent) {
+  @HostListener("dragleave", ["$event"])
+  onDragLeave(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
+
+    if (event.target === this.dropZoneElement.elementRef.nativeElement) {
+      return;
+    }
+
+    this.fileDragged.emit(false);
+  }
+
+  @HostListener("drop", ["$event"])
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.fileDragged.emit(false);
 
     const files = event.dataTransfer?.files;
     if (files) {

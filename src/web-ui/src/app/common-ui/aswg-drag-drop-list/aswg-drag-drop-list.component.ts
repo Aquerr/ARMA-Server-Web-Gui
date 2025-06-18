@@ -1,11 +1,13 @@
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import { MatIconButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: "aswg-drag-drop-list",
   templateUrl: "./aswg-drag-drop-list.component.html",
-  styleUrls: ["./aswg-drag-drop-list.component.scss"],
-  standalone: false
+  imports: [CdkDropList, MatIcon, CdkDrag, MatIconButton],
+  styleUrls: ["./aswg-drag-drop-list.component.scss"]
 })
 export class AswgDragDropListComponent implements OnInit, OnDestroy {
   @Input() items: string[] = [];

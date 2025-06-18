@@ -1,0 +1,21 @@
+.drag-and-drop-overlay {
+  display: table;
+  position: absolute;
+  z-index: 6;
+  width: calc(100% - 380px);
+  height: calc(100% - 3rem);
+  border: 4px dashed var(--aswg-border-color);
+  opacity: 0.8;
+  font-size: 3em;
+}
+
+.drag-and-drop-overlay-border {
+  background-color: var(--aswg-bg-primary-bg-color);
+  display: table-row;
+}
+
+.drag-and-drop-overlay-text {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}

@@ -1,107 +1,124 @@
-<div appDragAndDropFile (fileDropped)="onFileDropped($event)" class="app-missions-tab">
+<div appDragAndDropFile
+     (fileDropped)="onFileDropped($event)"
+     (fileDragged)="setFileDragged($event)"
+     [dropZoneElement]="dropZone"
+     class="app-missions-tab">
   <h1>Missions</h1>
-  <div class="buttons-section-top">
-    <div>
-      <button mat-flat-button color="primary" (click)="addNewMission()">Add new mission</button>
-    </div>
-  </div>
-  <hr />
-  <mat-form-field>
-    <mat-label>Search mission...</mat-label>
-    <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mission..." />
-  </mat-form-field>
-  <div class="mission-list-group" cdkDropListGroup>
-    <div class="mission-list">
-      <h2>Disabled</h2>
-      <div
-        id="disabled-missions-list"
-        cdkDropList
-        [cdkDropListData]="this.filteredDisabledMissions"
-        class="list"
-        [cdkDropListSortingDisabled]="false"
-        (cdkDropListDropped)="onMissionItemDropped($event)"
-        >
-        @for (mission of this.filteredDisabledMissions; track mission) {
-          <div
-            class="list-item-container"
-            cdkDrag
-            >
-            <div style="flex: 72%; display: flex; flex-direction: column">
-              <span style="font-weight: bold">{{ getMissionNameForDisplay(mission) }}</span>
-              <span>Difficulty: {{ mission.difficulty }}</span>
-              <span style="filter: brightness(50%)">Template: {{ mission.template }}</span>
-            </div>
-            <div class="text-center" style="flex: 14%">
-              <button
-                mat-icon-button
-                matTooltip="Configure parameters"
-                (click)="showMissionModifyDialog(mission)"
-                >
-                <mat-icon>settings</mat-icon>
-              </button>
-            </div>
-            <div class="text-center" style="flex: 14%">
-              <button
-                mat-icon-button
-                matTooltip="Delete the mission"
-                (click)="showMissionDeleteConfirmationDialog(mission.template)"
-                >
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
-          </div>
-        }
+
+  <ng-template #dropZone>
+    <div app-drag-and-drop-overlay></div>
+  </ng-template>
+
+  @if (isFileDragged) {
+    <ng-container [ngTemplateOutlet]="dropZone"></ng-container>
+  }
+
+  <div [ngClass]="isFileDragged ? ['pointer-events-none', 'display-none'] : []">
+    <div class="buttons-section-top">
+      <div>
+        <button mat-flat-button color="primary" (click)="addNewMission()">Add new mission</button>
       </div>
     </div>
-    <div class="mission-list" style="margin-left: 1rem">
-      <h2>Enabled</h2>
-      <div
-        id="enabled-missions-list"
-        cdkDropList
-        [cdkDropListData]="this.filteredEnabledMissions"
-        class="list"
-        [cdkDropListSortingDisabled]="false"
-        (cdkDropListDropped)="onMissionItemDropped($event)"
+    <hr />
+    <mat-form-field>
+      <mat-label>Search mission...</mat-label>
+      <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mission..." />
+    </mat-form-field>
+    <div class="mission-list-group" cdkDropListGroup>
+      <div class="mission-list">
+        <h2>Disabled</h2>
+        <div
+          id="disabled-missions-list"
+          cdkDropList
+          [cdkDropListData]="this.filteredDisabledMissions"
+          class="list"
+          [cdkDropListSortingDisabled]="false"
+          (cdkDropListDropped)="onMissionItemDropped($event)"
         >
-        @for (mission of this.filteredEnabledMissions; track mission) {
-          <div
-            class="list-item-container"
-            cdkDrag
+          @for (mission of this.filteredDisabledMissions; track mission) {
+            <div
+              class="list-item-container"
+              cdkDrag
             >
-            <div style="flex: 72%; display: flex; flex-direction: column">
-              <span style="font-weight: bold">{{ getMissionNameForDisplay(mission) }}</span>
-              <span>Difficulty: {{ mission.difficulty }}</span>
-              <span style="filter: brightness(50%)">Template: {{ mission.template }}</span>
-            </div>
-            <div class="text-center" style="flex: 14%">
-              <button
-                mat-icon-button
-                matTooltip="Configure parameters"
-                (click)="showMissionModifyDialog(mission)"
+              <div style="flex: 72%; display: flex; flex-direction: column">
+                <span style="font-weight: bold">{{ getMissionNameForDisplay(mission) }}</span>
+                <span>Difficulty: {{ mission.difficulty }}</span>
+                <span style="filter: brightness(50%)">Template: {{ mission.template }}</span>
+              </div>
+              <div class="text-center" style="flex: 14%">
+                <button
+                  mat-icon-button
+                  matTooltip="Configure parameters"
+                  (click)="showMissionModifyDialog(mission)"
                 >
-                <mat-icon>settings</mat-icon>
-              </button>
-            </div>
-            <div class="text-center" style="flex: 14%">
-              <button
-                mat-icon-button
-                matTooltip="Delete the mission"
-                (click)="showMissionDeleteConfirmationDialog(mission.template)"
+                  <mat-icon>settings</mat-icon>
+                </button>
+              </div>
+              <div class="text-center" style="flex: 14%">
+                <button
+                  mat-icon-button
+                  matTooltip="Delete the mission"
+                  (click)="showMissionDeleteConfirmationDialog(mission.template)"
                 >
-                <mat-icon>delete</mat-icon>
-              </button>
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </div>
-          </div>
-        }
+          }
+        </div>
+      </div>
+      <div class="mission-list" style="margin-left: 1rem">
+        <h2>Enabled</h2>
+        <div
+          id="enabled-missions-list"
+          cdkDropList
+          [cdkDropListData]="this.filteredEnabledMissions"
+          class="list"
+          [cdkDropListSortingDisabled]="false"
+          (cdkDropListDropped)="onMissionItemDropped($event)"
+        >
+          @for (mission of this.filteredEnabledMissions; track mission) {
+            <div
+              class="list-item-container"
+              cdkDrag
+            >
+              <div style="flex: 72%; display: flex; flex-direction: column">
+                <span style="font-weight: bold">{{ getMissionNameForDisplay(mission) }}</span>
+                <span>Difficulty: {{ mission.difficulty }}</span>
+                <span style="filter: brightness(50%)">Template: {{ mission.template }}</span>
+              </div>
+              <div class="text-center" style="flex: 14%">
+                <button
+                  mat-icon-button
+                  matTooltip="Configure parameters"
+                  (click)="showMissionModifyDialog(mission)"
+                >
+                  <mat-icon>settings</mat-icon>
+                </button>
+              </div>
+              <div class="text-center" style="flex: 14%">
+                <button
+                  mat-icon-button
+                  matTooltip="Delete the mission"
+                  (click)="showMissionDeleteConfirmationDialog(mission.template)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="buttons-section-bottom">
+      <div>
+        <button mat-flat-button color="primary" (click)="save()">Save</button>
+      </div>
+      <div>
+        <app-upload-mission></app-upload-mission>
       </div>
     </div>
   </div>
-  <div class="buttons-section-bottom">
-    <div>
-      <button mat-flat-button color="primary" (click)="save()">Save</button>
-    </div>
-    <div>
-      <app-upload-mission></app-upload-mission>
-    </div>
-  </div>
+
+
 </div>

@@ -345,6 +345,14 @@ hr {
   margin-bottom: 1.5rem !important;
 }
 
+.pointer-events-none * {
+  pointer-events: none;
+}
+
+.display-none {
+  display: none;
+}
+
 .navbar {
   --bs-navbar-padding-x: 0;
   --bs-navbar-padding-y: 0.5rem;
