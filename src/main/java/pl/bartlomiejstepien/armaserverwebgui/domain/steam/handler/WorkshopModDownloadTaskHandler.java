@@ -216,9 +216,9 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
 
     private Path buildWorkshopModDownloadPath(long fileId)
     {
-        String customWorkshopDownloadsPath = this.aswgConfig.getSteamCmdWorkshopDownloadsPath();
-        if (StringUtils.hasText(customWorkshopDownloadsPath))
-            return resolveWorkshopModPath(Paths.get(customWorkshopDownloadsPath), fileId);
+        String customWorkshopContentPath = this.aswgConfig.getSteamCmdWorkshopContentPath();
+        if (StringUtils.hasText(customWorkshopContentPath))
+            return resolveWorkshopModPath(Paths.get(customWorkshopContentPath), fileId);
 
         if (SystemUtils.isWindows())
         {

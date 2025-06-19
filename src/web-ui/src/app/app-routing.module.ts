@@ -83,6 +83,14 @@ const routes: Routes = [
       ),
     canActivate: [isAuthenticated]
   },
+  {
+    path: "settings/steam",
+    loadComponent: () =>
+      import("./tabs/settings/settings-steam/settings-steam.component").then(
+        (c) => c.SettingsSteamComponent
+      ),
+    canActivate: [hasAllAuthorities([AswgAuthority.SECURITY_SETTINGS_VIEW])]
+  },
   { path: "login", component: LoginComponent },
   { path: "", redirectTo: "/status", pathMatch: "full" },
   { path: "**", redirectTo: "status" }
