@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
+import io.github.aquerr.steamwebapiclient.SteamWebApiClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionSecuritySettingsSave;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionSecuritySettingsView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamWebApiClientWrapper;
 
 @RestController
 @RequestMapping("/api/v1/settings/steam")
@@ -16,6 +18,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 public class SteamSettingsController
 {
     private final ASWGConfig aswgConfig;
+    private final SteamWebApiClientWrapper webApiClientWrapper;
 
     @GetMapping
     @HasPermissionSecuritySettingsView
@@ -38,8 +41,21 @@ public class SteamSettingsController
         aswgConfig.setSteamCmdUsername(settings.steamCmdUsername());
         aswgConfig.setSteamCmdPassword(settings.steamCmdPassword());
         aswgConfig.setSteamCmdWorkshopContentPath(settings.steamCmdWorkshopContentPath());
+
+        if (!aswgConfig.getSteamApiKey().equals(settings.steamWebApiToken()))
+        {
+            recreateSteamWebApiClient(settings.steamWebApiToken());
+        }
         aswgConfig.setSteamApiKey(settings.steamWebApiToken());
+
         this.aswgConfig.saveToFile();
+    }
+
+    private void recreateSteamWebApiClient(String newSteamWebApiToken)
+    {
+        webApiClientWrapper.setSteamWebApiClient(SteamWebApiClient.builder()
+                .apiKey(newSteamWebApiToken)
+                .build());
     }
 
     public record SteamSettings(

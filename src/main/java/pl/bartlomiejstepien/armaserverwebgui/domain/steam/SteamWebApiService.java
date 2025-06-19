@@ -1,6 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam;
 
-import io.github.aquerr.steamwebapiclient.SteamWebApiClient;
 import io.github.aquerr.steamwebapiclient.exception.HttpClientException;
 import io.github.aquerr.steamwebapiclient.request.PublishedFileDetailsRequest;
 import io.github.aquerr.steamwebapiclient.request.WorkShopQueryFilesRequest;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.MissingSteamApiKeyException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamWebApiClientWrapper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 @AllArgsConstructor
 public class SteamWebApiService
 {
-    private final SteamWebApiClient steamWebApiClient;
+    private final SteamWebApiClientWrapper steamWebApiClientWrapper;
     private final ArmaWorkshopModConverter armaWorkshopModConverter;
 
     @Cacheable(cacheNames = "workshop-query")
@@ -36,7 +36,8 @@ public class SteamWebApiService
         WorkShopQueryResponse workShopQueryResponse;
         try
         {
-            workShopQueryResponse = steamWebApiClient.getSteamPublishedFileWebApiClient().queryFiles(WorkShopQueryFilesRequest.builder()
+            workShopQueryResponse = steamWebApiClientWrapper.getSteamWebApiClient().getSteamPublishedFileWebApiClient()
+                    .queryFiles(WorkShopQueryFilesRequest.builder()
                     .appId(SteamUtils.ARMA_APP_ID)
                     .cursor(StringUtils.hasText(params.getCursor()) ? params.getCursor() : "*")
                     .numPerPage(10)
@@ -79,7 +80,7 @@ public class SteamWebApiService
         try
         {
             log.info("Fetching workshop mod info for mod id: {}", modId);
-            WorkshopMod workshopMod = Optional.ofNullable(this.steamWebApiClient.getSteamRemoteStorageClient()
+            WorkshopMod workshopMod = Optional.ofNullable(this.steamWebApiClientWrapper.getSteamWebApiClient().getSteamRemoteStorageClient()
                             .getPublishedFileDetails(new PublishedFileDetailsRequest(List.of(modId))))
                     .map(PublishedFileDetailsResponse::getResponse)
                     .map(PublishedFileDetailsResponse.QueryFilesResponse::getPublishedFileDetails)

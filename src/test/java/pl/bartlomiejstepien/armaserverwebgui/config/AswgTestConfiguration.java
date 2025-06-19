@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamWebApiClientWrapper;
 
 @TestConfiguration(proxyBeanMethods = false)
 public class AswgTestConfiguration
@@ -16,10 +17,10 @@ public class AswgTestConfiguration
     @Lazy
     @Bean
     @Primary
-    public SteamWebApiClient testSteamWebApiClient()
+    public SteamWebApiClientWrapper testSteamWebApiClientWrapper()
     {
-        return SteamWebApiClient.builder()
+        return new SteamWebApiClientWrapper(SteamWebApiClient.builder()
                 .baseUrl("http://localhost:" + wireMockPort)
-                .build();
+                .build());
     }
 }
