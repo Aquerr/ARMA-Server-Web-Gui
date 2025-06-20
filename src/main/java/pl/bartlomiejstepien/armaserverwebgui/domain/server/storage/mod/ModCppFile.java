@@ -7,6 +7,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.type
 @Data
 public class ModCppFile implements CppFile
 {
-    @CfgProperty(name = "name", type = PropertyType.QUOTED_STRING)
+    @CfgProperty(name = "name", type = PropertyType.RAW_STRING)
     private String name;
 }

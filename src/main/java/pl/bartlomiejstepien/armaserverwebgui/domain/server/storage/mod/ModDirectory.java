@@ -84,7 +84,22 @@ public class ModDirectory
                 .orElse(this.modCppFile.getOptional()
                         .map(ModCppFile::getName)
                         .filter(StringUtils::hasText)
+                        .map(ModDirectory::stripQuotationsAndTrim)
                         .orElse(getDirectoryName()));
+    }
+
+    private static String stripQuotationsAndTrim(String modName)
+    {
+        String trimString = modName.trim();
+        if (trimString.startsWith("\""))
+        {
+            trimString = trimString.substring(1);
+        }
+        if (trimString.endsWith("\""))
+        {
+            trimString = trimString.substring(0, trimString.length() - 1);
+        }
+        return trimString;
     }
 
     public long getSizeBytes()
