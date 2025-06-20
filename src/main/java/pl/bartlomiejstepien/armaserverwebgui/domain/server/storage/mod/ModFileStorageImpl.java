@@ -90,7 +90,7 @@ public class ModFileStorageImpl implements ModFileStorage
     {
         return Optional.ofNullable(modDirectory.get().toFile().listFiles())
                 .map(files -> Stream.of(files)
-                        .filter(this::isModDirectory)
+                        .filter(ModDirectory::isModDirectory)
                         .map(this::getFileSystemModFromDirectory)
                         .filter(Objects::nonNull)
                         .toList())
@@ -243,12 +243,8 @@ public class ModFileStorageImpl implements ModFileStorage
     private FileSystemMod getFileSystemModFromDirectory(File file)
     {
         if (Files.notExists(file.toPath()))
-        {
             return null;
-        }
-
-        String directoryPath = file.getAbsolutePath();
-        return FileSystemMod.from(Paths.get(directoryPath));
+        return FileSystemMod.from(Paths.get(file.getAbsolutePath()));
     }
 
     private void saveFileAtPath(MultipartFile multipartFile, Path saveLocation)
@@ -283,10 +279,5 @@ public class ModFileStorageImpl implements ModFileStorage
     private void deleteZipFile(Path filePath) throws IOException
     {
         Files.deleteIfExists(filePath);
-    }
-
-    private boolean isModDirectory(File file)
-    {
-        return file.isDirectory() && file.getName().startsWith("@");
     }
 }

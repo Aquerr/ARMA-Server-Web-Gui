@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.dotnet.DotnetDateTimeUtils;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.OffsetDateTime;
 
@@ -42,9 +43,10 @@ public class FileSystemMod
         return this.modDirectory.getModName();
     }
 
-    public boolean isValid()
+    public boolean hasFiles()
     {
-        return ofNullable(this.modDirectory.getMetaCppFile()).isPresent();
+        return ofNullable(this.modDirectory.getMetaCppFile()).isPresent()
+                && (Files.exists(this.modDirectory.getPath().resolve("Addons")) || Files.exists(this.modDirectory.getPath().resolve("addons")));
     }
 
     public OffsetDateTime getLastUpdated()

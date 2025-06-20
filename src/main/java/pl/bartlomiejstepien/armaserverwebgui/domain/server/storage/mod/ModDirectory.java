@@ -15,6 +15,13 @@ public class ModDirectory
     private final Lazy<MetaCppFile> metaCppFile;
     private final Lazy<ModCppFile> modCppFile;
 
+    public static boolean isModDirectory(File file)
+    {
+        return file.isDirectory()
+                && file.getName().startsWith("@")
+                && (Files.exists(file.toPath().resolve("addons")) || Files.exists(file.toPath().resolve("Addons")));
+    }
+
     public static ModDirectory from(Path modDirectory)
     {
         return new ModDirectory(modDirectory);

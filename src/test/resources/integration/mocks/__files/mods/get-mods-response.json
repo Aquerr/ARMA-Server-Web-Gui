@@ -1,0 +1,33 @@
+{
+  "disabledMods" : [ {
+    "workshopFileId" : 123,
+    "name" : "testmod1",
+    "serverMod" : true,
+    "previewUrl" : null,
+    "workshopUrl" : "https://steamcommunity.com/sharedfiles/filedetails/?id=123",
+    "fileExists" : false,
+    "sizeBytes" : 0,
+    "lastWorkshopUpdateDateTime" : null
+  } ],
+  "enabledMods" : [ {
+    "workshopFileId" : 456,
+    "name" : "testmod3",
+    "serverMod" : false,
+    "previewUrl" : null,
+    "workshopUrl" : "https://steamcommunity.com/sharedfiles/filedetails/?id=456",
+    "fileExists" : true,
+    "sizeBytes" : 46,
+    "lastWorkshopUpdateDateTime" : null
+  } ],
+  "notManagedMods" : [ {
+    "workshopFileId" : 0,
+    "name" : "@testmod4",
+    "serverMod" : false,
+    "previewUrl" : null,
+    "workshopUrl" : "https://steamcommunity.com/sharedfiles/filedetails/?id=0",
+    "fileExists" : true,
+    "sizeBytes" : 0,
+    "lastWorkshopUpdateDateTime" : null,
+    "directoryName" : "@testmod4"
+  } ]
+}
