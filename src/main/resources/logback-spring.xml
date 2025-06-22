@@ -20,9 +20,9 @@
             <file>${ASWG_LOGS_LOCATION}/aswg.log</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
                 <fileNamePattern>${ASWG_LOGS_LOCATION}/aswg.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
-                <maxFileSize>4MB</maxFileSize>
+                <maxFileSize>5MB</maxFileSize>
                 <maxHistory>10</maxHistory>
-                <totalSizeCap>50MB</totalSizeCap>
+                <totalSizeCap>100MB</totalSizeCap>
                 <cleanHistoryOnStart>false</cleanHistoryOnStart>
             </rollingPolicy>
             <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
@@ -63,9 +63,9 @@
             <file>${ASWG_LOGS_LOCATION}/aswg.log</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
                 <fileNamePattern>${ASWG_LOGS_LOCATION}/aswg.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
-                <maxFileSize>4MB</maxFileSize>
+                <maxFileSize>5MB</maxFileSize>
                 <maxHistory>10</maxHistory>
-                <totalSizeCap>50MB</totalSizeCap>
+                <totalSizeCap>100MB</totalSizeCap>
                 <cleanHistoryOnStart>false</cleanHistoryOnStart>
             </rollingPolicy>
         </appender>
@@ -79,9 +79,9 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${ASWG_LOGS_LOCATION}/arma-server-%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
-            <maxFileSize>4MB</maxFileSize>
+            <maxFileSize>5MB</maxFileSize>
             <maxHistory>10</maxHistory>
-            <totalSizeCap>50MB</totalSizeCap>
+            <totalSizeCap>100MB</totalSizeCap>
             <cleanHistoryOnStart>false</cleanHistoryOnStart>
         </rollingPolicy>
     </appender>

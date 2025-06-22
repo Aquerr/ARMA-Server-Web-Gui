@@ -1,10 +1,13 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.discord;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordMessage;
 
+@Slf4j
 public class DiscordWebhookHandler
 {
     private final String webhookUrl;
@@ -23,6 +26,12 @@ public class DiscordWebhookHandler
 
     public void sendMessage(DiscordMessage discordMessage)
     {
+        if (!StringUtils.hasText(this.webhookUrl))
+        {
+            log.warn("Discord webhook url is not set. Cannot send message to Discord.");
+            return;
+        }
+
         String jsonMessage;
         try
         {

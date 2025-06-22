@@ -131,21 +131,25 @@ public class ModFileStorageImpl implements ModFileStorage
     @Override
     public void deleteMod(InstalledModEntity installedModEntity)
     {
+        deleteModDirectory(installedModEntity.getModDirectoryName(), installedModEntity.getDirectoryPath());
+        this.installedModRepository.delete(installedModEntity);
+    }
+
+    private void deleteModDirectory(String directoryName, String directoryPath)
+    {
         final File[] files = this.modDirectory.get().toFile().listFiles();
         if (files != null)
         {
             for (final File file : files)
             {
-                if (file.getName().equals(installedModEntity.getModDirectoryName()))
+                if (file.getName().equals(directoryName))
                 {
-                    log.info("Deleting mod directory {}", installedModEntity.getDirectoryPath());
+                    log.info("Deleting mod directory {}", directoryPath);
                     FileUtils.deleteFilesRecursively(file.toPath(), true);
                     break;
                 }
             }
         }
-
-        this.installedModRepository.delete(installedModEntity);
     }
 
     @Override
@@ -234,7 +238,7 @@ public class ModFileStorageImpl implements ModFileStorage
         // Clear old directory
         if (!modFolder.getName().equals(newModFolderPath.getFileName().toString()))
         {
-            FileUtils.deleteFilesRecursively(modFolder.toPath(), true);
+            deleteModDirectory(modFolder.getName(), modFolder.getPath());
         }
 
         return newModFolderPath;
@@ -261,11 +265,11 @@ public class ModFileStorageImpl implements ModFileStorage
 
     private Path unpackZipFile(Path filePath)
     {
-        try (ZipFile zipFile = new ZipFile(filePath.toAbsolutePath().toString()))
+        try (ZipFile zipFile = new ZipFile(filePath.toAbsolutePath().normalize().toString()))
         {
-            zipFile.extractAll(filePath.getParent().toAbsolutePath().toString());
+            zipFile.extractAll(filePath.getParent().toAbsolutePath().normalize().toString());
             String modFolderName = zipFile.getFileHeaders().get(0).getFileName();
-            Path newModFolderPath = renameModFolderToLowerCaseWithUnderscores(filePath.getParent().resolve(modFolderName));
+            Path newModFolderPath = renameModFolderToLowerCaseWithUnderscores(filePath.getParent().resolve(modFolderName).normalize());
             normalizeEachFileNameInFolderRecursively(newModFolderPath);
             return newModFolderPath;
         }
