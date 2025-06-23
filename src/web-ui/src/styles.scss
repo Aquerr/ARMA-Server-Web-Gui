@@ -353,6 +353,10 @@ hr {
   display: none;
 }
 
+.brightness-50 {
+  filter: brightness(50%);
+}
+
 .navbar {
   --bs-navbar-padding-x: 0;
   --bs-navbar-padding-y: 0.5rem;

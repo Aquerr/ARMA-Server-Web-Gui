@@ -1,0 +1,36 @@
+.not-managed-mods-container {
+  margin-top: 3rem
+}
+
+.not-managed-mod-list {
+  border: solid 1px #444c56;
+  border-radius: 4px;
+}
+
+.not-managed-mod-list-item {
+  border-bottom: #444c56 solid 1px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem;
+  font-weight: 500;
+
+  .not-managed-mod-list-item-header {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.not-managed-mod-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.not-managed-mod-buttons .mat-icon {
+  color: white !important;
+}
+
+.not-managed-mod-list-item:last-child {
+  border: none;
+}

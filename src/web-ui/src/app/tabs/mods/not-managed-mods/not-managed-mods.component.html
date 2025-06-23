@@ -1,0 +1,27 @@
+<div class="not-managed-mods-container">
+  <h2>Detected not managed mods</h2>
+  <div>
+    <div class="not-managed-mod-list">
+      @for (mod of mods; track mod.name) {
+        <div class="not-managed-mod-list-item">
+          <div class="not-managed-mod-list-item-header">
+            <div>
+              {{ mod.name }}
+            </div>
+            <div class="brightness-50">
+              Directory: {{ mod.directoryName }}
+            </div>
+          </div>
+          <div class="not-managed-mod-buttons">
+            <button mat-button (click)="registerNotManagedMod(mod)">
+              <mat-icon fontIcon="settings"></mat-icon> Manage
+            </button>
+            <button mat-button (click)="deleteNotManagedMod(mod)">
+              <mat-icon fontIcon="delete"></mat-icon> Delete
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

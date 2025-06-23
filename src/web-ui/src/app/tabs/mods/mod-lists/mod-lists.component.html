@@ -1,0 +1,21 @@
+<div class="mod-list-group" cdkDropListGroup>
+  <app-mod-list [mods]="disabledMods"
+                [listHeader]="'Disabled'"
+                (moveAll)="enableAllMods()"
+                (modItemDragDrop)="onModItemDragDrop($event)"
+                (modDelete)="onModDelete($event)"
+                [moveAllModsButtonName]="'Enable all'"
+                [moveAllModsButtonIcon]="'arrow_forward'"></app-mod-list>
+
+  <app-mod-list [mods]="enabledMods"
+                [listHeader]="'Enabled'"
+                (moveAll)="disableAllMods()"
+                (modItemDragDrop)="onModItemDragDrop($event)"
+                (modDelete)="onModDelete($event)"
+                [moveAllModsButtonName]="'Disable all'"
+                [moveAllModsButtonIcon]="'arrow_backward'"></app-mod-list>
+</div>
+
+@if (notManagedMods.length > 0) {
+  <app-not-managed-mods [mods]="notManagedMods" (notManagedModsChanged)="reloadMods()"></app-not-managed-mods>
+}

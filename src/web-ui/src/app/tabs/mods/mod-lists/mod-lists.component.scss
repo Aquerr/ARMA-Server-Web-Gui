@@ -1,0 +1,18 @@
+.mod-list-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  min-height: 30rem;
+  gap: 1rem;
+}
+
+@media (max-width: 800px) {
+  .mod-list-group {
+    flex-direction: column;
+    margin: auto;
+    justify-items: left;
+    align-items: center;
+    width: 100%;
+  }
+}

@@ -7,17 +7,44 @@ import { ServerModsService } from "../../../service/server-mods.service";
 import { ModForceUpdateConfirmDialogComponent } from "../mod-force-update-confirm-dialog/mod-force-update-confirm-dialog.component";
 import { WorkshopService } from "../../../service/workshop.service";
 import { NotificationService } from "../../../service/notification.service";
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelDescription,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle
+} from "@angular/material/expansion";
+import { NgOptimizedImage, NgStyle } from "@angular/common";
+import { MatIconButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
+import { MatTooltip } from "@angular/material/tooltip";
+import { FilesizePipe } from "../../../util/filesize.pipe";
+import { MatCheckbox } from "@angular/material/checkbox";
 
 @Component({
   selector: "[app-mod-list-item]",
   templateUrl: "./mod-list-item.component.html",
-  styleUrls: ["./mod-list-item.component.scss"],
-  standalone: false
+  imports: [
+    MatAccordion,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    MatExpansionPanelHeader,
+    NgStyle,
+    MatIcon,
+    MatIconButton,
+    MatTooltip,
+    FilesizePipe,
+    MatCheckbox,
+    NgOptimizedImage,
+    MatExpansionPanel
+  ],
+  styleUrls: ["./mod-list-item.component.scss"]
 })
 export class ModListItemComponent {
   @Input() mod!: Mod;
   @Output() onModDelete: EventEmitter<Mod> = new EventEmitter<Mod>();
   expanded: boolean = false;
+
   constructor(
     private matDialog: MatDialog,
     private maskService: MaskService,
