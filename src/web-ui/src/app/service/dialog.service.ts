@@ -49,7 +49,7 @@ export class DialogService {
       };
     } else {
       return {
-        width: "350px",
+        maxWidth: "450px",
         enterAnimationDuration: "200ms",
         exitAnimationDuration: "200ms",
         data: data

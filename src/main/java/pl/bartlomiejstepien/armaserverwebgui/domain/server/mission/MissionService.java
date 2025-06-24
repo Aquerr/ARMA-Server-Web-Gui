@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface MissionService
 {
-    void save(MultipartFile multipartFile);
+    void save(MultipartFile multipartFile, boolean overwrite);
+
+    boolean checkMissionFileExists(String fileName);
 
     boolean deleteMission(String template);
 

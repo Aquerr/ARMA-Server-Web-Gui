@@ -9,6 +9,7 @@ import { Mission } from "../model/mission.model";
 })
 export class ServerMissionsService {
   private readonly MISSIONS_URL = `${API_BASE_URL}/missions`;
+  private readonly MISSIONS_FILES_URL = `${API_BASE_URL}/missions-files`;
 
   constructor(private httpClient: HttpClient) {}
 
@@ -20,10 +21,16 @@ export class ServerMissionsService {
   }
 
   uploadMission(formData: FormData): Observable<any> {
-    return this.httpClient.post(`${this.MISSIONS_URL}/file`, formData, {
+    return this.httpClient.post(`${this.MISSIONS_FILES_URL}`, formData, {
       reportProgress: true,
       observe: "events"
     });
+  }
+
+  checkMissionFileExists(modFileName: string): Observable<DoesMissionExistsResponse> {
+    return this.httpClient.get<DoesMissionExistsResponse>(
+      `${this.MISSIONS_FILES_URL}/${modFileName}/exists`
+    );
   }
 
   getInstalledMissions(): Observable<GetMissionsResponse> {
@@ -52,4 +59,8 @@ export interface GetMissionsResponse {
 
 export interface SaveEnabledMissionsRequest {
   missions: Mission[];
+}
+
+export interface DoesMissionExistsResponse {
+  exists: boolean;
 }

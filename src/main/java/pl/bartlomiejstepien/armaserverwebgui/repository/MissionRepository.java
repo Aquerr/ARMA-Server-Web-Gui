@@ -15,7 +15,7 @@ public interface MissionRepository extends JpaRepository<MissionEntity, Long>
     List<MissionEntity> findByTemplate(String template);
 
     @Modifying
-    void deleteByTemplate(String template);
+    void deleteFirstByTemplate(String template);
 
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE mission SET mission.enabled = true WHERE mission.template IN (:templates)")

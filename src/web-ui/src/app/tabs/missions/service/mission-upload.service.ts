@@ -15,13 +15,14 @@ export class MissionUploadService extends FileUploadService {
     super(notificationService, ["*"], [".pbo"]);
   }
 
-  uploadMission(file: File) {
-    this.uploadFile(file, false);
+  uploadMission(file: File, overwrite: boolean = false) {
+    this.uploadFile(file, overwrite);
   }
 
-  override doUpload(file: File): Observable<any> {
+  override doUpload(file: File, overwrite: boolean = false): Observable<any> {
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("overwrite", overwrite.toString());
     return this.missionService.uploadMission(formData);
   }
 

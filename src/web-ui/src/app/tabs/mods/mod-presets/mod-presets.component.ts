@@ -146,6 +146,7 @@ export class ModPresetsComponent {
 
     dialogRef.afterClosed().subscribe((result: { create: boolean; modPresetName: string }) => {
       if (result) {
+        console.log(this.enabledMods);
         this.modsService
           .savePreset({
             name: presetName,

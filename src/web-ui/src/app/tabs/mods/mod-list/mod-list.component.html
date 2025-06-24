@@ -1,0 +1,28 @@
+<h2 class="mods-list-header">
+  {{ listHeader }} <span class="brightness-50">({{ mods.length }})</span>
+</h2>
+<div class="mod-list-buttons">
+  <button mat-button (click)="moveAllMods()">
+    {{moveAllModsButtonName}}<mat-icon>{{moveAllModsButtonIcon}}</mat-icon>
+  </button>
+</div>
+
+<div class="list-container">
+  <div
+    [id]="listHeader"
+    cdkDropList
+    class="list-container"
+    [cdkDropListData]="filteredMods"
+    [cdkDropListSortingDisabled]="true"
+    (cdkDropListDropped)="onModItemDragDrop($event)"
+  >
+    @for (mod of filteredMods; track mod.name) {
+      <div
+        app-mod-list-item
+        [mod]="mod"
+        (onModDelete)="onModDelete($event)"
+        cdkDrag
+      ></div>
+    }
+  </div>
+</div>

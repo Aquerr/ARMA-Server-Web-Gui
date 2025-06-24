@@ -44,7 +44,6 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { WorkshopComponent } from "./tabs/workshop/workshop.component";
 import { NgOptimizedImage } from "@angular/common";
 import { WorkshopItemComponent } from "./tabs/workshop/workshop-item/workshop-item.component";
-import { ModListItemComponent } from "./tabs/mods/mod-list-item/mod-list-item.component";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { PlayerListComponent } from "./tabs/status/player-list/player-list.component";
 import { ServerConsoleComponent } from "./tabs/status/server-console/server-console.component";
@@ -65,7 +64,6 @@ import { DifficultyComponent } from "./tabs/difficulty/difficulty.component";
 import { DifficultyPanelComponent } from "./tabs/difficulty/difficulty-panel/difficulty-panel.component";
 import { DifficultyDeleteConfirmDialogComponent } from "./tabs/difficulty/difficulty-delete-confirm-dialog/difficulty-delete-confirm-dialog.component";
 import { NewMissionDialogComponent } from "./tabs/missions/new-mission-dialog/new-mission-dialog.component";
-import { FilesizePipe } from "./util/filesize.pipe";
 import { FileUploadSnackBarComponent } from "./common-ui/file-upload-snack-bar/file-upload-snack-bar.component";
 import { NgxCodeJarComponent } from "ngx-codejar";
 import { CommonConfirmDialogComponent } from "./common-ui/common-confirm-dialog/common-confirm-dialog.component";
@@ -77,6 +75,9 @@ import { DesktopHeaderComponent } from "./desktop-header/desktop-header.componen
 import { AswgChipFormInputComponent } from "./common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
 import { DragDropOverlay } from "./common-ui/drag-and-drop-overlay/drag-and-drop-overlay.component";
 import { DragAndDropFileDirective } from "./common-ui/directive/drag-and-drop-file.directive";
+import { NotManagedModsComponent } from "./tabs/mods/not-managed-mods/not-managed-mods.component";
+import { ModListsComponent } from "./tabs/mods/mod-lists/mod-lists.component";
+import { FilesizePipe } from "./util/filesize.pipe";
 
 @NgModule({
   declarations: [
@@ -104,7 +105,6 @@ import { DragAndDropFileDirective } from "./common-ui/directive/drag-and-drop-fi
     MissionParameterComponent,
     WorkshopComponent,
     WorkshopItemComponent,
-    ModListItemComponent,
     PlayerListComponent,
     PlayerListComponent,
     ServerConsoleComponent,
@@ -119,8 +119,6 @@ import { DragAndDropFileDirective } from "./common-ui/directive/drag-and-drop-fi
     DifficultyPanelComponent,
     DifficultyDeleteConfirmDialogComponent,
     NewMissionDialogComponent,
-    FileUploadSnackBarComponent,
-    FilesizePipe,
     CommonConfirmDialogComponent,
     AswgChipInputComponent,
     PasswordChangeModalComponent
@@ -160,7 +158,11 @@ import { DragAndDropFileDirective } from "./common-ui/directive/drag-and-drop-fi
     MatAutocompleteTrigger,
     AswgChipFormInputComponent,
     DragDropOverlay,
-    DragAndDropFileDirective
+    DragAndDropFileDirective,
+    NotManagedModsComponent,
+    ModListsComponent,
+    FilesizePipe,
+    FileUploadSnackBarComponent
   ],
   exports: [],
   providers: [
