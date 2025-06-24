@@ -38,6 +38,7 @@ public class MissionServiceImpl implements MissionService
     private final MissionFileNameHelper missionFileNameHelper;
 
     @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.MINUTES)
+    @Transactional
     public void missionScan()
     {
         log.info("Scanning for new file missions...");

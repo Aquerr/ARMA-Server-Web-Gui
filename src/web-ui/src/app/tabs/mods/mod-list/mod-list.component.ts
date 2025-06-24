@@ -1,13 +1,35 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from "@angular/core";
 import { CdkDrag, CdkDragDrop, CdkDropList } from "@angular/cdk/drag-drop";
 import { MatButton } from "@angular/material/button";
 import { Mod } from "../../../model/mod.model";
 import { ModListItemComponent } from "../mod-list-item/mod-list-item.component";
 import { MatIcon } from "@angular/material/icon";
+import { MatFormField, MatOption, MatSelect } from "@angular/material/select";
+import { MatLabel } from "@angular/material/form-field";
+
+export type SortBy = "Name" | "Size";
 
 @Component({
   selector: "app-mod-list",
-  imports: [CdkDrag, MatButton, CdkDropList, ModListItemComponent, MatIcon],
+  imports: [
+    CdkDrag,
+    MatButton,
+    CdkDropList,
+    ModListItemComponent,
+    MatIcon,
+    MatSelect,
+    MatOption,
+    MatFormField,
+    MatLabel
+  ],
   templateUrl: "./mod-list.component.html",
   styleUrl: "./mod-list.component.scss"
 })
@@ -22,6 +44,7 @@ export class ModListComponent implements OnInit, OnChanges {
   @Output() modDelete = new EventEmitter<Mod>();
 
   filteredMods: Mod[] = [];
+  sortBy: SortBy = "Name";
 
   ngOnInit() {
     this.reload();
@@ -48,11 +71,17 @@ export class ModListComponent implements OnInit, OnChanges {
   }
 
   filterMods(searchPhrase: string) {
-    this.filteredMods = this.mods.filter(mod => mod.name.toLowerCase().includes(searchPhrase.toLowerCase()));
+    this.filteredMods = this.mods.filter((mod) =>
+      mod.name.toLowerCase().includes(searchPhrase.toLowerCase())
+    );
     this.sortModList();
   }
 
   public sortModList() {
-    this.mods.sort((a, b) => a.name.localeCompare(b.name));
+    if (this.sortBy == "Name") {
+      this.filteredMods.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (this.sortBy == "Size") {
+      this.filteredMods.sort((a, b) => a.sizeBytes - b.sizeBytes);
+    }
   }
 }

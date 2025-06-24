@@ -5,6 +5,13 @@
   <button mat-button (click)="moveAllMods()">
     {{moveAllModsButtonName}}<mat-icon>{{moveAllModsButtonIcon}}</mat-icon>
   </button>
+  <mat-form-field style="width: 8rem;">
+    <mat-label>Sort by</mat-label>
+    <mat-select [(value)]="sortBy" (selectionChange)="sortModList()">
+      <mat-option [value]="'Name'">Name</mat-option>
+      <mat-option [value]="'Size'">Size</mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
 
 <div class="list-container">
