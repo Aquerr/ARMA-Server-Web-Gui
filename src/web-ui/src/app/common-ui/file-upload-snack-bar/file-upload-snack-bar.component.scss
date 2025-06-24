@@ -1,6 +1,6 @@
 .snack-bar-header {
   border-bottom: 1px solid gray;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   font-size: large;
 }
 
@@ -10,7 +10,13 @@
 
 .snack-bar-close-button {
   top: 5px;
-  right: 5px;
+  right: 0;
   position: absolute;
   cursor: pointer;
+}
+
+.cancel-upload-button {
+  position: absolute;
+  right: 0;
+  cursor: pointer
 }

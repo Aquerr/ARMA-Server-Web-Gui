@@ -2,7 +2,7 @@
   <div>
     <mat-label class="file-upload-snackbar-header-label">Uploading</mat-label>
     <div class="snack-bar-close-button">
-      <mat-icon (click)="snackBarRef.dismissWithAction()">close</mat-icon>
+      <mat-icon (click)="snackBarRef.dismissWithAction()" matTooltip="Close">close</mat-icon>
     </div>
   </div>
 </div>
@@ -10,6 +10,7 @@
   @for (file of getUploadingFiles(); track file; let i = $index) {
     <div>
       <div style="display: flex; flex-direction: column">
+        <mat-icon class="cancel-upload-button" (click)="cancelUpload(file)" matTooltip="Cancel upload">cancel</mat-icon>
         <mat-label>{{ file.fileName }}</mat-label>
         <mat-label style="filter: brightness(75%)">{{
           (file.uploadedSize | filesize) + "/" + (file.totalSize | filesize)

@@ -55,6 +55,7 @@ export class FileUploadMonitorService {
 
     return {
       next: (response) => {
+
         if (response.type == HttpEventType.UploadProgress) {
           const uploadingFile = this.uploadingFiles.find(
             (uploadingFile) => uploadingFile.fileName === file.name
@@ -62,6 +63,13 @@ export class FileUploadMonitorService {
           if (uploadingFile) {
             uploadingFile.uploadedSize = response.loaded;
             uploadingFile.progress = Math.round((response.loaded / response.total) * 100);
+
+            if (uploadingFile.shouldCancel) {
+              this.removeFileWithName(uploadingFile.fileName);
+              this.fileUploadedSubject.next(null);
+              this.notificationService.warningNotification("File upload cancelled.");
+              throw Error("File upload cancelled!");
+            }
           }
         }
 

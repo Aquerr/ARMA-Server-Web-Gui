@@ -81,4 +81,5 @@ export interface UploadingFile {
   progress: number;
   uploadedSize: number;
   totalSize: number;
+  shouldCancel: boolean;
 }
