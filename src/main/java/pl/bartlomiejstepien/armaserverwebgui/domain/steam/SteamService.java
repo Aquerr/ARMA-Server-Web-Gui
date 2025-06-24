@@ -7,6 +7,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface SteamService
@@ -22,6 +23,8 @@ public interface SteamService
     WorkshopMod getWorkshopMod(long modId);
 
     UUID scheduleWorkshopModDownload(long fileId, String title, boolean forced);
+
+    UUID scheduleWorkshopModDownload(Map<Long, String> fileIdsWithTitles, boolean forced);
 
     boolean canUseWorkshop();
 

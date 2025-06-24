@@ -17,6 +17,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamWebApiClien
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -88,13 +89,37 @@ public class SteamWebApiService
                     .map(List::getFirst)
                     .map(this.armaWorkshopModConverter::convert)
                     .orElse(null);
-            log.info("Got workshop mod info: {}", workshopMod);
+            log.info("Got workshop info for mod: {}", workshopMod);
             return workshopMod;
         }
         catch (Exception exception)
         {
             log.warn("Could not fetch mod info from workshop. Reason: {}", exception.getMessage());
             return null;
+        }
+    }
+
+    @Cacheable("workshop-get-mods")
+        public List<WorkshopMod> getWorkshopMods(List<Long> modIds)
+    {
+        try
+        {
+            log.info("Fetching workshop mod info for mod ids: {}", modIds);
+            List<WorkshopMod> workshopMods = Optional.ofNullable(this.steamWebApiClientWrapper.getSteamWebApiClient().getSteamRemoteStorageClient()
+                            .getPublishedFileDetails(new PublishedFileDetailsRequest(List.copyOf(modIds))))
+                    .map(PublishedFileDetailsResponse::getResponse)
+                    .map(PublishedFileDetailsResponse.QueryFilesResponse::getPublishedFileDetails)
+                    .orElse(List.of())
+                    .stream()
+                    .map(this.armaWorkshopModConverter::convert)
+                    .toList();
+            log.info("Got workshop info for mods: {}", workshopMods);
+            return workshopMods;
+        }
+        catch (Exception exception)
+        {
+            log.warn("Could not fetch mod info from workshop. Reason: {}", exception.getMessage());
+            return List.of();
         }
     }
 }

@@ -10,6 +10,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.RetryableExc
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.handler.SteamTaskHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.QueuedSteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamTask;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopBatchModDownloadTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopModInstallSteamTask;
 
 import java.util.ArrayList;
@@ -103,11 +104,18 @@ public class SteamCmdHandler
             // Game update has always first priority
             STEAM_TASKS.offerFirst(queuedSteamTask);
         }
-        else
+        else if (queuedSteamTask.getSteamTask().getType() == SteamTask.Type.WORKSHOP_DOWNLOAD)
         {
-            STEAM_TASKS.add(queuedSteamTask);
             publishMessage(new WorkshopModInstallationStatus(((WorkshopModInstallSteamTask) queuedSteamTask.getSteamTask()).getFileId(), 0));
         }
+        else
+        {
+            ((WorkshopBatchModDownloadTask) queuedSteamTask.getSteamTask())
+                    .getFileIdsWithTitles()
+                    .keySet()
+                    .forEach(id -> publishMessage(new WorkshopModInstallationStatus(id, 0)));
+        }
+        STEAM_TASKS.add(queuedSteamTask);
     }
 
     private void handleSteamTask(SteamTask steamTask)

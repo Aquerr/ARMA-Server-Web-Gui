@@ -1,4 +1,4 @@
-package pl.bartlomiejstepien.armaserverwebgui.domain.steam.model;
+package pl.bartlomiejstepien.armaserverwebgui.application.process;
 
 import java.util.List;
 

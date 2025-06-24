@@ -1,7 +1,6 @@
-package pl.bartlomiejstepien.armaserverwebgui.application.util;
+package pl.bartlomiejstepien.armaserverwebgui.application.process;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ProcessParameters;
 
 import java.io.BufferedReader;
 import java.io.File;

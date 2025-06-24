@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.steam.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import pl.bartlomiejstepien.armaserverwebgui.application.process.ProcessParameters;
 
 import java.util.ArrayList;
 import java.util.List;

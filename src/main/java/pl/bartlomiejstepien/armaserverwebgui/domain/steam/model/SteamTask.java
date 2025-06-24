@@ -7,6 +7,7 @@ public interface SteamTask
     enum Type
     {
         WORKSHOP_DOWNLOAD,
+        WORKSHOP_BATCH_DOWNLOAD,
         GAME_UPDATE
     }
 }

@@ -12,6 +12,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdNotI
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQueryResponse;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.GameUpdateSteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamTask;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopBatchModDownloadTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopModInstallSteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
@@ -20,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
@@ -98,6 +100,15 @@ public class SteamServiceImpl implements SteamService
             throw new SteamCmdNotInstalled();
 
         return this.steamCmdHandler.queueSteamTask(new WorkshopModInstallSteamTask(fileId, title, forced));
+    }
+
+    @Override
+    public UUID scheduleWorkshopModDownload(Map<Long, String> fileIdsWithTitles, boolean forced)
+    {
+        if (!isSteamCmdInstalled())
+            throw new SteamCmdNotInstalled();
+
+        return this.steamCmdHandler.queueSteamTask(new WorkshopBatchModDownloadTask(fileIdsWithTitles, forced));
     }
 
     @Override

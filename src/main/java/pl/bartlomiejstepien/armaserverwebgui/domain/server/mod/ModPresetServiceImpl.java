@@ -11,12 +11,12 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.PresetImportP
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.PresetNotFoundException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSaveParams;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetEntryRepository;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -149,9 +149,10 @@ public class ModPresetServiceImpl implements ModPresetService
                         .build())
                 .toList()));
 
-        entryEntities.stream()
-                .map(entry -> new WorkshopModInstallationRequest(entry.getModId(), entry.getName()))
-                .forEach(request -> steamService.scheduleWorkshopModDownload(request.getFileId(), request.getTitle(), false));
+        Map<Long, String> modsToDownload = entryEntities.stream()
+                .collect(Collectors.toMap(ModPresetEntity.EntryEntity::getModId, ModPresetEntity.EntryEntity::getName));
+
+        steamService.scheduleWorkshopModDownload(modsToDownload, false);
     }
 
     @Override

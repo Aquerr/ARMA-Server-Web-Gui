@@ -17,6 +17,8 @@ public interface InstalledModRepository extends JpaRepository<InstalledModEntity
 
     Optional<InstalledModEntity> findByWorkshopFileId(Long id);
 
+    List<InstalledModEntity> findAllByWorkshopFileIdIn(List<Long> id);
+
     List<InstalledModEntity> findAllByOrderByNameAsc();
 
     @Modifying

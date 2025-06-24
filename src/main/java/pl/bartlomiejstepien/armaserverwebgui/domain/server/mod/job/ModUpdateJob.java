@@ -9,6 +9,9 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -36,12 +39,11 @@ public class ModUpdateJob
         }
 
         log.info("Executing Mod Update Job");
-        modService.getInstalledMods()
-                .forEach(this::scheduleModUpdate);
+        scheduleModUpdate(modService.getInstalledMods().stream().collect(Collectors.toMap(InstalledModEntity::getWorkshopFileId, InstalledModEntity::getName)));
     }
 
-    private void scheduleModUpdate(InstalledModEntity installedModEntity)
+    private void scheduleModUpdate(Map<Long, String> modIdWithName)
     {
-        steamService.scheduleWorkshopModDownload(installedModEntity.getWorkshopFileId(), installedModEntity.getName(), false);
+        steamService.scheduleWorkshopModDownload(modIdWithName, false);
     }
 }
