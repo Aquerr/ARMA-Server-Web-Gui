@@ -12,6 +12,7 @@ import { FormControl } from "@angular/forms";
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
 import { MissionUploadService } from "./service/mission-upload.service";
 import { NewMissionDialogComponent } from "./new-mission-dialog/new-mission-dialog.component";
+import { DialogService } from "../../service/dialog.service";
 
 @Component({
   selector: "app-missions",
@@ -38,7 +39,8 @@ export class MissionsComponent implements OnInit, OnDestroy {
     private maskService: MaskService,
     private notificationService: NotificationService,
     private matDialog: MatDialog,
-    private missionUploadService: MissionUploadService
+    private missionUploadService: MissionUploadService,
+    private dialogService: DialogService
   ) {
     this.reloadMissionsDataSubject = new Subject();
     this.reloadMissionDataSubscription = this.reloadMissionsDataSubject.subscribe(() => {
@@ -67,7 +69,25 @@ export class MissionsComponent implements OnInit, OnDestroy {
   }
 
   onFileDropped(file: File) {
-    this.missionUploadService.uploadMission(file);
+    this.maskService.show();
+    this.missionsService.checkMissionFileExists(file.name).subscribe((response) => {
+      this.maskService.hide();
+      if (response.exists) {
+        const onCloseCallback = (result: boolean) => {
+          if (!result) return;
+          this.missionUploadService.uploadMission(file, true);
+        };
+
+        this.dialogService.openCommonConfirmationDialog(
+          {
+            question: `File for mission <strong>${file.name}</strong> already exists. <br>Do you want to overwrite it?`
+          },
+          onCloseCallback
+        );
+      } else {
+        this.missionUploadService.uploadMission(file);
+      }
+    });
   }
 
   private reloadMissions(): void {

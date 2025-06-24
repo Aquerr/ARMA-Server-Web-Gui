@@ -51,18 +51,28 @@ public class MissionServiceImpl implements MissionService
         }
     }
 
+    @Override
+    public boolean checkMissionFileExists(String fileName)
+    {
+        return missionFileStorage.doesMissionExists(fileName);
+    }
+
     @Transactional
     @Override
-    public void save(MultipartFile multipartFile)
+    public void save(MultipartFile multipartFile, boolean overwrite)
     {
-        if (missionFileStorage.doesMissionExists(multipartFile.getOriginalFilename()))
+        if (!overwrite && checkMissionFileExists(multipartFile.getOriginalFilename()))
             throw new MissionFileAlreadyExistsException();
 
         try
         {
             String missionTemplate = missionFileNameHelper.resolveMissionNameFromFilePart(multipartFile);
             missionFileStorage.save(multipartFile);
-            addMission(missionTemplate, missionTemplate);
+
+            if (!overwrite)
+            {
+                addMission(missionTemplate, missionTemplate);
+            }
         }
         catch (IOException exception)
         {
@@ -87,7 +97,7 @@ public class MissionServiceImpl implements MissionService
         if (this.missionRepository.findByTemplate(template).isEmpty())
             throw new MissionNotFoundException("No mission exist for template: " + template);
 
-        this.missionRepository.deleteByTemplate(template);
+        this.missionRepository.deleteFirstByTemplate(template);
         return this.missionFileStorage.deleteMission(template);
     }
 

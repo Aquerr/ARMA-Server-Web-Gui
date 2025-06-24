@@ -11,10 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.converter.MissionConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionFileAlreadyExistsException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionFileNameHelper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionFileStorage;
 import pl.bartlomiejstepien.armaserverwebgui.repository.MissionRepository;
@@ -30,6 +30,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @ExtendWith(MockitoExtension.class)
 class MissionServiceImplTest
@@ -67,9 +68,23 @@ class MissionServiceImplTest
         given(missionConverter.convertToEntity(mission)).willReturn(missionEntity);
         given(missionRepository.save(missionEntity)).willReturn(missionEntity);
 
-        missionService.save(multipartFile);
+        missionService.save(multipartFile, false);
 
         verify(missionFileStorage, times(1)).save(multipartFile);
+    }
+
+    @Test
+    void shouldOverwriteMissionFile() throws IOException
+    {
+        Mission mission = prepareMission(MISSION_NAME_1);
+        mission.setEnabled(false);
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        given(missionFileNameHelper.resolveMissionNameFromFilePart(multipartFile)).willReturn(MISSION_NAME_1);
+
+        missionService.save(multipartFile, true);
+
+        verify(missionFileStorage, times(1)).save(multipartFile);
+        verifyNoInteractions(missionRepository);
     }
 
     @Test
@@ -79,7 +94,7 @@ class MissionServiceImplTest
         given(multipartFile.getOriginalFilename()).willReturn(MISSION_NAME_1);
         given(missionFileStorage.doesMissionExists(MISSION_NAME_1)).willReturn(true);
 
-        assertThrows(MissionFileAlreadyExistsException.class, () -> missionService.save(multipartFile));
+        assertThrows(MissionFileAlreadyExistsException.class, () -> missionService.save(multipartFile, false));
     }
 
     @Test
@@ -137,7 +152,7 @@ class MissionServiceImplTest
 
         missionService.deleteMission(MISSION_TEMPLATE_1);
 
-        verify(missionRepository).deleteByTemplate(MISSION_TEMPLATE_1);
+        verify(missionRepository).deleteFirstByTemplate(MISSION_TEMPLATE_1);
         verify(missionFileStorage, times(1)).deleteMission(MISSION_TEMPLATE_1);
     }
 
