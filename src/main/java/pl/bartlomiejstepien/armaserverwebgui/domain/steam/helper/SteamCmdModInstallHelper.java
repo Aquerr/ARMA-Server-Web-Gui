@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.steam.helper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
@@ -40,7 +41,7 @@ public class SteamCmdModInstallHelper
     private final InstalledModRepository installedModRepository;
     private final WorkshopModInstallProgressWebsocketHandler workshopModInstallProgressWebsocketHandler;
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void installDownloadedMod(ModData modData)
     {
         ModDirectory modDirectory = modData.getModDirectory();
