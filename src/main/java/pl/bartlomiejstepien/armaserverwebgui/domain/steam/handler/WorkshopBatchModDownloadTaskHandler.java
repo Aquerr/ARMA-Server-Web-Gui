@@ -56,6 +56,9 @@ public class WorkshopBatchModDownloadTaskHandler implements SteamTaskHandler
         WorkshopBatchModDownloadTask task = (WorkshopBatchModDownloadTask) steamTask;
 
         List<ModData> modsToUpdate = calculateModsToUpdate(task.getFileIdsWithTitles(), task.isForced());
+        if (modsToUpdate.isEmpty())
+            return;
+        
         ModDownloadResult modDownloadResult = downloadModsFromWorkshop(modsToUpdate);
         Map<Long, Path> successDownloadMods = modDownloadResult.getSuccessMods();
         modsToUpdate = modsToUpdate.stream().filter(modData -> successDownloadMods.containsKey(modData.getFileId()))
