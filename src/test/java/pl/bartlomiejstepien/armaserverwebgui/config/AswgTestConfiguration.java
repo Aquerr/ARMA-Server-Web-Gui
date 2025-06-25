@@ -21,6 +21,7 @@ public class AswgTestConfiguration
     {
         return new SteamWebApiClientWrapper(SteamWebApiClient.builder()
                 .baseUrl("http://localhost:" + wireMockPort)
+                .apiKey("test-api-key")
                 .build());
     }
 }
