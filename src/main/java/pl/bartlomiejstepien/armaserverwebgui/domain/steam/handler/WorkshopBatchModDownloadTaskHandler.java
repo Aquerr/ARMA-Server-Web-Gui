@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.application.process.ExternalProcess;
 import pl.bartlomiejstepien.armaserverwebgui.application.process.ExternalProcessHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
@@ -26,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +65,13 @@ public class WorkshopBatchModDownloadTaskHandler implements SteamTaskHandler
         for (ModData modData : modsToUpdate)
         {
             steamCmdModInstallHelper.installDownloadedMod(modData);
+        }
+
+        if (!modDownloadResult.getFailedMods().isEmpty())
+        {
+            // To retry the steam task
+            throw new CouldNotDownloadWorkshopModException("Couldn't download workshop mods: "
+                    + Arrays.toString(modDownloadResult.getFailedMods().keySet().stream().map(String::valueOf).toArray()));
         }
     }
 
@@ -137,7 +144,7 @@ public class WorkshopBatchModDownloadTaskHandler implements SteamTaskHandler
         }
         catch (Exception e)
         {
-            throw new CouldNotDownloadWorkshopModException(e.getMessage(), e);
+            log.warn("Failed to batch download mods from workshop", e);
         }
 
         Map<Long, Path> successMods = new HashMap<>();
