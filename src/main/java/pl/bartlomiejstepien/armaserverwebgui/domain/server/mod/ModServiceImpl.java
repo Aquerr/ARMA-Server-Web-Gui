@@ -190,9 +190,6 @@ public class ModServiceImpl implements ModService
 
     private void startManagingMod(FileSystemMod fileSystemMod)
     {
-        Path normalizedModPath = this.modFileStorage.renameModFolderToLowerCaseWithUnderscores(fileSystemMod.getModDirectory().getPath().toAbsolutePath());
-        this.modFileStorage.normalizeEachFileNameInFolderRecursively(normalizedModPath);
-
         FileSystemMod correctedFileSystemMod = findNotManagedMods().stream()
                 .filter(mod -> mod.getName().equals(fileSystemMod.getName()))
                 .findFirst()
@@ -206,6 +203,8 @@ public class ModServiceImpl implements ModService
         if (this.installedModRepository.findByWorkshopFileId(correctedFileSystemMod.getWorkshopFileId()).isPresent())
             throw new ModIdAlreadyRegisteredException();
 
+        Path normalizedModPath = this.modFileStorage.renameModFolderToLowerCaseWithUnderscores(fileSystemMod.getModDirectory().getPath().toAbsolutePath());
+        this.modFileStorage.normalizeEachFileNameInFolderRecursively(normalizedModPath);
         saveToDB(installedModEntityHelper.toEntity(correctedFileSystemMod));
     }
 
