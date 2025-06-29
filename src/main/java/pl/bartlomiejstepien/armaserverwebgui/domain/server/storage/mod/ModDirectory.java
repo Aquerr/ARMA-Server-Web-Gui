@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod;
 
+import lombok.ToString;
 import org.springframework.data.util.Lazy;
 import org.springframework.util.StringUtils;
 
@@ -9,10 +10,13 @@ import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@ToString
 public class ModDirectory
 {
     private final Path path;
+    @ToString.Exclude
     private final Lazy<MetaCppFile> metaCppFile;
+    @ToString.Exclude
     private final Lazy<ModCppFile> modCppFile;
 
     public static boolean isModDirectory(File file)

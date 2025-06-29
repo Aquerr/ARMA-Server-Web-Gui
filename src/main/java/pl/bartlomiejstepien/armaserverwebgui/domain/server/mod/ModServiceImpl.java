@@ -227,9 +227,19 @@ public class ModServiceImpl implements ModService
     private void saveModInDatabase(Path modDirectoryPath)
     {
         ModDirectory modDirectory = ModDirectory.from(modDirectoryPath);
-        InstalledModEntity installedModEntity = installedModRepository.findFirstByName(modDirectory.getModName()).orElse(null);
+        FileSystemMod fileSystemMod = FileSystemMod.from(modDirectory);
+        InstalledModEntity installedModEntity = installedModRepository.findFirstByName(fileSystemMod.getName()).orElse(null);
         if (installedModEntity != null)
             return;
+
+        if (fileSystemMod.getWorkshopFileId() == 0)
+            throw new ModIdCannotBeZeroException();
+
+        installedModEntity = installedModRepository.findByWorkshopFileId(fileSystemMod.getWorkshopFileId()).orElse(null);
+        if (installedModEntity != null)
+        {
+            throw new ModIdAlreadyRegisteredException();
+        }
 
         installedModRepository.save(installedModEntityHelper.toEntity(FileSystemMod.from(modDirectory)));
     }
