@@ -15,7 +15,7 @@ import { MatIcon } from "@angular/material/icon";
 import { MatFormField, MatOption, MatSelect } from "@angular/material/select";
 import { MatLabel } from "@angular/material/form-field";
 
-export type SortBy = "Name" | "Size";
+export type SortBy = "Name_Asc" | "Name_Desc" | "Size_Asc" | "Size_Desc";
 
 @Component({
   selector: "app-mod-list",
@@ -44,7 +44,7 @@ export class ModListComponent implements OnInit, OnChanges {
   @Output() modDelete = new EventEmitter<Mod>();
 
   filteredMods: Mod[] = [];
-  sortBy: SortBy = "Name";
+  sortBy: SortBy = "Name_Asc";
 
   ngOnInit() {
     this.reload();
@@ -78,10 +78,20 @@ export class ModListComponent implements OnInit, OnChanges {
   }
 
   public sortModList() {
-    if (this.sortBy == "Name") {
-      this.filteredMods.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (this.sortBy == "Size") {
-      this.filteredMods.sort((a, b) => a.sizeBytes - b.sizeBytes);
+
+    switch (this.sortBy) {
+      case "Name_Asc":
+        this.filteredMods.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "Name_Desc":
+        this.filteredMods.sort((a, b) => a.name.localeCompare(b.name)).reverse();
+        break;
+      case "Size_Asc":
+        this.filteredMods.sort((a, b) => a.sizeBytes - b.sizeBytes);
+        break;
+      case "Size_Desc":
+        this.filteredMods.sort((a, b) => a.sizeBytes - b.sizeBytes).reverse();
+        break;
     }
   }
 }

@@ -7,9 +7,11 @@
   </button>
   <mat-form-field style="width: 8rem;">
     <mat-label>Sort by</mat-label>
-    <mat-select [(value)]="sortBy" (selectionChange)="sortModList()">
-      <mat-option [value]="'Name'">Name</mat-option>
-      <mat-option [value]="'Size'">Size</mat-option>
+    <mat-select [(value)]="sortBy" (selectionChange)="sortModList()" [hideSingleSelectionIndicator]="true">
+      <mat-option [value]="'Name_Asc'">Name <mat-icon>arrow_downward_alt</mat-icon></mat-option>
+      <mat-option [value]="'Name_Desc'">Name <mat-icon>arrow_upward_alt</mat-icon></mat-option>
+      <mat-option [value]="'Size_Asc'">Size <mat-icon>arrow_downward_alt</mat-icon></mat-option>
+      <mat-option [value]="'Size_Desc'">Size <mat-icon>arrow_upward_alt</mat-icon></mat-option>
     </mat-select>
   </mat-form-field>
 </div>
