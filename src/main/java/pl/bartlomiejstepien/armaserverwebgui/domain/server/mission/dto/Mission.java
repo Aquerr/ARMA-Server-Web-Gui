@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -46,9 +47,10 @@ public class Mission
 
         public static Difficulty findOrDefault(String value)
         {
-            return Stream.of(values())
-                    .filter(difficulty -> difficulty.name().toUpperCase().equals(value))
-                    .findFirst()
+            return Optional.ofNullable(value)
+                    .map(String::toUpperCase)
+                    .flatMap(searchedValue -> Stream.of(values()).filter(difficulty -> difficulty.name().equals(searchedValue))
+                            .findFirst())
                     .orElse(REGULAR);
         }
     }

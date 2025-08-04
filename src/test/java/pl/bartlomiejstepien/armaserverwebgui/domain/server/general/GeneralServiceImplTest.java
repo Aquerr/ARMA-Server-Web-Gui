@@ -7,6 +7,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
@@ -40,11 +41,13 @@ class GeneralServiceImplTest
     {
         ArmaServerConfig armaServerConfig = new ArmaServerConfig();
         armaServerConfig.setMaxPlayers(MAX_PLAYERS);
+        armaServerConfig.setForcedDifficulty("VETERAN");
         given(serverConfigStorage.getServerConfig()).willReturn(armaServerConfig);
 
         GeneralProperties generalProperties = generalService.getGeneralProperties();
 
         assertThat(generalProperties.getMaxPlayers()).isEqualTo(MAX_PLAYERS);
+        assertThat(generalProperties.getForcedDifficulty()).isEqualTo(Mission.Difficulty.VETERAN);
     }
 
     @Test
@@ -80,6 +83,7 @@ class GeneralServiceImplTest
         expectedArmaServerConfig.setMaxPlayers(MAX_PLAYERS);
         expectedArmaServerConfig.setMotd(new String[]{"testmod"});
         expectedArmaServerConfig.setPersistent(1);
+        expectedArmaServerConfig.setForcedDifficulty("veteran");
         expectedArmaServerConfig.setDrawingInMap("true");
         expectedArmaServerConfig.setHeadlessClients(new String[]{"123.123.123.123"});
         expectedArmaServerConfig.setLocalClients(new String[]{"123.123.254.254"});
@@ -97,6 +101,7 @@ class GeneralServiceImplTest
                 .drawingInMap(true)
                 .headlessClients(List.of("123.123.123.123"))
                 .localClients(List.of("123.123.254.254"))
+                .forcedDifficulty(Mission.Difficulty.VETERAN)
                 .build();
     }
 }
