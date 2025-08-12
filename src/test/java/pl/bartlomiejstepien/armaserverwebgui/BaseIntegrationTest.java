@@ -68,11 +68,31 @@ public abstract class BaseIntegrationTest
 
     protected ResponseEntity<String> getAuthenticatedRequest(String url)
     {
+        return getAuthenticatedRequest(url, String.class);
+    }
+
+    protected <T> ResponseEntity<T> getAuthenticatedRequest(String url, Class<T> responseType)
+    {
         return testRestTemplate.exchange(url,
                 HttpMethod.GET,
                 new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
                         HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser()
                 ))),
-                String.class);
+                responseType);
+    }
+
+    protected ResponseEntity<String> postAuthenticatedRequest(String url, Object body)
+    {
+        return postAuthenticatedRequest(url, body, String.class);
+    }
+
+    protected <T> ResponseEntity<T> postAuthenticatedRequest(String url, Object body, Class<T> responseType)
+    {
+        return testRestTemplate.exchange(url,
+                HttpMethod.POST,
+                new HttpEntity<>(body, MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser()
+                ))),
+                responseType);
     }
 }

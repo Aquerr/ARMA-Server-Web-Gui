@@ -21,13 +21,23 @@
   } ],
   "notManagedMods" : [ {
     "workshopFileId" : 0,
-    "name" : "@testmod4",
+    "name" : "@TESTMOD4",
     "serverMod" : false,
     "previewUrl" : null,
     "workshopUrl" : "https://steamcommunity.com/sharedfiles/filedetails/?id=0",
     "fileExists" : true,
     "sizeBytes" : 0,
     "lastWorkshopUpdateDateTime" : null,
-    "directoryName" : "@testmod4"
+    "directoryName" : "@TESTMOD4"
+  }, {
+    "workshopFileId" : 999,
+    "name" : "@TESTMOD5",
+    "serverMod" : false,
+    "previewUrl" : null,
+    "workshopUrl" : "https://steamcommunity.com/sharedfiles/filedetails/?id=999",
+    "fileExists" : true,
+    "sizeBytes" : 16,
+    "lastWorkshopUpdateDateTime" : null,
+    "directoryName" : "@TESTMOD5"
   } ]
 }

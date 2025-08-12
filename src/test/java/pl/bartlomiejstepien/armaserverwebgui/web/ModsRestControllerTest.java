@@ -1,13 +1,17 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import org.json.JSONException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.HttpStatus;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.FileUtils;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
@@ -19,6 +23,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.OffsetDateTime;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static pl.bartlomiejstepien.armaserverwebgui.TestUtils.loadJsonIntegrationContractFor;
 
 @AutoConfigureMockMvc
@@ -29,8 +34,14 @@ class ModsRestControllerTest extends BaseIntegrationTest
     @Autowired
     private InstalledModRepository installedModRepository;
 
+    @BeforeEach
+    void setUp()
+    {
+        cleanUpMods();
+    }
+
     @Test
-    void shouldGetModsView() throws IOException, JSONException
+    void should_get_mods() throws IOException, JSONException
     {
         // given
         prepareMods();
@@ -43,6 +54,50 @@ class ModsRestControllerTest extends BaseIntegrationTest
                 loadJsonIntegrationContractFor("mods/get-mods-response.json"),
                 response.getBody(),
                 JSONCompareMode.LENIENT);
+
+        cleanUpMods();
+    }
+
+    @Test
+    void should_manage_mod() throws IOException
+    {
+        // given
+        prepareMods();
+
+        ModsRestController.ManageModsRequest manageModsRequest = new ModsRestController.ManageModsRequest();
+        manageModsRequest.setName("@TESTMOD5");
+
+        // when
+        var response = postAuthenticatedRequest("/api/v1/mods/manage", manageModsRequest);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        var getModsResponse = getAuthenticatedRequest("/api/v1/mods", ModsView.class);
+
+        var enabledModView = getModsResponse.getBody().getDisabledMods().stream()
+                        .filter(modView -> modView.getName().equals("@testmod5"))
+                        .findFirst();
+
+        assertThat(enabledModView).map(ModView::isFileExists).get().isEqualTo(true);
+
+        cleanUpMods();
+    }
+
+    @Test
+    void should_manage_mod_return_error_when_mod_id_zero() throws IOException
+    {
+        // given
+        prepareMods();
+
+        ModsRestController.ManageModsRequest manageModsRequest = new ModsRestController.ManageModsRequest();
+        manageModsRequest.setName("@TESTMOD4");
+
+        // when
+        var response = postAuthenticatedRequest("/api/v1/mods/manage", manageModsRequest);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
 
         cleanUpMods();
     }
@@ -95,6 +150,8 @@ class ModsRestControllerTest extends BaseIntegrationTest
     private void prepareNotManagedMods(Path modsPath) throws IOException
     {
         Files.createDirectories(modsPath.resolve("testmod2"));
-        Files.createDirectories(modsPath.resolve("@testmod4").resolve("Addons"));
+        Files.createDirectories(modsPath.resolve("@TESTMOD4").resolve("Addons"));
+        Files.createDirectories(modsPath.resolve("@TESTMOD5").resolve("Addons"));
+        Files.writeString(modsPath.resolve("@TESTMOD5").resolve("meta.cpp"), "publishedid=999;", StandardOpenOption.CREATE);
     }
 }
