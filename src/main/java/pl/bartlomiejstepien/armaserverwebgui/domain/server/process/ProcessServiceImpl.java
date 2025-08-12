@@ -31,13 +31,10 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +47,7 @@ public class ProcessServiceImpl implements ProcessService
     private final SteamService steamService;
     private final ArmaServerParametersGenerator serverParametersGenerator;
     private final DiscordIntegration discordIntegration;
+    private final ProcessAliveChecker processAliveChecker;
 
     private final ASWGConfig aswgConfig;
 
@@ -66,15 +64,23 @@ public class ProcessServiceImpl implements ProcessService
     private Thread ioServerThread;
     private Thread ioServerErrorThread;
 
+
     private static final ConcurrentLinkedDeque<SseEmitter> serverLogsEmitters = new ConcurrentLinkedDeque<>();
-    private static final ExecutorService LOGS_EMITTER_EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
 
     @Override
     public SseEmitter getServerLogEmitter()
     {
         SseEmitter emitter = new SseEmitter(Duration.ofSeconds(60).toMillis());
-        emitter.onTimeout(() -> serverLogsEmitters.remove(emitter));
-        emitter.onError(throwable -> serverLogsEmitters.remove(emitter));
+        emitter.onTimeout(() ->
+        {
+            serverLogsEmitters.remove(emitter);
+            emitter.complete();
+        });
+        emitter.onError(throwable ->
+        {
+            serverLogsEmitters.remove(emitter);
+            emitter.complete();
+        });
         emitter.onCompletion(() -> serverLogsEmitters.remove(emitter));
         serverLogsEmitters.add(emitter);
         return emitter;
@@ -99,8 +105,12 @@ public class ProcessServiceImpl implements ProcessService
         {
             throw new RuntimeException("Could not get server pid.", e);
         }
-        return pid != 0 ? ServerStatus.of(ServerStatus.Status.RUNNING_BUT_NOT_DETECTED_BY_STEAM, "Running but not detected by Steam")
-                : ServerStatus.of(ServerStatus.Status.OFFLINE, "Offline");
+
+        if (pid == 0)
+            return ServerStatus.of(ServerStatus.Status.OFFLINE, "Offline");
+        else if (processAliveChecker.isPidAlive(pid))
+            return ServerStatus.of(ServerStatus.Status.RUNNING_BUT_NOT_DETECTED_BY_STEAM, "Running but not detected by Steam");
+        return ServerStatus.of(ServerStatus.Status.OFFLINE, "Offline");
     }
 
     @Override

@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -21,7 +22,7 @@ public class ErrorRestController
      * @param runtimeException the runtime exception
      * @return the {@link ResponseEntity}
      */
-    @ExceptionHandler(Throwable.class)
+    @ExceptionHandler(value = Throwable.class, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestErrorResponse> handleException(Throwable runtimeException)
     {
         log.error(runtimeException.getMessage(), runtimeException);
