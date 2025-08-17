@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.steam.model;
 import lombok.Builder;
 import lombok.Getter;
 import pl.bartlomiejstepien.armaserverwebgui.application.process.ProcessParameters;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamArmaBranch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class SteamCmdAppUpdateParameters implements ProcessParameters
     private String steamCmdPath;
     private String steamUsername;
     private String steamPassword;
-    private String branch;
+    private SteamArmaBranch branch;
 
     @Override
     public List<String> asProcessParameters()
@@ -31,9 +32,9 @@ public class SteamCmdAppUpdateParameters implements ProcessParameters
                 "+app_update"
         ));
 
-        if (branch != null && !branch.equals("public"))
+        if (SteamArmaBranch.PUBLIC != branch)
         {
-            params.add("\"" + appId + " -beta " + branch + "\"");
+            params.add("\"" + appId + " -beta " + branch.getCode() + "\"");
         }
         else
         {

@@ -38,6 +38,15 @@
         <input name="max-players" [(ngModel)]="maxPlayers" matInput type="number" min="0" />
       </mat-form-field>
       <mat-form-field>
+        <mat-label>Branch</mat-label>
+        <mat-select [(ngModel)]="branch" name="branch" matTooltip="The server steam branch to use. May require server update.">
+          <mat-option [value]="'public'">Main (public)</mat-option>
+          <mat-option [value]="'profiling'">Profiling (profiling)</mat-option>
+          <mat-option [value]="'contact'">Contact (contact)</mat-option>
+          <mat-option [value]="'creatordlc'">Creator DLC (creatordlc)</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
         <mat-label>Persistent</mat-label>
         <mat-select
           [(ngModel)]="persistent"
@@ -91,7 +100,7 @@
       <mat-label>Current command-line parameters</mat-label>
       <div class="command-line-params-wrapper">
         <textarea class="command-line-params" disabled [textContent]="formatCommandLineParams(commandLineParams)" style="resize: none;"></textarea>
-        @if (canOverwriteCommandLineParams) {
+        @if (canOverwriteCommandLineParams && hasOverwriteCommandLineParamsPermission()) {
           <button mat-flat-button color="primary" (click)="overrideCommandLineParams()">Overwrite</button>
         }
       </div>

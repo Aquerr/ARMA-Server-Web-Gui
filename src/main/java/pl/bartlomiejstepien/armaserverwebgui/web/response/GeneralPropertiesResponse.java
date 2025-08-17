@@ -26,12 +26,14 @@ public class GeneralPropertiesResponse
     List<String> headlessClients;
     List<String> localClients;
     Mission.Difficulty forcedDifficulty;
+    String branch;
 
     public static GeneralPropertiesResponse of(String serverDirectory,
                                                String modsDirectory,
                                                Integer port,
                                                ArmaServerParameters armaServerParameters,
                                                boolean canOverwriteCommandLineParams,
+                                               String branch,
                                                GeneralProperties generalProperties)
     {
         return GeneralPropertiesResponse.builder()
@@ -49,6 +51,7 @@ public class GeneralPropertiesResponse
                 .headlessClients(generalProperties.getHeadlessClients())
                 .localClients(generalProperties.getLocalClients())
                 .forcedDifficulty(generalProperties.getForcedDifficulty())
+                .branch(branch)
                 .build();
     }
 }

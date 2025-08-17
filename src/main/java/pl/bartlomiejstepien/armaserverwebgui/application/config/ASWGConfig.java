@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamArmaBranch;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -111,10 +112,20 @@ public class ASWGConfig
     private final DiscordProperties discordProperties;
     private final UnsafeProperties unsafeProperties;
 
+    public void setServerBranch(SteamArmaBranch steamArmaBranch)
+    {
+        this.serverBranch = steamArmaBranch.getCode();
+    }
+
+    public SteamArmaBranch getServerBranch()
+    {
+        return SteamArmaBranch.findByCode(this.serverBranch).orElse(SteamArmaBranch.PUBLIC);
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void onEnvironmentPreparedEvent() throws IOException
     {
-        // Create configuration file on startup
+        // Create the configuration file on startup
         createConfigFileIfNotExists();
     }
 

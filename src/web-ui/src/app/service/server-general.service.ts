@@ -44,6 +44,7 @@ export interface SaveGeneralProperties {
   headlessClients: string[];
   localClients: string[];
   forcedDifficulty: MissionDifficulty | null;
+  branch: string;
 }
 
 export interface GeneralProperties {
@@ -61,4 +62,5 @@ export interface GeneralProperties {
   headlessClients: string[];
   localClients: string[];
   forcedDifficulty: MissionDifficulty | null;
+  branch: string;
 }

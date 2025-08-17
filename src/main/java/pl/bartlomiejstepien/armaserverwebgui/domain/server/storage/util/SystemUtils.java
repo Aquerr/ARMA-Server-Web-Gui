@@ -6,4 +6,9 @@ public class SystemUtils
     {
         return org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
     }
+
+    public static boolean is64Bit()
+    {
+        return System.getProperty("os.arch").contains("64");
+    }
 }

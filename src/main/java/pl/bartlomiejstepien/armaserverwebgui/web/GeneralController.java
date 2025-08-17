@@ -13,6 +13,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.GeneralService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ArmaServerParametersGenerator;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamArmaBranch;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.SaveGeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.GeneralPropertiesResponse;
 
@@ -35,6 +36,7 @@ public class GeneralController
                 this.aswgConfig.getServerPort(),
                 armaServerParametersGenerator.generateParameters(),
                 this.aswgConfig.getUnsafeProperties().isOverwriteStartupParamsWebEditEnabled(),
+                this.aswgConfig.getServerBranch().getCode(),
                 this.generalService.getGeneralProperties()
         );
     }
@@ -45,6 +47,7 @@ public class GeneralController
     {
         this.aswgConfig.setServerDirectoryPath(saveGeneralProperties.getServerDirectory());
         this.aswgConfig.setModsDirectoryPath(saveGeneralProperties.getModsDirectory());
+        this.aswgConfig.setServerBranch(SteamArmaBranch.findByCode(saveGeneralProperties.getBranch()).orElse(SteamArmaBranch.PUBLIC));
         this.aswgConfig.setServerPort(saveGeneralProperties.getPort());
         this.generalService.saveGeneralProperties(GeneralProperties.builder()
                 .hostname(saveGeneralProperties.getHostname())

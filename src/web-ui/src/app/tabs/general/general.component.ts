@@ -31,6 +31,7 @@ export class GeneralComponent implements OnInit {
   headlessClients: string[] = [];
   localClients: string[] = [];
   forcedDifficulty: MissionDifficulty | null = null;
+  branch: string = "public";
 
   constructor(
     private readonly permissionsService: PermissionService,
@@ -61,7 +62,8 @@ export class GeneralComponent implements OnInit {
       drawingInMap: this.drawingInMap,
       headlessClients: this.headlessClients,
       localClients: this.localClients,
-      forcedDifficulty: this.forcedDifficulty
+      forcedDifficulty: this.forcedDifficulty,
+      branch: this.branch
     } as SaveGeneralProperties;
 
     this.serverGeneralService.saveGeneralProperties(saveGeneralProperties).subscribe((response) => {
@@ -89,6 +91,7 @@ export class GeneralComponent implements OnInit {
       this.headlessClients = response.headlessClients;
       this.localClients = response.localClients;
       this.forcedDifficulty = response.forcedDifficulty;
+      this.branch = response.branch;
       this.maskService.hide();
     });
   }

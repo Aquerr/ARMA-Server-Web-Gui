@@ -2,7 +2,9 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model;
 
 import lombok.Getter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
-import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamUtils;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamArmaBranch;
+
+import java.util.Map;
 
 @Getter
 public enum ServerExecutable
@@ -11,32 +13,28 @@ public enum ServerExecutable
 
     PROFILING_BRANCH("arma3server", "arma3serverprofiling_x64");
 
-    private final String serverExecutable;
-    private final String getServerExecutable64bit;
+    private static final Map<SteamArmaBranch, ServerExecutable> SERVER_EXECUTABLES = Map.of(
+            SteamArmaBranch.PUBLIC, MAIN_BRANCH,
+            SteamArmaBranch.PROFILING, PROFILING_BRANCH
+    );
 
-    ServerExecutable(String serverExecutable, String getServerExecutable64bit)
+    private final String serverExecutable;
+    private final String serverExecutable64bit;
+
+    ServerExecutable(String serverExecutable, String serverExecutable64bit)
     {
         this.serverExecutable = serverExecutable;
-        this.getServerExecutable64bit = getServerExecutable64bit;
+        this.serverExecutable64bit = serverExecutable64bit;
     }
 
-    public static String getForBranch(String branch)
+    public static String getForBranch(SteamArmaBranch branch)
     {
-        String executable;
-        if (SteamUtils.ARMA_BRANCH_PROFILING.equals(branch))
-        {
-            executable = is64Bit() ? ServerExecutable.PROFILING_BRANCH.getGetServerExecutable64bit() : ServerExecutable.PROFILING_BRANCH.getServerExecutable();
-        }
-        else
-        {
-            executable = is64Bit() ? ServerExecutable.MAIN_BRANCH.getGetServerExecutable64bit() : ServerExecutable.MAIN_BRANCH.getServerExecutable();
-        }
+        return SERVER_EXECUTABLES.getOrDefault(branch, MAIN_BRANCH).getExecutableForSystem();
+    }
 
+    public String getExecutableForSystem()
+    {
+        var executable = SystemUtils.is64Bit() ? serverExecutable64bit : serverExecutable;
         return SystemUtils.isWindows() ? executable + ".exe" : executable;
-    }
-
-    private static boolean is64Bit()
-    {
-        return System.getProperty("os.arch").contains("64");
     }
 }

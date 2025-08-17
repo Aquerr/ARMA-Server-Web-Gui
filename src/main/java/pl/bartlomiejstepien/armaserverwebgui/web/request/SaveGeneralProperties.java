@@ -20,4 +20,5 @@ public class SaveGeneralProperties
     private List<String> headlessClients;
     private List<String> localClients;
     private Mission.Difficulty forcedDifficulty;
+    private String branch;
 }
