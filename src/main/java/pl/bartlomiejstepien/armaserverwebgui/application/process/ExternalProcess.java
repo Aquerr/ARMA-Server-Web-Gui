@@ -6,14 +6,21 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 @Slf4j
-public class ExternalProcess
+public abstract class ExternalProcess
 {
-    private Process process;
+    protected Process process;
 
     private Thread inputStreamThread;
     private Thread errorStreamThread;
+
+    protected final Deque<String> logs = new ConcurrentLinkedDeque<>();
 
     public void startProcess(File workingDirectory,
                              ProcessParameters processParameters) throws IOException
@@ -28,10 +35,12 @@ public class ExternalProcess
             this.process = processBuilder.start();
             log.info("Process started!");
             handleProcessInputOutput();
+            handleHealthCheck();
         }
         catch (Exception exception)
         {
             closeInputOutput();
+            postClose();
             throw new IOException(exception);
         }
 
@@ -53,10 +62,18 @@ public class ExternalProcess
         }
         catch (Exception exception)
         {
-            closeInputOutput();
             throw new IOException(exception);
         }
+        finally
+        {
+            closeInputOutput();
+            postClose();
+        }
     }
+
+    protected abstract void postClose();
+
+    protected abstract void handleHealthCheck();
 
     public void closeInputOutput()
     {
@@ -65,18 +82,14 @@ public class ExternalProcess
 
     private void handleProcessInputOutput()
     {
-        this.inputStreamThread = new Thread(() ->
+        this.inputStreamThread = Thread.ofVirtual().start(() ->
         {
-            try
+            try(Scanner scanner = new Scanner(process.getInputStream()))
             {
-                final BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null)
+                while (scanner.hasNextLine())
                 {
-                    log.info(line);
+                    addLog(scanner.nextLine(), false);
                 }
-                reader.close();
             }
             catch (final Exception e)
             {
@@ -84,28 +97,20 @@ public class ExternalProcess
             }
         });
 
-        this.errorStreamThread = new Thread(() ->
+        this.errorStreamThread = Thread.ofVirtual().start(() ->
         {
-            try
+            try(Scanner scanner = new Scanner(process.getErrorStream()))
             {
-                final BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getErrorStream()));
-                String line;
-                while ((line = reader.readLine()) != null)
+                while (scanner.hasNextLine())
                 {
-                    log.error(line);
+                    addLog(scanner.nextLine(), true);
                 }
-                reader.close();
             }
             catch (final Exception e)
             {
                 log.error("Error", e);
             }
         });
-        this.errorStreamThread.setDaemon(true);
-        this.errorStreamThread.start();
-        this.inputStreamThread.setDaemon(true);
-        this.inputStreamThread.start();
     }
 
     private void closeProcessInputOutput()
@@ -120,5 +125,19 @@ public class ExternalProcess
             errorStreamThread.interrupt();
             errorStreamThread = null;
         }
+
+        this.logs.clear();
+    }
+
+    private void addLog(String line, boolean isError)
+    {
+        if (isError)
+            log.error(line);
+        else
+            log.info(line);
+
+        logs.add(line);
+        if (logs.size() > 5)
+            logs.removeFirst();
     }
 }

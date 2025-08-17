@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.process.ExternalProcess;
+import pl.bartlomiejstepien.armaserverwebgui.application.process.ExternalProcessHandler;
+import pl.bartlomiejstepien.armaserverwebgui.application.process.ExternalProcessType;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamCmdExternalProcess;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotUpdateArmaServerException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
@@ -22,6 +25,7 @@ import java.util.Optional;
 public class GameUpdateTaskHandler implements SteamTaskHandler
 {
     private final ASWGConfig aswgConfig;
+    private final ExternalProcessHandler externalProcessHandler;
 
     @Override
     public void handle(SteamTask steamTask)
@@ -49,7 +53,6 @@ public class GameUpdateTaskHandler implements SteamTaskHandler
 
     private void performArmaUpdate(SteamCmdAppUpdateParameters parameters) throws Exception
     {
-        ExternalProcess externalProcess = new ExternalProcess();
-        externalProcess.startProcess(Paths.get(parameters.getSteamCmdPath()).getParent().toFile(), parameters);
+        externalProcessHandler.handle(Paths.get(parameters.getSteamCmdPath()).getParent().toFile(), parameters, ExternalProcessType.STEAMCMD);
     }
 }

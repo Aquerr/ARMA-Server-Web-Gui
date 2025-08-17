@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.process.ExternalProcessHandler;
+import pl.bartlomiejstepien.armaserverwebgui.application.process.ExternalProcessType;
 import pl.bartlomiejstepien.armaserverwebgui.application.process.ProcessParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
@@ -151,7 +152,7 @@ class WorkshopModDownloadTaskHandlerTest
         workshopModDownloadTaskHandler.handle(new WorkshopModInstallSteamTask(MOD_ID, MOD_TITLE, false));
 
         // then
-        verify(externalProcessHandler).handle(eq(new File("target")), processParametersArgumentCaptor.capture());
+        verify(externalProcessHandler).handle(eq(new File("target")), processParametersArgumentCaptor.capture(), ExternalProcessType.STEAMCMD);
         assertThat(processParametersArgumentCaptor.getValue()).satisfies(processParameters -> {
             assertThat(processParameters).asInstanceOf(InstanceOfAssertFactories.type(SteamCmdWorkshopDownloadParameters.class)).satisfies(parameters -> {
                 assertThat(parameters.getAppId()).isEqualTo(107410);

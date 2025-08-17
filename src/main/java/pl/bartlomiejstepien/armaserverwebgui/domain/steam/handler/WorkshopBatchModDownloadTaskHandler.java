@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.process.ExternalProcessHandler;
+import pl.bartlomiejstepien.armaserverwebgui.application.process.ExternalProcessType;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamUtils;
@@ -172,6 +173,6 @@ public class WorkshopBatchModDownloadTaskHandler implements SteamTaskHandler
 
     private void downloadModThroughSteamCmd(SteamCmdWorkshopBatchDownloadParameters parameters) throws Exception
     {
-        externalProcessHandler.handle(Paths.get(parameters.getSteamCmdPath()).getParent().toFile(), parameters);
+        externalProcessHandler.handle(Paths.get(parameters.getSteamCmdPath()).getParent().toFile(), parameters, ExternalProcessType.STEAMCMD);
     }
 }
