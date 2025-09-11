@@ -38,11 +38,11 @@ public class CdlcService
         return cdlcConverter.convert(entities, cdlcDirectories);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void toggleCdlc(long id)
     {
         CdlcEntity cdlcEntity = cdlcRepository.findById(id).orElseThrow();
         cdlcEntity.setEnabled(!cdlcEntity.isEnabled());
-        cdlcRepository.save(cdlcEntity);
+        cdlcRepository.saveAndFlush(cdlcEntity);
     }
 }

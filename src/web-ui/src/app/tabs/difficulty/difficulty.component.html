@@ -1,5 +1,20 @@
 <div class="container">
   <h1>Difficulty</h1>
+
+  <div class="difficulty-warning">
+    <div class="difficulty-warning-content">
+      <div class="difficulty-warning-icon">
+        <mat-icon [fontIcon]="'warning'"></mat-icon>
+      </div>
+      <span>
+      A difficulty is the same thing as <strong>a game profile</strong>.
+      Its change will also affect the game saves.
+      <br>
+      For example, if the server has a savefile for a game mode like Antistasi, then such savefile will be left on the old profile and it won't be possible to load it from the new profile.
+    </span>
+    </div>
+  </div>
+
   <div class="difficulty-page-content">
     @for (difficultyProfile of difficultyProfiles; track difficultyProfile.name) {
       <app-difficulty-panel

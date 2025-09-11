@@ -1,5 +1,5 @@
 <div class="container">
-  <h1>CDLC</h1>
+  <h1>Creator DLCs</h1>
   <div class="cdlc-list">
     @for (cdlc of cdlcList; track cdlc.id) {
       <div class="cdlc-list-item">
@@ -9,7 +9,8 @@
         <span class="cdlc-buttons">
           <button
             mat-flat-button
-            color="primary"
+
+            [color]="cdlc.enabled ? 'accent' : 'primary'"
             (click)="toggleCdlc(cdlc)"
             [disabled]="!cdlc.fileExists"
           >{{ cdlc.enabled ? "Disable" : "Enable" }}</button>
