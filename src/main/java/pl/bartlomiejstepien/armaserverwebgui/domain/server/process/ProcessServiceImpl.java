@@ -35,6 +35,7 @@ import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 @RequiredArgsConstructor
@@ -57,8 +58,9 @@ public class ProcessServiceImpl implements ProcessService
     @Value("${server.log.file.name}")
     private String serverLogFileName;
 
-    private boolean serverStartScheduled;
-    private boolean isUpdating;
+    private volatile ServerStatus.Status serverStatus;
+
+    private final ReentrantLock serverStartUpLock = new ReentrantLock();
 
     private Thread serverThread;
     private Thread ioServerThread;
@@ -89,10 +91,12 @@ public class ProcessServiceImpl implements ProcessService
     @Override
     public ServerStatus getServerStatus()
     {
+        //TODO: Get status from server healthcheck (status monitoring) here.
+
         log.info("Fetching server status...");
-        if (isUpdating)
+        if (ServerStatus.Status.UPDATING == serverStatus)
             return ServerStatus.of(ServerStatus.Status.UPDATING, "Updating");
-        else if (serverStartScheduled)
+        else if (ServerStatus.Status.STARTING == serverStatus)
             return ServerStatus.of(ServerStatus.Status.STARTING, "Starting");
         else if (this.steamService.isServerRunning())
             return ServerStatus.of(ServerStatus.Status.ONLINE, "Online");
@@ -116,12 +120,19 @@ public class ProcessServiceImpl implements ProcessService
     @Override
     public void startServer(boolean performUpdate)
     {
-        if (getServerStatus().getStatus() != ServerStatus.Status.OFFLINE || serverStartScheduled)
+        if (getServerStatus().getStatus() != ServerStatus.Status.OFFLINE)
             throw new ServerIsAlreadyRunningException("Server is already running!");
+
+        if (serverStartUpLock.isLocked())
+        {
+            throw new ServerIsAlreadyRunningException("Server is starting!");
+        }
+
+        serverStartUpLock.lock();
 
         try
         {
-            serverStartScheduled = true;
+            serverStatus = ServerStatus.Status.STARTING;
 
             if (performUpdate)
             {
@@ -130,11 +141,15 @@ public class ProcessServiceImpl implements ProcessService
             }
 
             sendDiscordMessage(MessageKind.SERVER_STARTED);
+            serverStatus = ServerStatus.Status.STARTING;
             startServerProcess();
+            serverStartUpLock.unlock();
+            //TODO: Start server healthcheck (status monitoring) here.
         }
         catch (Exception exception)
         {
-            serverStartScheduled = false;
+            serverStatus = ServerStatus.Status.OFFLINE;
+            serverStartUpLock.unlock();
             throw exception;
         }
     }
@@ -179,11 +194,11 @@ public class ProcessServiceImpl implements ProcessService
 
                 saveServerPid(pid);
                 handleProcessInputOutput(process);
-                serverStartScheduled = false;
+                this.serverStatus = ServerStatus.Status.ONLINE;
             }
             catch (IOException e)
             {
-                serverStartScheduled = false;
+                this.serverStatus = ServerStatus.Status.OFFLINE;
                 log.error("Error", e);
                 stopServer();
             }
@@ -199,9 +214,9 @@ public class ProcessServiceImpl implements ProcessService
 
     private void tryUpdateArmaServer()
     {
-        this.isUpdating = true;
         try
         {
+            this.serverStatus = ServerStatus.Status.UPDATING;
             if (steamService.isSteamCmdInstalled())
             {
                 log.info("Scheduling Arma update");
@@ -227,7 +242,7 @@ public class ProcessServiceImpl implements ProcessService
         }
         finally
         {
-            this.isUpdating = false;
+            this.serverStatus = ServerStatus.Status.STARTING;
         }
     }
 
@@ -269,6 +284,7 @@ public class ProcessServiceImpl implements ProcessService
                 this.serverThread.interrupt();
                 this.serverThread = null;
             }
+            this.serverStatus = ServerStatus.Status.OFFLINE;
         });
 
         try

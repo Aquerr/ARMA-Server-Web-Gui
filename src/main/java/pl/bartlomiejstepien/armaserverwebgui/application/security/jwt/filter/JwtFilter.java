@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,7 +42,11 @@ public class JwtFilter extends OncePerRequestFilter
         }
         catch (Exception exception)
         {
-            throw new BadAuthTokenException(exception);
+            if (exception instanceof BadCredentialsException)
+            {
+                throw new BadAuthTokenException(exception);
+            }
+            else throw exception;
         }
     }
 
