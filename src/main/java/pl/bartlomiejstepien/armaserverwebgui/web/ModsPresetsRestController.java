@@ -39,7 +39,7 @@ public class ModsPresetsRestController
     public ModPresetNamesResponse getModPresetsNames()
     {
         return ModPresetNamesResponse.of(this.modPresetService.getModPresetsNames().stream()
-                .sorted(Comparator.naturalOrder())
+                .sorted(String.CASE_INSENSITIVE_ORDER)
                 .toList());
     }
 

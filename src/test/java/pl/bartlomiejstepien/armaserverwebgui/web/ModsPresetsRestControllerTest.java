@@ -40,6 +40,37 @@ class ModsPresetsRestControllerTest extends BaseIntegrationTest
     private ArgumentCaptor<List<ModPresetEntity.EntryEntity>> modPresetEntryEntityArgumentCaptor;
 
     @Test
+    void shouldGetModPresetsNames()
+    {
+        // given
+        List<String> presetsNames = List.of("operation_false_brother", "Test_preset", "Attack_on_titan", "the_seeker");
+        for (String presetName : presetsNames)
+        {
+            modPresetService.saveModPreset(ModPresetSaveParams.of(presetName, List.of()));
+        }
+
+        // when
+        var response = testRestTemplate.exchange(
+                "/api/v1/mods-presets",
+                HttpMethod.GET,
+                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser()
+                ))), ModsPresetsRestController.ModPresetNamesResponse.class);
+
+        // then
+        assertThat(response.getBody().getPresets()).containsExactly(
+                "Attack_on_titan", "operation_false_brother", "Test_preset", "the_seeker"
+        );
+
+        // teardown
+        for (String presetName : presetsNames)
+        {
+            modPresetService.deletePreset(presetName);
+        }
+    }
+
+    @Test
     void shouldSelectPreset()
     {
         // given
