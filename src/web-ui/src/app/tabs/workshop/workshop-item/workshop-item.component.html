@@ -1,6 +1,8 @@
 <div class="workshop-item-card">
   <div class="card-image">
-    <img [src]="workshopMod.previewUrl" alt="No Image" />
+    <a target="_blank" [href]="workshopMod.modWorkshopUrl" style="text-decoration: none">
+      <img [src]="workshopMod.previewUrl" alt="No Image" />
+    </a>
   </div>
   <div class="card-content">
     <a target="_blank" [href]="workshopMod.modWorkshopUrl" style="text-decoration: none">
