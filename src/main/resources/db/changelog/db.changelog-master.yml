@@ -13,4 +13,6 @@ databaseChangeLog:
       path: db/changelog/006-aswg-user/
   - includeAll:
       path: db/changelog/007-overwrite-startup-params-authority/
+  - includeAll:
+      path: db/changelog/008-cdlc/
 

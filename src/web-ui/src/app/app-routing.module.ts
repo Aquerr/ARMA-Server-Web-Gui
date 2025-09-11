@@ -49,6 +49,11 @@ const routes: Routes = [
     canActivate: [hasAllAuthorities([AswgAuthority.MODS_VIEW])]
   },
   {
+    path: "cdlc",
+    loadComponent: () => import("./tabs/cdlc/cdlc.component").then((c) => c.CdlcComponent),
+    canActivate: [hasAllAuthorities([AswgAuthority.CDLC_VIEW])]
+  },
+  {
     path: "mods-settings",
     loadComponent: () =>
       import("./tabs/mods-settings/mods-settings.component").then((c) => c.ModsSettingsComponent),

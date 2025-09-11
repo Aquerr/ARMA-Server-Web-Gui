@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.cdlc.CdlcService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.cdlc.dto.Cdlc;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.DifficultyService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModSettingsService;
@@ -16,6 +18,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,23 +35,16 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
     private final DifficultyService difficultyService;
     @Resource
     private final ModSettingsService modSettingsService;
+    @Resource
+    private final CdlcService cdlcService;
 
 
     @Override
     public ArmaServerParameters generateParameters()
     {
         String serverExecToUse = ServerExecutable.getForBranch(aswgConfig.getServerBranch());
-
         List<InstalledModEntity> installedMods = modService.getInstalledMods();
-
-        Set<String> modsDirs = installedMods.stream()
-                .filter(InstalledModEntity::isEnabled)
-                .filter(installedModEntity -> !installedModEntity.isServerMod())
-                .map(InstalledModEntity::getModDirectoryName)
-                .map(modDirName -> StringUtils.hasText(this.aswgConfig.getModsDirectoryPath()) ?
-                        this.aswgConfig.getModsDirectoryPath() + File.separator + modDirName : modDirName)
-                .collect(Collectors.toSet());
-
+        Set<String> modsDirs = collectModsAndCdlcs(installedMods);
         Set<String> serverModsDirs = installedMods.stream()
                 .filter(InstalledModEntity::isEnabled)
                 .filter(InstalledModEntity::isServerMod)
@@ -67,5 +63,24 @@ public class ArmaServerParametersGeneratorImpl implements ArmaServerParametersGe
                 .mods(modsDirs)
                 .serverMods(serverModsDirs)
                 .build();
+    }
+
+    private Set<String> collectModsAndCdlcs(List<InstalledModEntity> installedMods)
+    {
+        Set<String> directories = new HashSet<>();
+        directories.addAll(installedMods.stream()
+                .filter(InstalledModEntity::isEnabled)
+                .filter(installedModEntity -> !installedModEntity.isServerMod())
+                .map(InstalledModEntity::getModDirectoryName)
+                .map(modDirName -> StringUtils.hasText(this.aswgConfig.getModsDirectoryPath()) ?
+                        this.aswgConfig.getModsDirectoryPath() + File.separator + modDirName : modDirName)
+                .toList());
+
+        directories.addAll(cdlcService.findEnabledCdlc().stream()
+                .filter(Cdlc::isFileExists)
+                .map(Cdlc::getDirectoryName)
+                .toList());
+
+        return directories;
     }
 }
