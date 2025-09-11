@@ -217,16 +217,22 @@ public class UserServiceImpl implements UserService
 
     private void resetDefaultAswgUserIfNeeded(AswgUserEntity entity)
     {
-        if (!aswgConfig.isResetDefaultUser())
-            return;
+        // Authorities reset
+        if (aswgConfig.isResetDefaultUser())
+        {
+            log.info("Resetting default user: {}", aswgConfig.getUsername());
+            entity.setUsername(aswgConfig.getUsername());
+            entity.setPassword(passwordEncoder.encode(aswgConfig.getPassword()));
+            entity.setLocked(false);
+            entity.setCreatedDateTime(OffsetDateTime.now());
 
-        log.info("Resetting default user: {}", aswgConfig.getUsername());
-        entity.setUsername(aswgConfig.getUsername());
-        entity.setPassword(passwordEncoder.encode(aswgConfig.getPassword()));
-        entity.setLocked(false);
-        entity.setCreatedDateTime(OffsetDateTime.now());
+            entity = userRepository.save(entity);
+            userAuthorityRepository.saveUserAuthorities(entity.getId(), EnumSet.allOf(AswgAuthority.class).stream()
+                    .map(AswgAuthority::getCode)
+                    .collect(Collectors.toSet()));
+        }
 
-        entity = userRepository.save(entity);
+        // Reset default authorities always. The main account should always have all possible authorities.
         userAuthorityRepository.saveUserAuthorities(entity.getId(), EnumSet.allOf(AswgAuthority.class).stream()
                 .map(AswgAuthority::getCode)
                 .collect(Collectors.toSet()));
