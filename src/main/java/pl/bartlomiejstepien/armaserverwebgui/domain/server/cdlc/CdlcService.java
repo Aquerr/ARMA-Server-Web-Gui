@@ -43,6 +43,6 @@ public class CdlcService
     {
         CdlcEntity cdlcEntity = cdlcRepository.findById(id).orElseThrow();
         cdlcEntity.setEnabled(!cdlcEntity.isEnabled());
-        cdlcRepository.saveAndFlush(cdlcEntity);
+        cdlcRepository.save(cdlcEntity);
     }
 }

@@ -3,6 +3,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.user;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public interface UserService
@@ -22,4 +23,6 @@ public interface UserService
     void updateUser(AswgUserWithPassword user);
 
     void updatePassword(int userId, String password);
+
+    void updateLastSuccessLoginDateTime(int userId, OffsetDateTime loginDateTime);
 }

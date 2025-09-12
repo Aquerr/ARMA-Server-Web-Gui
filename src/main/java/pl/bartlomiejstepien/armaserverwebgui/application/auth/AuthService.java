@@ -10,6 +10,8 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
 
+import java.time.OffsetDateTime;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,7 +32,11 @@ public class AuthService
             throw new BadCredentialsException();
 
         AswgUser user = this.userService.getUser(username);
-        return new JwtToken(this.jwtService.createJwt(user), user.getAuthorities());
+        JwtToken jwtToken = new JwtToken(this.jwtService.createJwt(user), user.getAuthorities());
+
+        userService.updateLastSuccessLoginDateTime(user.getId(), OffsetDateTime.now());
+
+        return jwtToken;
     }
 
     public void logout(String jwt)

@@ -31,4 +31,7 @@ public class AswgUserEntity
 
     @Column(name = "created_date_time")
     private OffsetDateTime createdDateTime;
+
+    @Column(name = "last_success_login_date_time")
+    private OffsetDateTime lastSuccessLoginDateTime;
 }

@@ -145,6 +145,7 @@ public class UserServiceImpl implements UserService
                             .orElse(entity.getPassword()));
                     entityToUpdate.setLocked(user.isLocked());
                     entityToUpdate.setCreatedDateTime(entity.getCreatedDateTime());
+                    entityToUpdate.setLastSuccessLoginDateTime(entity.getLastSuccessLoginDateTime());
                     return entityToUpdate;
                 })
                 .map(this.userRepository::save)
@@ -163,6 +164,13 @@ public class UserServiceImpl implements UserService
 
         userEntity.setPassword(passwordEncoder.encode(password));
         this.userRepository.save(userEntity);
+    }
+
+    @Override
+    @Transactional
+    public void updateLastSuccessLoginDateTime(int userId, OffsetDateTime loginDateTime)
+    {
+        this.userRepository.updateLastSuccessLoginDateTime(userId, loginDateTime);
     }
 
     private AswgUserEntity toEntity(AswgUserWithPassword user)
