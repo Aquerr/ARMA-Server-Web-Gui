@@ -41,6 +41,8 @@ class GeneralControllerTest extends BaseIntegrationTest
     @Test
     void getGeneralPropertiesShouldReturnServerDirectoryFromASWGConfig() throws JSONException
     {
+        aswgConfig.setServerDirectoryPath("./target");
+        aswgConfig.setModsDirectoryPath("mods");
         given(generalService.getGeneralProperties()).willReturn(GeneralProperties.builder()
                 .maxPlayers(MAX_PLAYERS)
                 .build());
