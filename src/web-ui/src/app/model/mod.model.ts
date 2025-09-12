@@ -7,9 +7,6 @@ export interface Mod {
   fileExists: boolean;
   lastWorkshopUpdateDateTime: string;
   sizeBytes: number;
-}
-
-export interface NotManagedMod extends Mod {
   directoryName: string;
 }
 

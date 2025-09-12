@@ -5,7 +5,7 @@ import {
   moveItemInArray,
   transferArrayItem
 } from "@angular/cdk/drag-drop";
-import { Mod, NotManagedMod } from "../../../model/mod.model";
+import { Mod } from "../../../model/mod.model";
 import { SaveEnabledModsRequest, ServerModsService } from "../../../service/server-mods.service";
 import { NotificationService } from "../../../service/notification.service";
 import { MaskService } from "../../../service/mask.service";
@@ -24,7 +24,7 @@ export class ModListsComponent implements OnInit, OnDestroy {
   private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly modService: ServerModsService = inject(ServerModsService);
 
-  notManagedMods: NotManagedMod[] = [];
+  notManagedMods: Mod[] = [];
   disabledMods: Mod[] = [];
   enabledMods: Mod[] = [];
 

@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.NotManagedModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.InstalledModConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModWorkshopUrlBuilder;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
@@ -255,7 +254,7 @@ public class ModServiceImpl implements ModService
                 .map(mod -> asModView(mod, fileSystemMods))
                 .toList();
 
-        List<NotManagedModView> notManagedMods = findNotManagedMods(fileSystemMods, installedModEntities).stream()
+        List<ModView> notManagedMods = findNotManagedMods(fileSystemMods, installedModEntities).stream()
                 .map(this::asModView)
                 .toList();
 
@@ -265,9 +264,9 @@ public class ModServiceImpl implements ModService
         return modsView;
     }
 
-    private NotManagedModView asModView(FileSystemMod fileSystemMod)
+    private ModView asModView(FileSystemMod fileSystemMod)
     {
-        return NotManagedModView.builder()
+        return ModView.builder()
                 .workshopFileId(fileSystemMod.getWorkshopFileId())
                 .name(fileSystemMod.getName())
                 .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(fileSystemMod.getWorkshopFileId()))
@@ -295,6 +294,7 @@ public class ModServiceImpl implements ModService
                         .map(mod -> mod.getModDirectory().getSizeBytes())
                         .orElse(0L))
                 .lastWorkshopUpdateDateTime(modEntity.getLastWorkshopUpdate())
+                .directoryName(modEntity.getModDirectoryName())
                 .build();
     }
 }

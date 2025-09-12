@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { API_BASE_URL } from "src/environments/environment";
-import { Mod, NotManagedMod } from "../model/mod.model";
+import { Mod } from "../model/mod.model";
 
 @Injectable({
   providedIn: "root"
@@ -76,7 +76,7 @@ export class ServerModsService {
 export interface GetModsResponse {
   disabledMods: Mod[];
   enabledMods: Mod[];
-  notManagedMods: NotManagedMod[];
+  notManagedMods: Mod[];
 }
 
 export interface SaveEnabledModsRequest {

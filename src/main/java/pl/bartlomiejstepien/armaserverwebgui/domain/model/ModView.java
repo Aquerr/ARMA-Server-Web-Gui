@@ -21,6 +21,7 @@ public class ModView
     private String workshopUrl;
     private boolean fileExists;
     private long sizeBytes;
+    private String directoryName;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime lastWorkshopUpdateDateTime;

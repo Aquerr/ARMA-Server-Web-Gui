@@ -31,7 +31,7 @@
   flex-direction: row;
 }
 
-.mod-list-item-inner-panel-actions {
+.mod-list-item-inner-panel-details {
   display: flex;
   flex-flow: column;
   width: 100%;
@@ -39,10 +39,20 @@
   margin-left: 24px;
 }
 
+.mod-list-item-inner-panel-details-directory {
+  margin-left: 10px;
+}
+
 .mod-list-item-inner-panel-actions-action {
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
+}
+
+.mod-list-item-inner-panel-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .mod-list-item-expansion-panel-header {

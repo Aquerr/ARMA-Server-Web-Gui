@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, Output } from "@angular/core";
-import { Mod, NotManagedMod } from "../../../model/mod.model";
+import { Mod } from "../../../model/mod.model";
 import { MatButton } from "@angular/material/button";
 import { DialogService } from "../../../service/dialog.service";
 import { MaskService } from "../../../service/mask.service";
@@ -14,7 +14,7 @@ import { MatIcon } from "@angular/material/icon";
   styleUrl: "./not-managed-mods.component.scss"
 })
 export class NotManagedModsComponent {
-  @Input() mods!: NotManagedMod[];
+  @Input() mods!: Mod[];
   @Output() notManagedModsChanged = new EventEmitter<void>();
 
   private readonly dialogService: DialogService = inject(DialogService);
@@ -38,7 +38,7 @@ export class NotManagedModsComponent {
     );
   }
 
-  deleteNotManagedMod(mod: NotManagedMod) {
+  deleteNotManagedMod(mod: Mod) {
     this.dialogService.openCommonConfirmationDialog(
       { question: `Are you sure you want to delete the folder for <strong>${mod.name}</strong>?` },
       (dialogResult) => {

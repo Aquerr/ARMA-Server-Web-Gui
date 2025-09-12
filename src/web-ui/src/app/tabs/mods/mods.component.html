@@ -21,7 +21,7 @@
           <mat-label>Search mod...</mat-label>
           <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mod..." />
         </mat-form-field>
-        <div style="display: flex; flex-direction: row; gap: 10px">
+        <div class="mods-top-buttons">
           <button mat-button (click)="openModSettings()">Mod settings</button>
           <app-mod-presets
             [mods]="enabledMods"
