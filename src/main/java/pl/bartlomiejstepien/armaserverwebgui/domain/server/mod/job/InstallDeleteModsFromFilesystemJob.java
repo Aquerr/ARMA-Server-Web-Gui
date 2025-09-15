@@ -1,43 +1,54 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.job;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.AswgJob;
+import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.JobExecutionInfoService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.job.AswgJobNames;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Component
-@AllArgsConstructor
 @Slf4j
-public class InstallDeleteModsFromFilesystemJob
+public class InstallDeleteModsFromFilesystemJob extends AswgJob
 {
+    public static final String DELETION_ENABLED_PROPERTY = "DELETION_ENABLED";
+    public static final String INSTALLATION_ENABLED_PROPERTY = "INSTALLATION_ENABLED";
+
     private final ASWGConfig aswgConfig;
     private final ModService modService;
 
-    @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.MINUTES)
-    public void scanModDirectories()
+    public InstallDeleteModsFromFilesystemJob(JobExecutionInfoService jobExecutionInfoService,
+                                              ASWGConfig aswgConfig,
+                                              ModService modService)
     {
-        if (!this.aswgConfig.isModsScannerDeletionEnabled() && !this.aswgConfig.isModsScannerInstallationEnabled())
+        super(jobExecutionInfoService);
+        this.aswgConfig = aswgConfig;
+        this.modService = modService;
+    }
+
+    @Override
+    public void runJob()
+    {
+        if (!this.aswgConfig.getJobsProperties().isModsScannerDeletionEnabled()
+                && !this.aswgConfig.getJobsProperties().isModsScannerInstallationEnabled())
         {
             log.info("Mods file scanner job is disabled. Skipping...");
             return;
         }
 
         log.info("Running mod directory scan.");
-
-        List<FileSystemMod> fileSystemMods = modService.getInstalledModsFromFileSystem();
-        saveOrDeleteModsFromDB(fileSystemMods);
+        saveOrDeleteModsFromDB();
     }
 
-    private void saveOrDeleteModsFromDB(List<FileSystemMod> fileSystemMods)
+    private void saveOrDeleteModsFromDB()
     {
+        List<FileSystemMod> fileSystemMods = modService.getInstalledModsFromFileSystem();
         List<InstalledModEntity> installedModsInDB = modService.getInstalledMods();
         List<FileSystemMod> notManagedMods = modService.findNotManagedMods();
         deleteModsWithoutFiles(installedModsInDB, fileSystemMods);
@@ -46,7 +57,7 @@ public class InstallDeleteModsFromFilesystemJob
 
     private void deleteModsWithoutFiles(List<InstalledModEntity> installedModsInDB, List<FileSystemMod> fileSystemMods)
     {
-        if (!aswgConfig.isModsScannerDeletionEnabled())
+        if (!aswgConfig.getJobsProperties().isModsScannerDeletionEnabled())
         {
             log.info("File scanner deletion job is disabled. Skipping...");
             return;
@@ -61,7 +72,7 @@ public class InstallDeleteModsFromFilesystemJob
 
     private void installNewMods(List<FileSystemMod> fileSystemMods)
     {
-        if (!aswgConfig.isModsScannerInstallationEnabled())
+        if (!aswgConfig.getJobsProperties().isModsScannerInstallationEnabled())
         {
             log.info("File scanner installation job is disabled. Skipping...");
             return;
@@ -89,5 +100,11 @@ public class InstallDeleteModsFromFilesystemJob
                 .filter(installedDatabaseMod -> fileSystemMods.stream()
                         .noneMatch(fileSystemMod -> fileSystemMod.getWorkshopFileId() == installedDatabaseMod.getWorkshopFileId()))
                 .toList();
+    }
+
+    @Override
+    public String getName()
+    {
+        return AswgJobNames.INSTALL_DELETE_MODS;
     }
 }

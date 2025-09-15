@@ -1,0 +1,27 @@
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.button-container {
+  margin-top: 20px;
+}
+
+.information {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid rgba(144, 238, 144, 0.57);
+  margin-bottom: 1rem;
+}
+
+.information-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  filter: brightness(90%);
+}
+
+.information-icon {
+  --mat-icon-color: lightgreen;
+}

@@ -1,0 +1,48 @@
+<div class="container">
+  <h1>Job {{ jobName }}</h1>
+  <div>
+    <form [formGroup]="form" class="fields">
+
+      <div class="information">
+        <div class="information-content">
+          <div class="information-icon">
+            <mat-icon [fontIcon]="'information'"></mat-icon>
+          </div>
+          <span>
+            Last job execution date: {{ formService.getLastExecutionDateControl(form)?.value | date: 'short' }}
+          </span>
+        </div>
+      </div>
+
+      <mat-form-field>
+        <mat-label>Enabled</mat-label>
+        <mat-select formControlName="enabled">
+          <mat-option [value]="true">Yes</mat-option>
+          <mat-option [value]="false">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Cron</mat-label>
+        <input name="cron" formControlName="cron" matInput type="text" />
+        <mat-hint>Next execution date: {{ formService.getNextExecutionDateControl(form)?.value | date: 'short' }}</mat-hint>
+      </mat-form-field>
+
+      @if (formService.getParametersControl(form).value.length > 0) {
+        <h2>Parameters</h2>
+        <div formArrayName="parameters">
+          @for (parameter of parameters.controls; track $index; let i = $index) {
+            <div [formGroupName]="i">
+              <mat-form-field>
+                <mat-label [matTooltip]="parameter.get('description')?.value">{{ parameter.get('name')?.value }}</mat-label>
+                <input matInput [name]="parameter.get('name')?.value" type="text" formControlName="value">
+              </mat-form-field>
+            </div>
+          }
+        </div>
+      }
+      <div class="button-container">
+        <button mat-flat-button color="primary" (click)="save()">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

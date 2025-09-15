@@ -1,10 +1,10 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.job;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.AswgJob;
+import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.JobExecutionInfoService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.job.AswgJobNames;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
@@ -13,25 +13,24 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
-public class ModUpdateJob
+public class ModUpdateJob extends AswgJob
 {
     private final ModService modService;
     private final SteamService steamService;
 
-    @Value("${aswg.job.mod-update.enabled:false}")
-    private boolean enabled = false;
-
-    @Scheduled(cron = "${aswg.job.mod-update.cron:0 0 1 * * *}")
-    public void updateMods()
+    public ModUpdateJob(ModService modService,
+                        SteamService steamService,
+                        JobExecutionInfoService jobExecutionInfoService)
     {
-        if (!enabled)
-        {
-            log.info("Mod update job is disabled. Skipping...");
-            return;
-        }
+        super(jobExecutionInfoService);
+        this.modService = modService;
+        this.steamService = steamService;
+    }
 
+    @Override
+    public void runJob()
+    {
         if (!this.steamService.isSteamCmdInstalled())
         {
             log.warn("Steamcmd is not installed yet mod update is enabled. Fix this issue by properly configuring steamcmd.");
@@ -45,5 +44,11 @@ public class ModUpdateJob
     private void scheduleModUpdate(Map<Long, String> modIdWithName)
     {
         steamService.scheduleWorkshopModDownload(modIdWithName, false);
+    }
+
+    @Override
+    public String getName()
+    {
+        return AswgJobNames.MOD_UPDATE;
     }
 }

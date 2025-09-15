@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.util.Lazy;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileSystemUtils;
@@ -17,14 +16,10 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgF
 import pl.bartlomiejstepien.armaserverwebgui.repository.DifficultyProfileRepository;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 import static pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgValueHelper.toInt;
 
@@ -32,19 +27,17 @@ import static pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.c
 @Slf4j
 public class DifficultyServiceImpl implements DifficultyService
 {
+    public static final String PROFILE_SUFFIX = ".Arma3Profile";
     private static final String DEFAULT_PROFILE_NAME = "Player";
-    private static final String PROFILE_SUFFIX = ".Arma3Profile";
 
     private final DifficultyProfileRepository difficultyProfileRepository;
     private final Lazy<Path> profilesDirectory;
     private final CfgFileHandler cfgFileHandler;
-    private final ASWGConfig aswgConfig;
 
     public DifficultyServiceImpl(ASWGConfig aswgConfig,
                                  CfgFileHandler cfgFileHandler,
                                  DifficultyProfileRepository difficultyProfileRepository)
     {
-        this.aswgConfig = aswgConfig;
         this.cfgFileHandler = cfgFileHandler;
         this.difficultyProfileRepository = difficultyProfileRepository;
 
@@ -74,42 +67,10 @@ public class DifficultyServiceImpl implements DifficultyService
         }
     }
 
-    @Scheduled(fixedDelay = 20, timeUnit = TimeUnit.MINUTES)
-    public void installDeleteDifficulties()
+    @Override
+    public Path getProfilesDirectory()
     {
-        if (!this.aswgConfig.isDifficultyProfileInstallationScannerEnabled())
-        {
-            log.info("Difficulty scanner is disabled. Skipping...");
-        }
-
-        scanDifficultyProfilesDirectoryForNewProfiles();
-    }
-
-    private void scanDifficultyProfilesDirectoryForNewProfiles()
-    {
-        Path difficultiesDirectoryPath = this.profilesDirectory.get();
-        if (!Files.exists(difficultiesDirectoryPath))
-            return;
-
-        List<String> profileDirNames = Arrays.stream(difficultiesDirectoryPath.toFile().list())
-                .filter(Objects::nonNull)
-                .filter(profileName -> Files.exists(resolveDifficultyPath(profileName)))
-                .toList();
-
-        List<String> existingProfileNames = difficultyProfileRepository.findAll().stream()
-                .map(DifficultyProfileEntity::getName)
-                .toList();
-        List<String> newDifficultyProfiles = profileDirNames.stream()
-                .filter(name -> !existingProfileNames.contains(name))
-                .toList();
-
-        for (String name : newDifficultyProfiles)
-        {
-            DifficultyConfig difficultyConfig = readDifficultyFile(name);
-            DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, name, false);
-            this.difficultyProfileRepository.save(difficultyProfileEntity);
-            saveToFile(map(difficultyConfig, difficultyProfileEntity));
-        }
+        return profilesDirectory.get();
     }
 
     @Override
@@ -193,6 +154,15 @@ public class DifficultyServiceImpl implements DifficultyService
                     return difficultyProfileEntity;
                 })
                 .ifPresent(difficultyProfileRepository::delete);
+    }
+
+    @Override
+    public void importDifficultyProfileFromFile(String profileName)
+    {
+        DifficultyConfig difficultyConfig = readDifficultyFile(profileName);
+        DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, profileName, false);
+        this.difficultyProfileRepository.save(difficultyProfileEntity);
+        saveToFile(map(difficultyConfig, difficultyProfileEntity));
     }
 
     private void deleteFile(String difficultyName)
