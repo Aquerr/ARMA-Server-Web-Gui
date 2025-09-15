@@ -41,14 +41,21 @@ public class ASWGConfig
 
     private static final String SERVER_PORT_PROPERTY = "aswg.server-port";
 
-    private static final String FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY = "aswg.job.mods-scanner.installation.enabled";
-    private static final String FILE_SCANNER_DELETION_ENABLED_PROPERTY = "aswg.job.mods-scanner.deletion.enabled";
-    private static final String DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED_PROPERTY = "aswg.job.difficulty-scanner.installation.enabled";
-    private static final String MOD_SETTINGS_INSTLLATION_SCANNER_ENABLED_PROPERTY = "aswg.job.mod-settings-scanner.installation.enabled";
+    private static final String JOB_MODS_SCANNER_ENABLED_PROPERTY = "aswg.job.mods-scanner.enabled";
+    private static final String JOB_MODS_SCANNER_CRON_PROPERTY = "aswg.job.mods-scanner.cron";
+    private static final String JOB_MODS_SCANNER_INSTALLATION_ENABLED_PROPERTY = "aswg.job.mods-scanner.installation.enabled";
+    private static final String JOB_MODS_SCANNER_DELETION_ENABLED_PROPERTY = "aswg.job.mods-scanner.deletion.enabled";
+    private static final String JOB_DIFFICULTY_PROFILE_SCANNER_ENABLED_PROPERTY = "aswg.job.difficulty-scanner.enabled";
+    private static final String JOB_DIFFICULTY_PROFILE_SCANNER_CRON_PROPERTY = "aswg.job.difficulty-scanner.cron";
+    private static final String JOB_MOD_SETTINGS_SCANNER_ENABLED_PROPERTY = "aswg.job.mod-settings-scanner.enabled";
+    private static final String JOB_MOD_SETTINGS_SCANNER_CRON_PROPERTY = "aswg.job.mod-settings-scanner.cron";
     private static final String VANILLA_MISSIONS_IMPORTER_PROPERTY = "aswg.vanilla-missions-importer.enabled";
 
     private static final String JOB_MOD_UPDATE_ENABLED_PROPERTY = "aswg.job.mod-update.enabled";
     private static final String JOB_MOD_UPDATE_CRON_PROPERTY = "aswg.job.mod-update.cron";
+
+    private static final String JOB_MISSION_SCANNER_ENABLED_PROPERTY = "aswg.job.mission-scanner.enabled";
+    private static final String JOB_MISSION_SCANNER_CRON_PROPERTY = "aswg.job.mission-scanner.cron";
 
     // Discord
     private static final String DISCORD_WEBHOOK_ENABLED = "aswg.discord.webhook.enabled";
@@ -88,27 +95,13 @@ public class ASWGConfig
     @Value("${" + STEAM_API_KEY_PROPERTY + ":}")
     private String steamApiKey;
 
-    @Value("${" + FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY + ":true}")
-    private boolean modsScannerInstallationEnabled;
-    @Value("${" + FILE_SCANNER_DELETION_ENABLED_PROPERTY + ":false}")
-    private boolean modsScannerDeletionEnabled;
-
-    @Value("${" + DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED_PROPERTY + ":true}")
-    private boolean difficultyProfileInstallationScannerEnabled;
-    @Value("${" + MOD_SETTINGS_INSTLLATION_SCANNER_ENABLED_PROPERTY + ":true}")
-    private boolean modSettingsInstallationScannerEnabled;
     @Value("${" + VANILLA_MISSIONS_IMPORTER_PROPERTY + ":false}")
     private boolean vanillaMissionsImporter;
-
-    @Value("${" + JOB_MOD_UPDATE_ENABLED_PROPERTY + ":true}")
-    private boolean jobModUpdateEnabled;
-
-    @Value("${" + JOB_MOD_UPDATE_CRON_PROPERTY + ":0 0 1 * * *}")
-    private String jobModUpdateCron;
 
     @Value("${" + SERVER_BRANCH_PROPERTY + ":public}")
     private String serverBranch;
 
+    private final JobsProperties jobsProperties;
     private final DiscordProperties discordProperties;
     private final UnsafeProperties unsafeProperties;
 
@@ -155,6 +148,8 @@ public class ASWGConfig
     private Properties prepareProperties()
     {
         Properties configurationProperties = new Properties();
+
+        // General
         configurationProperties.setProperty(SERVER_DIRECTORY_PATH_PROPERTY, this.serverDirectoryPath);
         configurationProperties.setProperty(MODS_DIRECTORY_PATH_PROPERTY, this.modsDirectoryPath);
         configurationProperties.setProperty(USERNAME_PROPERTY, this.username);
@@ -166,24 +161,41 @@ public class ASWGConfig
         configurationProperties.setProperty(STEAM_API_KEY_PROPERTY, this.steamApiKey);
         configurationProperties.setProperty(STEAMCMD_USERNAME_PROPERTY, this.steamCmdUsername);
         configurationProperties.setProperty(STEAMCMD_PASSWORD_PROPERTY, this.steamCmdPassword);
-        configurationProperties.setProperty(FILE_SCANNER_INSTALLATION_ENABLED_PROPERTY, String.valueOf(this.modsScannerInstallationEnabled));
-        configurationProperties.setProperty(FILE_SCANNER_DELETION_ENABLED_PROPERTY, String.valueOf(this.modsScannerDeletionEnabled));
-        configurationProperties.setProperty(DIFFICULTY_PROFILE_INSTALLATION_SCANNER_ENABLED_PROPERTY,
-                String.valueOf(this.difficultyProfileInstallationScannerEnabled));
-        configurationProperties.setProperty(MOD_SETTINGS_INSTLLATION_SCANNER_ENABLED_PROPERTY, String.valueOf(this.modSettingsInstallationScannerEnabled));
 
-        configurationProperties.setProperty(JOB_MOD_UPDATE_ENABLED_PROPERTY, String.valueOf(this.jobModUpdateEnabled));
-        configurationProperties.setProperty(JOB_MOD_UPDATE_CRON_PROPERTY, this.jobModUpdateCron);
+        configurationProperties.setProperty(VANILLA_MISSIONS_IMPORTER_PROPERTY, String.valueOf(this.vanillaMissionsImporter));
+        configurationProperties.setProperty(SERVER_BRANCH_PROPERTY, String.valueOf(this.serverBranch));
 
+        // Jobs
+        configurationProperties.setProperty(JOB_MODS_SCANNER_ENABLED_PROPERTY, String.valueOf(this.jobsProperties.isModsScannerEnabled()));
+        configurationProperties.setProperty(JOB_MODS_SCANNER_CRON_PROPERTY, this.jobsProperties.getModsScannerCron());
+        configurationProperties.setProperty(JOB_MODS_SCANNER_INSTALLATION_ENABLED_PROPERTY,
+                String.valueOf(this.jobsProperties.isModsScannerInstallationEnabled()));
+        configurationProperties.setProperty(JOB_MODS_SCANNER_DELETION_ENABLED_PROPERTY,
+                String.valueOf(this.jobsProperties.isModsScannerDeletionEnabled()));
+
+        configurationProperties.setProperty(JOB_DIFFICULTY_PROFILE_SCANNER_ENABLED_PROPERTY,
+                String.valueOf(this.jobsProperties.isDifficultyProfileScannerEnabled()));
+        configurationProperties.setProperty(JOB_DIFFICULTY_PROFILE_SCANNER_CRON_PROPERTY,
+                this.jobsProperties.getDifficultyProfileScannerCron());
+
+        configurationProperties.setProperty(JOB_MOD_SETTINGS_SCANNER_ENABLED_PROPERTY,
+                String.valueOf(this.jobsProperties.isModSettingsScannerEnabled()));
+        configurationProperties.setProperty(JOB_MOD_SETTINGS_SCANNER_CRON_PROPERTY,
+                this.jobsProperties.getModSettingsScannerCron());
+
+        configurationProperties.setProperty(JOB_MOD_UPDATE_ENABLED_PROPERTY, String.valueOf(this.jobsProperties.isJobModUpdateEnabled()));
+        configurationProperties.setProperty(JOB_MOD_UPDATE_CRON_PROPERTY, this.jobsProperties.getJobModUpdateCron());
+
+        configurationProperties.setProperty(JOB_MISSION_SCANNER_ENABLED_PROPERTY, String.valueOf(this.jobsProperties.isMissionScannerEnabled()));
+        configurationProperties.setProperty(JOB_MISSION_SCANNER_CRON_PROPERTY, this.jobsProperties.getMissionScannerCron());
+
+        // Discord
         configurationProperties.setProperty(DISCORD_WEBHOOK_URL, this.discordProperties.getWebhookUrl());
         configurationProperties.setProperty(DISCORD_WEBHOOK_ENABLED, String.valueOf(this.discordProperties.isEnabled()));
         configurationProperties.setProperty(DISCORD_MESSAGE_SERVER_STARTING, this.discordProperties.getMessageServerStarting());
         configurationProperties.setProperty(DISCORD_MESSAGE_SERVER_START, this.discordProperties.getMessageServerStart());
         configurationProperties.setProperty(DISCORD_MESSAGE_SERVER_STOP, this.discordProperties.getMessageServerStop());
         configurationProperties.setProperty(DISCORD_MESSAGE_SERVER_UPDATE, this.discordProperties.getMessageServerUpdate());
-
-        configurationProperties.setProperty(VANILLA_MISSIONS_IMPORTER_PROPERTY, String.valueOf(this.vanillaMissionsImporter));
-        configurationProperties.setProperty(SERVER_BRANCH_PROPERTY, String.valueOf(this.serverBranch));
 
         // Unsafe
         configurationProperties.setProperty(UNSAFE_OVERWRITE_SERVER_STARTUP_PARAMS_ENABLED_PROPERTY,
@@ -220,5 +232,39 @@ public class ASWGConfig
         private String messageServerStop;
         @Value("${aswg.discord.message.server-update:}")
         private String messageServerUpdate;
+    }
+
+    @Data
+    @Component
+    public static class JobsProperties
+    {
+        @Value("${" + JOB_MODS_SCANNER_ENABLED_PROPERTY + ":false}")
+        private boolean modsScannerEnabled;
+        @Value("${" + JOB_MODS_SCANNER_CRON_PROPERTY + ":0 0/15 * * * *}")
+        private String modsScannerCron;
+        @Value("${" + JOB_MODS_SCANNER_INSTALLATION_ENABLED_PROPERTY + ":true}")
+        private boolean modsScannerInstallationEnabled;
+        @Value("${" + JOB_MODS_SCANNER_DELETION_ENABLED_PROPERTY + ":false}")
+        private boolean modsScannerDeletionEnabled;
+
+        @Value("${" + JOB_MOD_UPDATE_ENABLED_PROPERTY + ":true}")
+        private boolean jobModUpdateEnabled;
+        @Value("${" + JOB_MOD_UPDATE_CRON_PROPERTY + ":0 0 1 * * *}")
+        private String jobModUpdateCron;
+
+        @Value("${" + JOB_DIFFICULTY_PROFILE_SCANNER_ENABLED_PROPERTY + ":true}")
+        private boolean difficultyProfileScannerEnabled;
+        @Value("${" + JOB_DIFFICULTY_PROFILE_SCANNER_CRON_PROPERTY + ":0 0/20 * * * *}")
+        private String difficultyProfileScannerCron;
+
+        @Value("${" + JOB_MOD_SETTINGS_SCANNER_ENABLED_PROPERTY + ":true}")
+        private boolean modSettingsScannerEnabled;
+        @Value("${" + JOB_MOD_SETTINGS_SCANNER_CRON_PROPERTY + ":0 0/20 * * * *}")
+        private String modSettingsScannerCron;
+
+        @Value("${" + JOB_MISSION_SCANNER_ENABLED_PROPERTY + ":true}")
+        private boolean missionScannerEnabled;
+        @Value("${" + JOB_MISSION_SCANNER_CRON_PROPERTY + ":0 0/20 * * * *}")
+        private String missionScannerCron;
     }
 }

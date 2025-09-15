@@ -1,0 +1,14 @@
+<form class="container">
+  <h1>Jobs (scheduled tasks)</h1>
+  <div class="jobs-list">
+    <div class="nav-list">
+      @for (jobName of jobsNames; track $index) {
+        <div class="nav-list-item" [routerLink]="jobName">
+          <div>
+            {{ jobName }}
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</form>

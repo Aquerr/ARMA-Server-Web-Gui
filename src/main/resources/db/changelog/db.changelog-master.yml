@@ -17,3 +17,5 @@ databaseChangeLog:
       path: db/changelog/008-cdlc/
   - includeAll:
       path: db/changelog/009-aswg-user-last-login-column/
+  - includeAll:
+      path: db/changelog/010-job-last-execution-time/

@@ -2,7 +2,6 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,7 +10,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionNotFoundException;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionFileNameHelper;
@@ -23,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -36,21 +33,6 @@ public class MissionServiceImpl implements MissionService
     private final ServerConfigStorage serverConfigStorage;
     private final MissionConverter missionConverter;
     private final MissionFileNameHelper missionFileNameHelper;
-
-    @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.MINUTES)
-    @Transactional
-    public void missionScan()
-    {
-        log.info("Scanning for new file missions...");
-        List<String> installedMissionTemplates = this.missionFileStorage.getInstalledMissionTemplates();
-        List<String> notInstalledTemplates = this.findNotInstalledTemplates(installedMissionTemplates, this.missionRepository.findAll());
-
-        log.info("Installing new missions: {}", notInstalledTemplates);
-        for (String templateName : notInstalledTemplates)
-        {
-            addMission(templateName, templateName);
-        }
-    }
 
     @Override
     public boolean checkMissionFileExists(String fileName)
@@ -79,15 +61,6 @@ public class MissionServiceImpl implements MissionService
         {
             throw new RuntimeException(exception);
         }
-    }
-
-    private List<String> findNotInstalledTemplates(List<String> installedTemplates, List<MissionEntity> entities)
-    {
-        List<String> templatesInDB = entities.stream().map(MissionEntity::getTemplate).toList();
-
-        return installedTemplates.stream()
-                .filter(template -> !templatesInDB.contains(template))
-                .toList();
     }
 
     @Transactional

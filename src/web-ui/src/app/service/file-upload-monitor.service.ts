@@ -3,7 +3,7 @@ import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { UploadingFile } from "./file-upload.service";
 import { FileUploadSnackBarComponent } from "../common-ui/file-upload-snack-bar/file-upload-snack-bar.component";
 import { HttpEventType } from "@angular/common/http";
-import { Observer, Subject, Subscription } from "rxjs";
+import { interval, Observer, Subject, Subscription } from "rxjs";
 import { NotificationService } from "./notification.service";
 
 @Injectable({
@@ -20,6 +20,8 @@ export class FileUploadMonitorService {
   private fileUploadedSubject!: Subject<File | null>;
   private fileUploadSubscription!: Subscription;
 
+  private canDisplayFileUploadSubscription!: Subscription;
+
   constructor() {
     this.matSnackBar = inject(MatSnackBar);
     this.notificationService = inject(NotificationService);
@@ -32,6 +34,15 @@ export class FileUploadMonitorService {
         this.fileUploadSnackBarRef = null;
       }
     });
+
+    this.canDisplayFileUploadSubscription = interval(2000)
+      .pipe()
+      .subscribe(() => {
+        if (this.uploadingFiles.length > 0 && this.fileUploadSnackBarRef == null) {
+          //TODO: Show the ability to open file upload progress snack bar
+
+        }
+      });
   }
 
   getUploadingFiles() {

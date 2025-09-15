@@ -7,7 +7,7 @@ export class ThemeService {
   WHITE_THEME_COLOR = "#4634b7";
 
   setThemeOnAppInit() {
-    const theme = localStorage.getItem("theme");
+    const theme = sessionStorage.getItem("theme");
     if (theme) {
       this.setTheme(theme);
     } else {
@@ -16,7 +16,7 @@ export class ThemeService {
   }
 
   isDarkMode() {
-    const theme = localStorage.getItem("theme");
+    const theme = sessionStorage.getItem("theme");
     return theme !== null && theme === "dark";
   }
 
@@ -50,6 +50,6 @@ export class ThemeService {
   }
 
   private saveTheme(theme: string) {
-    localStorage.setItem("theme", theme);
+    sessionStorage.setItem("theme", theme);
   }
 }
