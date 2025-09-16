@@ -54,8 +54,8 @@ public class ASWGConfig
     private static final String JOB_MOD_UPDATE_ENABLED_PROPERTY = "aswg.job.mod-update.enabled";
     private static final String JOB_MOD_UPDATE_CRON_PROPERTY = "aswg.job.mod-update.cron";
 
-    private static final String JOB_MISSION_SCANNER_ENABLED_PROPERTY = "aswg.job.mission-scanner.enabled";
-    private static final String JOB_MISSION_SCANNER_CRON_PROPERTY = "aswg.job.mission-scanner.cron";
+    private static final String JOB_MISSION_SCANNER_ENABLED_PROPERTY = "aswg.job.missions-scanner.enabled";
+    private static final String JOB_MISSION_SCANNER_CRON_PROPERTY = "aswg.job.missions-scanner.cron";
 
     // Discord
     private static final String DISCORD_WEBHOOK_ENABLED = "aswg.discord.webhook.enabled";
