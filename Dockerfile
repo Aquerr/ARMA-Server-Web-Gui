@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jre as runner
+FROM eclipse-temurin:21-jre AS runner
 
 USER root
 
@@ -25,6 +25,8 @@ RUN groupadd --gid 1001 aswg \
 WORKDIR /aswg
 
 COPY ./target/arma-server-web-gui-*.jar /aswg/aswg.jar
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # ASWG Properties
 ENV ASWG_STEAMCMD_PATH="/steamcmd/steamcmd.sh"
@@ -47,4 +49,4 @@ EXPOSE 2302-2306/udp
 
 USER aswg:aswg
 
-ENTRYPOINT ["java", "-jar", "/aswg/aswg.jar"]
+ENTRYPOINT ["/entrypoint.sh"]
