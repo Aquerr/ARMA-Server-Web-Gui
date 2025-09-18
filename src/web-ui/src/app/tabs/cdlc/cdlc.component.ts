@@ -4,10 +4,11 @@ import { Cdlc } from "../../model/cdlc.model";
 import { NotificationService } from "src/app/service/notification.service";
 import { MaskService } from "../../service/mask.service";
 import { MatButton } from "@angular/material/button";
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
   selector: "app-cdlc",
-  imports: [MatButton],
+  imports: [MatButton, MatTooltip],
   templateUrl: "./cdlc.component.html",
   styleUrl: "./cdlc.component.scss"
 })
@@ -34,7 +35,9 @@ export class CdlcComponent implements OnInit {
     this.maskService.show();
     this.cdlcService.toggleCdlc(cdlc.id).subscribe((response) => {
       this.reloadCdlcs();
-      this.notificationService.successNotification(`CDLC has been ${cdlc.enabled ? "disabled" : "enabled"}!`);
+      this.notificationService.successNotification(
+        `CDLC has been ${cdlc.enabled ? "disabled" : "enabled"}!`
+      );
     });
   }
 }

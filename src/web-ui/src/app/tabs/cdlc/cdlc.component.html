@@ -6,10 +6,9 @@
         <span class="cdlc-list-item-header">
           {{ cdlc.name }}
         </span>
-        <span class="cdlc-buttons">
+        <span class="cdlc-buttons" [matTooltip]="cdlc.fileExists ? undefined : 'CDLC is not installed'">
           <button
             mat-flat-button
-
             [color]="cdlc.enabled ? 'accent' : 'primary'"
             (click)="toggleCdlc(cdlc)"
             [disabled]="!cdlc.fileExists"
