@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.job;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.AswgJob;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.JobExecutionInfoService;
@@ -19,6 +20,7 @@ public class ModUpdateJob extends AswgJob
     private final ModService modService;
     private final SteamService steamService;
 
+    @Autowired
     public ModUpdateJob(ModService modService,
                         SteamService steamService,
                         JobExecutionInfoService jobExecutionInfoService)

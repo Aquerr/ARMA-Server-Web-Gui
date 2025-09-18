@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.job;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.AswgJob;
@@ -21,6 +22,7 @@ public class MissionScannerJob extends AswgJob
     private final MissionService missionService;
     private final MissionRepository missionRepository;
 
+    @Autowired
     public MissionScannerJob(JobExecutionInfoService jobExecutionInfoService,
                              MissionFileStorage missionFileStorage,
                              MissionService missionService,

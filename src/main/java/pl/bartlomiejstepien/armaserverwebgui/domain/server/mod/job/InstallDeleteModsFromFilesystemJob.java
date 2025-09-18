@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.job;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.AswgJob;
@@ -23,6 +24,7 @@ public class InstallDeleteModsFromFilesystemJob extends AswgJob
     private final ASWGConfig aswgConfig;
     private final ModService modService;
 
+    @Autowired
     public InstallDeleteModsFromFilesystemJob(JobExecutionInfoService jobExecutionInfoService,
                                               ASWGConfig aswgConfig,
                                               ModService modService)

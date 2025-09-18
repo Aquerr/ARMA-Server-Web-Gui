@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
@@ -22,6 +23,7 @@ public class DifficultyScanJob extends AswgJob
     private final ASWGConfig aswgConfig;
     private final DifficultyService difficultyService;
 
+    @Autowired
     public DifficultyScanJob(JobExecutionInfoService jobExecutionInfoService,
                              ASWGConfig aswgConfig,
                              DifficultyService difficultyService)
