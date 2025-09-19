@@ -47,6 +47,6 @@ VOLUME ["/aswg/arma-server", "/aswg/data", "/aswg/config"]
 EXPOSE 8085/tcp
 EXPOSE 2302-2306/udp
 
-#USER aswg:aswg
+USER aswg:aswg
 
 ENTRYPOINT ["/entrypoint.sh"]
