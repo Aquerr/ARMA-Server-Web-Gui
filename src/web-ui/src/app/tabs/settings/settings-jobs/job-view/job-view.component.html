@@ -30,11 +30,11 @@
       @if (formService.getParametersControl(form).value.length > 0) {
         <h2>Parameters</h2>
         <div formArrayName="parameters">
-          @for (parameter of parameters.controls; track $index; let i = $index) {
+          @for (parameter of parameters.controls; track parameter; let i = $index) {
             <div [formGroupName]="i">
               <mat-form-field>
                 <mat-label [matTooltip]="parameter.get('description')?.value">{{ parameter.get('name')?.value }}</mat-label>
-                <input matInput [name]="parameter.get('name')?.value" type="text" formControlName="value">
+                <input matInput type="text" formControlName="value" [value]="parameter.get('value')?.value">
               </mat-form-field>
             </div>
           }

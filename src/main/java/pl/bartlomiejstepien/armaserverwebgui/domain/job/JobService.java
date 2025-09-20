@@ -130,7 +130,7 @@ public class JobService
     {
         return JobSettings.builder()
                 .name(AswgJobNames.INSTALL_DELETE_MODS)
-                .enabled(this.aswgConfig.getJobsProperties().isModsScannerInstallationEnabled())
+                .enabled(this.aswgConfig.getJobsProperties().isModsScannerEnabled())
                 .cron(this.aswgConfig.getJobsProperties().getModsScannerCron())
                 .parameters(Map.of(
                         InstallDeleteModsFromFilesystemJob.DELETION_ENABLED_PROPERTY, JobSettings.JobParameter.builder()
