@@ -6,6 +6,7 @@
   --aswg-primary-text-color: #adbac7;
   --aswg-bg-primary-bg-color: #22272e;
   --aswg-input-bg-color: #2d333b;
+  --aswg-chip-bg-color: #fefefe;
   --aswg-border-color: #444c56 !important;
   --mat-icon-color: var(--aswg-primary-color) !important;
   --mat-stepper-header-edit-state-icon-background-color: var(--aswg-primary-color) !important;
@@ -51,8 +52,8 @@
   --mat-slider-active-track-color: var(--aswg-primary-color) !important;
   --mat-slider-inactive-track-color: var(--aswg-primary-color) !important;
   --mat-radio-checked-ripple-color: var(--aswg-primary-color) !important;
-  --mat-chip-elevated-container-color: var(--aswg-primary-color) !important;
-  --mat-chip-elevated-disabled-container-color: var(--aswg-primary-color) !important;
+  --mat-chip-elevated-container-color: var(--aswg-chip-bg-color) !important;
+  --mat-chip-elevated-disabled-container-color: var(--aswg-chip-bg-color) !important;
   --mat-form-field-outlined-caret-color: var(--aswg-primary-color) !important;
   --mat-form-field-outlined-focus-outline-color: var(--aswg-primary-color) !important;
   --mat-form-field-filled-caret-color: var(--aswg-primary-color) !important;
@@ -104,6 +105,10 @@ a {
   ~ .mdc-checkbox__background {
   border-color: var(--aswg-primary-color) !important;
   background-color: var(--aswg-primary-color) !important;
+}
+
+.mat-mdc-standard-chip {
+  --mat-chip-elevated-container-color: var(--aswg-chip-bg-color) !important;
 }
 
 ::ng-deep .mdc-text-field .mdc-text-field__input {
