@@ -19,6 +19,8 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryPar
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -126,10 +128,20 @@ public class SteamServiceImpl implements SteamService
     @Override
     public List<WorkshopModInstallationRequest> getInstallingMods()
     {
-        return this.steamCmdHandler.getSteamTasks(SteamTask.Type.WORKSHOP_DOWNLOAD).stream()
+        List<WorkshopModInstallationRequest> requests = new ArrayList<>();
+        requests.addAll(this.steamCmdHandler.getSteamTasks(SteamTask.Type.WORKSHOP_DOWNLOAD).stream()
                 .map(WorkshopModInstallSteamTask.class::cast)
                 .map(task -> new WorkshopModInstallationRequest(task.getFileId(), task.getTitle()))
-                .toList();
+                .toList());
+
+        requests.addAll(this.steamCmdHandler.getSteamTasks(SteamTask.Type.WORKSHOP_BATCH_DOWNLOAD).stream()
+                .map(WorkshopBatchModDownloadTask.class::cast)
+                .map(task -> task.getFileIdsWithTitles().entrySet())
+                .flatMap(Collection::stream)
+                .map(entry -> new WorkshopModInstallationRequest(entry.getKey(), entry.getValue()))
+                .toList());
+
+        return requests;
     }
 
     @Override
