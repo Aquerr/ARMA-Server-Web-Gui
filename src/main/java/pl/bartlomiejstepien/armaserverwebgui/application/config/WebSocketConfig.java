@@ -20,6 +20,6 @@ public class WebSocketConfig implements WebSocketConfigurer
         registry.addHandler(
                 workshopModInstallProgressWebsocketHandler,
                 "/api/v1/ws/workshop-mod-install-progress"
-        );
+        ).setAllowedOrigins("*");
     }
 }
