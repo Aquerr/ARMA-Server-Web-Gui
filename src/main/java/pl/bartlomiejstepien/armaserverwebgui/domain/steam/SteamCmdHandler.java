@@ -84,7 +84,7 @@ public class SteamCmdHandler
             log.warn("Exception during handling of steam task.", exception);
             if (exception instanceof RetryableException && steamTaskRetryPolicy.canRetry(queuedSteamTask))
             {
-                log.info("Requeue steam task: {}", queuedSteamTask);
+                log.info("Requeuing steam task: {}", queuedSteamTask);
                 queueTask(new QueuedSteamTask(queuedSteamTask.getId(), queuedSteamTask.getSteamTask(), queuedSteamTask.getRetryCount() + 1));
             }
         }

@@ -25,14 +25,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static java.lang.String.format;
 
 @Slf4j
 @Component
@@ -73,8 +71,7 @@ public class WorkshopBatchModDownloadTaskHandler implements SteamTaskHandler
         if (!modDownloadResult.getFailedMods().isEmpty())
         {
             // To retry the steam task
-            throw new CouldNotDownloadWorkshopModException("Couldn't download workshop mods: "
-                    + Arrays.toString(modDownloadResult.getFailedMods().keySet().stream().map(String::valueOf).toArray()));
+            throw new CouldNotDownloadWorkshopModException(prepareFailedModsLog(modDownloadResult.getFailedMods()));
         }
     }
 
@@ -151,7 +148,7 @@ public class WorkshopBatchModDownloadTaskHandler implements SteamTaskHandler
         }
 
         Map<Long, Path> successMods = new HashMap<>();
-        Map<Long, Path> failedMods = new HashMap<>();
+        List<ModData> failedModDatas = new LinkedList<>();
 
         for (ModData modData : modsToInstall)
         {
@@ -162,12 +159,22 @@ public class WorkshopBatchModDownloadTaskHandler implements SteamTaskHandler
             }
             else
             {
-                log.warn(format("Could not download mod id=%s title=%s.", modData.getFileId(), modData.getTitle()));
-                failedMods.put(modData.getFileId(), path);
+                failedModDatas.add(modData);
             }
         }
 
-        return new ModDownloadResult(successMods, failedMods);
+        return new ModDownloadResult(successMods, failedModDatas);
+    }
+
+    private static String prepareFailedModsLog(List<ModData> failedModDatas)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Could not download workshop mods:\n");
+        for (ModData modData : failedModDatas)
+        {
+            stringBuilder.append("id: ").append(modData.getFileId()).append(" | title: ").append(modData.getTitle()).append(",\n");
+        }
+        return stringBuilder.toString();
     }
 
     private void downloadModThroughSteamCmd(SteamCmdWorkshopBatchDownloadParameters parameters) throws Exception
