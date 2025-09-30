@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jre AS runner
+FROM eclipse-temurin:25-jre AS runner
 
 USER root
 

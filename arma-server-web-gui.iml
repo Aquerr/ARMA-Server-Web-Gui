@@ -2,20 +2,15 @@
 <module version="4">
   <component name="AdditionalModuleElements">
     <content url="file://$MODULE_DIR$" dumb="true">
-      <excludeFolder url="file://$MODULE_DIR$/src/web-ui/dist" />
-      <excludeFolder url="file://$MODULE_DIR$/src/web-ui/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/aswg_profiles" />
       <excludeFolder url="file://$MODULE_DIR$/logs" />
       <excludeFolder url="file://$MODULE_DIR$/server" />
+      <excludeFolder url="file://$MODULE_DIR$/src/web-ui/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/src/web-ui/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/userconfig" />
     </content>
   </component>
   <component name="CheckStyle-IDEA-Module" serialisationVersion="2">
     <option name="activeLocationsIds" />
-  </component>
-  <component name="FacetManager">
-    <facet type="Spring" name="Spring">
-      <configuration />
-    </facet>
   </component>
 </module>
