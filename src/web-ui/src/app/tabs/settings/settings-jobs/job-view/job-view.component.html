@@ -24,7 +24,7 @@
       <mat-form-field>
         <mat-label>Cron</mat-label>
         <input name="cron" formControlName="cron" matInput type="text" />
-        <mat-hint>Next execution date: {{ formService.getNextExecutionDateControl(form)?.value | date: 'short' }}</mat-hint>
+        <mat-hint>Next execution date: {{ formService.getNextExecutionDateControl(form)?.value | date: 'yyyy-MM-dd HH:mm:ss' }}</mat-hint>
       </mat-form-field>
 
       @if (formService.getParametersControl(form).value.length > 0) {
