@@ -15,6 +15,7 @@ LABEL maintainer=Aquerr
 # Intall SteamCMD
 RUN apt-get -y update \
     && apt-get -y install lib32gcc-s1 \
+    && apt-get -y install curl \
     && mkdir /steamcmd \
     && cd /steamcmd \
     && curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
@@ -31,6 +32,10 @@ RUN groupadd --gid 1001 aswg \
     && chown aswg:aswg -R /steamcmd
 
 WORKDIR /aswg
+
+COPY ./target/arma-server-web-gui-*.jar /aswg/aswg.jar
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 COPY --from=builder target/arma-server-web-gui-*.jar /aswg/aswg.jar
 
@@ -55,4 +60,4 @@ EXPOSE 2302-2306/udp
 
 USER aswg:aswg
 
-ENTRYPOINT ["java", "-jar", "/aswg/aswg.jar"]
+ENTRYPOINT ["sh", "/entrypoint.sh"]

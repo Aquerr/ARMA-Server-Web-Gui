@@ -7,6 +7,7 @@ LABEL maintainer=Aquerr
 # Intall SteamCMD
 RUN apt-get -y update \
     && apt-get -y install lib32gcc-s1 \
+    && apt-get -y install curl \
     && mkdir /steamcmd \
     && cd /steamcmd \
     && curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
@@ -49,4 +50,4 @@ EXPOSE 2302-2306/udp
 
 USER aswg:aswg
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["sh", "/entrypoint.sh"]
