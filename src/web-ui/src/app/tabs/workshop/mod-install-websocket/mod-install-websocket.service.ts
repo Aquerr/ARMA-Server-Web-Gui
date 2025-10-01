@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable, Output } from "@angular/core";
 import { API_WS_BASE_URL } from "../../../../environments/environment";
 import { WorkShopModInstallStatus } from "../../../model/workshop.model";
+import { API_WSS_BASE_URL } from "../../../../environments/environment.prod";
 
 @Injectable({
   providedIn: "root"
@@ -19,7 +20,8 @@ export class ModInstallWebsocketService {
       return;
     }
 
-    this.websocket = new WebSocket(API_WS_BASE_URL + "/workshop-mod-install-progress");
+    const wsUrl = this.isHttps() ? API_WSS_BASE_URL : API_WS_BASE_URL;
+    this.websocket = new WebSocket(wsUrl + "/workshop-mod-install-progress");
     this.websocket.onopen = (event) => {
       this.isConnected = true;
     };
@@ -67,4 +69,8 @@ export class ModInstallWebsocketService {
   //     console.log("Message Received: " + message);
   //   });
   // }
+
+  private isHttps(): boolean {
+    return window.location.protocol === "https:";
+  }
 }
