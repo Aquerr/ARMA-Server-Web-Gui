@@ -45,7 +45,7 @@ ASWG can be setup manually on a system or via Docker.
 ## Manual Setup
 
 ### Installation:
-- Install JRE 21
+- Install JRE 25
 - [Install Arma Server in desired directory](https://community.bistudio.com/wiki/Arma_3:_Dedicated_Server).
 - [Download](https://github.com/Aquerr/ARMA-Server-Web-Gui/packages/2322633) ASWG from Github Packages or [build ASWG yourself](#Building).
 - Put `ASWG.jar` file in desired folder where you want your ASWG to be running.
@@ -65,7 +65,7 @@ Sample docker compose can be found [here](https://github.com/Aquerr/ARMA-Server-
 
 # Building
 
-- Install JDK 21
+- Install JDK 25
 - Clone repo
 - Go to project directory
 - Run `./mvnw.cmd clean package`
