@@ -3,7 +3,7 @@ import { ApiErrorCode, ApiErrorResponse } from "./api-error.model";
 import { AuthService } from "../service/auth.service";
 import { Router } from "@angular/router";
 import { NotificationService } from "../service/notification.service";
-import { MaskService } from "../service/mask.service";
+import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.service";
 
 @Injectable({
   providedIn: "root"
@@ -18,7 +18,7 @@ export class ApiErrorHandlerService {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly notificationService = inject(NotificationService);
-  private readonly maskService = inject(MaskService);
+  private readonly maskService = inject(LoadingSpinnerMaskService);
 
   public handleError(apiErrorResponse: ApiErrorResponse) {
     this.maskService.hide();

@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../service/auth.service";
 import { Router } from "@angular/router";
-import { MaskService } from "../service/mask.service";
+import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.service";
 
 @Component({
   selector: "app-login",
@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private maskService: MaskService,
+    private maskService: LoadingSpinnerMaskService,
     private router: Router
   ) {
     this.form = this.formBuilder.group({

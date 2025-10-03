@@ -4,7 +4,7 @@ import { AuthService } from "../service/auth.service";
 import { Router } from "@angular/router";
 import { NotificationService } from "../service/notification.service";
 import { map, Observable, of, tap } from "rxjs";
-import { MaskService } from "../service/mask.service";
+import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.service";
 
 @Component({
   selector: "app-side-menu",
@@ -31,7 +31,7 @@ export class SideMenuComponent {
     private authService: AuthService,
     private workshopService: WorkshopService,
     private notificationService: NotificationService,
-    private maskService: MaskService
+    private maskService: LoadingSpinnerMaskService
   ) {
     if (this.authService.isAuthenticated()) {
       this.workshopService.canUseWorkshop().subscribe((response) => {

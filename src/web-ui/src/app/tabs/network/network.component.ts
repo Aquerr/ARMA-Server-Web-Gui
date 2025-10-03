@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ServerNetworkService } from "../../service/server-network.service";
-import { MaskService } from "../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
 import { NetworkFormService } from "./network-form.service";
 import { FormGroup } from "@angular/forms";
@@ -15,7 +15,7 @@ export class NetworkComponent implements OnInit {
   form: FormGroup;
 
   constructor(
-    private readonly maskService: MaskService,
+    private readonly maskService: LoadingSpinnerMaskService,
     private readonly notificationService: NotificationService,
     private readonly serverNetworkService: ServerNetworkService,
     private readonly formService: NetworkFormService

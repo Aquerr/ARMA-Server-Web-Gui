@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Subject, Subscription } from "rxjs";
-import { MaskService } from "src/app/service/mask.service";
+import { LoadingSpinnerMaskService } from "src/app/service/loading-spinner-mask.service";
 import { ServerModsService } from "src/app/service/server-mods.service";
 import { NotificationService } from "../../service/notification.service";
 import { Mod } from "../../model/mod.model";
@@ -9,6 +9,9 @@ import { ModUploadService } from "./service/mod-upload.service";
 import { Router } from "@angular/router";
 import { DialogService } from "../../service/dialog.service";
 import { ModListsComponent } from "./mod-lists/mod-lists.component";
+import { ModDownloadQueueDialogComponent } from "./mod-download-queue-dialog/mod-download-queue-dialog.component";
+import { PermissionService } from "../../service/permission.service";
+import { AswgAuthority } from "../../model/authority.model";
 
 @Component({
   selector: "app-mods",
@@ -30,11 +33,12 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   constructor(
     private modService: ServerModsService,
-    private maskService: MaskService,
+    private maskService: LoadingSpinnerMaskService,
     private notificationService: NotificationService,
     private modUploadService: ModUploadService,
     private router: Router,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private permissionService: PermissionService
   ) {
     this.reloadModsDataSubject = new Subject();
     this.reloadModsDataSubscription = this.reloadModsDataSubject.subscribe(() => {
@@ -85,10 +89,12 @@ export class ModsComponent implements OnInit, OnDestroy {
   save() {
     this.maskService.show();
     this.enabledMods = this.modListsComponent.enabledMods;
-    this.modService.saveEnabledMods({ mods: this.modListsComponent.enabledMods }).subscribe((response) => {
-      this.maskService.hide();
-      this.notificationService.successNotification("Active mods list saved!", "Success");
-    });
+    this.modService
+      .saveEnabledMods({ mods: this.modListsComponent.enabledMods })
+      .subscribe((response) => {
+        this.maskService.hide();
+        this.notificationService.successNotification("Active mods list saved!", "Success");
+      });
   }
 
   onModPresetSelected(presetName: string) {
@@ -101,5 +107,15 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   setFileDragged(isFileDragged: boolean) {
     this.isFileDragged = isFileDragged;
+  }
+
+  openDownloadQueueModal() {
+    if (!this.permissionService.hasAllAuthorities([AswgAuthority.WORKSHOP_VIEW], true)) {
+      return;
+    }
+
+    this.dialogService.open(ModDownloadQueueDialogComponent, (dialogResult) => {}, {}, {
+      width: "70rem"
+    });
   }
 }

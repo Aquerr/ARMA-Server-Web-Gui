@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionSecuritySettingsSave;
-import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionSecuritySettingsView;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionSteamSettingsUpdate;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamWebApiClientWrapper;
 
 @RestController
@@ -21,7 +20,7 @@ public class SteamSettingsController
     private final SteamWebApiClientWrapper webApiClientWrapper;
 
     @GetMapping
-    @HasPermissionSecuritySettingsView
+    @HasPermissionSteamSettingsUpdate
     public SteamSettings getSettings()
     {
         return new SteamSettings(
@@ -34,7 +33,7 @@ public class SteamSettingsController
     }
 
     @PostMapping
-    @HasPermissionSecuritySettingsSave
+    @HasPermissionSteamSettingsUpdate
     public void save(@RequestBody SteamSettings settings)
     {
         aswgConfig.setSteamCmdPath(settings.steamCmdPath());

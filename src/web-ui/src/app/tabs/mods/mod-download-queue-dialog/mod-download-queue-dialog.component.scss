@@ -1,0 +1,34 @@
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dialog-close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px;
+  line-height: 14px;
+  min-width: auto;
+}
+
+.list {
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.list-item {
+  border: #444c56 solid 2px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem;
+  font-weight: 500;
+
+  .list-item-header {
+    display: flex;
+    flex-direction: column;
+  }
+}

@@ -35,3 +35,9 @@ export interface WorkShopModInstallStatus {
   fileId: number;
   status: number;
 }
+
+export interface DownloadingMod {
+  fileId: number;
+  title: string;
+  installAttemptCount: number;
+}

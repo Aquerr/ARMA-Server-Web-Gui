@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from "@angular/core";
 import { CdlcService } from "../../service/cdlc.service";
 import { Cdlc } from "../../model/cdlc.model";
 import { NotificationService } from "src/app/service/notification.service";
-import { MaskService } from "../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { MatButton } from "@angular/material/button";
 import { MatTooltip } from "@angular/material/tooltip";
 
@@ -14,7 +14,7 @@ import { MatTooltip } from "@angular/material/tooltip";
 })
 export class CdlcComponent implements OnInit {
   private readonly cdlcService: CdlcService = inject(CdlcService);
-  private readonly maskService: MaskService = inject(MaskService);
+  private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService: NotificationService = inject(NotificationService);
 
   cdlcList: Cdlc[] = [];

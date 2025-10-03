@@ -8,7 +8,7 @@ import {
 import { Mod } from "../../../model/mod.model";
 import { SaveEnabledModsRequest, ServerModsService } from "../../../service/server-mods.service";
 import { NotificationService } from "../../../service/notification.service";
-import { MaskService } from "../../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { NotManagedModsComponent } from "../not-managed-mods/not-managed-mods.component";
 import { Subject, Subscription } from "rxjs";
 import { ModListComponent } from "../mod-list/mod-list.component";
@@ -20,7 +20,7 @@ import { ModListComponent } from "../mod-list/mod-list.component";
   styleUrl: "./mod-lists.component.scss"
 })
 export class ModListsComponent implements OnInit, OnDestroy {
-  private readonly maskService: MaskService = inject(MaskService);
+  private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly modService: ServerModsService = inject(ServerModsService);
 

@@ -4,7 +4,7 @@ import { NgxSpinnerService } from "ngx-spinner";
 @Injectable({
   providedIn: "root"
 })
-export class MaskService {
+export class LoadingSpinnerMaskService {
   constructor(private spinnerService: NgxSpinnerService) {}
 
   show(): void {

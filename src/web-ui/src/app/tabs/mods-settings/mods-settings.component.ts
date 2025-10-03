@@ -1,7 +1,7 @@
 import { Component, QueryList, ViewChildren } from "@angular/core";
 import { ModSettings } from "../../model/mod-settings.model";
 import { ModSettingsService } from "../../service/mod-settings.service";
-import { MaskService } from "../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
 import { DialogService } from "../../service/dialog.service";
 import { ModSettingsPanelComponent } from "./mod-settings-panel/mod-settings-panel.component";
@@ -22,7 +22,7 @@ export class ModsSettingsComponent {
 
   constructor(
     private readonly modSettingsService: ModSettingsService,
-    private readonly maskService: MaskService,
+    private readonly maskService: LoadingSpinnerMaskService,
     private readonly notificationService: NotificationService,
     private readonly dialogService: DialogService
   ) {

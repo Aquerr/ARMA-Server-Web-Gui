@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { MaskService } from "../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
 import { ServerLoggingService } from "../../service/server-logging.service";
 
@@ -14,7 +14,7 @@ export class LoggingComponent implements OnInit {
 
   constructor(
     private serverLoggingService: ServerLoggingService,
-    private maskService: MaskService,
+    private maskService: LoadingSpinnerMaskService,
     private notificationService: NotificationService
   ) {}
 

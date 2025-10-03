@@ -2,7 +2,7 @@ import { Component, EventEmitter, inject, Input, Output } from "@angular/core";
 import { Mod } from "../../../model/mod.model";
 import { MatButton } from "@angular/material/button";
 import { DialogService } from "../../../service/dialog.service";
-import { MaskService } from "../../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../../service/notification.service";
 import { ServerModsService } from "../../../service/server-mods.service";
 import { MatIcon } from "@angular/material/icon";
@@ -18,7 +18,7 @@ export class NotManagedModsComponent {
   @Output() notManagedModsChanged = new EventEmitter<void>();
 
   private readonly dialogService: DialogService = inject(DialogService);
-  private readonly maskService: MaskService = inject(MaskService);
+  private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly modService: ServerModsService = inject(ServerModsService);
 

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { WorkshopMod } from "../../../model/workshop.model";
 import { WorkshopService } from "../../../service/workshop.service";
 import { ServerModsService } from "../../../service/server-mods.service";
-import { MaskService } from "../../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
@@ -22,7 +22,7 @@ export class WorkshopItemComponent implements OnInit {
   constructor(
     private workshopService: WorkshopService,
     private serverModsService: ServerModsService,
-    private maskService: MaskService,
+    private maskService: LoadingSpinnerMaskService,
     private ngxSpinner: NgxSpinnerService
   ) {}
 

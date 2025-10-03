@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { AuthService } from "../service/auth.service";
 import { Router } from "@angular/router";
-import { MaskService } from "../service/mask.service";
+import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.service";
 import { Observable, of } from "rxjs";
 
 @Component({
@@ -23,7 +23,7 @@ export class DesktopHeaderComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private maskService: MaskService
+    private maskService: LoadingSpinnerMaskService
   ) {}
 
   logout() {

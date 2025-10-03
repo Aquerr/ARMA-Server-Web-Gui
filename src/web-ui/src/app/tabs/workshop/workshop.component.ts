@@ -3,7 +3,7 @@ import { WorkshopMod } from "../../model/workshop.model";
 import { WorkshopService } from "../../service/workshop.service";
 import { FormControl } from "@angular/forms";
 import { ModInstallWebsocketService } from "./mod-install-websocket/mod-install-websocket.service";
-import { MaskService } from "../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { PageEvent } from "@angular/material/paginator";
 
 @Component({
@@ -26,7 +26,7 @@ export class WorkshopComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly workshopService: WorkshopService,
-    private readonly maskService: MaskService,
+    private readonly maskService: LoadingSpinnerMaskService,
     private readonly modInstallWebsocketService: ModInstallWebsocketService
   ) {
     this.searchBoxControl = new FormControl<string>("");

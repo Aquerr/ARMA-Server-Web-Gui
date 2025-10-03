@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal, WritableSignal } from "@angular/core";
 import { AswgUser, UsersService } from "../../../service/users.service";
-import { MaskService } from "../../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../../service/notification.service";
 import { DialogService } from "../../../service/dialog.service";
 import { MatIcon } from "@angular/material/icon";
@@ -12,11 +12,10 @@ import { FormsModule } from "@angular/forms";
   selector: "app-settings-users",
   templateUrl: "./settings-users.component.html",
   styleUrl: "./settings-users.component.scss",
-  standalone: true,
   imports: [MatIcon, FormsModule, MatButtonModule, SettingsUserPanelComponent]
 })
 export class SettingsUsersComponent implements OnInit {
-  private readonly maskService: MaskService = inject(MaskService);
+  private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly dialogService: DialogService = inject(DialogService);
   private readonly usersService: UsersService = inject(UsersService);

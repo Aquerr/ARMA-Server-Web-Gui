@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import { JobSettingsService } from "../../../service/job-settings.service";
+import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 
 @Component({
   selector: "app-settings-jobs",
@@ -12,12 +13,15 @@ import { JobSettingsService } from "../../../service/job-settings.service";
 export class SettingsJobsComponent implements OnInit {
 
   private readonly jobsSettingsService: JobSettingsService = inject(JobSettingsService);
+  private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
 
   public jobsNames: string[] = [];
 
   ngOnInit(): void {
+    this.maskService.show();
     this.jobsSettingsService.getAllJobsNames().subscribe((response) => {
       this.jobsNames = response;
+      this.maskService.hide();
     });
   }
 }

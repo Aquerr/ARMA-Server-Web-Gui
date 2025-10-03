@@ -11,10 +11,10 @@ import { StatusComponent } from "./tabs/status/status.component";
 import { WorkshopComponent } from "./tabs/workshop/workshop.component";
 import { WorkshopService } from "./service/workshop.service";
 import { map } from "rxjs";
-import { SettingsComponent } from "./tabs/settings/settings.component";
 import { DifficultyComponent } from "./tabs/difficulty/difficulty.component";
 import { hasAllAuthorities, isAuthenticated } from "./service/permission.service";
 import { AswgAuthority } from "./model/authority.model";
+import { settingsRoutes } from "./tabs/settings/settings.routes";
 
 const routes: Routes = [
   { path: "status", component: StatusComponent, canActivate: [isAuthenticated] },
@@ -71,58 +71,6 @@ const routes: Routes = [
           .pipe(map((response) => response.active))
     ]
   },
-  {
-    path: "settings",
-    children: [
-      {
-        path: "",
-        component: SettingsComponent,
-        canActivate: [isAuthenticated]
-      },
-      {
-        path: "users",
-        loadComponent: () =>
-          import("./tabs/settings/settings-users/settings-users.component").then(
-            (c) => c.SettingsUsersComponent
-          ),
-        canActivate: [hasAllAuthorities([AswgAuthority.USERS_VIEW])]
-      },
-      {
-        path: "discord",
-        loadComponent: () =>
-          import("./tabs/settings/settings-discord/settings-discord.component").then(
-            (c) => c.SettingsDiscordComponent
-          ),
-        canActivate: [hasAllAuthorities([AswgAuthority.SECURITY_SETTINGS_VIEW])]
-      },
-      {
-        path: "steam",
-        loadComponent: () =>
-          import("./tabs/settings/settings-steam/settings-steam.component").then(
-            (c) => c.SettingsSteamComponent
-          ),
-        canActivate: [hasAllAuthorities([AswgAuthority.SECURITY_SETTINGS_VIEW])]
-      },
-      {
-        path: "jobs",
-        children: [
-          {
-            path: '',
-            loadComponent: () =>
-              import("./tabs/settings/settings-jobs/settings-jobs.component").then(
-                (c) => c.SettingsJobsComponent
-              ),
-            canActivate: [hasAllAuthorities([AswgAuthority.SECURITY_SETTINGS_VIEW])],
-          },
-          {
-            path: ':name',
-            loadComponent: () => import("./tabs/settings/settings-jobs/job-view/job-view.component").then(c => c.JobViewComponent),
-            canActivate: [hasAllAuthorities([AswgAuthority.SECURITY_SETTINGS_VIEW])],
-          }
-        ]
-      }
-    ]
-  },
   { path: "login", component: LoginComponent },
   { path: "", redirectTo: "/status", pathMatch: "full" },
   { path: "**", redirectTo: "status" }
@@ -130,6 +78,7 @@ const routes: Routes = [
 
 @NgModule({
   exports: [RouterModule],
+  imports: [RouterModule.forChild(settingsRoutes)],
   providers: [provideRouter(routes)]
 })
 export class AppRoutingModule {}

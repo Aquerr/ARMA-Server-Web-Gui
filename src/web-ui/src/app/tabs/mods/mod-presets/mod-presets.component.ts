@@ -5,7 +5,7 @@ import {
   ModPresetSaveRequest,
   ServerModsService
 } from "../../../service/server-mods.service";
-import { MaskService } from "../../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../../service/notification.service";
 import { MatDialog } from "@angular/material/dialog";
 import { ModPresetAddDialogComponent } from "./mod-preset-add-dialog/mod-preset-add-dialog.component";
@@ -30,7 +30,7 @@ export class ModPresetsComponent {
 
   constructor(
     private modsService: ServerModsService,
-    private maskService: MaskService,
+    private maskService: LoadingSpinnerMaskService,
     private notificationService: NotificationService,
     private matDialog: MatDialog,
     private modPresetParserService: ModPresetParserService

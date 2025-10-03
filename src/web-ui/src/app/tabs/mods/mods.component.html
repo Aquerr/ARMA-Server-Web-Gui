@@ -22,6 +22,7 @@
           <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mod..." />
         </mat-form-field>
         <div class="mods-top-buttons">
+          <button mat-button (click)="openDownloadQueueModal()">Download queue</button>
           <button mat-button (click)="openModSettings()">Mod settings</button>
           <app-mod-presets
             [mods]="enabledMods"

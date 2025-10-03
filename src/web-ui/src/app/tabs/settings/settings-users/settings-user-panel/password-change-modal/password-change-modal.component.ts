@@ -9,7 +9,7 @@ import {
 } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { AswgUser, UsersService } from "../../../../../service/users.service";
-import { MaskService } from "../../../../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../../../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../../../../service/notification.service";
 
 export const passwordsMatchValidator: ValidatorFn = (
@@ -33,7 +33,7 @@ export class PasswordChangeModalComponent {
     MatDialogRef<PasswordChangeModalComponent>
   );
   private readonly usersService: UsersService = inject(UsersService);
-  private readonly maskService: MaskService = inject(MaskService);
+  private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService: NotificationService = inject(NotificationService);
 
   form: FormGroup;

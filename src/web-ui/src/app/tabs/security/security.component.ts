@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { AllowedFilePatching, ServerSecurityService } from "../../service/server-security.service";
-import { MaskService } from "../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
 import { SecurityFormService } from "./security-form.service";
 import { FormGroup } from "@angular/forms";
@@ -19,7 +19,7 @@ export class SecurityComponent implements OnInit {
 
   constructor(
     private readonly serverSecurityService: ServerSecurityService,
-    private readonly maskService: MaskService,
+    private readonly maskService: LoadingSpinnerMaskService,
     private readonly notificationService: NotificationService,
     public formService: SecurityFormService
   ) {

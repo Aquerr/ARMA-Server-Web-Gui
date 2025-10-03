@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { DifficultyProfile } from "../../../model/difficulty-profile.model";
-import { MaskService } from "../../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { ServerDifficultyService } from "../../../service/server-difficulty.service";
 import { NotificationService } from "../../../service/notification.service";
 import { MatDialog } from "@angular/material/dialog";
@@ -21,7 +21,7 @@ export class DifficultyPanelComponent {
   editingTitle: boolean = false;
 
   constructor(
-    private maskService: MaskService,
+    private maskService: LoadingSpinnerMaskService,
     private difficultyService: ServerDifficultyService,
     private notificationService: NotificationService,
     private matDialog: MatDialog

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { MissionUploadButtonComponent } from "./upload-mission/mission-upload-button.component";
 import { Subject, Subscription } from "rxjs";
 import { ServerMissionsService } from "../../service/server-missions.service";
-import { MaskService } from "../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { MatDialog } from "@angular/material/dialog";
 import { MissionDeleteConfirmDialogComponent } from "./mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
 import { NotificationService } from "../../service/notification.service";
@@ -36,7 +36,7 @@ export class MissionsComponent implements OnInit, OnDestroy {
 
   constructor(
     private missionsService: ServerMissionsService,
-    private maskService: MaskService,
+    private maskService: LoadingSpinnerMaskService,
     private notificationService: NotificationService,
     private matDialog: MatDialog,
     private missionUploadService: MissionUploadService,

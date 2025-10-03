@@ -5,7 +5,7 @@ import { MatHint, MatLabel, MatOption, MatSelect } from "@angular/material/selec
 import { MatFormField } from "@angular/material/form-field";
 import { JobSettingsService, UpdateJobSettingsRequest } from "../../../../service/job-settings.service";
 import { MatButton } from "@angular/material/button";
-import { MaskService } from "../../../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../../../service/notification.service";
 import { ActivatedRoute } from "@angular/router";
 import { MatInput } from "@angular/material/input";
@@ -37,7 +37,7 @@ export class JobViewComponent implements OnInit {
   public readonly formService: JobSettingsFormService = inject(JobSettingsFormService);
 
   private readonly jobSettingsService: JobSettingsService = inject(JobSettingsService);
-  private readonly maskService: MaskService = inject(MaskService);
+  private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 

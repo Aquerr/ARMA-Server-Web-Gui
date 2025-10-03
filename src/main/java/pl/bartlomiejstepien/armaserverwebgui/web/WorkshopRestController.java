@@ -2,7 +2,6 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +15,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.ArmaWorkshopQuer
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.WorkshopQueryRequest;
+import pl.bartlomiejstepien.armaserverwebgui.web.response.ModDownloadQueueResponse;
 
 import java.util.List;
 
@@ -48,6 +48,13 @@ public class WorkshopRestController
     }
 
     @HasPermissionWorkshopInstall
+    @GetMapping("/download-queue")
+    public ModDownloadQueueResponse getDownloadQueue()
+    {
+        return toModDownloadQueueResponse(this.steamService.getInstallingMods());
+    }
+
+    @HasPermissionWorkshopInstall
     @PostMapping("/install")
     public WorkShopModInstallResponse installMod(@RequestBody WorkShopModInstallRequest request)
     {
@@ -55,13 +62,13 @@ public class WorkshopRestController
         return new WorkShopModInstallResponse(request.getFileId());
     }
 
-    private InstalledItemsResponse toInstalledItemsResponse(List<WorkshopMod> installedWorkshopMods,
+    private static InstalledItemsResponse toInstalledItemsResponse(List<WorkshopMod> installedWorkshopMods,
                                                             List<WorkshopModInstallationRequest> installationRequests)
     {
         return new InstalledItemsResponse(installedWorkshopMods, toResponse(installationRequests));
     }
 
-    private List<WorkShopModInstallRequest> toResponse(List<WorkshopModInstallationRequest> requests)
+    private static List<WorkShopModInstallRequest> toResponse(List<WorkshopModInstallationRequest> requests)
     {
         return requests.stream().map(request ->
         {
@@ -72,12 +79,24 @@ public class WorkshopRestController
         }).toList();
     }
 
-    private WorkshopQueryParams toWorkshopQueryParams(WorkshopQueryRequest request)
+    private static WorkshopQueryParams toWorkshopQueryParams(WorkshopQueryRequest request)
     {
         return WorkshopQueryParams.builder()
                 .cursor(request.getCursor())
                 .searchText(request.getSearchText())
                 .build();
+    }
+
+    private static ModDownloadQueueResponse toModDownloadQueueResponse(List<WorkshopModInstallationRequest> installingMods)
+    {
+        return new ModDownloadQueueResponse(installingMods.stream()
+                .map(installRequest ->
+                        new ModDownloadQueueResponse.DownloadingMod(
+                                installRequest.getFileId(),
+                                installRequest.getTitle(),
+                                installRequest.getInstallAttemptCount()))
+                .toList()
+        );
     }
 
     @Data
@@ -87,22 +106,15 @@ public class WorkshopRestController
         private String modName;
     }
 
-    @Value
-    public static class WorkShopModInstallResponse
+    public record WorkShopModInstallResponse(long fileId)
     {
-        long fileId;
     }
 
-    @Value
-    public static class InstalledItemsResponse
+    public record InstalledItemsResponse(List<WorkshopMod> mods, List<WorkShopModInstallRequest> modsUnderInstallation)
     {
-        List<WorkshopMod> mods;
-        List<WorkShopModInstallRequest> modsUnderInstallation;
     }
 
-    @Value
-    public static class WorkshopActiveResponse
+    public record WorkshopActiveResponse(boolean active)
     {
-        boolean active;
     }
 }

@@ -9,7 +9,7 @@
             <mat-icon [fontIcon]="'information'"></mat-icon>
           </div>
           <span>
-            Last job execution date: {{ formService.getLastExecutionDateControl(form)?.value | date: 'short' }}
+            Last job execution date: {{ formService.getLastExecutionDateControl(form).value | date: 'short' }}
           </span>
         </div>
       </div>
@@ -24,7 +24,7 @@
       <mat-form-field>
         <mat-label>Cron</mat-label>
         <input name="cron" formControlName="cron" matInput type="text" />
-        <mat-hint>Next execution date: {{ formService.getNextExecutionDateControl(form)?.value | date: 'yyyy-MM-dd HH:mm:ss' }}</mat-hint>
+        <mat-hint>Next execution date: {{ formService.getNextExecutionDateControl(form).value | date: 'yyyy-MM-dd HH:mm:ss' }}</mat-hint>
       </mat-form-field>
 
       @if (formService.getParametersControl(form).value.length > 0) {

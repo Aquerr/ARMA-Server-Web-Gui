@@ -3,7 +3,7 @@ import { ModSettings } from "../../../model/mod-settings.model";
 import { ModSettingsService } from "../../../service/mod-settings.service";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { EditModsSettingsFormService } from "./edit-mods-settings-form.service";
-import { MaskService } from "../../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { CodeJarContainer, NgxCodeJarComponent } from "ngx-codejar";
 import hljs from "highlight.js";
 import { NotificationService } from "../../../service/notification.service";
@@ -51,7 +51,7 @@ export class ModSettingsPanelComponent implements OnInit {
   constructor(
     private readonly modSettingsService: ModSettingsService,
     public readonly formService: EditModsSettingsFormService,
-    private readonly maskService: MaskService,
+    private readonly maskService: LoadingSpinnerMaskService,
     private readonly notificationService: NotificationService
   ) {}
 

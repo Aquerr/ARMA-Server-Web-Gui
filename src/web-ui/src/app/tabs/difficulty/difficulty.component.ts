@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { MaskService } from "../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
 import { ServerDifficultyService } from "../../service/server-difficulty.service";
 import { DifficultyOptions, DifficultyProfile } from "../../model/difficulty-profile.model";
@@ -14,7 +14,7 @@ export class DifficultyComponent implements OnInit {
   difficultyProfiles: DifficultyProfile[] = [];
 
   constructor(
-    private maskService: MaskService,
+    private maskService: LoadingSpinnerMaskService,
     private difficultyService: ServerDifficultyService,
     private notificationService: NotificationService
   ) {}

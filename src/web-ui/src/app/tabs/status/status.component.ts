@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { MaskService } from "../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { ServerStatusService } from "../../service/server-status.service";
 import { ServerStatus, Status } from "./model/status.model";
 import { NotificationService } from "../../service/notification.service";
@@ -22,7 +22,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   performUpdate: boolean = false;
 
   constructor(
-    private maskService: MaskService,
+    private maskService: LoadingSpinnerMaskService,
     private notificationService: NotificationService,
     private serverStatusService: ServerStatusService,
     private dialogService: DialogService

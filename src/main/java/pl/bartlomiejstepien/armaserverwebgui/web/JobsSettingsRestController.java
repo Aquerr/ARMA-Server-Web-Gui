@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionSecuritySettingsView;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionJobsSettingsUpdate;
 import pl.bartlomiejstepien.armaserverwebgui.domain.job.JobService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.job.model.JobSettings;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.JobSettingsUpdate;
@@ -34,7 +34,7 @@ public class JobsSettingsRestController
     }
 
     @GetMapping("/{name}")
-    @HasPermissionSecuritySettingsView
+    @HasPermissionJobsSettingsUpdate
     public JobSettingsResponse getJobSettings(@PathVariable("name") String name)
     {
         return mapToResponse(jobService.getJobSettings(name),
@@ -43,7 +43,7 @@ public class JobsSettingsRestController
     }
 
     @PutMapping("/{name}")
-    @HasPermissionSecuritySettingsView
+    @HasPermissionJobsSettingsUpdate
     public JobSettingsResponse updateJobSettings(@PathVariable("name") String name,
                                                  @RequestBody JobSettingsUpdate request)
     {

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { MaskService } from "../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { SaveGeneralProperties, ServerGeneralService } from "../../service/server-general.service";
 import { NotificationService } from "../../service/notification.service";
 import { MotdListComponent } from "./motd-list/motd-list.component";
@@ -35,7 +35,7 @@ export class GeneralComponent implements OnInit {
 
   constructor(
     private readonly permissionsService: PermissionService,
-    private readonly maskService: MaskService,
+    private readonly maskService: LoadingSpinnerMaskService,
     private readonly serverGeneralService: ServerGeneralService,
     private readonly notificationService: NotificationService,
     private readonly unsafeService: UnsafeService,

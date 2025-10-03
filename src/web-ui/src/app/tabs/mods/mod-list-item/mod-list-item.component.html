@@ -30,7 +30,11 @@
     </mat-expansion-panel-header>
     <div class="mod-list-item-inner-panel">
       <a class="image-wrapper" [href]="mod.workshopUrl" target="_blank">
-        <img [ngSrc]="mod.previewUrl" [width]="200" [height]="200" alt="No Image" />
+        @if (mod.previewUrl) {
+          <img [ngSrc]="mod.previewUrl" [width]="200" [height]="200" alt="No Image" style="object-fit: fill" />
+        } @else {
+          <img [src]="mod.previewUrl" [width]="200" [height]="200" alt="No Image"/>
+        }
       </a>
       <div class="mod-list-item-inner-panel-details">
         <div class="mod-list-item-inner-panel-details-directory">

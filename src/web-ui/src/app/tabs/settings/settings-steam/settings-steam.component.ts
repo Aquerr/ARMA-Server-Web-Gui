@@ -3,7 +3,7 @@ import { MatButton } from "@angular/material/button";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
-import { MaskService } from "../../../service/mask.service";
+import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../../service/notification.service";
 import { SteamSettingsFormService } from "./steam-settings-form.service";
 import { SteamSettingsService } from "../../../service/steam-settings.service";
@@ -27,7 +27,7 @@ export class SettingsSteamComponent implements OnInit {
 
   private readonly formService: SteamSettingsFormService = inject(SteamSettingsFormService);
   private readonly steamSettingsService: SteamSettingsService = inject(SteamSettingsService);
-  private readonly maskService: MaskService = inject(MaskService);
+  private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService: NotificationService = inject(NotificationService);
 
   ngOnInit(): void {
