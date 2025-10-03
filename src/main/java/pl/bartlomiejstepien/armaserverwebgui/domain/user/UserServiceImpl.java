@@ -271,6 +271,7 @@ public class UserServiceImpl implements UserService
                 .username(entity.getUsername())
                 .createdDate(entity.getCreatedDateTime())
                 .locked(entity.isLocked())
+                .lastLoginDate(entity.getLastSuccessLoginDateTime())
                 .build();
     }
 }

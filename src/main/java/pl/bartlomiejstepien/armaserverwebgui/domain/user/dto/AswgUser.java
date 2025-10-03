@@ -16,4 +16,5 @@ public class AswgUser
     private Set<AswgAuthority> authorities;
     private OffsetDateTime createdDate;
     private boolean locked;
+    private OffsetDateTime lastLoginDate;
 }

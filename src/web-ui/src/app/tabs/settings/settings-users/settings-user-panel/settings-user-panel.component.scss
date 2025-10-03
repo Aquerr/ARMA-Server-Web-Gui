@@ -3,3 +3,21 @@
   flex-direction: column;
   align-items: flex-start;
 }
+
+.information {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid rgba(144, 238, 144, 0.57);
+  margin-bottom: 1rem;
+}
+
+.information-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  filter: brightness(90%);
+}
+
+.information-icon {
+  --mat-icon-color: lightgreen;
+}

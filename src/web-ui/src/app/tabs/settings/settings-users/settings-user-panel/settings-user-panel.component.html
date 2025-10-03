@@ -35,6 +35,17 @@
               <mat-option [value]="false">False</mat-option>
             </mat-select>
           </mat-form-field>
+
+          <div class="information">
+            <div class="information-content">
+              <div class="information-icon">
+                <mat-icon [fontIcon]="'information'"></mat-icon>
+              </div>
+              <span>
+                Last login: {{ user.lastLoginDate | date: 'yyyy-MM-dd HH:mm:ss' }}
+             </span>
+            </div>
+          </div>
         </form>
       </div>
       <div class="panel-bottom-buttons">

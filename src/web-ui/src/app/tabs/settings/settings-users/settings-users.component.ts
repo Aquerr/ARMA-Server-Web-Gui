@@ -55,7 +55,8 @@ export class SettingsUsersComponent implements OnInit {
       username: "",
       password: "",
       locked: false,
-      authorities: []
+      authorities: [],
+      lastLoginDate: ""
     } as AswgUser;
     this.users.update((value) => [...value, aswgUser]);
   }

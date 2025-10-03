@@ -11,12 +11,13 @@ import {
   MatExpansionPanelHeader,
   MatExpansionPanelTitle
 } from "@angular/material/expansion";
-import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
 import { MatIcon } from "@angular/material/icon";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { AswgChipFormInputComponent } from "../../../../common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
 import { MatInput } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
+import { DatePipe } from "@angular/common";
 
 @Component({
   selector: "app-settings-user-panel",
@@ -36,7 +37,9 @@ import { MatButtonModule } from "@angular/material/button";
     AswgChipFormInputComponent,
     MatFormField,
     MatInput,
-    MatButtonModule
+    MatButtonModule,
+    DatePipe,
+    MatHint
   ]
 })
 export class SettingsUserPanelComponent implements OnInit {

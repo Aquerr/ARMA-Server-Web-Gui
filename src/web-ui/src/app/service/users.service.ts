@@ -41,4 +41,5 @@ export interface AswgUser {
   password: string;
   authorities: AswgAuthority[];
   locked: boolean;
+  lastLoginDate: string;
 }
