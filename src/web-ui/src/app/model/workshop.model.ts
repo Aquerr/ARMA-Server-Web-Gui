@@ -40,4 +40,5 @@ export interface DownloadingMod {
   fileId: number;
   title: string;
   installAttemptCount: number;
+  issuer: string;
 }

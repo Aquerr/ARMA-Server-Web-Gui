@@ -9,6 +9,13 @@ public class WorkshopBatchModDownloadTask implements SteamTask
 {
     Map<Long, String> fileIdsWithTitles;
     boolean forced;
+    String issuer;
+
+    @Override
+    public String getIssuer()
+    {
+        return issuer;
+    }
 
     @Override
     public Type getType()

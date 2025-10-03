@@ -80,12 +80,12 @@ public class SteamServiceImpl implements SteamService
     }
 
     @Override
-    public UUID scheduleArmaUpdate()
+    public UUID scheduleArmaUpdate(String issuer)
     {
         if (!isSteamCmdInstalled())
             throw new SteamCmdNotInstalled();
 
-        return this.steamCmdHandler.queueSteamTask(new GameUpdateSteamTask());
+        return this.steamCmdHandler.queueSteamTask(new GameUpdateSteamTask(issuer));
     }
 
     @Nullable
@@ -96,21 +96,21 @@ public class SteamServiceImpl implements SteamService
     }
 
     @Override
-    public UUID scheduleWorkshopModDownload(long fileId, String title, boolean forced)
+    public UUID scheduleWorkshopModDownload(long fileId, String title, boolean forced, String issuer)
     {
         if (!isSteamCmdInstalled())
             throw new SteamCmdNotInstalled();
 
-        return this.steamCmdHandler.queueSteamTask(new WorkshopModInstallSteamTask(fileId, title, forced));
+        return this.steamCmdHandler.queueSteamTask(new WorkshopModInstallSteamTask(fileId, title, forced, issuer));
     }
 
     @Override
-    public UUID scheduleWorkshopModDownload(Map<Long, String> fileIdsWithTitles, boolean forced)
+    public UUID scheduleWorkshopModDownload(Map<Long, String> fileIdsWithTitles, boolean forced, String issuer)
     {
         if (!isSteamCmdInstalled())
             throw new SteamCmdNotInstalled();
 
-        return this.steamCmdHandler.queueSteamTask(new WorkshopBatchModDownloadTask(fileIdsWithTitles, forced));
+        return this.steamCmdHandler.queueSteamTask(new WorkshopBatchModDownloadTask(fileIdsWithTitles, forced, issuer));
     }
 
     @Override
@@ -131,14 +131,13 @@ public class SteamServiceImpl implements SteamService
         List<WorkshopModInstallationRequest> requests = new ArrayList<>();
         requests.addAll(this.steamCmdHandler.getSteamTasks(SteamTask.Type.WORKSHOP_DOWNLOAD).stream()
                 .map(WorkshopModInstallSteamTask.class::cast)
-                .map(task -> new WorkshopModInstallationRequest(task.getFileId(), task.getTitle()))
+                .map(task -> new WorkshopModInstallationRequest(task.getFileId(), task.getTitle(), task.getIssuer()))
                 .toList());
 
         requests.addAll(this.steamCmdHandler.getSteamTasks(SteamTask.Type.WORKSHOP_BATCH_DOWNLOAD).stream()
                 .map(WorkshopBatchModDownloadTask.class::cast)
-                .map(task -> task.getFileIdsWithTitles().entrySet())
-                .flatMap(Collection::stream)
-                .map(entry -> new WorkshopModInstallationRequest(entry.getKey(), entry.getValue()))
+                .flatMap(task -> task.getFileIdsWithTitles().entrySet().stream()
+                        .map(entry -> new WorkshopModInstallationRequest(entry.getKey(), entry.getValue(), task.getIssuer())))
                 .toList());
 
         return requests;

@@ -18,13 +18,13 @@ public interface SteamService
 
     List<ArmaServerPlayer> getServerPlayers();
 
-    UUID scheduleArmaUpdate();
+    UUID scheduleArmaUpdate(String issuer);
 
     WorkshopMod getWorkshopMod(long modId);
 
-    UUID scheduleWorkshopModDownload(long fileId, String title, boolean forced);
+    UUID scheduleWorkshopModDownload(long fileId, String title, boolean forced, String issuer);
 
-    UUID scheduleWorkshopModDownload(Map<Long, String> fileIdsWithTitles, boolean forced);
+    UUID scheduleWorkshopModDownload(Map<Long, String> fileIdsWithTitles, boolean forced, String issuer);
 
     boolean canUseWorkshop();
 

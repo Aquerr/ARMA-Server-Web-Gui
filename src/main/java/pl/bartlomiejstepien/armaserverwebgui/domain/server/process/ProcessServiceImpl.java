@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.AuthenticationFacade;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordIntegration;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
@@ -16,6 +18,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.Ser
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -45,6 +48,7 @@ public class ProcessServiceImpl implements ProcessService
     private static final Logger SERVER_LOGGER = LoggerFactory.getLogger("arma-server");
     private static final String PID_FILE_NAME = "arma_server.pid";
 
+    private final AuthenticationFacade authenticationFacade;
     private final SteamService steamService;
     private final ArmaServerParametersGenerator serverParametersGenerator;
     private final DiscordIntegration discordIntegration;
@@ -220,7 +224,7 @@ public class ProcessServiceImpl implements ProcessService
             if (steamService.isSteamCmdInstalled())
             {
                 log.info("Scheduling Arma update");
-                UUID taskId = steamService.scheduleArmaUpdate();
+                UUID taskId = steamService.scheduleArmaUpdate(authenticationFacade.getCurrentUser().map(AswgUser::getUsername).orElse(null));
 
                 // Wait for update
                 while (true)

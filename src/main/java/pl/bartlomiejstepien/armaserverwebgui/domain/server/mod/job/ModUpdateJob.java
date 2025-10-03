@@ -45,7 +45,7 @@ public class ModUpdateJob extends AswgJob
 
     private void scheduleModUpdate(Map<Long, String> modIdWithName)
     {
-        steamService.scheduleWorkshopModDownload(modIdWithName, false);
+        steamService.scheduleWorkshopModDownload(modIdWithName, false, "MOD_UPDATE_JOB");
     }
 
     @Override

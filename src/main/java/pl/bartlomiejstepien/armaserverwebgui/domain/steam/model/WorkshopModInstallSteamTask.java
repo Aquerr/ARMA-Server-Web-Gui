@@ -8,6 +8,7 @@ public class WorkshopModInstallSteamTask implements SteamTask
     long fileId;
     String title;
     boolean forced;
+    String issuer;
 
     @Override
     public Type getType()

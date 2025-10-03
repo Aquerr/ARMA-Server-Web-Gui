@@ -4,6 +4,8 @@ public interface SteamTask
 {
     Type getType();
 
+    String getIssuer();
+
     enum Type
     {
         WORKSHOP_DOWNLOAD,

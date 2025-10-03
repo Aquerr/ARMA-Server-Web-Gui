@@ -2,8 +2,10 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.AuthenticationFacade;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModPresetConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModPreset;
@@ -12,6 +14,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.PresetN
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSaveParams;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetEntryRepository;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetRepository;
 
@@ -26,6 +29,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ModPresetServiceImpl implements ModPresetService
 {
+    private final AuthenticationFacade authenticationFacade;
     private final ModService modService;
     private final SteamService steamService;
     private final ModPresetConverter modPresetConverter;
@@ -152,7 +156,11 @@ public class ModPresetServiceImpl implements ModPresetService
         Map<Long, String> modsToDownload = entryEntities.stream()
                 .collect(Collectors.toMap(ModPresetEntity.EntryEntity::getModId, ModPresetEntity.EntryEntity::getName));
 
-        steamService.scheduleWorkshopModDownload(modsToDownload, false);
+        steamService.scheduleWorkshopModDownload(
+                modsToDownload,
+                false,
+                "IMPORT_PRESET by " + authenticationFacade.getCurrentUser().map(AswgUser::getUsername).orElse(null)
+        );
     }
 
     @Override

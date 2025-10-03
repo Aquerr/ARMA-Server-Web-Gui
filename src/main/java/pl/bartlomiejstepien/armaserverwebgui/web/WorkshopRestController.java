@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -94,7 +95,8 @@ public class WorkshopRestController
                         new ModDownloadQueueResponse.DownloadingMod(
                                 installRequest.getFileId(),
                                 installRequest.getTitle(),
-                                installRequest.getInstallAttemptCount()))
+                                installRequest.getInstallAttemptCount(),
+                                installRequest.getIssuer()))
                 .toList()
         );
     }

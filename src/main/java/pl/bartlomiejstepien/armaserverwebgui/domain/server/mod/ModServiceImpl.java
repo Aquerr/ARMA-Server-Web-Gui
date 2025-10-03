@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.AuthenticationFacade;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
@@ -21,6 +22,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirect
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModFileStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 
 import java.io.IOException;
@@ -38,6 +40,7 @@ import static java.lang.String.format;
 @Slf4j
 public class ModServiceImpl implements ModService
 {
+    private final AuthenticationFacade authenticationFacade;
     private final ModFileStorage modFileStorage;
     private final InstalledModRepository installedModRepository;
     private final InstalledModConverter installedModConverter;
@@ -73,7 +76,7 @@ public class ModServiceImpl implements ModService
     @Override
     public void installModFromWorkshop(long fileId, String modName)
     {
-        steamService.scheduleWorkshopModDownload(fileId, modName, true);
+        steamService.scheduleWorkshopModDownload(fileId, modName, true, authenticationFacade.getCurrentUser().map(AswgUser::getUsername).orElse(null));
     }
 
     @Override

@@ -5,6 +5,14 @@ import lombok.Value;
 @Value
 public class GameUpdateSteamTask implements SteamTask
 {
+    String issuer;
+
+    @Override
+    public String getIssuer()
+    {
+        return this.issuer;
+    }
+
     @Override
     public Type getType()
     {

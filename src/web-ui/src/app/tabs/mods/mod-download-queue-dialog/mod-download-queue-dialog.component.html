@@ -8,17 +8,20 @@
 </div>
 <mat-dialog-content>
   <div class="list">
-    @for (mod of modDownloadQueue; track mod.fileId) {
+    @for (downloadingMod of modDownloadQueue; track downloadingMod.fileId) {
       <div class="list-item">
         <div class="list-item-header">
           <span>
-            Id: {{ mod.fileId }}
+            Id: {{ downloadingMod.fileId }}
           </span>
           <span>
-            Name: {{ mod.title }}
+            Name: {{ downloadingMod.title }}
+          </span>
+          <span>
+            Download issuer: {{ downloadingMod.issuer }}
           </span>
           <span style="filter: brightness(75%)">
-            Download attempt: {{ mod.installAttemptCount }}
+            Download attempt: {{ downloadingMod.installAttemptCount }}
           </span>
         </div>
       </div>
