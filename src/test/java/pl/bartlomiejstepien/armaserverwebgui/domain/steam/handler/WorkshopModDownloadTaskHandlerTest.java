@@ -45,6 +45,7 @@ class WorkshopModDownloadTaskHandlerTest
     private static final long MOD_ID = 123L;
     private static final String MOD_TITLE = "Test_Mod_Title";
     private static final String MOD_DIRECTORY_NAME = "Test_Mod_Directory";
+    private static final String ISSUER = "issuer_user";
     private static final String STEAMCMD_WORKSHOP_MOD_PATH = "target" + File.separator + "Steamcmd_path" + File.separator + "workshop" + File.separator + MOD_ID;
     private static final String STEAMCMD_PATH = "target" + File.separator + "Steamcmd_path";
     private static final String STEAMCMD_USERNAME = "steamcmd_username";
@@ -83,7 +84,7 @@ class WorkshopModDownloadTaskHandlerTest
         given(steamCmdModInstallHelper.shouldUpdateMod(any(ModDirectory.class), eq(workshopMod), eq(installedModEntity), eq(false))).willReturn(false);
 
         // when
-        workshopModDownloadTaskHandler.handle(new WorkshopModInstallSteamTask(MOD_ID, MOD_TITLE, false));
+        workshopModDownloadTaskHandler.handle(new WorkshopModInstallSteamTask(MOD_ID, MOD_TITLE, false, ISSUER));
 
         // then
         verify(steamCmdModInstallHelper, times(0)).installDownloadedMod(any());
@@ -105,7 +106,7 @@ class WorkshopModDownloadTaskHandlerTest
 
         // when
         // then
-        assertThrows(SteamCmdPathNotSetException.class, () -> workshopModDownloadTaskHandler.handle(new WorkshopModInstallSteamTask(MOD_ID, MOD_TITLE, false)));
+        assertThrows(SteamCmdPathNotSetException.class, () -> workshopModDownloadTaskHandler.handle(new WorkshopModInstallSteamTask(MOD_ID, MOD_TITLE, false, ISSUER)));
     }
 
     @Test
@@ -126,7 +127,7 @@ class WorkshopModDownloadTaskHandlerTest
 
         // when
         // then
-        assertThrows(CouldNotDownloadWorkshopModException.class, () -> workshopModDownloadTaskHandler.handle(new WorkshopModInstallSteamTask(MOD_ID, MOD_TITLE, false)));
+        assertThrows(CouldNotDownloadWorkshopModException.class, () -> workshopModDownloadTaskHandler.handle(new WorkshopModInstallSteamTask(MOD_ID, MOD_TITLE, false, ISSUER)));
     }
 
     @Test
@@ -148,7 +149,7 @@ class WorkshopModDownloadTaskHandlerTest
         Files.createDirectories(steamcmdWorkshopModPath);
 
         // when
-        workshopModDownloadTaskHandler.handle(new WorkshopModInstallSteamTask(MOD_ID, MOD_TITLE, false));
+        workshopModDownloadTaskHandler.handle(new WorkshopModInstallSteamTask(MOD_ID, MOD_TITLE, false, ISSUER));
 
         // then
         verify(externalProcessHandler).handle(eq(new File("target")), processParametersArgumentCaptor.capture());

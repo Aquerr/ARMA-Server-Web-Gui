@@ -17,6 +17,7 @@ class SteamTaskRetryPolicyTest
 {
     private static final int FILE_ID = 1;
     private static final String FILE_TITLE = "FILE_TITLE";
+    private static final String ISSUER = "issuer_user";
 
     @InjectMocks
     private SteamTaskRetryPolicy retryPolicy;
@@ -31,7 +32,7 @@ class SteamTaskRetryPolicyTest
     )
     void shouldReturnIfCanRetry(int currentAttemptCount, boolean expected)
     {
-        QueuedSteamTask queuedSteamTask = new QueuedSteamTask(UUID.randomUUID(), new WorkshopModInstallSteamTask(FILE_ID, FILE_TITLE, false), currentAttemptCount);
+        QueuedSteamTask queuedSteamTask = new QueuedSteamTask(UUID.randomUUID(), new WorkshopModInstallSteamTask(FILE_ID, FILE_TITLE, false, ISSUER), currentAttemptCount);
 
         boolean canRetry = retryPolicy.canRetry(queuedSteamTask);
 
