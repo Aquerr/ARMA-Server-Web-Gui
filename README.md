@@ -76,9 +76,13 @@ Sample docker compose can be found [here](https://github.com/Aquerr/ARMA-Server-
 Many thanks to:
 - **[mateo9x](https://github.com/mateo9x)** (for help with dark theme and some front-end things)
 
-Also thanks to JetBrains for their IDE
+## Used by
 
-<img width="200" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.png" alt="JetBrains logo.">
+Units/Communities using ASWG:
+
+<img width="200" src="https://tispmc.pl/assets/tis_logo.png" alt="TIS Unit Logo">
+
+If you want to add your unit/group here, you are more than welcome to do it through a [PR](https://github.com/Aquerr/ARMA-Server-Web-Gui/pulls) or let me know via [Discord](https://discord.gg/Zg3rWta).
 
 ## License
 
