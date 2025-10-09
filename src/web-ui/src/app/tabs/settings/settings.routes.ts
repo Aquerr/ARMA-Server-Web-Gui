@@ -10,7 +10,7 @@ export const settingsRoutes: Routes = [
       {
         path: "",
         component: SettingsComponent,
-        canActivate: [isAuthenticated]
+        canActivate: [isAuthenticated()]
       },
       {
         path: "users",

@@ -38,8 +38,7 @@ import { DatePipe } from "@angular/common";
     MatFormField,
     MatInput,
     MatButtonModule,
-    DatePipe,
-    MatHint
+    DatePipe
   ]
 })
 export class SettingsUserPanelComponent implements OnInit {

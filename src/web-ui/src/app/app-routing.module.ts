@@ -17,7 +17,7 @@ import { AswgAuthority } from "./model/authority.model";
 import { settingsRoutes } from "./tabs/settings/settings.routes";
 
 const routes: Routes = [
-  { path: "status", component: StatusComponent, canActivate: [isAuthenticated] },
+  { path: "status", component: StatusComponent, canActivate: [isAuthenticated()] },
   {
     path: "general",
     component: GeneralComponent,
@@ -59,7 +59,7 @@ const routes: Routes = [
       import("./tabs/mods-settings/mods-settings.component").then((c) => c.ModsSettingsComponent),
     canActivate: [hasAllAuthorities([AswgAuthority.MOD_SETTINGS_VIEW])]
   },
-  { path: "logging", component: LoggingComponent, canActivate: [isAuthenticated] },
+  { path: "logging", component: LoggingComponent, canActivate: [isAuthenticated()] },
   {
     path: "workshop",
     component: WorkshopComponent,
