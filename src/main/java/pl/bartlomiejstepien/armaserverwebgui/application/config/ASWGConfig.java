@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -25,8 +26,6 @@ import java.util.Properties;
 @RequiredArgsConstructor
 public class ASWGConfig
 {
-    private static final Path ASWG_CONFIGURATION_FILE_PATH = Paths.get("aswg-config.properties");
-
     private static final String SERVER_DIRECTORY_PATH_PROPERTY = "aswg.server-directory-path";
     private static final String MODS_DIRECTORY_PATH_PROPERTY = "aswg.mods-directory-path";
 
@@ -70,6 +69,9 @@ public class ASWGConfig
     // Unsafe
     private static final String UNSAFE_OVERWRITE_SERVER_STARTUP_PARAMS_ENABLED_PROPERTY = "aswg.server.unsafe.startup-params.overwrite.web-edit.enabled";
     private static final String UNSAFE_OVERWRITE_SERVER_STARTUP_PARAMS_VALUE = "aswg.server.unsafe.startup-params.overwrite.value";
+
+    @Autowired
+    private ConfigPathProvider configPathProvider;
 
     @Value("${aswg.default-user.username:}")
     private String username;
@@ -124,7 +126,7 @@ public class ASWGConfig
 
     public void saveToFile()
     {
-        try (FileWriter fileWriter = new FileWriter(ASWG_CONFIGURATION_FILE_PATH.toFile(), StandardCharsets.UTF_8);
+        try (FileWriter fileWriter = new FileWriter(configPathProvider.getConfigPath().toFile(), StandardCharsets.UTF_8);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter))
         {
             Properties configurationProperties = prepareProperties();
@@ -138,9 +140,9 @@ public class ASWGConfig
 
     private void createConfigFileIfNotExists() throws IOException
     {
-        if (Files.notExists(ASWG_CONFIGURATION_FILE_PATH))
+        if (Files.notExists(configPathProvider.getConfigPath()))
         {
-            Files.createFile(ASWG_CONFIGURATION_FILE_PATH);
+            Files.createFile(configPathProvider.getConfigPath());
             saveToFile();
         }
     }

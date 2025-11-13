@@ -3,26 +3,25 @@ package pl.bartlomiejstepien.armaserverwebgui;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import pl.bartlomiejstepien.armaserverwebgui.application.config.ConfigPathProvider;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 @Slf4j
 @Configuration(proxyBeanMethods = false)
 public class DefaultConfigGenerator
 {
-    @Value("${aswg.config.dir:.}")
-    private String configDirPath;
+    @Autowired
+    private ConfigPathProvider configPathProvider;
 
     @Autowired
     private ConfigurableEnvironment environment;
@@ -30,7 +29,7 @@ public class DefaultConfigGenerator
     @PostConstruct
     public void postConstruct() throws IOException
     {
-        Path configFilePath = Paths.get(this.configDirPath).resolve("aswg-config.properties");
+        Path configFilePath = configPathProvider.getConfigPath();
         if (Files.exists(configFilePath))
             return;
 
