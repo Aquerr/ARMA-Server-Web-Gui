@@ -10,6 +10,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -51,15 +52,19 @@ public class MissionConverter
     {
         try
         {
+            Set<Mission.Parameter> parameters = new HashSet<>();
+            if (entity.getParametersJson() != null)
+            {
+                parameters = objectMapper.readValue(entity.getParametersJson(), new TypeReference<Set<Mission.Parameter>>() {});
+            }
+
             return Mission.builder()
                     .id(entity.getId())
                     .name(entity.getName())
                     .template(entity.getTemplate())
                     .enabled(entity.isEnabled())
                     .difficulty(Mission.Difficulty.findOrDefault(entity.getDifficulty()))
-                    .parameters(objectMapper.readValue(entity.getParametersJson(), new TypeReference<>()
-                    {
-                    }))
+                    .parameters(parameters)
                     .build();
         }
         catch (JsonProcessingException e)
