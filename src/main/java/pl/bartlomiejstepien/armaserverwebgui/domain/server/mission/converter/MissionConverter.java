@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
@@ -28,14 +29,20 @@ public class MissionConverter
         entity.setTemplate(mission.getTemplate());
         entity.setEnabled(mission.isEnabled());
         entity.setDifficulty(mission.getDifficulty().name());
-
-        try
+        if (!mission.getParameters().isEmpty())
         {
-            entity.setParametersJson(objectMapper.writeValueAsString(mission.getParameters()));
-        }
-        catch (JsonProcessingException e)
-        {
-            throw new RuntimeException(e);
+            try
+            {
+                // Skip nullable keys
+                Set<Mission.Parameter> correctedParameters = mission.getParameters().stream()
+                        .filter(parameter -> StringUtils.hasText(parameter.getName()))
+                        .collect(Collectors.toSet());
+                entity.setParametersJson(objectMapper.writeValueAsString(correctedParameters));
+            }
+            catch (JsonProcessingException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
         return entity;
     }
