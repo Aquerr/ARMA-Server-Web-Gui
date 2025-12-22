@@ -10,6 +10,7 @@ aswg-config.properties
 *.gz
 
 # Compile / Build
+/fake
 /target
 /logs
 *.tmp
