@@ -31,14 +31,9 @@
             </mat-select>
           </mat-form-field>
           <mat-label>Content</mat-label>
-          <ngx-codejar
-            highlighter="hljs"
-            [highlightMethod]="highlightMethod"
-            [code]="getContent()"
-            (codeChange)="onCodeChange($event)"
-            [showLineNumbers]="true"
-            class="code"
-          ></ngx-codejar>
+          <div class="code-wrapper">
+            <div #code class="code hljs" (input)="onCodeChange($event)"></div>
+          </div>
         </form>
       </div>
       <div class="button-container">

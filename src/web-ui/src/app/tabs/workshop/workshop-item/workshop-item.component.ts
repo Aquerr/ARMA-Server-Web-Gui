@@ -3,13 +3,13 @@ import { WorkshopMod } from "../../../model/workshop.model";
 import { WorkshopService } from "../../../service/workshop.service";
 import { ServerModsService } from "../../../service/server-mods.service";
 import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
-import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: "app-workshop-item",
   templateUrl: "./workshop-item.component.html",
   styleUrls: ["./workshop-item.component.scss"],
-  standalone: false
+  standalone: false,
+  providers: []
 })
 export class WorkshopItemComponent implements OnInit {
   @Input() workshopMod!: WorkshopMod;
@@ -22,8 +22,7 @@ export class WorkshopItemComponent implements OnInit {
   constructor(
     private workshopService: WorkshopService,
     private serverModsService: ServerModsService,
-    private maskService: LoadingSpinnerMaskService,
-    private ngxSpinner: NgxSpinnerService
+    private maskService: LoadingSpinnerMaskService
   ) {}
 
   ngOnInit(): void {
@@ -77,9 +76,9 @@ export class WorkshopItemComponent implements OnInit {
   showSpinner(value: boolean) {
     setTimeout(() => {
       if (value) {
-        this.ngxSpinner.show(this.workshopMod.title);
+        this.maskService.show();
       } else {
-        this.ngxSpinner.hide(this.workshopMod.title);
+        this.maskService.hide();
       }
       this.spinnerVisible = value;
     }, 2000);

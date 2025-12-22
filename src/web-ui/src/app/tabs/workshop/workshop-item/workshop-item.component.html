@@ -30,15 +30,8 @@
         class="spinner"
         style="position: relative; max-width: 30px; max-height: 30px; margin-top: 10px"
         >
-        <ngx-spinner
-          [name]="workshopMod.title"
-          [fullScreen]="false"
-          [size]="'default'"
-          [color]="spinnerColor"
-          [type]="'ball-clip-rotate-multiple'"
-          [bdColor]="'transparent'"
-          >
-        </ngx-spinner>
+        <!-- TODO: Pass mod title to spinner to make it unique -->
+        <app-aswg-spinner [fullScreen]="false"></app-aswg-spinner>
         <span style="margin-left: 40px">Installing...</span>
       </div>
     }

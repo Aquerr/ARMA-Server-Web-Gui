@@ -12,11 +12,9 @@ import { LoggingComponent } from "./tabs/logging/logging.component";
 import { SideMenuComponent } from "./side-menu/side-menu.component";
 import { LoginComponent } from "./login/login.component";
 import { RouterModule } from "@angular/router";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatListModule } from "@angular/material/list";
 import { MatRippleModule } from "@angular/material/core";
 import { AswgSpinnerComponent } from "./aswg-spinner/aswg-spinner.component";
-import { NgxSpinnerModule } from "ngx-spinner";
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { AswgHttpInterceptor } from "./interceptors/aswg-http.interceptor";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -65,7 +63,6 @@ import { DifficultyPanelComponent } from "./tabs/difficulty/difficulty-panel/dif
 import { DifficultyDeleteConfirmDialogComponent } from "./tabs/difficulty/difficulty-delete-confirm-dialog/difficulty-delete-confirm-dialog.component";
 import { NewMissionDialogComponent } from "./tabs/missions/new-mission-dialog/new-mission-dialog.component";
 import { FileUploadSnackBarComponent } from "./common-ui/file-upload-snack-bar/file-upload-snack-bar.component";
-import { NgxCodeJarComponent } from "ngx-codejar";
 import { CommonConfirmDialogComponent } from "./common-ui/common-confirm-dialog/common-confirm-dialog.component";
 import { AswgChipInputComponent } from "./common-ui/aswg-chip-input/aswg-chip-input.component";
 import { MatPaginator } from "@angular/material/paginator";
@@ -78,6 +75,7 @@ import { DragAndDropFileDirective } from "./common-ui/directive/drag-and-drop-fi
 import { NotManagedModsComponent } from "./tabs/mods/not-managed-mods/not-managed-mods.component";
 import { ModListsComponent } from "./tabs/mods/mod-lists/mod-lists.component";
 import { FilesizePipe } from "./util/filesize.pipe";
+import { LoadingSpinnerMaskService } from "./service/loading-spinner-mask.service";
 
 @NgModule({
   declarations: [
@@ -128,7 +126,6 @@ import { FilesizePipe } from "./util/filesize.pipe";
     BrowserModule,
     AppRoutingModule,
     RouterModule,
-    BrowserAnimationsModule,
     MatListModule,
     MatRippleModule,
     MatFormFieldModule,
@@ -138,7 +135,6 @@ import { FilesizePipe } from "./util/filesize.pipe";
     MatTableModule,
     MatCheckboxModule,
     MatDialogModule,
-    NgxSpinnerModule,
     ReactiveFormsModule,
     FormsModule,
     DragDropModule,
@@ -152,7 +148,6 @@ import { FilesizePipe } from "./util/filesize.pipe";
     MatMenuModule,
     MatChipsModule,
     MatCardModule,
-    NgxCodeJarComponent,
     MatPaginator,
     MatAutocomplete,
     MatAutocompleteTrigger,
@@ -167,7 +162,8 @@ import { FilesizePipe } from "./util/filesize.pipe";
   exports: [],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true },
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    LoadingSpinnerMaskService
   ]
 })
 export class AppModule {}

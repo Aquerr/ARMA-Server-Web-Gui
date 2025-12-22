@@ -6,7 +6,10 @@ import { ApplicationService } from "./service/application.service";
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
-  standalone: false
+  standalone: false,
+  host: {
+    "(window:resize)": "isMobileView()"
+  }
 })
 export class AppComponent implements OnInit {
   title = "arma-web-gui";
@@ -34,7 +37,6 @@ export class AppComponent implements OnInit {
     return this.themeService.isDarkMode();
   }
 
-  @HostListener("window:resize", ["$event"])
   isMobileView() {
     this.isMobile = window.innerWidth < 800;
   }

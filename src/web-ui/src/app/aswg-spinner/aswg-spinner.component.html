@@ -1,7 +1,8 @@
-<ngx-spinner
-  name="primary"
-  [fullScreen]="true"
-  type="ball-clip-rotate-multiple"
-  size="large"
-  color="#fff"
-></ngx-spinner>
+@if (isVisible()) {
+  <div class="overlay" [class]="fullScreen() ? 'fullscreen-spinner' : 'inline-spinner'" animate.enter="spinner-enter" animate.leave="spinner-leave">
+    <div class="la-3x la-ball-clip-rotate-multiple">
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+}

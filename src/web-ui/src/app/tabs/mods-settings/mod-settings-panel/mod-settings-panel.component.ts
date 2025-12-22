@@ -1,10 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from "@angular/core";
 import { ModSettings } from "../../../model/mod-settings.model";
 import { ModSettingsService } from "../../../service/mod-settings.service";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { EditModsSettingsFormService } from "./edit-mods-settings-form.service";
 import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
-import { CodeJarContainer, NgxCodeJarComponent } from "ngx-codejar";
 import hljs from "highlight.js";
 import { NotificationService } from "../../../service/notification.service";
 import {
@@ -18,6 +26,8 @@ import { MatOption, MatSelect } from "@angular/material/select";
 import { NgClass } from "@angular/common";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatInput } from "@angular/material/input";
+import { CodeJar } from "codejar";
+import { withLineNumbers } from "codejar-linenumbers";
 
 @Component({
   selector: "app-mod-settings-panel",
@@ -34,19 +44,21 @@ import { MatInput } from "@angular/material/input";
     MatSelect,
     MatOption,
     MatLabel,
-    NgxCodeJarComponent,
     NgClass,
     MatIconButton,
     MatInput,
     MatButton
   ]
 })
-export class ModSettingsPanelComponent implements OnInit {
+export class ModSettingsPanelComponent implements OnInit, AfterViewInit {
   @Input({ required: true }) modSettings!: ModSettings;
   @Output("deleted") modSettingsDeleted = new EventEmitter<number>();
   @Output("activated") modSettingsActivated = new EventEmitter<ModSettings>();
 
+  @ViewChild("code") codeElement!: ElementRef<HTMLDivElement>;
   public form!: FormGroup;
+
+  private jar!: any;
 
   constructor(
     private readonly modSettingsService: ModSettingsService,
@@ -54,6 +66,10 @@ export class ModSettingsPanelComponent implements OnInit {
     private readonly maskService: LoadingSpinnerMaskService,
     private readonly notificationService: NotificationService
   ) {}
+
+  ngAfterViewInit(): void {
+    this.prepareCodeJar();
+  }
 
   ngOnInit() {
     this.form = this.formService.getForm();
@@ -123,7 +139,7 @@ export class ModSettingsPanelComponent implements OnInit {
     this.modSettingsActivated.emit(this.formService.asModSettings(this.form));
   }
 
-  highlightMethod(editor: CodeJarContainer) {
+  highlightMethod(editor: HTMLElement) {
     if (editor.textContent !== null && editor.textContent !== undefined) {
       editor.innerHTML = hljs.highlight(editor.textContent, {
         language: "sql"
@@ -131,7 +147,13 @@ export class ModSettingsPanelComponent implements OnInit {
     }
   }
 
-  onCodeChange(code: string) {
-    this.formService.setContentControl(this.form, code);
+  onCodeChange(code: Event) {
+    this.formService.setContentControl(this.form, this.jar.toString());
+  }
+
+  private prepareCodeJar() {
+    this.jar = CodeJar(this.codeElement.nativeElement, withLineNumbers(this.highlightMethod), {
+      tab: "\t"
+    });
   }
 }
