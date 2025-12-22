@@ -4,18 +4,13 @@ import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.util.MultiValueMap;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.model.LoggingProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.LoggingService;
-
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,50 +33,27 @@ class LoggingRestControllerTest extends BaseIntegrationTest
         given(loggingService.getLoggingProperties()).willReturn(prepareLoggingProperties());
 
         // when
-        // then
-        var response = testRestTemplate.exchange(
-                LOGGING_PROPERTIES_URL,
-                HttpMethod.GET,
-                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                String.class
-        );
+        var response = getAuthenticatedRequest(LOGGING_PROPERTIES_URL);
 
+        // then
         JSONAssert.assertEquals(loadJsonIntegrationContractFor("logging/get-logging-properties.json"), response.getBody(), JSONCompareMode.LENIENT);
     }
 
     @Test
     void getLoggingPropertiesShouldTriggerForbiddenErrorWhenUserNotAuthorized()
     {
-        var response = testRestTemplate.exchange(
-                LOGGING_PROPERTIES_URL,
-                HttpMethod.GET,
-                new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                String.class
-        );
+        var response = restTestClient.get()
+                .uri(LOGGING_PROPERTIES_URL)
+                .exchange()
+                .returnResult(String.class);
 
-        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        assertThat(response.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     @Test
     void saveLoggingPropertiesShouldSavePropertiesUsingService()
     {
-        var response = testRestTemplate.exchange(
-                LOGGING_PROPERTIES_URL,
-                HttpMethod.POST,
-                new HttpEntity<>(loadJsonIntegrationContractFor("logging/save-logging-properties.json"), MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                String.class
-        );
+        var response = postAuthenticatedRequest(LOGGING_PROPERTIES_URL, loadJsonIntegrationContractFor("logging/save-logging-properties.json"));
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
         verify(loggingService).saveLoggingProperties(LoggingProperties.builder()
@@ -92,17 +64,15 @@ class LoggingRestControllerTest extends BaseIntegrationTest
     @Test
     void saveLoggingPropertiesShouldTriggerForbiddenErrorWhenUserNotAuthorized()
     {
-        var response = testRestTemplate.exchange(
-                LOGGING_PROPERTIES_URL,
-                HttpMethod.POST,
-                new HttpEntity<>(loadJsonIntegrationContractFor("logging/save-logging-properties.json"), MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                String.class
-        );
+        var response = restTestClient.post()
+                .uri(LOGGING_PROPERTIES_URL)
+                .body(loadJsonIntegrationContractFor("logging/save-logging-properties.json"))
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .returnResult(String.class);
 
-        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        assertThat(response.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     private LoggingProperties prepareLoggingProperties()

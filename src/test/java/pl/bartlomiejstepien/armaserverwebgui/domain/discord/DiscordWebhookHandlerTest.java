@@ -1,7 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.discord;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +7,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestClient;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordMessage;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
@@ -32,14 +32,14 @@ class DiscordWebhookHandlerTest
     }
 
     @Test
-    void shouldThrowRuntimeExceptionWhenCannotConvertMessageToJson() throws JsonProcessingException
+    void shouldThrowRuntimeExceptionWhenCannotConvertMessageToJson() throws JacksonException
     {
         // given
         DiscordMessage discordMessage = DiscordMessage.ofSingleEmbed(DiscordMessage.Embed.builder()
             .title("test")
             .build());
 
-        given(objectMapper.writeValueAsString(discordMessage)).willThrow(JsonProcessingException.class);
+        given(objectMapper.writeValueAsString(discordMessage)).willThrow(JacksonException.class);
 
         // when
         Throwable throwable = catchException(() -> discordWebhookHandler.sendMessage(discordMessage));

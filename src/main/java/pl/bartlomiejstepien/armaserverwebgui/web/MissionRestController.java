@@ -74,7 +74,7 @@ public class MissionRestController
         this.missionService.updateMission(id, mission);
     }
 
-    @Value(staticConstructor = "of")
+    @Value
     public static class GetMissionsResponse
     {
         List<Mission> disabledMissions;

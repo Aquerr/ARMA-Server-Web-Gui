@@ -23,7 +23,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.PresetImportP
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSaveParams;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -38,7 +37,7 @@ public class ModsPresetsRestController
     @GetMapping
     public ModPresetNamesResponse getModPresetsNames()
     {
-        return ModPresetNamesResponse.of(this.modPresetService.getModPresetsNames().stream()
+        return new ModPresetNamesResponse(this.modPresetService.getModPresetsNames().stream()
                 .sorted(String.CASE_INSENSITIVE_ORDER)
                 .toList());
     }
@@ -81,7 +80,7 @@ public class ModsPresetsRestController
         this.modPresetService.selectPreset(request.getName());
     }
 
-    @Value(staticConstructor = "of")
+    @Value
     public static class ModPresetNamesResponse
     {
         List<String> presets;

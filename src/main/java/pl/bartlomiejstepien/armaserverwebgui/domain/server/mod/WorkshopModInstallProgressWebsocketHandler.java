@@ -1,7 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +10,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationStatus;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -63,7 +63,7 @@ public class WorkshopModInstallProgressWebsocketHandler extends TextWebSocketHan
             String message = objectMapper.writeValueAsString(status);
             return new TextMessage(message);
         }
-        catch (JsonProcessingException e)
+        catch (JacksonException e)
         {
             throw new RuntimeException(e);
         }

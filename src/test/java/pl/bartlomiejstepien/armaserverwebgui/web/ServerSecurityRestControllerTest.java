@@ -4,17 +4,10 @@ import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.util.MultiValueMap;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
-
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
@@ -33,16 +26,7 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
     {
         given(serverConfigStorage.getServerConfig()).willReturn(prepareArmaServerConfig());
 
-        var response = testRestTemplate.exchange(
-                SECURITY_PROPERTIES_URL,
-                HttpMethod.GET,
-                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                String.class
-        );
+        var response = getAuthenticatedRequest(SECURITY_PROPERTIES_URL);
 
         JSONAssert.assertEquals(loadJsonIntegrationContractFor("security/get-security-properties-response.json"), response.getBody(), JSONCompareMode.LENIENT);
     }
@@ -52,16 +36,7 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
     {
         given(serverConfigStorage.getServerConfig()).willReturn(new ArmaServerConfig());
 
-        var response = testRestTemplate.exchange(
-                SECURITY_PROPERTIES_URL,
-                HttpMethod.POST,
-                new HttpEntity<>(loadJsonIntegrationContractFor("security/save-security-properties-request.json"), MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                String.class
-        );
+        var response = postAuthenticatedRequest(SECURITY_PROPERTIES_URL, loadJsonIntegrationContractFor("security/save-security-properties-request.json"));
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
 

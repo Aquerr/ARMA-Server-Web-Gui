@@ -1,7 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.web.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.ServerSecurityProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.security.model.VoteCommand;
 
@@ -9,6 +11,8 @@ import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SaveServerSecurityRequest
 {
     private String serverPassword;

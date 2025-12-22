@@ -3,7 +3,6 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -33,34 +32,36 @@ class MissionRestControllerTest extends BaseIntegrationTest
     @Test
     void updateShouldReturnErrorWhenMissionDoesNotExist()
     {
-        var response = testRestTemplate.exchange(
-                "/api/v1/missions/id/1",
-                HttpMethod.PUT,
-                new HttpEntity<>(loadJsonIntegrationContractFor("mission/update-mission.json"), MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                String.class
-        );
+        var response = restTestClient.put().uri("/api/v1/missions/id/1")
+                        .body(loadJsonIntegrationContractFor("mission/update-mission.json"))
+                        .headers(headers -> headers.putAll(
+                                MultiValueMap.fromSingleValue(Map.of(
+                                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                                ))
+                        ))
+                        .exchange()
+                        .returnResult(String.class);
 
-        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(response.getStatus().value()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
     void shouldDeleteMissionReturnErrorWhenMissionNotFound() {
-        var response = testRestTemplate.exchange(
-                "/api/v1/missions/template",
-                HttpMethod.DELETE,
-                new HttpEntity<>("{\"template\": \"test\"}", MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                String.class
-        );
+        var response = restTestClient.method(HttpMethod.DELETE).uri("/api/v1/missions/template")
+                        .body("{\"template\": \"test\"}")
+                                .headers(headers -> headers.putAll(
+                                        MultiValueMap.fromSingleValue(Map.of(
+                                                HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                                                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                                                HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                                        ))
+                                ))
+                .exchange()
+                .returnResult(String.class);
 
-        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(response.getStatus().value()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
@@ -70,28 +71,21 @@ class MissionRestControllerTest extends BaseIntegrationTest
 
         String jwt = createJwtForTestUser();
 
-        var response1 = testRestTemplate.exchange(
-                "/api/v1/missions/template",
-                HttpMethod.DELETE,
-                new HttpEntity<>("{\"template\": \"" + missionTemplate + "\"}", MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + jwt,
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                String.class
-        );
-        assertTrue(response1.getStatusCode().is2xxSuccessful());
+        var response1 = restTestClient.method(HttpMethod.DELETE).uri("/api/v1/missions/template")
+                        .body("{\"template\": \"" + missionTemplate + "\"}")
+                                .headers(headers -> headers.putAll(
+                                        MultiValueMap.fromSingleValue(Map.of(
+                                                HttpHeaders.AUTHORIZATION, "Bearer " + jwt,
+                                                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                                                HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                                        ))
+                                ))
+                .exchange()
+                .returnResult(String.class);
 
-        var response2 = testRestTemplate.exchange(
-                "/api/v1/missions",
-                HttpMethod.GET,
-                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + jwt,
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                MissionRestController.GetMissionsResponse.class
-        );
+        assertTrue(response1.getStatus().is2xxSuccessful());
+
+        var response2 = getAuthenticatedRequest("/api/v1/missions", MissionRestController.GetMissionsResponse.class);
 
         assertTrue(response2.getStatusCode().is2xxSuccessful());
         assertThat(response2.getBody().getEnabledMissions()).isEmpty();
@@ -105,28 +99,22 @@ class MissionRestControllerTest extends BaseIntegrationTest
 
         String jwt = createJwtForTestUser();
 
-        var response1 = testRestTemplate.exchange(
-                "/api/v1/missions/template",
-                HttpMethod.DELETE,
-                new HttpEntity<>("{\"template\": \"" + missionTemplate + "\"}", MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + jwt,
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                String.class
-        );
-        assertTrue(response1.getStatusCode().is2xxSuccessful());
+        var response1 = restTestClient.method(HttpMethod.DELETE)
+                .uri("/api/v1/missions/template")
+                .body("{\"template\": \"" + missionTemplate + "\"}")
+                        .headers(headers -> headers.putAll(
+                                MultiValueMap.fromSingleValue(Map.of(
+                                        HttpHeaders.AUTHORIZATION, "Bearer " + jwt,
+                                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                                ))
+                        ))
+                .exchange()
+                .returnResult(String.class);
 
-        var response2 = testRestTemplate.exchange(
-                "/api/v1/missions",
-                HttpMethod.GET,
-                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + jwt,
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                MissionRestController.GetMissionsResponse.class
-        );
+        assertTrue(response1.getStatus().is2xxSuccessful());
+
+        var response2 = getAuthenticatedRequest("/api/v1/missions", MissionRestController.GetMissionsResponse.class);
 
         assertTrue(response2.getStatusCode().is2xxSuccessful());
         assertThat(response2.getBody().getEnabledMissions()).isEmpty();

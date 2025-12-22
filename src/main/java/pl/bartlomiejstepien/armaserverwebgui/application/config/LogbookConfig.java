@@ -1,10 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ContainerNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +27,11 @@ import org.zalando.logbook.core.ResponseFilters;
 import org.zalando.logbook.json.JsonBodyFilters;
 import org.zalando.logbook.servlet.LogbookFilter;
 import pl.bartlomiejstepien.armaserverwebgui.application.tracing.HttpTracingFields;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ContainerNode;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -97,14 +97,14 @@ public class LogbookConfig
                 if (foundJsonNode == null || foundJsonNode.isEmpty())
                     return body;
 
-                if (foundJsonNode.isContainerNode())
+                if (foundJsonNode.isContainer())
                 {
                     ((ContainerNode<?>) foundJsonNode).removeAll();
                 }
 
                 return objectMapper.writeValueAsString(objectNode);
             }
-            catch (JsonProcessingException e)
+            catch (JacksonException e)
             {
                 return body;
             }

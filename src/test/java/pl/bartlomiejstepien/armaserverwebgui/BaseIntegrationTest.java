@@ -2,15 +2,14 @@ package pl.bartlomiejstepien.armaserverwebgui;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.util.MultiValueMap;
+import org.springframework.test.web.servlet.client.RestTestClient;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtService;
 import pl.bartlomiejstepien.armaserverwebgui.config.AswgTestConfiguration;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthority;
@@ -22,10 +21,10 @@ import pl.bartlomiejstepien.armaserverwebgui.repository.UserRepository;
 
 import java.time.OffsetDateTime;
 import java.util.EnumSet;
-import java.util.Map;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = AswgTestConfiguration.class)
+@AutoConfigureRestTestClient
 public abstract class BaseIntegrationTest
 {
     protected static final String TEST_USER_NAME = "test_user";
@@ -43,7 +42,7 @@ public abstract class BaseIntegrationTest
     @Autowired
     protected JwtService jwtService;
     @Autowired
-    protected TestRestTemplate testRestTemplate;
+    protected RestTestClient restTestClient;
     @Autowired
     protected UserService userService;
     @Autowired
@@ -73,26 +72,33 @@ public abstract class BaseIntegrationTest
 
     protected <T> ResponseEntity<T> getAuthenticatedRequest(String url, Class<T> responseType)
     {
-        return testRestTemplate.exchange(url,
-                HttpMethod.GET,
-                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser()
-                ))),
-                responseType);
+        return ResponseEntity.ofNullable(restTestClient.get()
+                .uri(url)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
+                .exchange()
+                .returnResult(responseType)
+                .getResponseBody());
+    }
+
+    protected ResponseEntity<String> postAuthenticatedRequest(String url, Object body, String contentType) {
+        return postAuthenticatedRequest(url, body, contentType, String.class);
     }
 
     protected ResponseEntity<String> postAuthenticatedRequest(String url, Object body)
     {
-        return postAuthenticatedRequest(url, body, String.class);
+        return postAuthenticatedRequest(url, body, MediaType.APPLICATION_JSON_VALUE);
     }
 
-    protected <T> ResponseEntity<T> postAuthenticatedRequest(String url, Object body, Class<T> responseType)
+    protected <T> ResponseEntity<T> postAuthenticatedRequest(String url, Object body, String contentType, Class<T> responseType)
     {
-        return testRestTemplate.exchange(url,
-                HttpMethod.POST,
-                new HttpEntity<>(body, MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser()
-                ))),
-                responseType);
+        var result = restTestClient.post()
+                .uri(url)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser())
+                .header(HttpHeaders.CONTENT_TYPE, contentType)
+                .body(body)
+                .exchange()
+                .returnResult(responseType);
+        return ResponseEntity.status(result.getStatus())
+                .body(result.getResponseBody());
     }
 }

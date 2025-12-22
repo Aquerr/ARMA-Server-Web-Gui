@@ -1,7 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Data
@@ -30,6 +32,8 @@ public class NetworkProperties
 
     @Data
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class KickTimeouts
     {
         private int manualKickTimeoutSeconds;

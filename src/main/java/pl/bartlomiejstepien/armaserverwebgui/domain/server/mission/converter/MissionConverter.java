@@ -1,14 +1,14 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.converter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -40,7 +40,7 @@ public class MissionConverter
                         .collect(Collectors.toSet());
                 entity.setParametersJson(objectMapper.writeValueAsString(correctedParameters));
             }
-            catch (JsonProcessingException e)
+            catch (JacksonException e)
             {
                 throw new RuntimeException(e);
             }
@@ -55,7 +55,9 @@ public class MissionConverter
             Set<Mission.Parameter> parameters = new HashSet<>();
             if (entity.getParametersJson() != null)
             {
-                parameters = objectMapper.readValue(entity.getParametersJson(), new TypeReference<Set<Mission.Parameter>>() {});
+                parameters = objectMapper.readValue(entity.getParametersJson(), new TypeReference<>()
+                {
+                });
             }
 
             return Mission.builder()
@@ -67,7 +69,7 @@ public class MissionConverter
                     .parameters(parameters)
                     .build();
         }
-        catch (JsonProcessingException e)
+        catch (JacksonException e)
         {
             throw new RuntimeException(e);
         }

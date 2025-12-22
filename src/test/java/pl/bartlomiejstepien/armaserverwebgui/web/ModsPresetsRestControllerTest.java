@@ -1,13 +1,12 @@
 package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.util.LinkedMultiValueMap;
@@ -22,12 +21,12 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSa
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetEntryRepository;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
+@ExtendWith(MockitoExtension.class)
 class ModsPresetsRestControllerTest extends BaseIntegrationTest
 {
     @Autowired
@@ -50,13 +49,7 @@ class ModsPresetsRestControllerTest extends BaseIntegrationTest
         }
 
         // when
-        var response = testRestTemplate.exchange(
-                "/api/v1/mods-presets",
-                HttpMethod.GET,
-                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser()
-                ))), ModsPresetsRestController.ModPresetNamesResponse.class);
+        var response = getAuthenticatedRequest("/api/v1/mods-presets", ModsPresetsRestController.ModPresetNamesResponse.class);
 
         // then
         assertThat(response.getBody().getPresets()).containsExactly(
@@ -79,13 +72,7 @@ class ModsPresetsRestControllerTest extends BaseIntegrationTest
         parts.add("file", new ClassPathResource("@testmod2.zip"));
 
         // when
-        var response1 = testRestTemplate.exchange(
-                "/api/v1/mods-files",
-                HttpMethod.POST,
-                new HttpEntity<>(parts, MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE,
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser()
-                ))), Object.class);
+        var response1 = postAuthenticatedRequest("/api/v1/mods-files", parts, MediaType.MULTIPART_FORM_DATA_VALUE, Object.class);
 
         modPresetService.saveModPreset(ModPresetSaveParams.of("test-preset", List.of(
                 "Test Mod"
@@ -93,13 +80,10 @@ class ModsPresetsRestControllerTest extends BaseIntegrationTest
 
         assertTrue(response1.getStatusCode().is2xxSuccessful());
 
-        var response2 = testRestTemplate.exchange(
-                "/api/v1/mods-presets/select",
-                HttpMethod.POST,
-                new HttpEntity<>(TestUtils.loadJsonIntegrationContractFor("mods/select-mod-preset-request.json"), MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser()
-                ))), Object.class);
+        var response2 = postAuthenticatedRequest("/api/v1/mods-presets/select",
+                TestUtils.loadJsonIntegrationContractFor("mods/select-mod-preset-request.json"),
+                MediaType.APPLICATION_JSON_VALUE,
+                Object.class);
 
         // then
         assertTrue(response2.getStatusCode().is2xxSuccessful());

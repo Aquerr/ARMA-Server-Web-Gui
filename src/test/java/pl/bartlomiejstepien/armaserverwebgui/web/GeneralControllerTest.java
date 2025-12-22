@@ -5,21 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.util.MultiValueMap;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.model.GeneralProperties;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.general.GeneralService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.GeneralPropertiesResponse;
-
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -47,14 +41,7 @@ class GeneralControllerTest extends BaseIntegrationTest
                 .maxPlayers(MAX_PLAYERS)
                 .build());
 
-        var response = testRestTemplate.exchange(
-                API_GENERAL_PROPERTIES_URL,
-                HttpMethod.GET,
-                new HttpEntity<>(null, MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser()
-                ))),
-                String.class
-        );
+        var response = getAuthenticatedRequest(API_GENERAL_PROPERTIES_URL, String.class);
 
         JSONAssert.assertEquals(
                 loadJsonIntegrationContractFor("general/get-general-properties-response.json"),
@@ -65,14 +52,8 @@ class GeneralControllerTest extends BaseIntegrationTest
     @Test
     void getGeneralPropertiesShouldTriggerForbiddenErrorWhenUserNotAuthorized()
     {
-        var response = testRestTemplate.exchange(
-                API_GENERAL_PROPERTIES_URL,
-                HttpMethod.GET,
-                new HttpEntity<>(null),
-                Object.class
-        );
-
-        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        var response = restTestClient.get().uri(API_GENERAL_PROPERTIES_URL).exchange().returnResult();
+        assertThat(response.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 
     @Test
@@ -81,13 +62,10 @@ class GeneralControllerTest extends BaseIntegrationTest
         String initialServerDirectory = aswgConfig.getServerDirectoryPath();
         String initialModsDirectory = aswgConfig.getModsDirectoryPath();
 
-        var response = testRestTemplate.exchange(
+        var response = postAuthenticatedRequest(
                 API_GENERAL_PROPERTIES_URL,
-                HttpMethod.POST,
-                new HttpEntity<>(loadJsonIntegrationContractFor("general/save-general-properties-request.json"), MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE
-                ))),
+                loadJsonIntegrationContractFor("general/save-general-properties-request.json"),
+                MediaType.APPLICATION_JSON_VALUE,
                 GeneralPropertiesResponse.class
         );
 
@@ -108,15 +86,11 @@ class GeneralControllerTest extends BaseIntegrationTest
     @Test
     void saveGeneralPropertiesShouldTriggerForbiddenErrorWhenUserNotAuthorized()
     {
-        var response = testRestTemplate.exchange(
-                API_GENERAL_PROPERTIES_URL,
-                HttpMethod.POST,
-                new HttpEntity<>(loadJsonIntegrationContractFor("general/save-general-properties-request.json"), MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                Object.class
-        );
+        var response = restTestClient.post().uri(API_GENERAL_PROPERTIES_URL)
+                .body(loadJsonIntegrationContractFor("general/save-general-properties-request.json"))
+                .exchange()
+                .returnResult(Object.class);
 
-        assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
+        assertThat(response.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
     }
 }

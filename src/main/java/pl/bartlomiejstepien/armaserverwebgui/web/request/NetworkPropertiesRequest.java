@@ -1,11 +1,15 @@
 package pl.bartlomiejstepien.armaserverwebgui.web.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.network.model.NetworkProperties;
 
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class NetworkPropertiesRequest
 {
     private boolean upnp;

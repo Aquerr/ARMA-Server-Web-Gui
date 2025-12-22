@@ -7,12 +7,11 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
+import org.springframework.test.web.servlet.client.EntityExchangeResult;
 import org.springframework.util.MultiValueMap;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.TestUtils;
@@ -59,14 +58,7 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
                 .content("active-test-content")
                 .build());
 
-        ResponseEntity<String> responseEntity = testRestTemplate.exchange(
-                "/api/v1/mods/settings",
-                HttpMethod.GET,
-                new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))), String.class);
+        ResponseEntity<String> responseEntity = getAuthenticatedRequest("/api/v1/mods/settings");
 
         assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
         JSONAssert.assertEquals(TestUtils.loadJsonIntegrationContractFor("mod-settings/get-mod-settings-list.json")
@@ -83,14 +75,7 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
                 .content("new-content")
                 .build());
 
-        ResponseEntity<String> responseEntity = testRestTemplate.exchange(
-                "/api/v1/mods/settings/" + ids.getFirst(),
-                        HttpMethod.GET,
-                        new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
-                                HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
-                                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                                HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                        ))), String.class);
+        ResponseEntity<String> responseEntity = getAuthenticatedRequest("/api/v1/mods/settings/" + ids.getFirst());
 
         assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
         JSONAssert.assertEquals(TestUtils.loadJsonIntegrationContractFor("mod-settings/get-mod-settings.json")
@@ -106,14 +91,7 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
                 .content("new-content")
                 .build());
 
-        ResponseEntity<String> responseEntity = testRestTemplate.exchange(
-                "/api/v1/mods/settings/" + ids.getFirst(),
-                        HttpMethod.GET,
-                        new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
-                                HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
-                                HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                                HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                        ))), String.class);
+        ResponseEntity<String> responseEntity = getAuthenticatedRequest("/api/v1/mods/settings/" + ids.getFirst());
 
         assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
         JSONAssert.assertEquals(TestUtils.loadJsonIntegrationContractFor("mod-settings/get-mod-settings.json")
@@ -129,31 +107,26 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
                 .content("new-content")
                 .build());
 
-        ResponseEntity<String> responseEntity = testRestTemplate.exchange("/api/v1/mods/settings/" + ids.getFirst(),
-                        HttpMethod.PUT,
-                        new HttpEntity<>(ModSettings.builder()
-                                .id(ids.getFirst())
-                                .name("new-mod-settings-update")
-                                .active(false)
-                                .content("new-content-update")
-                                .build(), MultiValueMap.fromSingleValue(Map.of(
+        EntityExchangeResult<String> responseEntity = restTestClient.put().uri("/api/v1/mods/settings/" + ids.getFirst())
+                .body(ModSettings.builder()
+                        .id(ids.getFirst())
+                        .name("new-mod-settings-update")
+                        .active(false)
+                        .content("new-content-update")
+                        .build())
+                .headers(httpHeaders -> httpHeaders.putAll(MultiValueMap.fromSingleValue(Map.of(
                                 HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
                                 HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
                                 HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                        ))), String.class);
+                        ))))
+                .exchange()
+                .returnResult(String.class);
 
-        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+        assertTrue(responseEntity.getStatus().is2xxSuccessful());
         JSONAssert.assertEquals(TestUtils.loadJsonIntegrationContractFor("mod-settings/updated-mod-settings.json")
-                .replace("{mod_settings_id}", Long.toString(ids.getFirst())), responseEntity.getBody(), JSONCompareMode.LENIENT);
+                .replace("{mod_settings_id}", Long.toString(ids.getFirst())), responseEntity.getResponseBody(), JSONCompareMode.LENIENT);
 
-        ResponseEntity<String> responseEntity2 = testRestTemplate.exchange("/api/v1/mods/settings/" + ids.getFirst() + "/content",
-                HttpMethod.GET,
-                new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
-                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))),
-                String.class);
+        ResponseEntity<String> responseEntity2 = getAuthenticatedRequest("/api/v1/mods/settings/" + ids.getFirst() + "/content");
 
         assertTrue(responseEntity2.getStatusCode().is2xxSuccessful());
         JSONAssert.assertEquals(TestUtils.loadJsonIntegrationContractFor("mod-settings/updated-mod-settings-only-content.json"), responseEntity2.getBody(), JSONCompareMode.LENIENT);
@@ -168,18 +141,18 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
                         .content("test-content")
                         .build());
 
-        ResponseEntity<List<ModSettingsHeader>> responseEntity = testRestTemplate.exchange(
-                "/api/v1/mods/settings",
-                HttpMethod.GET,
-                new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
+        EntityExchangeResult<List<ModSettingsHeader>> responseEntity = restTestClient.get().uri("/api/v1/mods/settings")
+                .headers(headers -> headers.putAll(MultiValueMap.fromSingleValue(Map.of(
                         HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
                         HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
                         HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                ))), new ParameterizedTypeReference<>() {});
+                ))))
+                .exchange()
+                .returnResult(new ParameterizedTypeReference<>() {});
 
-        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
-        assertThat(responseEntity.getBody()).hasSize(1);
-        assertThat(responseEntity.getBody().get(0).getName()).isEqualTo("testsettings");
+        assertTrue(responseEntity.getStatus().is2xxSuccessful());
+        assertThat(responseEntity.getResponseBody()).hasSize(1);
+        assertThat(responseEntity.getResponseBody().getFirst().getName()).isEqualTo("testsettings");
     }
 
     @Test
@@ -191,28 +164,30 @@ class ModSettingsRestControllerTest extends BaseIntegrationTest
                 .content("test-content")
                 .build());
 
-        ResponseEntity<String> responseEntity = testRestTemplate.exchange(
-                "/api/v1/mods/settings/" + ids.getFirst(),
-                    HttpMethod.DELETE,
-                    new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
-                            HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
-                            HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
-                            HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                    ))), String.class);
-
-        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
-
-        ResponseEntity<List> responseEntity2 = testRestTemplate.exchange(
-            "/api/v1/mods/settings",
-                        HttpMethod.GET,
-                        new HttpEntity<>(MultiValueMap.fromSingleValue(Map.of(
+        EntityExchangeResult<String> responseEntity = restTestClient.delete().uri("/api/v1/mods/settings/" + ids.getFirst())
+                .headers(headers -> headers.putAll(
+                        MultiValueMap.fromSingleValue(Map.of(
                                 HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
                                 HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
                                 HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
-                        ))), List.class);
+                        ))
+                ))
+                .exchange()
+                .returnResult(String.class);
 
-        assertTrue(responseEntity2.getStatusCode().is2xxSuccessful());
-        assertThat(responseEntity2.getBody()).isEmpty();
+        assertTrue(responseEntity.getStatus().is2xxSuccessful());
+
+        EntityExchangeResult<List> responseEntity2 = restTestClient.get().uri("/api/v1/mods/settings")
+                .headers(headers -> headers.putAll(MultiValueMap.fromSingleValue(Map.of(
+                        HttpHeaders.AUTHORIZATION, "Bearer " + createJwtForTestUser(),
+                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE,
+                        HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
+                ))))
+                .exchange()
+                .returnResult(new ParameterizedTypeReference<>() {});
+
+        assertTrue(responseEntity2.getStatus().is2xxSuccessful());
+        assertThat(responseEntity2.getResponseBody()).isEmpty();
     }
 
     private List<Long> preSaveModSettings(ModSettings... modSettingsArray)

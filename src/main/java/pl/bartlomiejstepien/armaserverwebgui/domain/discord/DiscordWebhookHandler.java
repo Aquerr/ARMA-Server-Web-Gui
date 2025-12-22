@@ -1,11 +1,11 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.discord;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordMessage;
+import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
 public class DiscordWebhookHandler
