@@ -166,7 +166,6 @@ public class CfgClassParserImpl implements CfgClassParser
             }
 
             stringBuilder
-                    .append(context.indentation())
                     .append("class ")
                     .append(className)
                     .append("\n")
@@ -216,8 +215,7 @@ public class CfgClassParserImpl implements CfgClassParser
 
             context.decrementIndentation();
 
-            stringBuilder.append("\n")
-                    .append(context.indentation())
+            stringBuilder.append(context.indentation())
                     .append("}");
 
             return stringBuilder.toString();
