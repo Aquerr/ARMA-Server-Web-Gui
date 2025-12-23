@@ -76,6 +76,7 @@ import { NotManagedModsComponent } from "./tabs/mods/not-managed-mods/not-manage
 import { ModListsComponent } from "./tabs/mods/mod-lists/mod-lists.component";
 import { FilesizePipe } from "./util/filesize.pipe";
 import { LoadingSpinnerMaskService } from "./service/loading-spinner-mask.service";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -123,6 +124,7 @@ import { LoadingSpinnerMaskService } from "./service/loading-spinner-mask.servic
   ],
   bootstrap: [AppComponent],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
     RouterModule,

@@ -1,10 +1,14 @@
 package pl.bartlomiejstepien.armaserverwebgui.web.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
 @Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class DifficultyProfileApiModel
 {
     // aswg fields
@@ -14,8 +18,10 @@ public class DifficultyProfileApiModel
 
     Options options;
 
-    @Value
+    @Data
     @Builder(toBuilder = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Options
     {
         //actual game difficulty fields
