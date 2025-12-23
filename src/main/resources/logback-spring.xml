@@ -113,4 +113,7 @@
     <logger name="arma-server" level="INFO" additivity="false">
         <appender-ref ref="SERVER_LOG_FILE" />
     </logger>
+    <logger name="steamcmd" additivity="false">
+        <appender-ref ref="SERVER_LOG_FILE"/>
+    </logger>
 </configuration>

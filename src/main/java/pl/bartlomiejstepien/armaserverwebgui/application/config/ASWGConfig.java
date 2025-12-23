@@ -16,8 +16,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 @Component
@@ -32,10 +30,12 @@ public class ASWGConfig
     private static final String USERNAME_PROPERTY = "aswg.default-user.username";
     private static final String PASSWORD_PROPERTY = "aswg.default-user.password";
     private static final String RESET_DEFAULT_USER = "aswg.default-user.reset";
+
     private static final String STEAMCMD_WORKSHOP_CONTENT_PATH = "aswg.steamcmd.workshop.content.path";
     private static final String STEAMCMD_PATH_PROPERTY = "aswg.steamcmd.path";
     private static final String STEAMCMD_USERNAME_PROPERTY = "aswg.steamcmd.username";
     private static final String STEAMCMD_PASSWORD_PROPERTY = "aswg.steamcmd.password";
+    private static final String STEAMCMD_LOG_TO_SERVER_CONSOLE = "aswg.steamcmd.log-to-server-console";
     private static final String STEAM_API_KEY_PROPERTY = "aswg.steam.web-api-token";
 
     private static final String SERVER_PORT_PROPERTY = "aswg.server-port";
@@ -94,6 +94,8 @@ public class ASWGConfig
     private String steamCmdUsername;
     @Value("${" + STEAMCMD_PASSWORD_PROPERTY + ":}")
     private String steamCmdPassword;
+    @Value("${" + STEAMCMD_LOG_TO_SERVER_CONSOLE + ":true}")
+    private boolean steamCmdlogToServerConsole;
     @Value("${" + STEAM_API_KEY_PROPERTY + ":}")
     private String steamApiKey;
 
@@ -157,12 +159,14 @@ public class ASWGConfig
         configurationProperties.setProperty(USERNAME_PROPERTY, this.username);
         configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
         configurationProperties.setProperty(RESET_DEFAULT_USER, String.valueOf(this.resetDefaultUser));
-        configurationProperties.setProperty(STEAMCMD_PATH_PROPERTY, this.steamCmdPath);
         configurationProperties.setProperty(SERVER_PORT_PROPERTY, String.valueOf(this.serverPort));
+
+        configurationProperties.setProperty(STEAMCMD_PATH_PROPERTY, this.steamCmdPath);
         configurationProperties.setProperty(STEAMCMD_WORKSHOP_CONTENT_PATH, this.steamCmdWorkshopContentPath);
         configurationProperties.setProperty(STEAM_API_KEY_PROPERTY, this.steamApiKey);
         configurationProperties.setProperty(STEAMCMD_USERNAME_PROPERTY, this.steamCmdUsername);
         configurationProperties.setProperty(STEAMCMD_PASSWORD_PROPERTY, this.steamCmdPassword);
+        configurationProperties.setProperty(STEAMCMD_LOG_TO_SERVER_CONSOLE, String.valueOf(this.steamCmdlogToServerConsole));
 
         configurationProperties.setProperty(VANILLA_MISSIONS_IMPORTER_PROPERTY, String.valueOf(this.vanillaMissionsImporter));
         configurationProperties.setProperty(SERVER_BRANCH_PROPERTY, String.valueOf(this.serverBranch));
