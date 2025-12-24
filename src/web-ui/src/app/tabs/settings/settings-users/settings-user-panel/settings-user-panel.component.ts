@@ -4,14 +4,14 @@ import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { EditUserFormService } from "./edit-user-form.service";
 import { AswgAuthority } from "../../../../model/authority.model";
 import { DialogService } from "../../../../service/dialog.service";
-import { PasswordChangeModalComponent } from "./password-change-modal/password-change-modal.component";
+import { PasswordChangeDialogComponent } from "../../../../common-ui/password-change-dialog/password-change-dialog.component";
 import {
   MatAccordion,
   MatExpansionPanel,
   MatExpansionPanelHeader,
   MatExpansionPanelTitle
 } from "@angular/material/expansion";
-import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
+import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatIcon } from "@angular/material/icon";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { AswgChipFormInputComponent } from "../../../../common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
@@ -54,6 +54,9 @@ export class SettingsUserPanelComponent implements OnInit {
   @Output()
   saved = new EventEmitter<AswgUser>();
 
+  @Output()
+  passwordSaved = new EventEmitter<{userId: number, password: string}>();
+
   public form!: FormGroup;
 
   constructor() {
@@ -80,6 +83,10 @@ export class SettingsUserPanelComponent implements OnInit {
   }
 
   showEditPasswordModal() {
-    this.dialogService.open(PasswordChangeModalComponent, (dialogResult) => {}, this.user);
+    this.dialogService.open(PasswordChangeDialogComponent, (newPassword) => {
+      if (newPassword) {
+        this.passwordSaved.emit({userId: this.user.id || 0, password: newPassword});
+      }
+    });
   }
 }

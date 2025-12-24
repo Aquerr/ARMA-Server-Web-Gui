@@ -85,4 +85,14 @@ export class SettingsUsersComponent implements OnInit {
       this.maskService.hide();
     });
   }
+
+  public passwordSaved(userId: number, password: string) {
+    this.maskService.show();
+    this.usersService
+      .updatePassword(userId!, password)
+      .subscribe((response) => {
+        this.notificationService.successNotification("Password has been updated!");
+        this.maskService.hide();
+      });
+  }
 }

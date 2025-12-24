@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionSteamSettingsUpdate;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamWebApiClientWrapper;
+import pl.bartlomiejstepien.armaserverwebgui.web.request.PasswordChangeRequest;
 
 @RestController
 @RequestMapping("/api/v1/settings/steam")
@@ -26,7 +27,7 @@ public class SteamSettingsController
         return new SteamSettings(
                 aswgConfig.getSteamCmdPath(),
                 aswgConfig.getSteamCmdUsername(),
-                aswgConfig.getSteamCmdPassword(),
+                null,
                 aswgConfig.getSteamCmdWorkshopContentPath(),
                 aswgConfig.getSteamApiKey()
         );
@@ -38,7 +39,6 @@ public class SteamSettingsController
     {
         aswgConfig.setSteamCmdPath(settings.steamCmdPath());
         aswgConfig.setSteamCmdUsername(settings.steamCmdUsername());
-        aswgConfig.setSteamCmdPassword(settings.steamCmdPassword());
         aswgConfig.setSteamCmdWorkshopContentPath(settings.steamCmdWorkshopContentPath());
 
         if (!aswgConfig.getSteamApiKey().equals(settings.steamWebApiToken()))
@@ -47,6 +47,14 @@ public class SteamSettingsController
         }
         aswgConfig.setSteamApiKey(settings.steamWebApiToken());
 
+        this.aswgConfig.saveToFile();
+    }
+
+    @HasPermissionSteamSettingsUpdate
+    @PostMapping("/password-change")
+    public void updateUserPassword(@RequestBody PasswordChangeRequest passwordChange)
+    {
+        this.aswgConfig.setSteamCmdPassword(passwordChange.getPassword());
         this.aswgConfig.saveToFile();
     }
 

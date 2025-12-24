@@ -19,6 +19,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
+import pl.bartlomiejstepien.armaserverwebgui.web.request.PasswordChangeRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -85,15 +86,9 @@ public class UserRestController
     @HasPermissionUsersUpdate
     @PostMapping("/{id}/password-change")
     public void updateUserPassword(@PathVariable("id") int userId,
-                                   @RequestBody PasswordChange passwordChange)
+                                   @RequestBody PasswordChangeRequest passwordChange)
     {
         this.userService.updatePassword(userId, passwordChange.getPassword());
-    }
-
-    @Data
-    public static class PasswordChange
-    {
-        private String password;
     }
 
     @Data

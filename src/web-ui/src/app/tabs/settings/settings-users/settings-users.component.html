@@ -2,7 +2,7 @@
   <h1>Users Settings</h1>
   <div class="">
     @for (user of users(); track $index) {
-      <app-settings-user-panel [user]="user" (deleted)="delete($event)" (saved)="save($event)">
+      <app-settings-user-panel [user]="user" (deleted)="delete($event)" (saved)="save($event)" (passwordSaved)="passwordSaved($event.userId, $event.password)">
       </app-settings-user-panel>
     }
     <div>

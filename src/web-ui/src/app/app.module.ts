@@ -67,7 +67,7 @@ import { CommonConfirmDialogComponent } from "./common-ui/common-confirm-dialog/
 import { AswgChipInputComponent } from "./common-ui/aswg-chip-input/aswg-chip-input.component";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatAutocomplete, MatAutocompleteTrigger } from "@angular/material/autocomplete";
-import { PasswordChangeModalComponent } from "./tabs/settings/settings-users/settings-user-panel/password-change-modal/password-change-modal.component";
+import { PasswordChangeDialogComponent } from "./common-ui/password-change-dialog/password-change-dialog.component";
 import { DesktopHeaderComponent } from "./desktop-header/desktop-header.component";
 import { AswgChipFormInputComponent } from "./common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
 import { DragDropOverlay } from "./common-ui/drag-and-drop-overlay/drag-and-drop-overlay.component";
@@ -120,7 +120,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
     NewMissionDialogComponent,
     CommonConfirmDialogComponent,
     AswgChipInputComponent,
-    PasswordChangeModalComponent
+    PasswordChangeDialogComponent
   ],
   bootstrap: [AppComponent],
   imports: [

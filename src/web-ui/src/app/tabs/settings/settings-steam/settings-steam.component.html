@@ -15,15 +15,7 @@
         <mat-label>SteamCMD Username</mat-label>
         <input name="steamCmdUsername" formControlName="steamCmdUsername" matInput type="text" />
       </mat-form-field>
-      <mat-form-field>
-        <mat-label>SteamCMD Password</mat-label>
-        <input
-          name="steamCmdPassword"
-          formControlName="steamCmdPassword"
-          matInput
-          type="password"
-        />
-      </mat-form-field>
+      <button mat-stroked-button style="width: fit-content;" (click)="showEditSteamCmdPasswordModal()">Change SteamCmd password</button>
       <mat-form-field>
         <mat-label>Custom SteamCMD Workshop Content Path</mat-label>
         <input

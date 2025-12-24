@@ -19,4 +19,10 @@ export class SteamSettingsService {
   saveSteamSettings(settings: SteamSettings) {
     return this.httpClient.post(this.STEAM_SETTINGS_URL, settings);
   }
+
+  updateSteamPassword(password: string) {
+    return this.httpClient.post(`${this.STEAM_SETTINGS_URL}/password-change`, {
+      password: password
+    });
+  }
 }

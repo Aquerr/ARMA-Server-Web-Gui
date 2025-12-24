@@ -8,6 +8,10 @@ import { NotificationService } from "../../../service/notification.service";
 import { SteamSettingsFormService } from "./steam-settings-form.service";
 import { SteamSettingsService } from "../../../service/steam-settings.service";
 import { MatTooltip } from "@angular/material/tooltip";
+import {
+  PasswordChangeDialogComponent
+} from "../../../common-ui/password-change-dialog/password-change-dialog.component";
+import {DialogService} from "../../../service/dialog.service";
 
 @Component({
   selector: "app-settings-steam",
@@ -29,6 +33,7 @@ export class SettingsSteamComponent implements OnInit {
   private readonly steamSettingsService: SteamSettingsService = inject(SteamSettingsService);
   private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService: NotificationService = inject(NotificationService);
+  private readonly dialogService: DialogService = inject(DialogService);
 
   ngOnInit(): void {
     this.form = this.formService.getForm();
@@ -48,5 +53,19 @@ export class SettingsSteamComponent implements OnInit {
         this.maskService.hide();
         this.notificationService.successNotification("Settings have been saved!");
       });
+  }
+
+  public showEditSteamCmdPasswordModal() {
+    this.dialogService.open(PasswordChangeDialogComponent, (dialogResult) => {
+      if (dialogResult) {
+        this.maskService.show();
+        this.steamSettingsService
+          .updateSteamPassword(dialogResult)
+          .subscribe((response) => {
+            this.maskService.hide();
+            this.notificationService.successNotification("SteamCmd password has been updated!");
+          });
+      }
+    });
   }
 }

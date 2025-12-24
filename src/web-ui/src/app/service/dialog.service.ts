@@ -25,7 +25,7 @@ export class DialogService {
   open<T>(
     dialogComponent: ComponentType<T>,
     closeCallback: (dialogResult: any) => any,
-    data: any,
+    data?: any,
     config?: MatDialogConfig
   ): void {
     const dialogConfig = this.prepareDialogConfig(config, data);
