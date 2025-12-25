@@ -59,6 +59,7 @@ class InstalledModEntityHelperTest
         assertThat(entity.getDirectoryPath()).isEqualTo(Paths.get("./ace-mod").toAbsolutePath().toString());
         assertThat(entity.getCreatedDate()).isBeforeOrEqualTo(OffsetDateTime.now());
         assertThat(entity.getLastWorkshopUpdate()).isEqualTo(OffsetDateTime.parse("2024-10-01T19:01:47.073357Z"));
+        assertThat(entity.getLastUpdate()).isBeforeOrEqualTo(OffsetDateTime.now());
         assertThat(entity.getPreviewUrl()).isEqualTo("previewurl");
     }
 

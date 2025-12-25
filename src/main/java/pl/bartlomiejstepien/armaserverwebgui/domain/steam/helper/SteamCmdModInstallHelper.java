@@ -105,6 +105,7 @@ public class SteamCmdModInstallHelper
                         .map(MetaCppFile::getTimestamp)
                         .map(DotnetDateTimeUtils::dotnetTicksToOffsetDateTime)
                         .orElse(OffsetDateTime.now())));
+        installedModBuilder.lastWorkshopUpdateAttempt(OffsetDateTime.now());
 
         installedModRepository.saveAndFlush(installedModBuilder.build());
         log.info("Mod: {} saved in DB", modName);

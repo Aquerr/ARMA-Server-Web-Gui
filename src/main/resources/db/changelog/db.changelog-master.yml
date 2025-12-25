@@ -21,3 +21,5 @@ databaseChangeLog:
       path: db/changelog/010-job-last-execution-time/
   - includeAll:
       path: db/changelog/011-add-authorities/
+  - includeAll:
+      path: db/changelog/012-last-mod-update-attempt/
