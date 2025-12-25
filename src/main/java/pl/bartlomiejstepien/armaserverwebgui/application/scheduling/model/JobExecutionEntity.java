@@ -25,4 +25,10 @@ public class JobExecutionEntity
 
     @Column(name = "last_execution_date", unique = false, nullable = false)
     private OffsetDateTime lastExecutionDate;
+
+    @Column(name = "status", unique = false, nullable = false)
+    private String status;
+
+    @Column(name = "message", unique = false, nullable = true)
+    private String message;
 }

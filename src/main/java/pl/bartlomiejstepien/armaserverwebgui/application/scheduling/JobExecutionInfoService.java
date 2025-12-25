@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.model.JobExecutionEntity;
+import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.model.JobExecutionStatus;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -21,6 +22,12 @@ public class JobExecutionInfoService
     {
         return jobExecutionRepository.findFirstByJobName(jobName)
                 .map(JobExecutionEntity::getLastExecutionDate);
+    }
+
+    @Transactional
+    public void saveJobExecutionStatus(String name, JobExecutionStatus status)
+    {
+        log.info("Saving execution status for job '{}' at: {}", name, status);
     }
 
     @Transactional
