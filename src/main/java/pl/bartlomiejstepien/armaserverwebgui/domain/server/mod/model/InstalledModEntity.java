@@ -45,8 +45,11 @@ public class InstalledModEntity
     @Column(name = "created_date")
     private OffsetDateTime createdDate;
 
-    @Column(name = "last_workshop_update")
-    private OffsetDateTime lastWorkshopUpdate;
+    @Column(name = "last_workshop_update_date")
+    private OffsetDateTime lastWorkshopUpdateDate;
+
+    @Column(name = "last_workshop_update_attempt_date")
+    private OffsetDateTime lastWorkshopUpdateAttemptDate;
 
     @Column(name = "enabled")
     private boolean enabled;

@@ -100,7 +100,7 @@ public class SteamWebApiService
     }
 
     @Cacheable("workshop-get-mods")
-        public List<WorkshopMod> getWorkshopMods(List<Long> modIds)
+    public List<WorkshopMod> getWorkshopMods(List<Long> modIds)
     {
         try
         {

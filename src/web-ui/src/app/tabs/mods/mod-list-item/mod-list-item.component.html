@@ -7,12 +7,12 @@
     >
       <mat-panel-title class="mod-list-item-expansion-panel-title">
         <div>
-          <div>
+          <span>
             {{ mod.name }}
-          </div>
+          </span>
           <div style="filter: brightness(50%)">
-            <span>Last workshop update: </span>
-            <span>{{ mod.lastWorkshopUpdateDateTime }}</span>
+            <span>Last update attempt: </span>
+            <span>{{ mod.lastWorkshopUpdateAttemptDateTime }}</span>
           </div>
         </div>
       </mat-panel-title>
@@ -33,12 +33,13 @@
         @if (mod.previewUrl) {
           <img [ngSrc]="mod.previewUrl" [width]="200" [height]="200" alt="No Image" style="object-fit: fill" />
         } @else {
-          <img [src]="mod.previewUrl" [width]="200" [height]="200" alt="No Image"/>
+          <img [src]="mod.previewUrl" [width]="200" [height]="200" alt="No Image" />
         }
       </a>
       <div class="mod-list-item-inner-panel-details">
         <div class="mod-list-item-inner-panel-details-directory">
-          <span>Directory: {{ mod.directoryName }}</span>
+          <p><strong>Directory:</strong> {{ mod.directoryName }}</p>
+          <p><strong>Last update at workshop:</strong> {{ mod.lastWorkshopUpdateDateTime }}</p>
         </div>
         <div class="mod-list-item-inner-panel-actions-action">
           <mat-checkbox [checked]="mod.serverMod" (change)="mod.serverMod = !mod.serverMod">Server Mod</mat-checkbox>

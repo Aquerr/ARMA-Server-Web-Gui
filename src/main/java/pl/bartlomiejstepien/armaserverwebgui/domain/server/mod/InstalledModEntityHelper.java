@@ -24,7 +24,7 @@ public class InstalledModEntityHelper
         installedModBuilder.name(fileSystemMod.getName());
         installedModBuilder.directoryPath(fileSystemMod.getModDirectory().getPath().toAbsolutePath().toString());
         installedModBuilder.createdDate(OffsetDateTime.now());
-        installedModBuilder.lastWorkshopUpdate(fileSystemMod.getLastUpdated());
+        installedModBuilder.lastWorkshopUpdateDate(fileSystemMod.getLastUpdated());
 
         tryPopulateModPreviewUrl(fileSystemMod.getWorkshopFileId(), installedModBuilder);
         return installedModBuilder.build();

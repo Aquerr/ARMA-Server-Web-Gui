@@ -296,7 +296,8 @@ public class ModServiceImpl implements ModService
                         .findFirst()
                         .map(mod -> mod.getModDirectory().getSizeBytes())
                         .orElse(0L))
-                .lastWorkshopUpdateDateTime(modEntity.getLastWorkshopUpdate())
+                .lastWorkshopUpdateDateTime(modEntity.getLastWorkshopUpdateDate())
+                .lastWorkshopUpdateAttemptDateTime(modEntity.getLastWorkshopUpdateAttemptDate())
                 .directoryName(modEntity.getModDirectoryName())
                 .build();
     }

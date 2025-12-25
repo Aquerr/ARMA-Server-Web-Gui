@@ -18,6 +18,7 @@ public class CacheConfig
         cacheManager.setCaffeine(prepareCaffeine(Duration.ofMinutes(30), 30));
         cacheManager.registerCustomCache("workshop-query", prepareCaffeine(Duration.ofMinutes(30), 15).buildAsync());
         cacheManager.registerCustomCache("workshop-get-mod", prepareCaffeine(Duration.ofMinutes(30), 50).buildAsync());
+        cacheManager.registerCustomCache("workshop-get-mods", prepareCaffeine(Duration.ofMinutes(30), 15).buildAsync());
         return cacheManager;
     }
 

@@ -58,7 +58,8 @@ class InstalledModEntityHelperTest
         assertThat(entity.getWorkshopFileId()).isEqualTo(123456789L);
         assertThat(entity.getDirectoryPath()).isEqualTo(Paths.get("./ace-mod").toAbsolutePath().toString());
         assertThat(entity.getCreatedDate()).isBeforeOrEqualTo(OffsetDateTime.now());
-        assertThat(entity.getLastWorkshopUpdate()).isEqualTo(OffsetDateTime.parse("2024-10-01T19:01:47.073357Z"));
+        assertThat(entity.getLastWorkshopUpdateDate()).isEqualTo(OffsetDateTime.parse("2024-10-01T19:01:47.073357Z"));
+        assertThat(entity.getLastWorkshopUpdateAttemptDate()).isNull();
         assertThat(entity.getPreviewUrl()).isEqualTo("previewurl");
     }
 
@@ -87,7 +88,7 @@ class InstalledModEntityHelperTest
         assertThat(entity.getWorkshopFileId()).isEqualTo(2041057379L);
         assertThat(entity.getDirectoryPath()).isEqualTo(Paths.get("./@A3-thermal-improvement").toAbsolutePath().toString());
         assertThat(entity.getCreatedDate()).isBeforeOrEqualTo(OffsetDateTime.now());
-        assertThat(entity.getLastWorkshopUpdate()).isEqualTo(OffsetDateTime.parse("2024-10-01T19:01:47.073357Z"));
+        assertThat(entity.getLastWorkshopUpdateDate()).isEqualTo(OffsetDateTime.parse("2024-10-01T19:01:47.073357Z"));
         assertThat(entity.getPreviewUrl()).isNull();
     }
 

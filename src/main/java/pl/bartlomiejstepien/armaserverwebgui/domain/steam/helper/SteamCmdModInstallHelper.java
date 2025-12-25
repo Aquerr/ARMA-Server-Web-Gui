@@ -100,11 +100,12 @@ public class SteamCmdModInstallHelper
         installedModBuilder.name(modName);
         installedModBuilder.directoryPath(modDirectory.getPath().toAbsolutePath().toString());
         installedModBuilder.previewUrl(ofNullable(workshopMod).map(WorkshopMod::getPreviewUrl).orElse(null));
-        installedModBuilder.lastWorkshopUpdate(ofNullable(workshopMod).map(WorkshopMod::getLastUpdate)
+        installedModBuilder.lastWorkshopUpdateDate(ofNullable(workshopMod).map(WorkshopMod::getLastUpdate)
                 .orElse(ofNullable(modDirectory.getMetaCppFile())
                         .map(MetaCppFile::getTimestamp)
                         .map(DotnetDateTimeUtils::dotnetTicksToOffsetDateTime)
                         .orElse(OffsetDateTime.now())));
+        installedModBuilder.lastWorkshopUpdateAttemptDate(OffsetDateTime.now());
 
         installedModRepository.saveAndFlush(installedModBuilder.build());
         log.info("Mod: {} saved in DB", modName);
@@ -174,16 +175,16 @@ public class SteamCmdModInstallHelper
         if (Files.notExists(modDirectory.getPath()))
             return true;
 
-        if (installedModEntity.getLastWorkshopUpdate() == null)
+        if (installedModEntity.getLastWorkshopUpdateDate() == null)
             return true;
 
         // If there is no way to determine if the mod is up to date.
         if (workshopMod == null)
             return true;
 
-        log.info("WorkshopLastUpdate: {} | DB last update: {}", workshopMod.getLastUpdate(), installedModEntity.getLastWorkshopUpdate());
+        log.info("WorkshopLastUpdate: {} | DB last update: {}", workshopMod.getLastUpdate(), installedModEntity.getLastWorkshopUpdateDate());
 
         // If we have equal or newer update time in db
-        return workshopMod.getLastUpdate().isAfter(installedModEntity.getLastWorkshopUpdate());
+        return workshopMod.getLastUpdate().isAfter(installedModEntity.getLastWorkshopUpdateDate());
     }
 }

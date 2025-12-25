@@ -6,6 +6,7 @@ export interface Mod {
   workshopUrl: string;
   fileExists: boolean;
   lastWorkshopUpdateDateTime: string;
+  lastWorkshopUpdateAttemptDateTime: string;
   sizeBytes: number;
   directoryName: string;
 }
