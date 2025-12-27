@@ -1,11 +1,12 @@
 package pl.bartlomiejstepien.armaserverwebgui;
 
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -18,13 +19,11 @@ import java.nio.file.StandardOpenOption;
 
 @Slf4j
 @Configuration(proxyBeanMethods = false)
+@RequiredArgsConstructor
 public class DefaultConfigGenerator
 {
-    @Autowired
-    private ConfigPathProvider configPathProvider;
-
-    @Autowired
-    private ConfigurableEnvironment environment;
+    private final ConfigPathProvider configPathProvider;
+    private final ConfigurableEnvironment environment;
 
     @PostConstruct
     public void postConstruct() throws IOException
@@ -36,8 +35,18 @@ public class DefaultConfigGenerator
         log.info("Creating default config file in: {}", configFilePath);
         Files.createDirectories(configFilePath.getParent());
         Files.write(configFilePath, new ClassPathResource("aswg-default-config.properties").getContentAsByteArray(), StandardOpenOption.CREATE);
-        environment.getPropertySources().addFirst(
-                new PropertiesPropertySource("aswg-config", PropertiesLoaderUtils.loadProperties(new FileSystemResource(configFilePath)))
-        );
+
+        if (environment.getPropertySources().contains(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME))
+        {
+            environment.getPropertySources().addAfter(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME,
+                    new PropertiesPropertySource("aswg-config", PropertiesLoaderUtils.loadProperties(new FileSystemResource(configFilePath)))
+            );
+        }
+        else
+        {
+            environment.getPropertySources().addFirst(
+                    new PropertiesPropertySource("aswg-config", PropertiesLoaderUtils.loadProperties(new FileSystemResource(configFilePath)))
+            );
+        }
     }
 }

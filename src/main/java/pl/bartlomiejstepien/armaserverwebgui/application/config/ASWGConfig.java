@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -70,8 +69,7 @@ public class ASWGConfig
     private static final String UNSAFE_OVERWRITE_SERVER_STARTUP_PARAMS_ENABLED_PROPERTY = "aswg.server.unsafe.startup-params.overwrite.web-edit.enabled";
     private static final String UNSAFE_OVERWRITE_SERVER_STARTUP_PARAMS_VALUE = "aswg.server.unsafe.startup-params.overwrite.value";
 
-    @Autowired
-    private ConfigPathProvider configPathProvider;
+    private final ConfigPathProvider configPathProvider;
 
     @Value("${aswg.default-user.username:}")
     private String username;

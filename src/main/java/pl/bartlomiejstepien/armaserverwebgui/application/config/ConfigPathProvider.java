@@ -2,12 +2,12 @@ package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@Component
+@Configuration(proxyBeanMethods = false)
 @Getter
 public class ConfigPathProvider
 {
