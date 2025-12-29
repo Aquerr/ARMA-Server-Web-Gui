@@ -35,6 +35,7 @@ import tools.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -157,6 +158,7 @@ public class LogbookConfig
                 {
                     log.info("Server response: {}", aswgHttpLog);
                 }
+                clearMdc();
             }
             catch (Exception e)
             {
@@ -206,6 +208,11 @@ public class LogbookConfig
             MDC.put(HttpTracingFields.RESPONSE_CONTENT_TYPE.getFieldName(), httpLog.getResponseContentType());
             MDC.put(HttpTracingFields.STATUS.getFieldName(), httpLog.getResponseStatus());
             MDC.put(HttpTracingFields.REUQEST_HOST.getFieldName(), httpLog.getRequestHost());
+        }
+
+        private void clearMdc()
+        {
+            Arrays.stream(HttpTracingFields.values()).forEach(field -> MDC.remove(field.getFieldName()));
         }
     }
 
