@@ -1,20 +1,30 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.scheduling.model;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum JobExecutionStatus
 {
     STARTED("STARTED"),
     SUCCESS("SUCCESS"),
     FAILURE("FAILURE");
 
-    private final String status;
+    private final String code;
 
-    JobExecutionStatus(String status)
+    JobExecutionStatus(String code)
     {
-        this.status = status;
+        this.code = code;
     }
 
-    public String getStatus()
+    public String getCode()
     {
-        return status;
+        return code;
+    }
+
+    public static Optional<JobExecutionStatus> findByCode(String code)
+    {
+        return Arrays.stream(values())
+                .filter(enumStatus -> code.equals(enumStatus.getCode()))
+                .findFirst();
     }
 }

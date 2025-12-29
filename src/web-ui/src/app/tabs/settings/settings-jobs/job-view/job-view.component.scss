@@ -6,13 +6,25 @@
 
 .button-container {
   margin-top: 20px;
+  display: flex;
+  gap: 1rem;
 }
 
 .information {
   padding: 0.5rem;
   border-radius: 5px;
-  border: 1px solid rgba(144, 238, 144, 0.57);
+  border: 1px solid;
   margin-bottom: 1rem;
+}
+
+.information-success-color {
+  border-color: rgba(144, 238, 144, 0.57);
+  --mat-icon-color: lightgreen;
+}
+
+.information-error-color {
+  border-color: rgba(238, 144, 144, 0.57);
+  --mat-icon-color: red;
 }
 
 .information-content {
@@ -20,8 +32,4 @@
   align-items: center;
   gap: 10px;
   filter: brightness(90%);
-}
-
-.information-icon {
-  --mat-icon-color: lightgreen;
 }

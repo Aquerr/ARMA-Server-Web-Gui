@@ -41,6 +41,28 @@ public class ModUpdateJob extends AswgJob
 
         log.info("Executing Mod Update Job");
         scheduleModUpdate(modService.getInstalledMods().stream().collect(Collectors.toMap(InstalledModEntity::getWorkshopFileId, InstalledModEntity::getName)));
+        waitForModUpdate();
+    }
+
+    private void waitForModUpdate()
+    {
+        while (true)
+        {
+            try
+            {
+                boolean installationFinished = this.steamService.getInstallingMods().isEmpty();
+                if (installationFinished)
+                {
+                    break;
+                }
+
+                Thread.sleep(5000);
+            }
+            catch (InterruptedException e)
+            {
+                break;
+            }
+        }
     }
 
     private void scheduleModUpdate(Map<Long, String> modIdWithName)

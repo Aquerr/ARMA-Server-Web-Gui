@@ -11,7 +11,9 @@ import { ActivatedRoute } from "@angular/router";
 import { MatInput } from "@angular/material/input";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatIcon } from "@angular/material/icon";
-import { DatePipe } from "@angular/common";
+import { DatePipe, NgClass } from "@angular/common";
+import { JobStatus } from "../../../../model/job-settings.model";
+import { DialogService } from "../../../../service/dialog.service";
 
 @Component({
   selector: "app-job-view",
@@ -26,7 +28,8 @@ import { DatePipe } from "@angular/common";
     MatTooltip,
     MatIcon,
     DatePipe,
-    MatHint
+    MatHint,
+    NgClass
   ],
   templateUrl: "./job-view.component.html",
   styleUrl: "./job-view.component.scss"
@@ -40,6 +43,7 @@ export class JobViewComponent implements OnInit {
   private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+  private readonly dialogService: DialogService = inject(DialogService);
 
   public jobName: string = "";
 
@@ -78,5 +82,21 @@ export class JobViewComponent implements OnInit {
       this.maskService.hide();
       this.notificationService.successNotification("Job settings have been updated.");
     });
+  }
+
+  protected readonly JobStatus = JobStatus;
+
+  runNow() {
+    const onCloseCallback = (result: boolean) => {
+      if (!result) return;
+      this.maskService.show();
+      this.jobSettingsService.runJobNow(this.jobName).subscribe(response => {
+        this.maskService.hide();
+        this.notificationService.successNotification("Job has been started!");
+      });
+    };
+    this.dialogService.openCommonConfirmationDialog({
+      question: `Are you sure you want to start <strong>${this.jobName}</strong> job now?`
+    }, onCloseCallback)
   }
 }

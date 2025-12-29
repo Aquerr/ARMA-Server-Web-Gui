@@ -24,6 +24,11 @@ public class JobSettingsResponse
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime lastExecutionDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    private OffsetDateTime lastExecutionFinishedDate;
+    private String lastMessage;
+    private String lastStatus;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime nextExecutionDate;
 
     @Builder

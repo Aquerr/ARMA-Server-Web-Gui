@@ -9,18 +9,15 @@ import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.AswgJob;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.AswgTaskScheduler;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.JobExecutionInfoService;
+import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.dto.JobExecution;
 import pl.bartlomiejstepien.armaserverwebgui.domain.job.model.JobSettings;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.DifficultyScanJob;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.job.MissionScannerJob;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.job.InstallDeleteModsFromFilesystemJob;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.job.ModSettingsScanJob;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.job.ModUpdateJob;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -32,11 +29,7 @@ public class JobService
     private final ASWGConfig aswgConfig;
     private final AswgTaskScheduler aswgTaskScheduler;
     private final JobExecutionInfoService jobExecutionInfoService;
-    private final ModUpdateJob modUpdateJob;
-    private final InstallDeleteModsFromFilesystemJob installDeleteModsFromFilesystemJob;
-    private final DifficultyScanJob difficultyScanJob;
-    private final ModSettingsScanJob modSettingsScanJob;
-    private final MissionScannerJob missionScannerJob;
+    private final Map<String, AswgJob> aswgJobsMap;
 
     private final Map<String, Supplier<JobSettings>> jobSettingsSuppliers = Map.of(
             AswgJobNames.MOD_UPDATE, this::getModUpdateJobSettings,
@@ -54,25 +47,26 @@ public class JobService
             AswgJobNames.MISSIONS_SCANNER, this::updateMissionScanJobSettings
     );
 
+
     @EventListener
     public void startJobs(ApplicationReadyEvent event)
     {
         try
         {
             log.info("Starting jobs...");
-            rescheduleJobIfEnabled(this.modUpdateJob,
+            rescheduleJobIfEnabled(aswgJobsMap.get(AswgJobNames.MOD_UPDATE),
                     this.aswgConfig.getJobsProperties().isJobModUpdateEnabled(),
                     this.aswgConfig.getJobsProperties().getJobModUpdateCron());
-            rescheduleJobIfEnabled(this.installDeleteModsFromFilesystemJob,
+            rescheduleJobIfEnabled(aswgJobsMap.get(AswgJobNames.INSTALL_DELETE_MODS),
                     this.aswgConfig.getJobsProperties().isModsScannerEnabled(),
                     this.aswgConfig.getJobsProperties().getModsScannerCron());
-            rescheduleJobIfEnabled(this.difficultyScanJob,
+            rescheduleJobIfEnabled(aswgJobsMap.get(AswgJobNames.DIFFICULTY_SCAN),
                     this.aswgConfig.getJobsProperties().isDifficultyProfileScannerEnabled(),
                     this.aswgConfig.getJobsProperties().getDifficultyProfileScannerCron());
-            rescheduleJobIfEnabled(this.modSettingsScanJob,
+            rescheduleJobIfEnabled(aswgJobsMap.get(AswgJobNames.MOD_SETTINGS_SCAN),
                     this.aswgConfig.getJobsProperties().isModSettingsScannerEnabled(),
                     this.aswgConfig.getJobsProperties().getModSettingsScannerCron());
-            rescheduleJobIfEnabled(this.missionScannerJob,
+            rescheduleJobIfEnabled(aswgJobsMap.get(AswgJobNames.MISSIONS_SCANNER),
                     this.aswgConfig.getJobsProperties().isMissionScannerEnabled(),
                     this.aswgConfig.getJobsProperties().getMissionScannerCron());
         }
@@ -95,11 +89,23 @@ public class JobService
         this.aswgTaskScheduler.schedule(aswgJob, cron);
     }
 
+    public boolean runNow(String jobName)
+    {
+        AswgJob aswgJob = aswgJobsMap.get(jobName);
+        if (aswgJob == null)
+        {
+            log.error("Job '{}' not found!", jobName);
+            return false;
+        }
+        this.aswgTaskScheduler.runNow(aswgJob);
+        return true;
+    }
+
     public JobSettings getJobSettings(String name)
     {
-         return Optional.ofNullable(jobSettingsSuppliers.get(name))
-                 .map(Supplier::get)
-                 .orElseThrow(() -> new IllegalArgumentException("Could not find job with name: " + name));
+        return Optional.ofNullable(jobSettingsSuppliers.get(name))
+                .map(Supplier::get)
+                .orElseThrow(() -> new IllegalArgumentException("Could not find job with name: " + name));
     }
 
     public JobSettings updateJobSettings(String name,
@@ -134,10 +140,10 @@ public class JobService
                 .cron(this.aswgConfig.getJobsProperties().getModsScannerCron())
                 .parameters(Map.of(
                         InstallDeleteModsFromFilesystemJob.DELETION_ENABLED_PROPERTY, JobSettings.JobParameter.builder()
-                                        .name(InstallDeleteModsFromFilesystemJob.DELETION_ENABLED_PROPERTY)
-                                        .description("Is automatic DB deletion of deleted file system mods enabled?")
-                                        .value(String.valueOf(this.aswgConfig.getJobsProperties().isModsScannerDeletionEnabled()))
-                                        .build(),
+                                .name(InstallDeleteModsFromFilesystemJob.DELETION_ENABLED_PROPERTY)
+                                .description("Is automatic DB deletion of deleted file system mods enabled?")
+                                .value(String.valueOf(this.aswgConfig.getJobsProperties().isModsScannerDeletionEnabled()))
+                                .build(),
                         InstallDeleteModsFromFilesystemJob.INSTALLATION_ENABLED_PROPERTY,
                         JobSettings.JobParameter.builder()
                                 .name(InstallDeleteModsFromFilesystemJob.INSTALLATION_ENABLED_PROPERTY)
@@ -179,7 +185,7 @@ public class JobService
         this.aswgConfig.getJobsProperties().setJobModUpdateEnabled(params.enabled());
         this.aswgConfig.getJobsProperties().setJobModUpdateCron(params.cron());
 
-        rescheduleJobIfEnabled(modUpdateJob, params.enabled(), params.cron());
+        rescheduleJobIfEnabled(aswgJobsMap.get(AswgJobNames.MOD_UPDATE), params.enabled(), params.cron());
     }
 
     private void updateInstallDeleteModsJobSettings(JobSettingsUpdateParams params)
@@ -197,7 +203,7 @@ public class JobService
                         .orElse(false)
         );
 
-        rescheduleJobIfEnabled(installDeleteModsFromFilesystemJob, params.enabled(), params.cron());
+        rescheduleJobIfEnabled(aswgJobsMap.get(AswgJobNames.INSTALL_DELETE_MODS), params.enabled(), params.cron());
     }
 
     private void updateDifficultyScanJobSettings(JobSettingsUpdateParams params)
@@ -205,7 +211,7 @@ public class JobService
         this.aswgConfig.getJobsProperties().setDifficultyProfileScannerEnabled(params.enabled());
         this.aswgConfig.getJobsProperties().setDifficultyProfileScannerCron(params.cron());
 
-        rescheduleJobIfEnabled(difficultyScanJob, params.enabled(), params.cron());
+        rescheduleJobIfEnabled(aswgJobsMap.get(AswgJobNames.DIFFICULTY_SCAN), params.enabled(), params.cron());
     }
 
     private void updateModSettingsScanJobSettings(JobSettingsUpdateParams params)
@@ -213,7 +219,7 @@ public class JobService
         this.aswgConfig.getJobsProperties().setModSettingsScannerEnabled(params.enabled());
         this.aswgConfig.getJobsProperties().setModSettingsScannerCron(params.cron());
 
-        rescheduleJobIfEnabled(modSettingsScanJob, params.enabled(), params.cron());
+        rescheduleJobIfEnabled(aswgJobsMap.get(AswgJobNames.MOD_SETTINGS_SCAN), params.enabled(), params.cron());
     }
 
     private void updateMissionScanJobSettings(JobSettingsUpdateParams params)
@@ -221,24 +227,20 @@ public class JobService
         this.aswgConfig.getJobsProperties().setMissionScannerEnabled(params.enabled());
         this.aswgConfig.getJobsProperties().setMissionScannerCron(params.cron());
 
-        rescheduleJobIfEnabled(missionScannerJob, params.enabled(), params.cron());
+        rescheduleJobIfEnabled(aswgJobsMap.get(AswgJobNames.MISSIONS_SCANNER), params.enabled(), params.cron());
     }
 
-    public Optional<OffsetDateTime> getLastExecutionDate(String name)
+    public Optional<JobExecution> getLastJobExecution(String name)
     {
-        return this.jobExecutionInfoService.getLastExecutionDate(name);
+        return this.jobExecutionInfoService.getLastJobExecution(name);
     }
 
-    public List<String> getJobsNames()
+    public Set<String> getJobsNames()
     {
-        return List.of(
-                AswgJobNames.MOD_UPDATE,
-                AswgJobNames.INSTALL_DELETE_MODS,
-                AswgJobNames.DIFFICULTY_SCAN,
-                AswgJobNames.MOD_SETTINGS_SCAN,
-                AswgJobNames.MISSIONS_SCANNER);
+        return aswgJobsMap.keySet();
     }
 
     private record JobSettingsUpdateParams(String name, boolean enabled, String cron, Map<String, String> parameters)
-    { }
+    {
+    }
 }

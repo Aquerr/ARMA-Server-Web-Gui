@@ -3,14 +3,23 @@
   <div>
     <form [formGroup]="form" class="fields">
 
-      <div class="information">
+      @let isFailed = formService.getLastStatus(form).value == JobStatus.FAILURE;
+      <div class="information" [ngClass]="isFailed ? 'information-error-color' : 'information-success-color'">
         <div class="information-content">
           <div class="information-icon">
             <mat-icon [fontIcon]="'information'"></mat-icon>
           </div>
-          <span>
-            Last job execution date: {{ formService.getLastExecutionDateControl(form).value | date: 'yyyy-MM-dd HH:mm:ss' }}
-          </span>
+          <div>
+            <div>
+              Last job execution date: {{ formService.getLastExecutionDateControl(form).value | date: 'yyyy-MM-dd HH:mm:ss' }}
+            </div>
+            <div>
+              Finished at: {{ formService.getLastExecutionFinishedDateControl(form).value | date: 'yyyy-MM-dd HH:mm:ss' }}
+            </div>
+            <div>
+              Message: {{ formService.getLastMessage(form).value }}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -42,6 +51,7 @@
       }
       <div class="button-container">
         <button mat-flat-button color="primary" (click)="save()">Save</button>
+        <button mat-flat-button color="primary" (click)="runNow()">Run now</button>
       </div>
     </form>
   </div>

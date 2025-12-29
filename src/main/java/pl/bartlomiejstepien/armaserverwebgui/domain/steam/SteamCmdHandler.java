@@ -65,7 +65,7 @@ public class SteamCmdHandler
         return this.currentlyProcessingTask != null;
     }
 
-    @Scheduled(fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(scheduler = "steamCmdTaskScheduler", fixedDelay = 5, timeUnit = TimeUnit.SECONDS)
     private void handleSteamTasks()
     {
         if (STEAM_TASKS.isEmpty())

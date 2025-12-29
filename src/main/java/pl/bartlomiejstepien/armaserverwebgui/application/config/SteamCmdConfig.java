@@ -1,7 +1,11 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.config;
 
+import org.springframework.boot.task.ThreadPoolTaskSchedulerBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.SimpleAsyncTaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.handler.GameUpdateTaskHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.handler.SteamTaskHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.handler.WorkshopBatchModDownloadTaskHandler;
@@ -25,5 +29,13 @@ public class SteamCmdConfig
         handlers.put(SteamTask.Type.WORKSHOP_DOWNLOAD, workshopModDownloadTaskHandler);
         handlers.put(SteamTask.Type.WORKSHOP_BATCH_DOWNLOAD, workshopBatchModDownloadTaskHandler);
         return handlers;
+    }
+
+    @Bean
+    public TaskScheduler steamCmdTaskScheduler()
+    {
+        return new ThreadPoolTaskSchedulerBuilder()
+                .poolSize(1)
+                .build();
     }
 }

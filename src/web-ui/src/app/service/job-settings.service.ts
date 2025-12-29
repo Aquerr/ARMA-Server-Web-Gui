@@ -26,6 +26,10 @@ export class JobSettingsService {
   public saveJobSettings(name: string, updateJobSettingsRequest: UpdateJobSettingsRequest): Observable<JobSettings> {
     return this.httpClient.put<JobSettings>(`${this.JOBS_SETTINGS_URL}/${name}`, updateJobSettingsRequest);
   }
+
+  public runJobNow(name: string): Observable<void> {
+    return this.httpClient.post<void>(`${this.JOBS_SETTINGS_URL}/${name}/run-now`, {});
+  }
 }
 
 export interface UpdateJobSettingsRequest {

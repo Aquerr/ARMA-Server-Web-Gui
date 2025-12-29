@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.scheduling;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.model.JobExecutionStatus;
 
 import java.time.OffsetDateTime;
 
@@ -14,7 +15,7 @@ public abstract class AswgJob implements Runnable
         this.jobExecutionInfoService = jobExecutionInfoService;
     }
 
-    protected abstract String getName();
+    public abstract String getName();
 
     protected abstract void runJob();
 
@@ -23,12 +24,15 @@ public abstract class AswgJob implements Runnable
     {
         try
         {
+            this.jobExecutionInfoService.saveJobExecutionStart(getName());
             runJob();
-            this.jobExecutionInfoService.saveJobLastExecutionDate(getName(), OffsetDateTime.now());
+            this.jobExecutionInfoService.saveJobExecutionFinish(getName(), OffsetDateTime.now(), JobExecutionStatus.SUCCESS,
+                    JobExecutionStatus.SUCCESS.getCode());
         }
         catch (Exception exception)
         {
             log.error("Could not execute job '{}'", getName(), exception);
+            this.jobExecutionInfoService.saveJobExecutionFinish(getName(), OffsetDateTime.now(), JobExecutionStatus.FAILURE, exception.getMessage());
         }
     }
 }

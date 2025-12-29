@@ -1,9 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.application.scheduling;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
+import org.springframework.scheduling.concurrent.SimpleAsyncTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.stereotype.Component;
@@ -15,12 +15,22 @@ import java.util.concurrent.ScheduledFuture;
 
 @Slf4j
 @Component
-@AllArgsConstructor
 public class AswgTaskScheduler
 {
     private static final ConcurrentHashMap<String, ScheduledJob> SCHEDULED_TASKS = new ConcurrentHashMap<>();
 
     private final TaskScheduler taskScheduler;
+
+    public AswgTaskScheduler()
+    {
+        this.taskScheduler = new SimpleAsyncTaskScheduler();
+    }
+
+    public void runNow(AswgJob job)
+    {
+        log.info("Force start job '{}' now!", job.getName());
+        this.taskScheduler.schedule(job, Instant.now());
+    }
 
     public void schedule(AswgJob job, String cron)
     {

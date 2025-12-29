@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 
 @Data
 @Entity
-@Table(name = "job_execution")
+@Table(name = "job_execution_history")
 public class JobExecutionEntity
 {
     @Id
@@ -23,8 +23,11 @@ public class JobExecutionEntity
     @Column(name = "job_name", nullable = false, unique = true)
     private String jobName;
 
-    @Column(name = "last_execution_date", unique = false, nullable = false)
-    private OffsetDateTime lastExecutionDate;
+    @Column(name = "start_date", unique = false, nullable = true)
+    private OffsetDateTime startDate;
+
+    @Column(name = "finish_date", unique = false, nullable = true)
+    private OffsetDateTime finishDate;
 
     @Column(name = "status", unique = false, nullable = false)
     private String status;

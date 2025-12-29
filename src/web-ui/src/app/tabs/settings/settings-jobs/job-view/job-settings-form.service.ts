@@ -19,7 +19,10 @@ export class JobSettingsFormService {
           value: ["", Validators.required],
         })]),
       lastExecutionDate: new FormControl({value: "", disabled: true}),
-      nextExecutionDate: new FormControl({value: "", disabled: true})
+      lastExecutionFinishedDate: new FormControl({value: "", disabled: true}),
+      nextExecutionDate: new FormControl({value: "", disabled: true}),
+      lastMessage: [""],
+      lastStatus: [""]
     });
   }
 
@@ -27,7 +30,10 @@ export class JobSettingsFormService {
     this.getEnabledControl(form).setValue(settings.enabled);
     this.getCronControl(form).setValue(settings.cron);
     this.getLastExecutionDateControl(form).setValue(settings.lastExecutionDate);
+    this.getLastExecutionFinishedDateControl(form).setValue(settings.lastExecutionFinishedDate);
     this.getNextExecutionDateControl(form).setValue(settings.nextExecutionDate);
+    this.getLastMessage(form).setValue(settings.lastMessage);
+    this.getLastStatus(form).setValue(settings.lastStatus);
 
     this.getParametersControl(form).clear();
     settings.parameters.forEach(parameter => this.getParametersControl(form)
@@ -36,8 +42,6 @@ export class JobSettingsFormService {
         description: new FormControl({value: parameter.description, disabled: true}),
         value: [parameter.value, Validators.required],
       })));
-
-    console.log(this.getParametersControl(form));
   }
 
   asSettings(form: FormGroup): JobSettings {
@@ -64,7 +68,19 @@ export class JobSettingsFormService {
     return form.get("lastExecutionDate") as AbstractControl;
   }
 
+  getLastExecutionFinishedDateControl(form: FormGroup): AbstractControl {
+    return form.get("lastExecutionFinishedDate") as AbstractControl;
+  }
+
   getNextExecutionDateControl(form: FormGroup): AbstractControl {
     return form.get("nextExecutionDate") as AbstractControl;
+  }
+
+  getLastMessage(form: FormGroup): AbstractControl {
+    return form.get('lastMessage') as AbstractControl;
+  }
+
+  getLastStatus(form: FormGroup): AbstractControl {
+    return form.get('lastStatus') as AbstractControl;
   }
 }
