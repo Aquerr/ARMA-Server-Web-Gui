@@ -9,12 +9,13 @@ public enum HttpTracingFields
     METHOD("method"),
     USER_ID("user-id"),
     USER_AGENT("user-agent"),
+    IP_ADDRESS("ip-address"),
     DURATION("duration"),
     CONTENT_TYPE("content-type"),
     RESPONSE_CONTENT_TYPE("response-content-type"),
     STATUS("status"),
     CORRELATION_ID("correlation-id"),
-    REUQEST_HOST("request-host"),
+    REQUEST_HOST("request-host"),
     ;
 
     private final String fieldName;

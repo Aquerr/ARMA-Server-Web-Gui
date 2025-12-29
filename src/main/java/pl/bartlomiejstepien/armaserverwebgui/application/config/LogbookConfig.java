@@ -10,7 +10,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpHeaders;
@@ -36,7 +35,6 @@ import tools.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
 
@@ -49,13 +47,12 @@ public class LogbookConfig
 {
     private static final String[] IGNORED_FILE_CONTENT = new String[] {"text/html", "text/css", "text/javascript", "application/javascript", "image/*"};
 
-    @Order(value = Ordered.HIGHEST_PRECEDENCE)
     @Bean
     public FilterRegistrationBean<LogbookFilter> logbookFilterFilterRegistrationBean(Logbook logbook)
     {
         FilterRegistrationBean<LogbookFilter> registrationBean = new FilterRegistrationBean<>(new LogbookFilter(logbook));
         registrationBean.setName("logbookFilter");
-        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
         return registrationBean;
     }
 
@@ -170,6 +167,7 @@ public class LogbookConfig
                                                  HttpRequest request) throws IOException
         {
             return AswgHttpLog.builder()
+                    .requestIpAddress(MDC.get(HttpTracingFields.IP_ADDRESS.getFieldName())) // Set in IpAddressMdcHttpFilter
                     .requestHost(request.getHost())
                     .requestUri(request.getRequestUri())
                     .method(request.getMethod())
@@ -187,7 +185,7 @@ public class LogbookConfig
         {
             return toAswgHttpLog(correlationId, request)
                     .toBuilder()
-                    .requestDuration(duration)
+                    .requestDurationMilis(String.valueOf(duration.toMillis()))
                     .responseContentType(response.getContentType())
                     .responseBody(response.getBodyAsString())
                     .responseStatus(String.format("%s %s", response.getStatus(), response.getReasonPhrase()))
@@ -200,14 +198,12 @@ public class LogbookConfig
             MDC.put(HttpTracingFields.URI.getFieldName(), httpLog.getRequestUri());
             MDC.put(HttpTracingFields.CONTENT_TYPE.getFieldName(), httpLog.getRequestContentType());
             MDC.put(HttpTracingFields.USER_AGENT.getFieldName(), httpLog.getRequestUserAgent());
-            MDC.put(HttpTracingFields.DURATION.getFieldName(), Optional.ofNullable(httpLog.getRequestDuration())
-                    .map(Duration::toMillis)
-                    .map(String::valueOf)
-                    .orElse(null));
+            MDC.put(HttpTracingFields.IP_ADDRESS.getFieldName(), httpLog.getRequestIpAddress());
+            MDC.put(HttpTracingFields.DURATION.getFieldName(), httpLog.getRequestDurationMilis());
             MDC.put(HttpTracingFields.METHOD.getFieldName(), httpLog.getMethod());
             MDC.put(HttpTracingFields.RESPONSE_CONTENT_TYPE.getFieldName(), httpLog.getResponseContentType());
             MDC.put(HttpTracingFields.STATUS.getFieldName(), httpLog.getResponseStatus());
-            MDC.put(HttpTracingFields.REUQEST_HOST.getFieldName(), httpLog.getRequestHost());
+            MDC.put(HttpTracingFields.REQUEST_HOST.getFieldName(), httpLog.getRequestHost());
         }
 
         private void clearMdc()
@@ -225,7 +221,8 @@ public class LogbookConfig
         String requestUri;
         String requestContentType;
         String requestUserAgent;
-        Duration requestDuration;
+        String requestIpAddress;
+        String requestDurationMilis;
         String requestBody;
         String method;
         String responseBody;

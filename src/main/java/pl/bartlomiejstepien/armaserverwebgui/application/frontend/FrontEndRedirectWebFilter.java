@@ -14,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 
 @Component
-@Order(value = Ordered.HIGHEST_PRECEDENCE + 1)
+@Order(value = Ordered.HIGHEST_PRECEDENCE + 2)
 public class FrontEndRedirectWebFilter extends OncePerRequestFilter
 {
     private boolean isNotApiRequest(String uri)

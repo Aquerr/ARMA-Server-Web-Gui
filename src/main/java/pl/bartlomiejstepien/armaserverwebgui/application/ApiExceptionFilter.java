@@ -16,7 +16,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-@Order(Ordered.HIGHEST_PRECEDENCE + 2)
+@Order(Ordered.HIGHEST_PRECEDENCE + 3)
 @Component
 @Slf4j
 @RequiredArgsConstructor
