@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.exception.BadAuthTokenException;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtService;
+import pl.bartlomiejstepien.armaserverwebgui.application.tracing.HttpTracingFields;
 
 import java.io.IOException;
 
@@ -38,6 +40,7 @@ public class JwtFilter extends OncePerRequestFilter
         {
             Authentication authentication = authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(jwt, jwt));
             authenticate(authentication);
+            MDC.put(HttpTracingFields.USER_ID.getFieldName(), authentication.getName()); // Will be cleared in LogbookFilter
             filterChain.doFilter(request, response);
         }
         catch (Exception exception)

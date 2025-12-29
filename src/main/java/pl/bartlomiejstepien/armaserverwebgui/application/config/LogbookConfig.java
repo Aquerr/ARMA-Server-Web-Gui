@@ -189,6 +189,7 @@ public class LogbookConfig
                     .responseContentType(response.getContentType())
                     .responseBody(response.getBodyAsString())
                     .responseStatus(String.format("%s %s", response.getStatus(), response.getReasonPhrase()))
+                    .userId(MDC.get(HttpTracingFields.USER_ID.getFieldName()))
                     .build();
         }
 
@@ -225,6 +226,7 @@ public class LogbookConfig
         String requestDurationMilis;
         String requestBody;
         String method;
+        String userId;
         String responseBody;
         String responseContentType;
         String responseStatus;
