@@ -1,6 +1,7 @@
-import { Component, HostListener, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ThemeService } from "./service/util/theme.service";
 import { ApplicationService } from "./service/application.service";
+import { IconRegistrarService } from "./service/icon-registrar.service";
 
 @Component({
   selector: "app-root",
@@ -18,7 +19,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private themeService: ThemeService,
-    private applicationService: ApplicationService
+    private applicationService: ApplicationService,
+    private iconRegistrarService: IconRegistrarService
   ) {}
 
   ngOnInit() {
