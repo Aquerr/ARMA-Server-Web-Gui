@@ -55,6 +55,7 @@ public class SecurityConfig
                         auths.requestMatchers("/api/v1/actuator/health").permitAll();
                         auths.requestMatchers(ANT_PATTERN_ALL_API_ENDPOINTS).authenticated();
                         auths.requestMatchers("/ws/**").permitAll();
+                        auths.requestMatchers("/assets/**").permitAll();
                         auths.requestMatchers("/static/**").permitAll();
                         auths.requestMatchers("/public/**").permitAll();
 
