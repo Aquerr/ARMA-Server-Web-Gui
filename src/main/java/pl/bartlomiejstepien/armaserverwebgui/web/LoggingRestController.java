@@ -7,6 +7,8 @@ import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,8 +51,13 @@ public class LoggingRestController
 
     @HasPermissionLogsView
     @GetMapping(value = "/logs-sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter subscribeToLogPublisher()
+    public SseEmitter subscribeToLogPublisher(Authentication authentication)
     {
+        // Make sure that request is authenticated on connection establishment
+        if (authentication == null || !authentication.isAuthenticated())
+        {
+            throw new AccessDeniedException("Unauthorized SSE connection");
+        }
         return this.processService.getServerLogEmitter();
     }
 

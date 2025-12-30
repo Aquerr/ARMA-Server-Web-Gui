@@ -1,11 +1,11 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.process;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
@@ -31,13 +31,15 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Service
@@ -70,21 +72,52 @@ public class ProcessServiceImpl implements ProcessService
     private Thread ioServerThread;
     private Thread ioServerErrorThread;
 
-
     private static final ConcurrentLinkedDeque<SseEmitter> serverLogsEmitters = new ConcurrentLinkedDeque<>();
+    private static final ScheduledExecutorService SERVER_LOGS_EMITTER_HEALTHCHECK_SERVICE = Executors.newSingleThreadScheduledExecutor();
+
+    @PostConstruct
+    public void postConstruct()
+    {
+        SERVER_LOGS_EMITTER_HEALTHCHECK_SERVICE.scheduleAtFixedRate(this::performServerLogsEmittersHealthcheck, 5, 10, TimeUnit.SECONDS);
+    }
+
+    private void performServerLogsEmittersHealthcheck()
+    {
+        try
+        {
+            serverLogsEmitters.forEach(emitter ->
+            {
+                try
+                {
+                    emitter.send(SseEmitter.event().name("ping").data("healthcheck"));
+                }
+                catch (IOException ex)
+                {
+                    log.warn("SseEmitter did not respond to ping event. Connection will be closed.", ex);
+                    emitter.complete(); //Not needed... but just in case...
+                }
+            });
+        }
+        catch (Exception exception)
+        {
+            log.warn("Could not perform SseEmitters healthcheck. Reason: {}", exception.getMessage());
+        }
+    }
 
     @Override
     public SseEmitter getServerLogEmitter()
     {
-        SseEmitter emitter = new SseEmitter(Duration.ofSeconds(60).toMillis());
+        SseEmitter emitter = new SseEmitter(0L);
         emitter.onTimeout(() ->
         {
             serverLogsEmitters.remove(emitter);
+            log.info("SseEmitter timeout");
             emitter.complete();
         });
         emitter.onError(throwable ->
         {
             serverLogsEmitters.remove(emitter);
+            log.warn("SseEmitter error", throwable);
             emitter.complete();
         });
         emitter.onCompletion(() -> serverLogsEmitters.remove(emitter));

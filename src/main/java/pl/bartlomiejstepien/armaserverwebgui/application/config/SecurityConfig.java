@@ -51,6 +51,7 @@ public class SecurityConfig
                         auths.requestMatchers("/api/v1/auth").permitAll();
                         auths.requestMatchers("/api/v1/auth/logout").permitAll();
                         auths.requestMatchers("/api/v1/ws/**").permitAll();
+                        auths.requestMatchers("/api/v1/logging/logs-sse").permitAll();
                         auths.requestMatchers("/api/v1/actuator/info").permitAll();
                         auths.requestMatchers("/api/v1/actuator/health").permitAll();
                         auths.requestMatchers(ANT_PATTERN_ALL_API_ENDPOINTS).authenticated();

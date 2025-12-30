@@ -44,6 +44,11 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
       headers: headers
     });
 
+    // To handle named sse events like i.e. "ping"
+    // this.eventSource.addEventListener("ping", (event) => {
+    //   console.log("Ping", event);
+    // });
+
     this.fetchEventSource(this.eventSource).subscribe({
       next: (value) => {
         this.logs += value + "\n";
