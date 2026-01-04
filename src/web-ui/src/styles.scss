@@ -73,6 +73,10 @@
   --mat-autocomplete-background-color: var(--aswg-input-bg-color) !important;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 a {
   color: var(--aswg-primary-color);
 }
@@ -284,25 +288,6 @@ body {
   width: 40rem !important;
 }
 
-.row {
-  --bs-gutter-x: 1.5rem;
-  --bs-gutter-y: 0;
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: calc(-1 * var(--bs-gutter-y));
-  margin-right: calc(-0.5 * var(--bs-gutter-x));
-  margin-left: calc(-0.5 * var(--bs-gutter-x));
-}
-
-.row > * {
-  flex-shrink: 0;
-  width: 102%;
-  max-width: 100%;
-  padding-right: calc(var(--bs-gutter-x) * 0.5);
-  padding-left: calc(var(--bs-gutter-x) * 0.5);
-  margin-top: var(--bs-gutter-y);
-}
-
 .col {
   flex: 1 0 0%;
 }
@@ -310,11 +295,7 @@ body {
 hr {
   margin: 1rem 0;
   color: inherit;
-  border: 0;
-  border-top-width: 0px;
-  border-top-style: none;
-  border-top-color: currentcolor;
-  border-top: 1px solid;
+  border-top: 1px solid currentcolor;
   opacity: 0.25;
 }
 

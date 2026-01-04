@@ -28,7 +28,7 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="difficulty-panel-content">
-      <hr />
+      <hr>
       <div class="difficulty-panel-content-options">
         <div class="valued-options">
           <mat-form-field>
@@ -40,7 +40,7 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field>
-            <mat-label>Friendly Tags </mat-label>
+            <mat-label>Friendly Tags</mat-label>
             <mat-select [(ngModel)]="difficultyProfile.options.friendlyTags">
               <mat-option [value]="0">Never</mat-option>
               <mat-option [value]="1">Limited Distance</mat-option>
@@ -56,7 +56,7 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field>
-            <mat-label>Detected Mines </mat-label>
+            <mat-label>Detected Mines</mat-label>
             <mat-select [(ngModel)]="difficultyProfile.options.detectedMines">
               <mat-option [value]="0">Never</mat-option>
               <mat-option [value]="1">Limited Distance</mat-option>
@@ -149,45 +149,56 @@
         </div>
         <div class="toggle-options">
           <mat-checkbox [(ngModel)]="difficultyProfile.options.reducedDamage"
-            >Reduced Damage</mat-checkbox
+          >Reduced Damage
+          </mat-checkbox
           >
           <mat-checkbox [(ngModel)]="difficultyProfile.options.staminaBar"
-            >Stamina Bar</mat-checkbox
+          >Stamina Bar
+          </mat-checkbox
           >
           <mat-checkbox [(ngModel)]="difficultyProfile.options.weaponCrosshair"
-            >Weapon Crosshair</mat-checkbox
+          >Weapon Crosshair
+          </mat-checkbox
           >
           <mat-checkbox [(ngModel)]="difficultyProfile.options.visionAid">Vision Aid</mat-checkbox>
           <mat-checkbox [(ngModel)]="difficultyProfile.options.cameraShake"
-            >Camera Shake</mat-checkbox
+          >Camera Shake
+          </mat-checkbox
           >
           <mat-checkbox [(ngModel)]="difficultyProfile.options.scoreTable"
-            >Score Table</mat-checkbox
+          >Score Table
+          </mat-checkbox
           >
           <mat-checkbox [(ngModel)]="difficultyProfile.options.deathMessages"
-            >Death Messages</mat-checkbox
+          >Death Messages
+          </mat-checkbox
           >
           <mat-checkbox [(ngModel)]="difficultyProfile.options.vonId">VON ID</mat-checkbox>
 
           <mat-checkbox [(ngModel)]="difficultyProfile.options.mapContentFriendly"
-            >Friendlies On Map</mat-checkbox
+          >Friendlies On Map
+          </mat-checkbox
           >
           <mat-checkbox [(ngModel)]="difficultyProfile.options.mapContentEnemy"
-            >Enemies On Map</mat-checkbox
+          >Enemies On Map
+          </mat-checkbox
           >
           <mat-checkbox [(ngModel)]="difficultyProfile.options.mapContentMines"
-            >Mines On Map</mat-checkbox
+          >Mines On Map
+          </mat-checkbox
           >
 
           <mat-checkbox [(ngModel)]="difficultyProfile.options.autoReport"
-            >Automatic Reporting</mat-checkbox
+          >Automatic Reporting
+          </mat-checkbox
           >
           <mat-checkbox [(ngModel)]="difficultyProfile.options.multipleSaves"
-            >Multiple Saves</mat-checkbox
+          >Multiple Saves
+          </mat-checkbox
           >
         </div>
       </div>
-      <hr />
+      <hr>
       <div class="difficulty-panel-content-buttons">
         <button mat-icon-button (click)="saveDifficulty(difficultyProfile)">
           <mat-icon [fontIcon]="'save'"></mat-icon>

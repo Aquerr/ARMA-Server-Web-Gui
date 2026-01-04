@@ -1,7 +1,6 @@
 <div class="container" style="height: 100%">
   @if (isMobile) {
     <app-mobile-header
-      class="row mb-4"
       (changeThemeEmit)="changeTheme()"
       [darkMode]="isDarkMode()"
     ></app-mobile-header>

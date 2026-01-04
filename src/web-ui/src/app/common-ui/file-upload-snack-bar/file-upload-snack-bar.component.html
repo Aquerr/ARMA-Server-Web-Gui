@@ -13,18 +13,19 @@
         <mat-icon class="cancel-upload-button" (click)="cancelUpload(file)" matTooltip="Cancel upload">cancel</mat-icon>
         <mat-label>{{ file.fileName }}</mat-label>
         <mat-label style="filter: brightness(75%)">{{
-          (file.uploadedSize | filesize) + "/" + (file.totalSize | filesize)
-        }}</mat-label>
+            (file.uploadedSize | filesize) + "/" + (file.totalSize | filesize)
+          }}
+        </mat-label>
       </div>
       <mat-progress-bar
         class="mt-2"
         mode="buffer"
         [value]="file.progress"
         [bufferValue]="file.totalSize"
-        >
+      >
       </mat-progress-bar>
       @if (i < getUploadingFiles().length - 1) {
-        <hr />
+        <hr>
       }
     </div>
   }

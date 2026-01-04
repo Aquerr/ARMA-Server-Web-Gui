@@ -15,7 +15,7 @@
           [canInstall]="canInstall(workshopMod)"
           (onModInstallDelete)="onModInstallDelete($event)"
           class="workshop-list-item"
-          >
+        >
         </app-workshop-item>
       }
       <div>
@@ -25,7 +25,7 @@
       </div>
     </div>
   </div>
-  <hr />
+  <hr>
   <div class="installed-mods">
     <h2>Installed mods</h2>
     <div class="installed-mods-list">
@@ -35,7 +35,7 @@
           [canInstall]="false"
           (onModInstallDelete)="onModInstallDelete($event)"
           class="workshop-list-item"
-          >
+        >
         </app-workshop-item>
       }
       @if (installedWorkshopMods.length == 0) {
