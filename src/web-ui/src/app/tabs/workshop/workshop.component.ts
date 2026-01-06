@@ -1,16 +1,27 @@
 import { Component, OnDestroy, OnInit, signal } from "@angular/core";
 import { WorkshopMod } from "../../model/workshop.model";
 import { WorkshopService } from "../../service/workshop.service";
-import { FormControl } from "@angular/forms";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { ModInstallWebsocketService } from "./mod-install-websocket/mod-install-websocket.service";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
-import { PageEvent } from "@angular/material/paginator";
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
+import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { MatButton } from "@angular/material/button";
+import { WorkshopItemComponent } from "./workshop-item/workshop-item.component";
 
 @Component({
   selector: "app-workshop",
   templateUrl: "./workshop.component.html",
-  styleUrls: ["./workshop.component.scss"],
-  standalone: false
+  imports: [
+    MatFormField,
+    MatLabel,
+    ReactiveFormsModule,
+    MatButton,
+    MatPaginator,
+    MatInput,
+    WorkshopItemComponent
+  ],
+  styleUrls: ["./workshop.component.scss"]
 })
 export class WorkshopComponent implements OnInit, OnDestroy {
   workshopMods: WorkshopMod[] = [];

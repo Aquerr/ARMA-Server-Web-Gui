@@ -2,12 +2,19 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { VoteCmd } from "../../../model/vote-cmd.model";
 import { CommandListItem } from "./vote-cmd-list-item/vote-cmd-list-item.model";
 import { FormGroup } from "@angular/forms";
+import { MatIconButton } from "@angular/material/button";
+import { VoteCmdListItemComponent } from "./vote-cmd-list-item/vote-cmd-list-item.component";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: "app-vote-cmds-list",
   templateUrl: "./vote-cmds-list.component.html",
-  styleUrl: "./vote-cmds-list.component.scss",
-  standalone: false
+  imports: [
+    MatIconButton,
+    VoteCmdListItemComponent,
+    MatIcon
+  ],
+  styleUrl: "./vote-cmds-list.component.scss"
 })
 export class VoteCmdsListComponent implements OnInit {
   // @Input() voteCommands: VoteCmd[] = [];

@@ -5,12 +5,42 @@ import { ServerDifficultyService } from "../../../service/server-difficulty.serv
 import { NotificationService } from "../../../service/notification.service";
 import { MatDialog } from "@angular/material/dialog";
 import { DifficultyDeleteConfirmDialogComponent } from "../difficulty-delete-confirm-dialog/difficulty-delete-confirm-dialog.component";
+import {
+  MatAccordion,
+  MatExpansionPanel, MatExpansionPanelDescription,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle
+} from "@angular/material/expansion";
+import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { FormsModule } from "@angular/forms";
+import { NgClass } from "@angular/common";
+import { MatIcon } from "@angular/material/icon";
+import { MatOption, MatSelect } from "@angular/material/select";
+import { MatCheckbox } from "@angular/material/checkbox";
+import { MatButton, MatIconButton } from "@angular/material/button";
 
 @Component({
   selector: "app-difficulty-panel",
   templateUrl: "./difficulty-panel.component.html",
-  styleUrl: "./difficulty-panel.component.scss",
-  standalone: false
+  imports: [
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatInput,
+    FormsModule,
+    NgClass,
+    MatExpansionPanelDescription,
+    MatIcon,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatCheckbox,
+    MatButton,
+    MatIconButton
+  ],
+  styleUrl: "./difficulty-panel.component.scss"
 })
 export class DifficultyPanelComponent {
   @Input() difficultyProfile!: DifficultyProfile;

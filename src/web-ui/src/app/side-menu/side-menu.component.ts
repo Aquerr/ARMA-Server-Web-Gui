@@ -6,12 +6,21 @@ import { NotificationService } from "../service/notification.service";
 import { map, Observable, of, switchMap, take, tap } from "rxjs";
 import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.service";
 import { fromPromise } from "rxjs/internal/observable/innerFrom";
+import { MatDivider, MatListItem, MatNavList } from "@angular/material/list";
+import { MatIcon } from "@angular/material/icon";
+import { NgClass } from "@angular/common";
 
 @Component({
   selector: "app-side-menu",
   templateUrl: "./side-menu.component.html",
-  styleUrls: ["./side-menu.component.scss"],
-  standalone: false
+  imports: [
+    MatNavList,
+    MatListItem,
+    MatIcon,
+    MatDivider,
+    NgClass
+  ],
+  styleUrls: ["./side-menu.component.scss"]
 })
 export class SideMenuComponent {
   @Input()

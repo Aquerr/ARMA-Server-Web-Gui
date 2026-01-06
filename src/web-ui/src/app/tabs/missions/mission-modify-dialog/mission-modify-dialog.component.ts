@@ -7,15 +7,37 @@ import {
   ViewContainerRef
 } from "@angular/core";
 import { MissionParameterComponent } from "./mission-parameter/mission-parameter.component";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions, MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle
+} from "@angular/material/dialog";
 import { Mission, MissionDifficulty, MissionParam } from "../../../model/mission.model";
 import { Subscription } from "rxjs";
+import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { FormsModule } from "@angular/forms";
+import { MatOption, MatSelect } from "@angular/material/select";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-mission-modify-dialog",
   templateUrl: "./mission-modify-dialog.component.html",
-  styleUrls: ["./mission-modify-dialog.component.scss"],
-  standalone: false
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatFormField,
+    MatLabel,
+    FormsModule,
+    MatSelect,
+    MatOption,
+    MatButton,
+    MatDialogActions,
+    MatDialogClose,
+    MatInput
+  ],
+  styleUrls: ["./mission-modify-dialog.component.scss"]
 })
 export class MissionModifyDialogComponent implements OnInit {
   @ViewChild("viewContainerRef", { read: ViewContainerRef, static: true })

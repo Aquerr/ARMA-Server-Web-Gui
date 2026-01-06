@@ -5,7 +5,6 @@ import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.servi
   selector: "app-aswg-spinner",
   templateUrl: "./aswg-spinner.component.html",
   styleUrls: ["./aswg-spinner.component.scss"],
-  standalone: false,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AswgSpinnerComponent {

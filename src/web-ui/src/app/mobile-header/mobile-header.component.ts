@@ -1,11 +1,18 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { AuthService } from "../service/auth.service";
+import { MatIcon } from "@angular/material/icon";
+import { SideMenuComponent } from "../side-menu/side-menu.component";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: "app-mobile-header",
   templateUrl: "./mobile-header.component.html",
-  styleUrls: ["./mobile-header.component.scss"],
-  standalone: false
+  imports: [
+    MatIcon,
+    SideMenuComponent,
+    RouterLink
+  ],
+  styleUrls: ["./mobile-header.component.scss"]
 })
 export class MobileHeaderComponent {
   @Input()

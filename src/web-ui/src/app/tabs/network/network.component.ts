@@ -3,13 +3,27 @@ import { ServerNetworkService } from "../../service/server-network.service";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
 import { NetworkFormService } from "./network-form.service";
-import { FormGroup } from "@angular/forms";
+import { FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { MatError, MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { MatTooltip } from "@angular/material/tooltip";
+import { MatOption, MatSelect } from "@angular/material/select";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-network",
   templateUrl: "./network.component.html",
-  styleUrls: ["./network.component.scss"],
-  standalone: false
+  imports: [
+    ReactiveFormsModule,
+    MatFormField,
+    MatTooltip,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatError,
+    MatInput,
+    MatButton
+  ],
+  styleUrls: ["./network.component.scss"]
 })
 export class NetworkComponent implements OnInit {
   form: FormGroup;

@@ -1,10 +1,15 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { MatIconButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: "app-mod-preset-item",
   templateUrl: "./mod-preset-item.component.html",
-  styleUrls: ["./mod-preset-item.component.scss"],
-  standalone: false
+  imports: [
+    MatIconButton,
+    MatIcon
+  ],
+  styleUrls: ["./mod-preset-item.component.scss"]
 })
 export class ModPresetItemComponent {
   @Input() presetName: string = "";

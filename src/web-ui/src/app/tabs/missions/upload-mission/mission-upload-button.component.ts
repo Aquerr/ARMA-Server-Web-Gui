@@ -1,11 +1,18 @@
 import { Component, inject } from "@angular/core";
 import { MissionUploadService } from "../service/mission-upload.service";
+import { MatTooltip } from "@angular/material/tooltip";
+import { MatMiniFabButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: "app-upload-mission",
   templateUrl: "./mission-upload-button.component.html",
-  styleUrls: ["./mission-upload-button.component.scss"],
-  standalone: false
+  imports: [
+    MatTooltip,
+    MatMiniFabButton,
+    MatIcon
+  ],
+  styleUrls: ["./mission-upload-button.component.scss"]
 })
 export class MissionUploadButtonComponent {
   private readonly missionUploadService = inject(MissionUploadService);

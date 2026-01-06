@@ -1,10 +1,18 @@
 import { Component } from "@angular/core";
+import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from "@angular/material/dialog";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-difficulty-delete-confirm-dialog",
   templateUrl: "./difficulty-delete-confirm-dialog.component.html",
-  styleUrls: ["./difficulty-delete-confirm-dialog.component.scss"],
-  standalone: false
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose
+  ],
+  styleUrls: ["./difficulty-delete-confirm-dialog.component.scss"]
 })
 export class DifficultyDeleteConfirmDialogComponent {
 }

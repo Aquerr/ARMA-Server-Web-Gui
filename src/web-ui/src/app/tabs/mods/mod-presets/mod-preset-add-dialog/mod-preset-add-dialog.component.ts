@@ -1,12 +1,31 @@
 import { Component } from "@angular/core";
-import { MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle
+} from "@angular/material/dialog";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { MatError, MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-mod-preset-add-dialog",
   templateUrl: "./mod-preset-add-dialog.component.html",
-  styleUrls: ["./mod-preset-add-dialog.component.scss"],
-  standalone: false
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose
+  ],
+  styleUrls: ["./mod-preset-add-dialog.component.scss"]
 })
 export class ModPresetAddDialogComponent {
   form: FormGroup;

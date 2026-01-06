@@ -7,18 +7,50 @@ import { MissionDeleteConfirmDialogComponent } from "./mission-delete-confirm-di
 import { NotificationService } from "../../service/notification.service";
 import { MissionModifyDialogComponent } from "./mission-modify-dialog/mission-modify-dialog.component";
 import { Mission } from "../../model/mission.model";
-import { FormControl } from "@angular/forms";
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDropList,
+  CdkDropListGroup,
+  moveItemInArray,
+  transferArrayItem
+} from "@angular/cdk/drag-drop";
 import { MissionUploadService } from "./service/mission-upload.service";
 import { NewMissionDialogComponent } from "./new-mission-dialog/new-mission-dialog.component";
 import { DialogService } from "../../service/dialog.service";
 import { moveItemBetweenSignalLists } from "../../util/signal/signal-utils";
+import { DragAndDropFileDirective } from "../../common-ui/directive/drag-and-drop-file.directive";
+import { DragDropOverlay } from "../../common-ui/drag-and-drop-overlay/drag-and-drop-overlay.component";
+import { NgClass, NgTemplateOutlet } from "@angular/common";
+import { MatButton, MatIconButton } from "@angular/material/button";
+import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { MatTooltip } from "@angular/material/tooltip";
+import { MatIcon } from "@angular/material/icon";
+import { MissionUploadButtonComponent } from "./upload-mission/mission-upload-button.component";
 
 @Component({
   selector: "app-missions",
   templateUrl: "./missions.component.html",
-  styleUrls: ["./missions.component.scss"],
-  standalone: false
+  imports: [
+    DragAndDropFileDirective,
+    DragDropOverlay,
+    NgTemplateOutlet,
+    NgClass,
+    MatButton,
+    MatFormField,
+    MatLabel,
+    ReactiveFormsModule,
+    MatInput,
+    CdkDropListGroup,
+    CdkDropList,
+    CdkDrag,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
+    MissionUploadButtonComponent
+  ],
+  styleUrls: ["./missions.component.scss"]
 })
 export class MissionsComponent implements OnInit, OnDestroy {
   disabledMissions = signal<Mission[]>([]);

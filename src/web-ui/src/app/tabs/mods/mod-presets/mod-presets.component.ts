@@ -13,12 +13,23 @@ import { ModPresetSaveDialogComponent } from "./mod-preset-save-dialog/mod-prese
 import { Mod } from "../../../model/mod.model";
 import { ModPresetDeleteDialogComponent } from "./mod-preset-delete-dialog/mod-preset-delete-dialog.component";
 import { ModPresetParserService } from "./service/mod-preset-parser.service";
+import { MatButton } from "@angular/material/button";
+import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
+import { MatDivider } from "@angular/material/list";
+import { ModPresetItemComponent } from "./mod-preset-item/mod-preset-item.component";
 
 @Component({
   selector: "app-mod-presets",
   templateUrl: "./mod-presets.component.html",
-  styleUrls: ["./mod-presets.component.scss"],
-  standalone: false
+  imports: [
+    MatButton,
+    MatMenu,
+    MatDivider,
+    MatMenuItem,
+    ModPresetItemComponent,
+    MatMenuTrigger
+  ],
+  styleUrls: ["./mod-presets.component.scss"]
 })
 export class ModPresetsComponent {
   @ViewChild("presetFileInput") fileInputComponent!: ElementRef<HTMLInputElement>;

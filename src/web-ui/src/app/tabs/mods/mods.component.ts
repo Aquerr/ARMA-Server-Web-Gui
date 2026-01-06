@@ -4,19 +4,41 @@ import { LoadingSpinnerMaskService } from "src/app/service/loading-spinner-mask.
 import { ServerModsService } from "src/app/service/server-mods.service";
 import { NotificationService } from "../../service/notification.service";
 import { Mod } from "../../model/mod.model";
-import { FormControl } from "@angular/forms";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { ModUploadService } from "./service/mod-upload.service";
 import { DialogService } from "../../service/dialog.service";
 import { ModListsComponent } from "./mod-lists/mod-lists.component";
 import { ModDownloadQueueDialogComponent } from "./mod-download-queue-dialog/mod-download-queue-dialog.component";
 import { PermissionService } from "../../service/permission.service";
 import { AswgAuthority } from "../../model/authority.model";
+import { DragAndDropFileDirective } from "../../common-ui/directive/drag-and-drop-file.directive";
+import { DragDropOverlay } from "../../common-ui/drag-and-drop-overlay/drag-and-drop-overlay.component";
+import { NgClass, NgTemplateOutlet } from "@angular/common";
+import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { MatButton } from "@angular/material/button";
+import { RouterLink } from "@angular/router";
+import { ModPresetsComponent } from "./mod-presets/mod-presets.component";
+import { ModUploadButtonComponent } from "./mod-upload-button/mod-upload-button.component";
 
 @Component({
   selector: "app-mods",
   templateUrl: "./mods.component.html",
-  styleUrls: ["./mods.component.scss"],
-  standalone: false
+  imports: [
+    DragAndDropFileDirective,
+    DragDropOverlay,
+    NgTemplateOutlet,
+    NgClass,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    ReactiveFormsModule,
+    MatButton,
+    RouterLink,
+    ModPresetsComponent,
+    ModListsComponent,
+    ModUploadButtonComponent
+  ],
+  styleUrls: ["./mods.component.scss"]
 })
 export class ModsComponent implements OnInit, OnDestroy, AfterViewInit {
   reloadModsDataSubject: Subject<void>;

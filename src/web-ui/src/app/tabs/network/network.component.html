@@ -35,11 +35,11 @@
         >
           <mat-label>Max Ping</mat-label>
           <input
-            name="maxping"
+            (keyup)="allowDigits($event)"
             formControlName="maxPing"
             matInput
             min="0"
-            (keyup)="allowDigits($event)"
+            name="maxping"
           />
           @if (hasFormError('maxPing', 'required')) {
             <mat-error>This field is required</mat-error>
@@ -48,20 +48,17 @@
         <mat-form-field>
           <mat-label>Disconnect Timeout</mat-label>
           <input
-            name="disconnectTimeout"
+            (keyup)="allowDigits($event)"
             formControlName="disconnectTimeout"
             matInput
             min="5"
-            (keyup)="allowDigits($event)"
+            name="disconnectTimeout"
           />
           @if (hasFormError('disconnectTimeout', 'min')) {
             <mat-error>Minimum value is 5</mat-error>
           }
           @if (hasFormError('disconnectTimeout', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -70,17 +67,14 @@
         >
           <mat-label>Max Desync</mat-label>
           <input
-            name="maxDesync"
+            (keyup)="allowDigits($event)"
             formControlName="maxDesync"
             matInput
             min="0"
-            (keyup)="allowDigits($event)"
+            name="maxDesync"
           />
           @if (hasFormError('maxDesync', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -89,17 +83,14 @@
         >
           <mat-label>Max Packet Loss</mat-label>
           <input
-            name="maxPacketLoss"
+            (keyup)="allowDigits($event)"
             formControlName="maxPacketLoss"
             matInput
             min="0"
-            (keyup)="allowDigits($event)"
+            name="maxPacketLoss"
           />
           @if (hasFormError('maxPacketLoss', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -112,10 +103,7 @@
             <mat-option [value]="false">No</mat-option>
           </mat-select>
           @if (hasFormError('enablePlayerDiag', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -124,17 +112,14 @@
         >
           <mat-label>Steam Protocol Max Data Size</mat-label>
           <input
-            name="steamProtocolMaxDataSize"
+            (keyup)="allowDigits($event)"
             formControlName="steamProtocolMaxDataSize"
             matInput
             min="0"
-            (keyup)="allowDigits($event)"
+            name="steamProtocolMaxDataSize"
           />
           @if (hasFormError('steamProtocolMaxDataSize', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
         </mat-form-field>
       </div>
@@ -150,23 +135,17 @@
         >
           <mat-label>Min Bandwidth</mat-label>
           <input
-            name="minBandwidth"
+            (keyup)="allowDigits($event)"
             formControlName="minBandwidth"
             matInput
             min="0"
-            (keyup)="allowDigits($event)"
+            name="minBandwidth"
           />
           @if (hasFormError('minBandwidth', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
           @if (hasFormError('minBandwidth', 'pattern')) {
-            <mat-error
-            >Only digits are permitted
-            </mat-error
-            >
+            <mat-error>Only digits are permitted</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -175,45 +154,33 @@
         >
           <mat-label>Max Bandwidth</mat-label>
           <input
-            name="maxBandwidth"
+            (keyup)="allowDigits($event)"
             formControlName="maxBandwidth"
             matInput
             min="0"
-            (keyup)="allowDigits($event)"
+            name="maxBandwidth"
           />
           @if (hasFormError('maxBandwidth', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
           @if (hasFormError('maxBandwidth', 'pattern')) {
-            <mat-error
-            >Only digits are permitted
-            </mat-error
-            >
+            <mat-error>Only digits are permitted</mat-error>
           }
         </mat-form-field>
         <mat-form-field>
           <mat-label>Max Msg Send</mat-label>
           <input
-            name="maxMsgSend"
+            (keyup)="allowDigits($event)"
             formControlName="maxMsgSend"
             matInput
             min="0"
-            (keyup)="allowDigits($event)"
+            name="maxMsgSend"
           />
           @if (hasFormError('maxMsgSend', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
           @if (hasFormError('maxMsgSend', 'pattern')) {
-            <mat-error
-            >Only digits are permitted
-            </mat-error
-            >
+            <mat-error>Only digits are permitted</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -222,23 +189,17 @@
         >
           <mat-label>Max Size Guaranteed</mat-label>
           <input
-            name="maxSizeGuaranteed"
+            (keyup)="allowDigits($event)"
             formControlName="maxSizeGuaranteed"
             matInput
             min="0"
-            (keyup)="allowDigits($event)"
+            name="maxSizeGuaranteed"
           />
           @if (hasFormError('maxSizeGuaranteed', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
           @if (hasFormError('maxSizeGuaranteed', 'pattern')) {
-            <mat-error
-            >Only digits are permitted
-            </mat-error
-            >
+            <mat-error>Only digits are permitted</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -247,23 +208,17 @@
         >
           <mat-label>Max Size Non Guaranteed</mat-label>
           <input
-            name="maxSizeNonGuaranteed"
+            (keyup)="allowDigits($event)"
             formControlName="maxSizeNonGuaranteed"
             matInput
             min="0"
-            (keyup)="allowDigits($event)"
+            name="maxSizeNonGuaranteed"
           />
           @if (hasFormError('maxSizeNonGuaranteed', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
           @if (hasFormError('maxSizeNonGuaranteed', 'pattern')) {
-            <mat-error
-            >Only digits are permitted
-            </mat-error
-            >
+            <mat-error>Only digits are permitted</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -272,23 +227,17 @@
         >
           <mat-label>Min Error To Send</mat-label>
           <input
-            name="minErrorToSend"
+            (keyup)="allowDecimals($event)"
             formControlName="minErrorToSend"
             matInput
+            name="minErrorToSend"
             type="text"
-            (keyup)="allowDecimals($event)"
           />
           @if (hasFormError('minErrorToSend', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
           @if (hasFormError('minErrorToSend', 'pattern')) {
-            <mat-error
-            >Only digits are permitted
-            </mat-error
-            >
+            <mat-error>Only digits are permitted</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -297,23 +246,17 @@
         >
           <mat-label>Min Error To Send Near</mat-label>
           <input
-            name="minErrorToSendNear"
+            (keyup)="allowDecimals($event)"
             formControlName="minErrorToSendNear"
             matInput
+            name="minErrorToSendNear"
             type="text"
-            (keyup)="allowDecimals($event)"
           />
           @if (hasFormError('minErrorToSendNear', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
           @if (hasFormError('minErrorToSendNear', 'pattern')) {
-            <mat-error
-            >Only digits are permitted
-            </mat-error
-            >
+            <mat-error>Only digits are permitted</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -322,22 +265,16 @@
         >
           <mat-label>Max Custom File Size</mat-label>
           <input
-            name="maxCustomFileSize"
+            (keyup)="allowDigits($event)"
             formControlName="maxCustomFileSize"
             matInput
-            (keyup)="allowDigits($event)"
+            name="maxCustomFileSize"
           />
           @if (hasFormError('maxCustomFileSize', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
           @if (hasFormError('maxCustomFileSize', 'pattern')) {
-            <mat-error
-            >Only digits are permitted
-            </mat-error
-            >
+            <mat-error>Only digits are permitted</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -346,22 +283,16 @@
         >
           <mat-label>Max Packet Size</mat-label>
           <input
-            name="maxPacketSize"
+            (keyup)="allowDigits($event)"
             formControlName="maxPacketSize"
             matInput
-            (keyup)="allowDigits($event)"
+            name="maxPacketSize"
           />
           @if (hasFormError('maxPacketSize', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
           @if (hasFormError('maxPacketSize', 'pattern')) {
-            <mat-error
-            >Only digits are permitted
-            </mat-error
-            >
+            <mat-error>Only digits are permitted</mat-error>
           }
         </mat-form-field>
       </div>
@@ -377,29 +308,20 @@
         >
           <mat-label>Manual kick timeout</mat-label>
           <input
-            name="manualKickTimeout"
+            (keyup)="allowDigits($event)"
             formControlName="manualKickTimeout"
             matInput
             min="-2"
-            (keyup)="allowDigits($event)"
+            name="manualKickTimeout"
           />
           @if (hasFormError('manualKickTimeout', 'min')) {
-            <mat-error
-            >Minimum value is -2
-            </mat-error
-            >
+            <mat-error>Minimum value is -2</mat-error>
           }
           @if (hasFormError('manualKickTimeout', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
           @if (hasFormError('manualKickTimeout', 'pattern')) {
-            <mat-error
-            >Only digits are permitted
-            </mat-error
-            >
+            <mat-error>Only digits are permitted</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -407,29 +329,20 @@
         >
           <mat-label>Connectivity kick timeout</mat-label>
           <input
-            name="connectivityKickTimeout"
+            (keyup)="allowDigits($event)"
             formControlName="connectivityKickTimeout"
             matInput
             min="-2"
-            (keyup)="allowDigits($event)"
+            name="connectivityKickTimeout"
           />
           @if (hasFormError('connectivityKickTimeout', 'min')) {
-            <mat-error
-            >Minimum value is -2
-            </mat-error
-            >
+            <mat-error>Minimum value is -2</mat-error>
           }
           @if (hasFormError('connectivityKickTimeout', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
           @if (hasFormError('connectivityKickTimeout', 'pattern')) {
-            <mat-error
-            >Only digits are permitted
-            </mat-error
-            >
+            <mat-error>Only digits are permitted</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -437,29 +350,20 @@
         >
           <mat-label>BattlEye kick timeout</mat-label>
           <input
-            name="battlEyeKickTimeout"
+            (keyup)="allowDigits($event)"
             formControlName="battlEyeKickTimeout"
             matInput
             min="-2"
-            (keyup)="allowDigits($event)"
+            name="battlEyeKickTimeout"
           />
           @if (hasFormError('battlEyeKickTimeout', 'min')) {
-            <mat-error
-            >Minimum value is -2
-            </mat-error
-            >
+            <mat-error>Minimum value is -2</mat-error>
           }
           @if (hasFormError('battlEyeKickTimeout', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
           @if (hasFormError('battlEyeKickTimeout', 'pattern')) {
-            <mat-error
-            >Only digits are permitted
-            </mat-error
-            >
+            <mat-error>Only digits are permitted</mat-error>
           }
         </mat-form-field>
         <mat-form-field
@@ -467,35 +371,26 @@
         >
           <mat-label>Harmless kick timeout</mat-label>
           <input
-            name="harmlessKickTimeout"
+            (keyup)="allowDigits($event)"
             formControlName="harmlessKickTimeout"
             matInput
             min="-2"
-            (keyup)="allowDigits($event)"
+            name="harmlessKickTimeout"
           />
           @if (hasFormError('harmlessKickTimeout', 'min')) {
-            <mat-error
-            >Minimum value is -2
-            </mat-error
-            >
+            <mat-error>Minimum value is -2</mat-error>
           }
           @if (hasFormError('harmlessKickTimeout', 'required')) {
-            <mat-error
-            >This field is required
-            </mat-error
-            >
+            <mat-error>This field is required</mat-error>
           }
           @if (hasFormError('harmlessKickTimeout', 'pattern')) {
-            <mat-error
-            >Only digits are permitted
-            </mat-error
-            >
+            <mat-error>Only digits are permitted</mat-error>
           }
         </mat-form-field>
       </div>
     </div>
   </div>
   <div>
-    <button mat-flat-button color="primary" (click)="save()">Save</button>
+    <button (click)="save()" color="primary" mat-flat-button>Save</button>
   </div>
 </form>

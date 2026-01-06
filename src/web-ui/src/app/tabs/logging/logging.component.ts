@@ -2,12 +2,21 @@ import { Component, OnInit } from "@angular/core";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
 import { ServerLoggingService } from "../../service/server-logging.service";
+import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { FormsModule } from "@angular/forms";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-logging",
   templateUrl: "./logging.component.html",
-  styleUrls: ["./logging.component.scss"],
-  standalone: false
+  imports: [
+    MatFormField,
+    MatLabel,
+    FormsModule,
+    MatButton,
+    MatInput
+  ],
+  styleUrls: ["./logging.component.scss"]
 })
 export class LoggingComponent implements OnInit {
   logFile: string = "";

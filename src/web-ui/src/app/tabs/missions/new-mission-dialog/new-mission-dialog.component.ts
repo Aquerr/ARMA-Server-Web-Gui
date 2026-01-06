@@ -1,12 +1,38 @@
 import { Component } from "@angular/core";
-import { MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle
+} from "@angular/material/dialog";
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { MatOption, MatSelect } from "@angular/material/select";
+import { DragAndDropFileDirective } from "../../../common-ui/directive/drag-and-drop-file.directive";
+import { MatIcon } from "@angular/material/icon";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-new-mission-dialog",
   templateUrl: "./new-mission-dialog.component.html",
-  styleUrl: "./new-mission-dialog.component.scss",
-  standalone: false
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    FormsModule,
+    ReactiveFormsModule,
+    DragAndDropFileDirective,
+    MatIcon,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    MatInput
+  ],
+  styleUrl: "./new-mission-dialog.component.scss"
 })
 export class NewMissionDialogComponent {
   missionType: "BUILT_IN" | "FILE" = "BUILT_IN";

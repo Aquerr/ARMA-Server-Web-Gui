@@ -1,10 +1,17 @@
 import { Component, EventEmitter, Output } from "@angular/core";
+import { MatTooltip } from "@angular/material/tooltip";
+import { MatIcon } from "@angular/material/icon";
+import { MatMiniFabButton } from "@angular/material/button";
 
 @Component({
   selector: "app-upload-mod",
   templateUrl: "./mod-upload-button.component.html",
-  styleUrls: ["./mod-upload-button.component.scss"],
-  standalone: false
+  imports: [
+    MatTooltip,
+    MatIcon,
+    MatMiniFabButton
+  ],
+  styleUrls: ["./mod-upload-button.component.scss"]
 })
 export class ModUploadButtonComponent {
   @Output() fileSelected: EventEmitter<File> = new EventEmitter<File>();

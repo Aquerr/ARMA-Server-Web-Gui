@@ -3,12 +3,19 @@ import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.se
 import { NotificationService } from "../../service/notification.service";
 import { ServerDifficultyService } from "../../service/server-difficulty.service";
 import { DifficultyOptions, DifficultyProfile } from "../../model/difficulty-profile.model";
+import { MatIcon } from "@angular/material/icon";
+import { DifficultyPanelComponent } from "./difficulty-panel/difficulty-panel.component";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-difficulty",
   templateUrl: "./difficulty.component.html",
-  styleUrl: "./difficulty.component.scss",
-  standalone: false
+  imports: [
+    MatIcon,
+    DifficultyPanelComponent,
+    MatButton
+  ],
+  styleUrl: "./difficulty.component.scss"
 })
 export class DifficultyComponent implements OnInit {
   difficultyProfiles = signal<DifficultyProfile[]>([]);

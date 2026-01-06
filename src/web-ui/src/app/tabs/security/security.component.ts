@@ -3,14 +3,32 @@ import { AllowedFilePatching, ServerSecurityService } from "../../service/server
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
 import { SecurityFormService } from "./security-form.service";
-import { FormGroup } from "@angular/forms";
+import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { VoteCmd } from "../../model/vote-cmd.model";
+import { MatError, MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { MatTooltip } from "@angular/material/tooltip";
+import { AswgChipFormInputComponent } from "../../common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
+import { MatOption, MatSelect } from "@angular/material/select";
+import { VoteCmdsListComponent } from "./vote-cmds-list/vote-cmds-list.component";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-security",
   templateUrl: "./security.component.html",
-  styleUrls: ["./security.component.scss"],
-  standalone: false
+  imports: [
+    ReactiveFormsModule,
+    MatFormField,
+    MatTooltip,
+    MatLabel,
+    MatError,
+    MatInput,
+    AswgChipFormInputComponent,
+    MatSelect,
+    MatOption,
+    VoteCmdsListComponent,
+    MatButton
+  ],
+  styleUrls: ["./security.component.scss"]
 })
 export class SecurityComponent implements OnInit {
   public form: FormGroup;

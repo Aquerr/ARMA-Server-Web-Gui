@@ -1,15 +1,23 @@
 import { Component } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { AuthService } from "../service/auth.service";
 import { Router } from "@angular/router";
 import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",
-  styleUrls: ["./login.component.scss"],
-  standalone: false
+  imports: [
+    MatFormField,
+    MatLabel,
+    ReactiveFormsModule,
+    MatInput,
+    MatButton
+  ],
+  styleUrls: ["./login.component.scss"]
 })
 export class LoginComponent {
   form: FormGroup<{ username: FormControl<string>; password: FormControl<string> }>;
