@@ -42,10 +42,13 @@ public class ModSettingsService
         if (modSettings.isActive())
         {
             ModSettingsEntity activeModSettings = modSettingsStorage.findActive();
-            String modSettingsContent = modSettingsStorage.readModSettingsFileContent(activeModSettings.getName(), true);
-            if (!activeModSettings.getId().equals(modSettings.getId()))
+            if (activeModSettings != null)
             {
-                modSettingsStorage.saveModSettingsFileContent(activeModSettings.getName(), false, modSettingsContent);
+                String modSettingsContent = modSettingsStorage.readModSettingsFileContent(activeModSettings.getName(), true);
+                if (!activeModSettings.getId().equals(modSettings.getId()))
+                {
+                    modSettingsStorage.saveModSettingsFileContent(activeModSettings.getName(), false, modSettingsContent);
+                }
             }
 
             if (modSettings.getId() != null)

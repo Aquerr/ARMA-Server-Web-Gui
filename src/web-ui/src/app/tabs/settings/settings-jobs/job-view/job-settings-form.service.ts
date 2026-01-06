@@ -14,13 +14,13 @@ export class JobSettingsFormService {
       cron: [""],
       parameters: this.formBuilder.array([
         this.formBuilder.group({
-          name: new FormControl({value: "", disabled: true}),
-          description: new FormControl({value: "", disabled: true}),
-          value: ["", Validators.required],
+          name: new FormControl({ value: "", disabled: true }),
+          description: new FormControl({ value: "", disabled: true }),
+          value: ["", Validators.required]
         })]),
-      lastExecutionDate: new FormControl({value: "", disabled: true}),
-      lastExecutionFinishedDate: new FormControl({value: "", disabled: true}),
-      nextExecutionDate: new FormControl({value: "", disabled: true}),
+      lastExecutionDate: new FormControl({ value: "", disabled: true }),
+      lastExecutionFinishedDate: new FormControl({ value: "", disabled: true }),
+      nextExecutionDate: new FormControl({ value: "", disabled: true }),
       lastMessage: [""],
       lastStatus: [""]
     });
@@ -36,11 +36,11 @@ export class JobSettingsFormService {
     this.getLastStatus(form).setValue(settings.lastStatus);
 
     this.getParametersControl(form).clear();
-    settings.parameters.forEach(parameter => this.getParametersControl(form)
+    settings.parameters.forEach((parameter) => this.getParametersControl(form)
       .push(this.formBuilder.group({
         name: [parameter.name],
-        description: new FormControl({value: parameter.description, disabled: true}),
-        value: [parameter.value, Validators.required],
+        description: new FormControl({ value: parameter.description, disabled: true }),
+        value: [parameter.value, Validators.required]
       })));
   }
 
@@ -52,35 +52,35 @@ export class JobSettingsFormService {
     } as JobSettings;
   }
 
-  getEnabledControl(form: FormGroup): AbstractControl {
-    return form.get("enabled") as AbstractControl;
+  getEnabledControl(form: FormGroup): AbstractControl<boolean> {
+    return form.get("enabled") as AbstractControl<boolean>;
   }
 
-  getCronControl(form: FormGroup): AbstractControl {
-    return form.get("cron") as AbstractControl;
+  getCronControl(form: FormGroup): AbstractControl<string> {
+    return form.get("cron") as AbstractControl<string>;
   }
 
-  getParametersControl(form: FormGroup): FormArray {
-    return form.get("parameters") as FormArray;
+  getParametersControl(form: FormGroup): FormArray<FormGroup> {
+    return form.get("parameters") as FormArray<FormGroup>;
   }
 
-  getLastExecutionDateControl(form: FormGroup): AbstractControl {
-    return form.get("lastExecutionDate") as AbstractControl;
+  getLastExecutionDateControl(form: FormGroup): AbstractControl<string> {
+    return form.get("lastExecutionDate") as AbstractControl<string>;
   }
 
-  getLastExecutionFinishedDateControl(form: FormGroup): AbstractControl {
-    return form.get("lastExecutionFinishedDate") as AbstractControl;
+  getLastExecutionFinishedDateControl(form: FormGroup): AbstractControl<string> {
+    return form.get("lastExecutionFinishedDate") as AbstractControl<string>;
   }
 
-  getNextExecutionDateControl(form: FormGroup): AbstractControl {
-    return form.get("nextExecutionDate") as AbstractControl;
+  getNextExecutionDateControl(form: FormGroup): AbstractControl<string> {
+    return form.get("nextExecutionDate") as AbstractControl<string>;
   }
 
-  getLastMessage(form: FormGroup): AbstractControl {
-    return form.get('lastMessage') as AbstractControl;
+  getLastMessage(form: FormGroup): AbstractControl<string> {
+    return form.get("lastMessage") as AbstractControl<string>;
   }
 
-  getLastStatus(form: FormGroup): AbstractControl {
-    return form.get('lastStatus') as AbstractControl;
+  getLastStatus(form: FormGroup): AbstractControl<string> {
+    return form.get("lastStatus") as AbstractControl<string>;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, signal } from "@angular/core";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
 import { ServerDifficultyService } from "../../service/server-difficulty.service";
@@ -11,7 +11,7 @@ import { DifficultyOptions, DifficultyProfile } from "../../model/difficulty-pro
   standalone: false
 })
 export class DifficultyComponent implements OnInit {
-  difficultyProfiles: DifficultyProfile[] = [];
+  difficultyProfiles = signal<DifficultyProfile[]>([]);
 
   constructor(
     private maskService: LoadingSpinnerMaskService,
@@ -24,13 +24,13 @@ export class DifficultyComponent implements OnInit {
   }
 
   addNewDifficulty() {
-    let newDifficulty = this.prepareNewDifficultyProfile();
-    this.difficultyProfiles.push(newDifficulty);
+    const newDifficulty = this.prepareNewDifficultyProfile();
+    this.difficultyProfiles.update((oldValue) => [...oldValue, newDifficulty]);
   }
 
   saveAll() {
     this.maskService.show();
-    this.difficultyService.saveDifficulties(this.difficultyProfiles).subscribe((response) => {
+    this.difficultyService.saveDifficulties(this.difficultyProfiles()).subscribe(() => {
       this.maskService.hide();
       this.notificationService.successNotification("Difficulty profiles has been saved!");
       this.reloadProfiles();
@@ -40,13 +40,13 @@ export class DifficultyComponent implements OnInit {
   private reloadProfiles() {
     this.maskService.show();
     this.difficultyService.getDifficulties().subscribe((response) => {
-      this.difficultyProfiles = response;
+      this.difficultyProfiles.set(response);
       this.maskService.hide();
     });
   }
 
   prepareNewDifficultyProfile() {
-    let options = {
+    const options = {
       reducedDamage: false,
 
       groupIndicators: 0,
@@ -88,19 +88,19 @@ export class DifficultyComponent implements OnInit {
 
   onProfileActivate(difficultyProfile: DifficultyProfile) {
     if (!difficultyProfile.active) {
-      this.difficultyProfiles = this.difficultyProfiles.map((profile) => {
+      this.difficultyProfiles.update((oldProfiles) => oldProfiles.map((profile) => {
         profile.active = false;
         return profile;
-      });
+      }));
     }
     difficultyProfile.active = !difficultyProfile.active;
   }
 
-  onProfileSave(difficultyProfile: DifficultyProfile) {
+  onProfileSave() {
     this.reloadProfiles();
   }
 
-  onProfileDelete(difficultyProfile: DifficultyProfile) {
+  onProfileDelete() {
     this.reloadProfiles();
   }
 }

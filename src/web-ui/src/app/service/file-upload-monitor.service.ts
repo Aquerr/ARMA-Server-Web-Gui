@@ -2,15 +2,17 @@ import { inject, Injectable } from "@angular/core";
 import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { UploadingFile } from "./file-upload.service";
 import { FileUploadSnackBarComponent } from "../common-ui/file-upload-snack-bar/file-upload-snack-bar.component";
-import { HttpEventType } from "@angular/common/http";
+import { HttpErrorResponse, HttpEvent, HttpEventType, HttpProgressEvent } from "@angular/common/http";
 import { interval, Observer, Subject, Subscription } from "rxjs";
 import { NotificationService } from "./notification.service";
+import { ApiErrorResponse } from "../api/api-error.model";
 
 @Injectable({
   providedIn: "root"
 })
 export class FileUploadMonitorService {
-  private uploadingFiles: UploadingFile[] = [];
+  uploadingFilesChanged: Subject<void> = new Subject<void>();
+  uploadingFiles: UploadingFile[] = [];
 
   private matSnackBar: MatSnackBar;
   private notificationService: NotificationService;
@@ -28,7 +30,7 @@ export class FileUploadMonitorService {
 
     this.fileUploadedSubject = new Subject();
 
-    this.fileUploadSubscription = this.fileUploadedSubject.subscribe((file) => {
+    this.fileUploadSubscription = this.fileUploadedSubject.subscribe(() => {
       if (this.getUploadingFiles().length == 0) {
         this.fileUploadSnackBarRef?.dismiss();
         this.fileUploadSnackBarRef = null;
@@ -39,7 +41,7 @@ export class FileUploadMonitorService {
       .pipe()
       .subscribe(() => {
         if (this.uploadingFiles.length > 0 && this.fileUploadSnackBarRef == null) {
-          //TODO: Show the ability to open file upload progress snack bar
+          // TODO: Show the ability to open file upload progress snack bar
 
         }
       });
@@ -55,7 +57,7 @@ export class FileUploadMonitorService {
     );
   }
 
-  monitorFileUpload(file: any): Observer<any> {
+  monitorFileUpload(file: File): Observer<HttpProgressEvent | HttpEvent<object>> {
     this.uploadingFiles.push({
       fileName: file.name,
       progress: 0,
@@ -65,15 +67,15 @@ export class FileUploadMonitorService {
     this.showUploadProgressSnackBar();
 
     return {
-      next: (response) => {
-
+      next: (response: HttpProgressEvent | HttpEvent<object>) => {
         if (response.type == HttpEventType.UploadProgress) {
           const uploadingFile = this.uploadingFiles.find(
             (uploadingFile) => uploadingFile.fileName === file.name
           );
           if (uploadingFile) {
             uploadingFile.uploadedSize = response.loaded;
-            uploadingFile.progress = Math.round((response.loaded / response.total) * 100);
+            uploadingFile.progress = Math.round((response.loaded / (response.total ?? 1)) * 100);
+            this.uploadingFilesChanged.next();
 
             if (uploadingFile.shouldCancel) {
               this.removeFileWithName(uploadingFile.fileName);
@@ -86,12 +88,14 @@ export class FileUploadMonitorService {
 
         if (response.type == HttpEventType.Response) {
           this.removeFileWithName(file.name);
+          console.log("Response:", response);
           this.fileUploadedSubject.next(file);
         }
       },
-      error: (error) => {
+      error: (error: HttpErrorResponse) => {
         this.removeFileWithName(file.name);
-        this.notificationService.errorNotification(error.error.message);
+        const apiErrorResponse = error.error as ApiErrorResponse;
+        this.notificationService.errorNotification(apiErrorResponse.message);
         this.fileUploadedSubject.next(null);
       },
       complete: () => {
@@ -103,6 +107,7 @@ export class FileUploadMonitorService {
 
   showUploadProgressSnackBar() {
     if (!this.fileUploadSnackBarRef) {
+      console.log("Opening file upload...");
       this.fileUploadSnackBarRef = this.matSnackBar.openFromComponent(FileUploadSnackBarComponent, {
         data: this
       });
@@ -118,6 +123,7 @@ export class FileUploadMonitorService {
     );
     if (uploadingFileIndex != -1) {
       this.uploadingFiles.splice(uploadingFileIndex, 1);
+      this.uploadingFilesChanged.next();
     }
   }
 }

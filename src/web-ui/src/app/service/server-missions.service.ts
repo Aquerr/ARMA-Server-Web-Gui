@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpEvent } from "@angular/common/http";
 import { API_BASE_URL } from "../../environments/environment";
 import { Observable } from "rxjs";
 import { Mission } from "../model/mission.model";
@@ -13,14 +13,14 @@ export class ServerMissionsService {
 
   constructor(private httpClient: HttpClient) {}
 
-  addTemplateMission(name: string, template: string): Observable<any> {
+  addTemplateMission(name: string, template: string): Observable<object> {
     return this.httpClient.post(`${this.MISSIONS_URL}/template`, {
       name: name,
       template: template
     });
   }
 
-  uploadMission(formData: FormData): Observable<any> {
+  uploadMission(formData: FormData): Observable<HttpEvent<object>> {
     return this.httpClient.post(`${this.MISSIONS_FILES_URL}`, formData, {
       reportProgress: true,
       observe: "events"
@@ -37,13 +37,13 @@ export class ServerMissionsService {
     return this.httpClient.get<GetMissionsResponse>(this.MISSIONS_URL);
   }
 
-  deleteMission(template: string): Observable<any> {
+  deleteMission(template: string): Observable<object> {
     return this.httpClient.delete(`${this.MISSIONS_URL}/template`, {
       body: { template: template }
     });
   }
 
-  saveEnabledMissions(saveEnabledMissionsRequest: SaveEnabledMissionsRequest): Observable<any> {
+  saveEnabledMissions(saveEnabledMissionsRequest: SaveEnabledMissionsRequest): Observable<object> {
     return this.httpClient.post(`${this.MISSIONS_URL}/enabled`, saveEnabledMissionsRequest);
   }
 

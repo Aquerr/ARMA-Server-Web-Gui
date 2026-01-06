@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, signal } from "@angular/core";
 import { ThemeService } from "./service/util/theme.service";
 import { ApplicationService } from "./service/application.service";
 import { IconRegistrarService } from "./service/icon-registrar.service";
@@ -15,7 +15,7 @@ import { IconRegistrarService } from "./service/icon-registrar.service";
 export class AppComponent implements OnInit {
   title = "arma-web-gui";
   isMobile: boolean = false;
-  version: string = "";
+  version = signal<string>("");
 
   constructor(
     private themeService: ThemeService,
@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
     this.themeService.setThemeOnAppInit();
     this.isMobileView();
     this.applicationService.getApplicationInfo().subscribe((response) => {
-      this.version = response.application.version;
+      this.version.set(response.application.version);
     });
   }
 

@@ -14,15 +14,15 @@ export class ServerDifficultyService {
     return this.httpClient.get<DifficultyProfile[]>(API_BASE_URL + "/difficulties");
   }
 
-  createDifficulty(difficultyProfile: DifficultyProfile): Observable<any> {
+  createDifficulty(difficultyProfile: DifficultyProfile): Observable<object> {
     return this.httpClient.post(API_BASE_URL + "/difficulties", difficultyProfile);
   }
 
-  updateDifficulty(id: number, difficultyProfile: DifficultyProfile): Observable<any> {
+  updateDifficulty(id: number, difficultyProfile: DifficultyProfile): Observable<object> {
     return this.httpClient.put(API_BASE_URL + `/difficulties/${id}`, difficultyProfile);
   }
 
-  deleteDifficulty(idOrName: number | string): Observable<any> {
+  deleteDifficulty(idOrName: number | string): Observable<object> {
     if (typeof idOrName == "number") {
       return this.httpClient.delete(API_BASE_URL + `/difficulties/${idOrName}`);
     } else {
@@ -30,7 +30,7 @@ export class ServerDifficultyService {
     }
   }
 
-  saveDifficulties(difficultyProfiles: DifficultyProfile[]): Observable<any> {
+  saveDifficulties(difficultyProfiles: DifficultyProfile[]): Observable<object> {
     return forkJoin(
       difficultyProfiles.map((profile) => {
         if (profile.id === 0 || profile.id === undefined) {

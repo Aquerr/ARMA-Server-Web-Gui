@@ -7,23 +7,23 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
   standalone: false
 })
 export class ModPresetItemComponent {
-  @Input("presetName") presetName: string = "";
+  @Input() presetName: string = "";
 
-  @Output("presetSelected") presetSelectedEmitter = new EventEmitter<string>();
-  @Output("presetDeleted") presetDeletedEmitter = new EventEmitter<string>();
-  @Output("presetSaved") presetSavedEmitter = new EventEmitter<string>();
+  @Output() presetSelected = new EventEmitter<string>();
+  @Output() presetDeleted = new EventEmitter<string>();
+  @Output() presetSaved = new EventEmitter<string>();
 
   deletePreset($event: MouseEvent) {
     $event.stopPropagation();
-    this.presetDeletedEmitter.emit(this.presetName);
+    this.presetDeleted.emit(this.presetName);
   }
 
   savePreset($event: MouseEvent) {
     $event.stopPropagation();
-    this.presetSavedEmitter.emit(this.presetName);
+    this.presetSaved.emit(this.presetName);
   }
 
-  presetSelected() {
-    this.presetSelectedEmitter.emit(this.presetName);
+  selectPreset() {
+    this.presetSelected.emit(this.presetName);
   }
 }

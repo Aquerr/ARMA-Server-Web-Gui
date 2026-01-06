@@ -12,7 +12,8 @@ export class MobileHeaderComponent {
   darkMode: boolean = true;
 
   @Output()
-  changeThemeEmit: EventEmitter<void> = new EventEmitter();
+  changeThemeEmit = new EventEmitter<void>();
+
   sideMenuExpanded = false;
 
   constructor(private authService: AuthService) {}

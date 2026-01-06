@@ -44,8 +44,8 @@ export class MissionModifyDialogComponent implements OnInit {
 
   createNewParameter(name: string | null, value: string | null) {
     const missionParam: MissionParam = {
-      name: name !== null ? name : "",
-      value: value !== null ? value : ""
+      name: name ?? "",
+      value: value ?? ""
     };
     this.parameters.push(missionParam);
 

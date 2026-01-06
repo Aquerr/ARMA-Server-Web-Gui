@@ -2,13 +2,13 @@ import { inject, Injectable } from "@angular/core";
 import { Observable, Subject, tap } from "rxjs";
 import { NotificationService } from "./notification.service";
 import { FileUploadMonitorService } from "./file-upload-monitor.service";
-import { HttpEventType } from "@angular/common/http";
+import { HttpEvent, HttpEventType } from "@angular/common/http";
 
 @Injectable({
   providedIn: "root"
 })
 export abstract class FileUploadService {
-  fileUploadMonitorService: FileUploadMonitorService;
+  fileUploadMonitorService: FileUploadMonitorService = inject(FileUploadMonitorService);
 
   public fileUploadedSubject!: Subject<File | null>;
 
@@ -17,8 +17,6 @@ export abstract class FileUploadService {
     private allowedFileTypes: string[] = [],
     private allowedFileExtensions: string[] = []
   ) {
-    this.fileUploadMonitorService = inject(FileUploadMonitorService);
-
     this.fileUploadedSubject = new Subject();
     this.fileUploadedSubject.subscribe((file) => {
       if (file) {
@@ -34,7 +32,7 @@ export abstract class FileUploadService {
   protected uploadFile(file: File, overwrite: boolean) {
     if (!this.isFileAllowed(file)) {
       this.notificationService.errorNotification(
-        `Wrong file type! Only ${this.allowedFileExtensions} files are supported!`
+        `Wrong file type! Only ${this.allowedFileExtensions.toString()} files are supported!`
       );
       return;
     }
@@ -45,14 +43,15 @@ export abstract class FileUploadService {
     }
 
     return this.doUpload(file, overwrite)
+      // .subscribe(this.fileUploadMonitorService.monitorFileUpload(file));
       .pipe(tap(this.fileUploadMonitorService.monitorFileUpload(file)))
       .subscribe({
-        next: (response) => {
+        next: (response: HttpEvent<object>) => {
           if (response.type == HttpEventType.Response) {
             this.fileUploadedSubject.next(file);
           }
         },
-        error: (error) => {
+        error: () => {
           this.fileUploadedSubject.next(null);
         }
       });
@@ -62,8 +61,8 @@ export abstract class FileUploadService {
     const fileName = file.name.toLowerCase();
     const fileExtension = fileName.substring(fileName.lastIndexOf("."));
     if (
-      !this.allowedFileExtensions.includes("*") &&
-      !this.allowedFileExtensions.includes(fileExtension)
+      !this.allowedFileExtensions.includes("*")
+      && !this.allowedFileExtensions.includes(fileExtension)
     ) {
       return false;
     }
@@ -71,9 +70,10 @@ export abstract class FileUploadService {
     return this.allowedFileTypes.includes("*") || this.allowedFileTypes.includes(file.type);
   }
 
-  protected abstract doUpload(file: File, overwrite: boolean): Observable<any>;
+  protected abstract doUpload(file: File, overwrite: boolean): Observable<HttpEvent<object>>;
 
-  protected doAfterUpload(file: File | null) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected doAfterUpload(file: File | null) { /* empty */ }
 }
 
 export interface UploadingFile {

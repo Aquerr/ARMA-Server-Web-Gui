@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from "@angular/core";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { SaveGeneralProperties, ServerGeneralService } from "../../service/server-general.service";
 import { NotificationService } from "../../service/notification.service";
@@ -9,14 +9,19 @@ import { OverwriteCommandlineParamsModalComponent } from "./unsafe/overwrite-com
 import { DialogService } from "../../service/dialog.service";
 import { PermissionService } from "../../service/permission.service";
 import { AswgAuthority } from "../../model/authority.model";
+import { AswgChipInputComponent } from "../../common-ui/aswg-chip-input/aswg-chip-input.component";
+import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { FormsModule } from "@angular/forms";
+import { MatTooltip } from "@angular/material/tooltip";
+import { MatOption, MatSelect } from "@angular/material/select";
 
 @Component({
   selector: "app-general",
   templateUrl: "./general.component.html",
   styleUrls: ["./general.component.scss"],
-  standalone: false
+  imports: [AswgChipInputComponent, MatFormField, MatLabel, FormsModule, MatInput, MatTooltip, MatSelect, MatOption, MotdListComponent]
 })
-export class GeneralComponent implements OnInit {
+export class GeneralComponent implements AfterViewInit {
   @ViewChild("motdListComponent") motdListComponent!: MotdListComponent;
 
   commandLineParams: string = "";
@@ -39,10 +44,11 @@ export class GeneralComponent implements OnInit {
     private readonly serverGeneralService: ServerGeneralService,
     private readonly notificationService: NotificationService,
     private readonly unsafeService: UnsafeService,
-    private readonly dialogService: DialogService
+    private readonly dialogService: DialogService,
+    private readonly changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit() {
     this.maskService.show();
     this.reloadGeneralProperties();
   }
@@ -66,7 +72,7 @@ export class GeneralComponent implements OnInit {
       branch: this.branch
     } as SaveGeneralProperties;
 
-    this.serverGeneralService.saveGeneralProperties(saveGeneralProperties).subscribe((response) => {
+    this.serverGeneralService.saveGeneralProperties(saveGeneralProperties).subscribe(() => {
       this.maskService.hide();
       this.notificationService.successNotification(
         "General settings have been updated!",
@@ -84,7 +90,7 @@ export class GeneralComponent implements OnInit {
       this.port = response.port;
       this.hostname = response.hostname;
       this.maxPlayers = response.maxPlayers;
-      this.motdListComponent.pupulateModtList(response.motd);
+      this.motdListComponent.populateModtList(response.motd);
       this.motdListComponent.motdInterval = response.motdInterval;
       this.persistent = response.persistent;
       this.drawingInMap = response.drawingInMap;
@@ -93,6 +99,7 @@ export class GeneralComponent implements OnInit {
       this.forcedDifficulty = response.forcedDifficulty;
       this.branch = response.branch;
       this.maskService.hide();
+      this.changeDetectorRef.markForCheck();
     });
   }
 
@@ -104,8 +111,7 @@ export class GeneralComponent implements OnInit {
         if (result == "null") return;
 
         this.maskService.show();
-        this.unsafeService.overwriteStartupParams(result).subscribe((response) => {
-          this.maskService.hide();
+        this.unsafeService.overwriteStartupParams(result).subscribe(() => {
           this.notificationService.successNotification("Updated commandline parameters");
           this.reloadGeneralProperties();
         });

@@ -10,19 +10,15 @@ import { CommandListItem } from "./vote-cmd-list-item.model";
 export class VoteCmdListItemComponent {
   @Input() item!: CommandListItem;
 
-  @Output() onDelete: EventEmitter<any> = new EventEmitter<any>();
+  @Output() deleted: EventEmitter<void> = new EventEmitter<void>();
 
   deleteClick() {
-    this.onDelete.emit();
+    this.deleted.emit();
   }
-
-  onItemUpdate() {}
 
   doubleClick() {
     this.item.editing = !this.item.editing;
   }
-
-  protected readonly onkeydown = onkeydown;
 
   onEnter() {
     if (this.item.editing) {

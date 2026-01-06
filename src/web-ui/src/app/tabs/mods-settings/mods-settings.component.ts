@@ -1,4 +1,4 @@
-import { Component, QueryList, ViewChildren } from "@angular/core";
+import { Component, QueryList, signal, ViewChildren } from "@angular/core";
 import { ModSettings } from "../../model/mod-settings.model";
 import { ModSettingsService } from "../../service/mod-settings.service";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
@@ -16,7 +16,7 @@ import { MatButton } from "@angular/material/button";
   imports: [MatIcon, ModSettingsPanelComponent, MatButton]
 })
 export class ModsSettingsComponent {
-  modSettingsList: ModSettings[] = [];
+  modSettingsList = signal<ModSettings[]>([]);
 
   @ViewChildren("modSettingPanels") modSettingPanels!: QueryList<ModSettingsPanelComponent>;
 
@@ -32,17 +32,20 @@ export class ModsSettingsComponent {
   private reloadModSettings() {
     this.maskService.show();
     this.modSettingsService.getAllModSettings().subscribe((response) => {
-      this.modSettingsList = response;
+      this.modSettingsList.set(response);
       this.maskService.hide();
     });
   }
 
   addNewModSettings() {
     const modSettings = {
-      name: "???",
+      name: "",
       active: false
     } as ModSettings;
-    this.modSettingsList.push(modSettings);
+    this.modSettingsList.update((items) => {
+      items.push(modSettings);
+      return items;
+    });
   }
 
   onModSettingsDelete(id: number) {
@@ -54,7 +57,7 @@ export class ModsSettingsComponent {
     const onCloseCallback = (result: boolean) => {
       if (!result) return;
       this.maskService.show();
-      this.modSettingsService.deleteModSettings(id).subscribe((response) => {
+      this.modSettingsService.deleteModSettings(id).subscribe(() => {
         this.notificationService.successNotification("Mod settings have been deleted");
         this.reloadModSettings();
       });

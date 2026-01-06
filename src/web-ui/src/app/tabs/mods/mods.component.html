@@ -7,7 +7,7 @@
   <h1>Mods</h1>
 
   <ng-template #dropZone>
-    <div app-drag-and-drop-overlay></div>
+    <app-drag-and-drop-overlay></app-drag-and-drop-overlay>
   </ng-template>
 
   @if (isFileDragged) {
@@ -23,16 +23,16 @@
         </mat-form-field>
         <div class="mods-top-buttons">
           <button mat-button (click)="openDownloadQueueModal()">Download queue</button>
-          <button mat-button (click)="openModSettings()">Mod settings</button>
+          <button mat-button routerLink="/mods-settings">Mod settings</button>
           <app-mod-presets
-            [mods]="enabledMods"
-            (modPresetSelected)="onModPresetSelected($event)"
+            [enabledMods]="enabledMods()"
+            (modPresetSelected)="onModPresetSelected()"
           ></app-mod-presets>
         </div>
       </div>
     </div>
 
-    <app-mod-lists></app-mod-lists>
+    <app-mod-lists [searchPhrase]="searchPhrase()"></app-mod-lists>
 
     <div class="buttons-section-bottom">
       <div>

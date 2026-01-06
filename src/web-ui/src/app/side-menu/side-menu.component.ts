@@ -3,8 +3,9 @@ import { WorkshopService } from "../service/workshop.service";
 import { AuthService } from "../service/auth.service";
 import { Router } from "@angular/router";
 import { NotificationService } from "../service/notification.service";
-import { map, Observable, of, tap } from "rxjs";
+import { map, Observable, of, switchMap, take, tap } from "rxjs";
 import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.service";
+import { fromPromise } from "rxjs/internal/observable/innerFrom";
 
 @Component({
   selector: "app-side-menu",
@@ -15,13 +16,15 @@ import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.servi
 export class SideMenuComponent {
   @Input()
   isMobile = false;
+
   @Input()
   darkMode: boolean = true;
 
   @Output()
-  routerLinkClickEmitter: EventEmitter<string> = new EventEmitter();
+  routerLinkClickEmitter = new EventEmitter<string>();
+
   @Output()
-  changeThemeEmit: EventEmitter<void> = new EventEmitter();
+  changeThemeEmit = new EventEmitter<void>();
 
   isWorkshopActive: boolean = false;
   routePreCheck = new Map<string, (routerLink: string) => Observable<boolean>>();
@@ -51,18 +54,20 @@ export class SideMenuComponent {
   }
 
   logout() {
-    this.routerLinkClicked("/logout");
-    this.authService.logout();
-    this.router.navigateByUrl("/login");
+    this.authService
+      .logout()
+      .pipe(
+        switchMap(() => fromPromise(this.router.navigateByUrl("/login"))),
+        take(1)
+      )
+      .subscribe();
   }
 
   routerLinkClicked(routerLink: string) {
     this.maskService.show();
     let preCheck = this.routePreCheck.get(routerLink);
 
-    if (preCheck === undefined) {
-      preCheck = this.canUseRouteDefault;
-    }
+    preCheck ??= SideMenuComponent.canUseRouteDefault;
 
     preCheck(routerLink).subscribe({
       next: (canAccessLink) => {
@@ -72,13 +77,13 @@ export class SideMenuComponent {
         }
 
         this.maskService.hide();
-        this.router.navigate([routerLink]);
+        void this.router.navigate([routerLink]);
         this.routerLinkClickEmitter.emit(routerLink);
       }
     });
   }
 
-  private canUseRouteDefault(): Observable<boolean> {
+  private static canUseRouteDefault(): Observable<boolean> {
     return of(true);
   }
 

@@ -49,9 +49,10 @@ export class WorkshopComponent implements OnInit, OnDestroy {
 
   onSearchBoxKeyDown($event: KeyboardEvent) {
     if ($event.code === "Enter" || $event.code === "NumpadEnter") {
-      this.searchWorkshop("", this.searchBoxControl.value);
+      this.searchWorkshop("", this.searchBoxControl.value as string);
     }
   }
+
   nextPage() {
     this.searchWorkshop(this.nextCursor, this.lastSearchText);
   }
@@ -83,7 +84,7 @@ export class WorkshopComponent implements OnInit, OnDestroy {
     );
   }
 
-  onModInstallDelete($event: any) {
+  onModInstallDelete() {
     this.reloadInstalledModList();
   }
 

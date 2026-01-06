@@ -16,8 +16,8 @@ export class ServerSecurityService {
     return this.httpClient.get<GetServerSecurityResponse>(this.SECURITY_URL);
   }
 
-  saveServerSecurity(saveServerSecurityRequest: SaveServerSecurityRequest): Observable<any> {
-    return this.httpClient.post(this.SECURITY_URL, saveServerSecurityRequest);
+  saveServerSecurity(saveServerSecurityRequest: SaveServerSecurityRequest): Observable<void> {
+    return this.httpClient.post<void>(this.SECURITY_URL, saveServerSecurityRequest);
   }
 }
 

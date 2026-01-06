@@ -5,6 +5,7 @@ import {
   GetServerSecurityResponse,
   SaveServerSecurityRequest
 } from "../../service/server-security.service";
+import { VoteCmd } from "../../model/vote-cmd.model";
 
 @Injectable({
   providedIn: "root"
@@ -65,58 +66,58 @@ export class SecurityFormService {
   }
 
   getServerPasswordControl(form: FormGroup) {
-    return this.getControl(form, "serverPassword");
+    return this.getControl(form, "serverPassword") as AbstractControl<string>;
   }
 
   getServerAdminPasswordControl(form: FormGroup) {
-    return this.getControl(form, "serverAdminPassword");
+    return this.getControl(form, "serverAdminPassword") as AbstractControl<string>;
   }
 
   getServerCommandPasswordControl(form: FormGroup) {
-    return this.getControl(form, "serverCommandPassword");
+    return this.getControl(form, "serverCommandPassword") as AbstractControl<string>;
   }
 
   getBattleEyeControl(form: FormGroup) {
-    return this.getControl(form, "battleEye");
+    return this.getControl(form, "battleEye") as AbstractControl<boolean>;
   }
 
   getVerifySignaturesControl(form: FormGroup) {
-    return this.getControl(form, "verifySignatures");
+    return this.getControl(form, "verifySignatures") as AbstractControl<boolean>;
   }
 
   getAllowedFilePatchingControl(form: FormGroup) {
-    return this.getControl(form, "allowedFilePatching");
+    return this.getControl(form, "allowedFilePatching") as AbstractControl<number>;
   }
 
   getFilePatchingIgnoredClientsControl(form: FormGroup) {
-    return this.getControl(form, "filePatchingIgnoredClients");
+    return this.getControl(form, "filePatchingIgnoredClients") as AbstractControl<string[]>;
   }
 
   getAllowedLoadFileExtensionsControl(form: FormGroup) {
-    return this.getControl(form, "allowedLoadFileExtensions");
+    return this.getControl(form, "allowedLoadFileExtensions") as AbstractControl<string[]>;
   }
 
   getAdminUUIDsControl(form: FormGroup) {
-    return this.getControl(form, "adminUUIDs");
+    return this.getControl(form, "adminUUIDs") as AbstractControl<string[]>;
   }
 
   getAllowedVoteCmdsControl(form: FormGroup) {
-    return this.getControl(form, "allowedVoteCmds");
+    return this.getControl(form, "allowedVoteCmds") as AbstractControl<VoteCmd[]>;
   }
 
   getKickDuplicateControl(form: FormGroup) {
-    return this.getControl(form, "kickDuplicate");
+    return this.getControl(form, "kickDuplicate") as AbstractControl<boolean>;
   }
 
   getVoteThresholdControl(form: FormGroup) {
-    return this.getControl(form, "voteThreshold");
+    return this.getControl(form, "voteThreshold") as AbstractControl<string>;
   }
 
   getVoteMissionPlayersControl(form: FormGroup) {
-    return this.getControl(form, "voteMissionPlayers");
+    return this.getControl(form, "voteMissionPlayers") as AbstractControl<number>;
   }
 
   private getControl(form: FormGroup, controlName: string) {
-    return form.get(controlName) as AbstractControl;
+    return form.get(controlName)!;
   }
 }

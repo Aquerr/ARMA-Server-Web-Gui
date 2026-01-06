@@ -4,8 +4,7 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output,
-  SimpleChanges
+  Output
 } from "@angular/core";
 import { CdkDrag, CdkDragDrop, CdkDropList } from "@angular/cdk/drag-drop";
 import { MatButton } from "@angular/material/button";
@@ -40,7 +39,7 @@ export class ModListComponent implements OnInit, OnChanges {
 
   @Input() mods!: Mod[];
   @Output() moveAll = new EventEmitter<unknown>();
-  @Output() modItemDragDrop = new EventEmitter<CdkDragDrop<Mod[], any>>();
+  @Output() modItemDragDrop = new EventEmitter<CdkDragDrop<Mod[], Mod[], Mod>>();
   @Output() modDelete = new EventEmitter<Mod>();
 
   filteredMods: Mod[] = [];
@@ -50,7 +49,7 @@ export class ModListComponent implements OnInit, OnChanges {
     this.reload();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges() {
     this.reload();
   }
 
@@ -62,7 +61,7 @@ export class ModListComponent implements OnInit, OnChanges {
     this.moveAll.emit();
   }
 
-  onModItemDragDrop(event: CdkDragDrop<Mod[], any>) {
+  onModItemDragDrop(event: CdkDragDrop<Mod[], Mod[], Mod>) {
     this.modItemDragDrop.emit(event);
   }
 
@@ -78,7 +77,6 @@ export class ModListComponent implements OnInit, OnChanges {
   }
 
   public sortModList() {
-
     switch (this.sortBy) {
       case "Name_Asc":
         this.filteredMods.sort((a, b) => a.name.localeCompare(b.name));

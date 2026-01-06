@@ -1,11 +1,17 @@
 import { Component } from "@angular/core";
 import { ArmaServerPlayer } from "../../../model/arma-server-player.model";
+import { MatList, MatListItem } from "@angular/material/list";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: "app-player-list",
   templateUrl: "./player-list.component.html",
-  styleUrls: ["./player-list.component.scss"],
-  standalone: false
+  imports: [
+    MatList,
+    MatListItem,
+    MatIcon
+  ],
+  styleUrls: ["./player-list.component.scss"]
 })
 export class PlayerListComponent {
   playerList: ArmaServerPlayer[] = [];

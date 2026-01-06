@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnDestroy, OnInit, signal, ViewChild } from "@angular/core";
 import { ServerLoggingService } from "../../../service/server-logging.service";
 import { API_BASE_URL } from "../../../../environments/environment";
 import FetchEventSource from "fetch-event-source";
@@ -8,13 +8,12 @@ import { Observable } from "rxjs";
 @Component({
   selector: "app-server-console",
   templateUrl: "./server-console.component.html",
-  styleUrls: ["./server-console.component.scss"],
-  standalone: false
+  styleUrls: ["./server-console.component.scss"]
 })
 export class ServerConsoleComponent implements OnInit, OnDestroy {
-  @ViewChild("console") private console!: ElementRef;
+  @ViewChild("console") private console!: ElementRef<HTMLDivElement>;
 
-  logs = "";
+  logs = signal("");
 
   eventSource!: FetchEventSource;
 
@@ -51,7 +50,7 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
 
     this.fetchEventSource(this.eventSource).subscribe({
       next: (value) => {
-        this.logs += value + "\n";
+        this.logs.update((oldLogs) => oldLogs + value + "\n");
         this.scrollConsoleToBottom();
       },
       error: (err) => {
@@ -63,7 +62,7 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
   fetchEventSource(eventSource: FetchEventSource): Observable<string> {
     return new Observable((observer) => {
       eventSource.onmessage = (event) => {
-        observer.next(event?.data);
+        observer.next(event?.data as string);
       };
       eventSource.onerror = (event) => {
         observer.error(event?.message);
@@ -79,7 +78,10 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
     if (!this.authService.isAuthenticated()) return;
 
     this.serverLoggingService.getLatestServerLogs().subscribe((response) => {
-      response.logs.forEach((log) => (this.logs += log + "\n"));
+      this.logs.update((oldLogs) => {
+        response.logs.forEach((log) => (oldLogs += log + "\n"));
+        return oldLogs;
+      });
       this.scrollConsoleToBottom();
     });
   }

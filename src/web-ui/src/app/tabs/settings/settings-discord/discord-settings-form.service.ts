@@ -39,27 +39,27 @@ export class DiscordSettingsFormService {
     } as DiscordIntegrationSettings;
   }
 
-  getEnabledControl(form: FormGroup): AbstractControl {
-    return form.get("enabled") as AbstractControl;
+  getEnabledControl(form: FormGroup) {
+    return form.get("enabled") as AbstractControl<boolean>;
   }
 
-  getWebhookUrlControl(form: FormGroup): AbstractControl {
-    return form.get("webhookUrl") as AbstractControl;
+  getWebhookUrlControl(form: FormGroup) {
+    return form.get("webhookUrl") as AbstractControl<string>;
   }
 
-  getServerStartingMessageControl(form: FormGroup): AbstractControl {
-    return form.get("serverStartingMessage") as AbstractControl;
+  getServerStartingMessageControl(form: FormGroup) {
+    return form.get("serverStartingMessage") as AbstractControl<string>;
   }
 
-  getServerStartMessageControl(form: FormGroup): AbstractControl {
-    return form.get("serverStartMessage") as AbstractControl;
+  getServerStartMessageControl(form: FormGroup) {
+    return form.get("serverStartMessage") as AbstractControl<string>;
   }
 
-  getServerUpdateMessageControl(form: FormGroup): AbstractControl {
-    return form.get("serverUpdateMessage") as AbstractControl;
+  getServerUpdateMessageControl(form: FormGroup) {
+    return form.get("serverUpdateMessage") as AbstractControl<string>;
   }
 
-  getServerStopMessageControl(form: FormGroup): AbstractControl {
-    return form.get("serverStopMessage") as AbstractControl;
+  getServerStopMessageControl(form: FormGroup) {
+    return form.get("serverStopMessage") as AbstractControl<string>;
   }
 }

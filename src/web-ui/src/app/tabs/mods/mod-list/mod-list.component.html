@@ -26,12 +26,12 @@
     (cdkDropListDropped)="onModItemDragDrop($event)"
   >
     @for (mod of filteredMods; track mod.name) {
-      <div
+      <app-mod-list-item
         app-mod-list-item
         [mod]="mod"
-        (onModDelete)="onModDelete($event)"
+        (modDeleted)="onModDelete($event)"
         cdkDrag
-      ></div>
+      ></app-mod-list-item>
     }
   </div>
 </div>

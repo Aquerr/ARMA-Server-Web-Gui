@@ -22,7 +22,7 @@
               "browser": ""
             },
             "index": "src/index.html",
-            "polyfills": ["src/polyfills.ts"],
+            "polyfills": [],
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
@@ -92,7 +92,7 @@
           "builder": "@angular/build:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": ["src/favicon.ico", "src/assets"],

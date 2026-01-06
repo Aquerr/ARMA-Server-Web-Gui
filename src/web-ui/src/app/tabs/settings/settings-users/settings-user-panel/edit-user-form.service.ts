@@ -36,23 +36,23 @@ export class EditUserFormService {
     } as AswgUser;
   }
 
-  getIdControl(form: FormGroup): AbstractControl {
-    return form.get("id") as AbstractControl;
+  getIdControl(form: FormGroup): AbstractControl<number | null> {
+    return form.get("id") as AbstractControl<number | null>;
   }
 
-  getUsernameControl(form: FormGroup): AbstractControl {
-    return form.get("username") as AbstractControl;
+  getUsernameControl(form: FormGroup): AbstractControl<string> {
+    return form.get("username") as AbstractControl<string>;
   }
 
-  getPasswordControl(form: FormGroup): AbstractControl {
-    return form.get("password") as AbstractControl;
+  getPasswordControl(form: FormGroup): AbstractControl<string> {
+    return form.get("password") as AbstractControl<string>;
   }
 
-  getLockedControl(form: FormGroup): AbstractControl {
-    return form.get("locked") as AbstractControl;
+  getLockedControl(form: FormGroup): AbstractControl<boolean> {
+    return form.get("locked") as AbstractControl<boolean>;
   }
 
-  getAuthoritiesControl(form: FormGroup): AbstractControl {
-    return form.get("authorities") as AbstractControl;
+  getAuthoritiesControl(form: FormGroup): AbstractControl<string[]> {
+    return form.get("authorities") as AbstractControl<string[]>;
   }
 }

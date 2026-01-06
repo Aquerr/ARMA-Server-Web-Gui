@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { CdlcService } from "../../service/cdlc.service";
 import { Cdlc } from "../../model/cdlc.model";
 import { NotificationService } from "src/app/service/notification.service";
@@ -17,7 +17,7 @@ export class CdlcComponent implements OnInit {
   private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService: NotificationService = inject(NotificationService);
 
-  cdlcList: Cdlc[] = [];
+  cdlcList = signal<Cdlc[]>([]);
 
   ngOnInit(): void {
     this.reloadCdlcs();
@@ -26,14 +26,14 @@ export class CdlcComponent implements OnInit {
   private reloadCdlcs(): void {
     this.maskService.show();
     this.cdlcService.getAllCdlcs().subscribe((response) => {
-      this.cdlcList = response.cdlcs;
+      this.cdlcList.set(response.cdlcs);
       this.maskService.hide();
     });
   }
 
   toggleCdlc(cdlc: Cdlc) {
     this.maskService.show();
-    this.cdlcService.toggleCdlc(cdlc.id).subscribe((response) => {
+    this.cdlcService.toggleCdlc(cdlc.id).subscribe(() => {
       this.reloadCdlcs();
       this.notificationService.successNotification(
         `CDLC has been ${cdlc.enabled ? "disabled" : "enabled"}!`

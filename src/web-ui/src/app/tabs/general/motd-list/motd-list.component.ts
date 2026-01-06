@@ -1,19 +1,28 @@
-import { Component, OnInit } from "@angular/core";
-import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
+import { Component } from "@angular/core";
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
+import { FormsModule } from "@angular/forms";
+import { MatIcon } from "@angular/material/icon";
+import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-motd-list",
   templateUrl: "./motd-list.component.html",
-  styleUrls: ["./motd-list.component.scss"],
-  standalone: false
+  imports: [
+    CdkDropList,
+    FormsModule,
+    MatIcon,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatButton,
+    CdkDrag
+  ],
+  styleUrls: ["./motd-list.component.scss"]
 })
-export class MotdListComponent implements OnInit {
+export class MotdListComponent {
   motd: MotdItem[] = [];
   motdInterval: number = 5;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   deleteMotdLine(motdLineIndex: number) {
     this.motd = this.motd.filter((value, index) => {
@@ -25,7 +34,7 @@ export class MotdListComponent implements OnInit {
     this.motd.push(new MotdItem(""));
   }
 
-  pupulateModtList(motdList: string[]) {
+  populateModtList(motdList: string[]) {
     this.motd = motdList.map((message) => new MotdItem(message));
   }
 

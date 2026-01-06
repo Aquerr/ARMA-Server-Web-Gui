@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { MissionParam } from "../../../../model/mission.model";
 
 @Component({
@@ -7,15 +7,11 @@ import { MissionParam } from "../../../../model/mission.model";
   styleUrls: ["./mission-parameter.component.scss"],
   standalone: false
 })
-export class MissionParameterComponent implements OnInit {
+export class MissionParameterComponent {
   @Output() parameterDeleted: EventEmitter<MissionParam> = new EventEmitter<MissionParam>();
 
   @Input()
   parameter!: MissionParam;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   deleteParameter() {
     this.parameterDeleted.emit(this.parameter);

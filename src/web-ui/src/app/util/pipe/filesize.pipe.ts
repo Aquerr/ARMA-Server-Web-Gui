@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from "@angular/core";
   name: "filesize"
 })
 export class FilesizePipe implements PipeTransform {
-  transform(value: number, ...args: unknown[]): string {
+  transform(value: number): string {
     if (isNaN(value) || value === 0) return "0 Bytes";
 
     const sizes = ["Bytes", "KB", "MB", "GB"];

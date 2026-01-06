@@ -20,14 +20,14 @@
               <input matInput formControlName="password" type="password" placeholder="<hidden>" />
             </mat-form-field>
           }
-          <aswg-chip-form-input
+          <app-aswg-chip-form-input
             style="width: 100%; margin-top: 1rem"
             labelText="Authorities"
             [control]="formService.getAuthoritiesControl(form)"
             [parent]="form"
             [autocompleteList]="prepareAuthorities()"
           >
-          </aswg-chip-form-input>
+          </app-aswg-chip-form-input>
           <mat-form-field>
             <mat-label>Locked</mat-label>
             <mat-select formControlName="locked">

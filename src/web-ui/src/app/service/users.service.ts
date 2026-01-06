@@ -10,8 +10,6 @@ import { AswgAuthority } from "../model/authority.model";
 export class UsersService {
   private readonly httpClient: HttpClient = inject(HttpClient);
 
-  constructor() {}
-
   getUsers(): Observable<AswgUser[]> {
     return this.httpClient.get<AswgUser[]>(`${API_BASE_URL}/users`);
   }

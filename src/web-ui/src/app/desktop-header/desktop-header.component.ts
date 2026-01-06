@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { AuthService } from "../service/auth.service";
 import { Router } from "@angular/router";
-import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.service";
-import { Observable, of } from "rxjs";
+import { take, tap } from "rxjs";
 
 @Component({
   selector: "app-desktop-header",
@@ -15,22 +14,26 @@ export class DesktopHeaderComponent {
   darkMode: boolean = true;
 
   @Output()
-  changeThemeEmit: EventEmitter<void> = new EventEmitter();
+  changeThemeEmit = new EventEmitter<void>();
+
   @Output()
-  routerLinkClickEmitter: EventEmitter<string> = new EventEmitter();
-  routePreCheck = new Map<string, (routerLink: string) => Observable<boolean>>();
+  routerLinkClickEmitter = new EventEmitter<string>();
 
   constructor(
     private authService: AuthService,
-    private router: Router,
-    private maskService: LoadingSpinnerMaskService
+    private router: Router
   ) {}
 
   logout() {
-    this.routerLinkClicked("/logout");
-    this.authService.logout();
-    this.router.navigateByUrl("/login");
+    this.authService
+      .logout()
+      .pipe(
+        tap(() => void this.router.navigateByUrl("/login")),
+        take(1)
+      )
+      .subscribe();
   }
+
   isAuthenticated() {
     return this.authService.isAuthenticated();
   }
@@ -41,31 +44,5 @@ export class DesktopHeaderComponent {
 
   changeTheme() {
     this.changeThemeEmit.emit();
-  }
-
-  private routerLinkClicked(routerLink: string) {
-    this.maskService.show();
-    let preCheck = this.routePreCheck.get(routerLink);
-
-    if (preCheck === undefined) {
-      preCheck = this.canUseRouteDefault;
-    }
-
-    preCheck(routerLink).subscribe({
-      next: (canAccessLink) => {
-        if (!canAccessLink) {
-          this.maskService.hide();
-          return;
-        }
-
-        this.maskService.hide();
-        this.router.navigate([routerLink]);
-        this.routerLinkClickEmitter.emit(routerLink);
-      }
-    });
-  }
-
-  private canUseRouteDefault(): Observable<boolean> {
-    return of(true);
   }
 }

@@ -52,13 +52,13 @@ import { withLineNumbers } from "codejar-linenumbers";
 })
 export class ModSettingsPanelComponent implements OnInit, AfterViewInit {
   @Input({ required: true }) modSettings!: ModSettings;
-  @Output("deleted") modSettingsDeleted = new EventEmitter<number>();
-  @Output("activated") modSettingsActivated = new EventEmitter<ModSettings>();
+  @Output() modSettingsDeleted = new EventEmitter<number>();
+  @Output() modSettingsActivated = new EventEmitter<ModSettings>();
 
   @ViewChild("code") codeElement!: ElementRef<HTMLDivElement>;
   public form!: FormGroup;
 
-  private jar!: any;
+  private jar!: CodeJar;
 
   constructor(
     private readonly modSettingsService: ModSettingsService,
@@ -93,7 +93,7 @@ export class ModSettingsPanelComponent implements OnInit, AfterViewInit {
       if (this.getId()) {
         this.modSettingsService
           .updateModSettings(this.getId(), this.formService.asModSettings(this.form))
-          .subscribe((response) => {
+          .subscribe(() => {
             this.maskService.hide();
             this.notificationService.successNotification("Settings have been updated!");
           });
@@ -113,7 +113,7 @@ export class ModSettingsPanelComponent implements OnInit, AfterViewInit {
   }
 
   getId() {
-    return this.formService.getIdControl(this.form).value;
+    return this.formService.getIdControl(this.form).value!;
   }
 
   getName() {
@@ -125,7 +125,7 @@ export class ModSettingsPanelComponent implements OnInit, AfterViewInit {
   }
 
   getContent() {
-    return this.formService.getContentControl(this.form).value;
+    return this.formService.getContentControl(this.form).value!;
   }
 
   deleteClick(event: MouseEvent) {
@@ -139,7 +139,7 @@ export class ModSettingsPanelComponent implements OnInit, AfterViewInit {
     this.modSettingsActivated.emit(this.formService.asModSettings(this.form));
   }
 
-  highlightMethod(editor: HTMLElement) {
+  static highlightMethod(editor: HTMLElement) {
     if (editor.textContent !== null && editor.textContent !== undefined) {
       editor.innerHTML = hljs.highlight(editor.textContent, {
         language: "sql"
@@ -147,12 +147,12 @@ export class ModSettingsPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onCodeChange(code: Event) {
+  onCodeChange() {
     this.formService.setContentControl(this.form, this.jar.toString());
   }
 
   private prepareCodeJar() {
-    this.jar = CodeJar(this.codeElement.nativeElement, withLineNumbers(this.highlightMethod), {
+    this.jar = CodeJar(this.codeElement.nativeElement, withLineNumbers(ModSettingsPanelComponent.highlightMethod), {
       tab: "\t"
     });
   }

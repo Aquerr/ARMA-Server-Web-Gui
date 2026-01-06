@@ -13,7 +13,7 @@
         <app-workshop-item
           [workshopMod]="workshopMod"
           [canInstall]="canInstall(workshopMod)"
-          (onModInstallDelete)="onModInstallDelete($event)"
+          (modInstallDelete)="onModInstallDelete()"
           class="workshop-list-item"
         >
         </app-workshop-item>
@@ -33,12 +33,12 @@
         <app-workshop-item
           [workshopMod]="installedWorkshopMod"
           [canInstall]="false"
-          (onModInstallDelete)="onModInstallDelete($event)"
+          (modInstallDelete)="onModInstallDelete()"
           class="workshop-list-item"
         >
         </app-workshop-item>
       }
-      @if (installedWorkshopMods.length == 0) {
+      @if (installedWorkshopMods.length === 0) {
         <div>
           <span>No workshop items are installed. :(</span>
         </div>

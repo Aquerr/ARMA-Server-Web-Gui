@@ -1,7 +1,7 @@
 export interface JobSettings {
-  enabled: string;
+  enabled: boolean;
   cron: string;
-  parameters: [{name: string, description: string, value: string}];
+  parameters: [{ name: string; description: string; value: string }];
   lastExecutionDate: string;
   lastExecutionFinishedDate: string;
   nextExecutionDate: string;
@@ -10,7 +10,7 @@ export interface JobSettings {
 }
 
 export enum JobStatus {
-  STARTED = 'STARTED',
-  SUCCESS = 'SUCCESS',
-  FAILURE = 'FAILURE'
+  STARTED = "STARTED",
+  SUCCESS = "SUCCESS",
+  FAILURE = "FAILURE"
 }

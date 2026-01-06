@@ -36,7 +36,7 @@ export class SettingsUsersComponent implements OnInit {
       if (!result) return;
 
       this.maskService.show();
-      this.usersService.deleteUser(id).subscribe((response) => {
+      this.usersService.deleteUser(id).subscribe(() => {
         this.maskService.hide();
         this.reloadUsersList();
         this.notificationService.successNotification("User has been deleted");
@@ -64,13 +64,13 @@ export class SettingsUsersComponent implements OnInit {
   save(aswgUser: AswgUser) {
     this.maskService.show();
     if (aswgUser.id) {
-      this.usersService.updateUser(aswgUser).subscribe((response) => {
+      this.usersService.updateUser(aswgUser).subscribe(() => {
         this.maskService.hide();
         this.reloadUsersList();
         this.notificationService.successNotification("User has been updated");
       });
     } else {
-      this.usersService.addNewUser(aswgUser).subscribe((response) => {
+      this.usersService.addNewUser(aswgUser).subscribe(() => {
         this.maskService.hide();
         this.reloadUsersList();
         this.notificationService.successNotification("User has been added");
@@ -89,8 +89,8 @@ export class SettingsUsersComponent implements OnInit {
   public passwordSaved(userId: number, password: string) {
     this.maskService.show();
     this.usersService
-      .updatePassword(userId!, password)
-      .subscribe((response) => {
+      .updatePassword(userId, password)
+      .subscribe(() => {
         this.notificationService.successNotification("Password has been updated!");
         this.maskService.hide();
       });

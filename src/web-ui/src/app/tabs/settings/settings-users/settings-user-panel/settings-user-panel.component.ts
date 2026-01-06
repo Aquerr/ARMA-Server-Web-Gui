@@ -39,7 +39,8 @@ import { DatePipe } from "@angular/common";
     MatInput,
     MatButtonModule,
     DatePipe
-  ]
+  ],
+  providers: [PasswordChangeDialogComponent]
 })
 export class SettingsUserPanelComponent implements OnInit {
   formService: EditUserFormService = inject(EditUserFormService);
@@ -55,7 +56,7 @@ export class SettingsUserPanelComponent implements OnInit {
   saved = new EventEmitter<AswgUser>();
 
   @Output()
-  passwordSaved = new EventEmitter<{userId: number, password: string}>();
+  passwordSaved = new EventEmitter<{ userId: number; password: string }>();
 
   public form!: FormGroup;
 
@@ -83,9 +84,9 @@ export class SettingsUserPanelComponent implements OnInit {
   }
 
   showEditPasswordModal() {
-    this.dialogService.open(PasswordChangeDialogComponent, (newPassword) => {
+    this.dialogService.open(PasswordChangeDialogComponent, (newPassword: string) => {
       if (newPassword) {
-        this.passwordSaved.emit({userId: this.user.id || 0, password: newPassword});
+        this.passwordSaved.emit({ userId: this.user.id ?? 0, password: newPassword });
       }
     });
   }

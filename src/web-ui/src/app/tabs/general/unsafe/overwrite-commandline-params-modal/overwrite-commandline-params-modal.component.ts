@@ -1,5 +1,5 @@
-import {Component, inject, Inject} from "@angular/core";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { Component, inject, Inject } from "@angular/core";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButton } from "@angular/material/button";
 import {
   MAT_DIALOG_DATA,
@@ -29,9 +29,8 @@ import { MatInput } from "@angular/material/input";
   styleUrl: "./overwrite-commandline-params-modal.component.scss"
 })
 export class OverwriteCommandlineParamsModalComponent {
-
   private readonly formBuilder: FormBuilder = inject(FormBuilder);
-  private readonly dialogRef: MatDialogRef<OverwriteCommandlineParamsModalComponent> = inject(
+  private readonly dialogRef: MatDialogRef<OverwriteCommandlineParamsModalComponent> = inject<MatDialogRef<OverwriteCommandlineParamsModalComponent>>(
     MatDialogRef<OverwriteCommandlineParamsModalComponent>
   );
 

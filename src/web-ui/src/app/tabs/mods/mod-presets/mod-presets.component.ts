@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
+import { Component, ElementRef, EventEmitter, input, Output, ViewChild } from "@angular/core";
 import {
   ModPresetImportRequest,
   ModPresetModParam,
@@ -21,12 +21,12 @@ import { ModPresetParserService } from "./service/mod-preset-parser.service";
   standalone: false
 })
 export class ModPresetsComponent {
-  @ViewChild("presetFileInput") fileInputComponent!: ElementRef;
+  @ViewChild("presetFileInput") fileInputComponent!: ElementRef<HTMLInputElement>;
 
-  @Input("mods") enabledMods: Mod[] = [];
+  enabledMods = input.required<Mod[]>();
   modPresets: string[] = [];
 
-  @Output("modPresetSelected") modPresetSelected: EventEmitter<string> = new EventEmitter<string>();
+  @Output() modPresetSelected: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
     private modsService: ServerModsService,
@@ -48,7 +48,7 @@ export class ModPresetsComponent {
     const file: File = target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (data) => {
+      reader.onload = () => {
         const modPreset = this.modPresetParserService.processModPresetFile(reader.result);
 
         if (modPreset == null) {
@@ -66,7 +66,7 @@ export class ModPresetsComponent {
           )
         } as ModPresetImportRequest;
 
-        this.modsService.importPreset(modPresetImportRequest).subscribe((response) => {
+        this.modsService.importPreset(modPresetImportRequest).subscribe(() => {
           this.maskService.hide();
           this.reloadModPresets();
           this.notificationService.successNotification(
@@ -97,7 +97,7 @@ export class ModPresetsComponent {
 
   onPresetSelect(presetName: string) {
     this.maskService.show();
-    this.modsService.selectPreset({ name: presetName }).subscribe((response) => {
+    this.modsService.selectPreset({ name: presetName }).subscribe(() => {
       this.modPresetSelected.emit(presetName);
       this.maskService.hide();
       this.notificationService.successNotification("Mod preset loaded!");
@@ -121,11 +121,11 @@ export class ModPresetsComponent {
       exitAnimationDuration: "200ms"
     });
 
-    dialogRef.afterClosed().subscribe((result: { create: boolean; modPresetName: string }) => {
+    dialogRef.afterClosed().subscribe((result: { create: boolean | undefined; modPresetName: string }) => {
       if (result.create) {
         this.modsService
           .savePreset({ name: result.modPresetName, modNames: [] })
-          .subscribe((response) => {
+          .subscribe(() => {
             this.reloadModPresets();
             this.notificationService.successNotification("Mod preset created!");
           });
@@ -146,13 +146,12 @@ export class ModPresetsComponent {
 
     dialogRef.afterClosed().subscribe((result: { create: boolean; modPresetName: string }) => {
       if (result) {
-        console.log(this.enabledMods);
         this.modsService
           .savePreset({
             name: presetName,
-            modNames: this.enabledMods.map((mod) => mod.name)
+            modNames: this.enabledMods().map((mod) => mod.name)
           } as ModPresetSaveRequest)
-          .subscribe((response) => {
+          .subscribe(() => {
             this.reloadModPresets();
             this.notificationService.successNotification("Mod preset saved!");
           });
@@ -170,7 +169,7 @@ export class ModPresetsComponent {
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
         this.maskService.show();
-        this.modsService.deletePreset(presetName).subscribe((response) => {
+        this.modsService.deletePreset(presetName).subscribe(() => {
           this.removePresetFromList(this.modPresets, presetName);
           this.maskService.hide();
           this.notificationService.successNotification("Mod preset deleted!");

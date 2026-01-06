@@ -1,12 +1,23 @@
 import { Component, Input } from "@angular/core";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
-import { MatChipEditedEvent, MatChipInputEvent } from "@angular/material/chips";
+import { MatChipEditedEvent, MatChipGrid, MatChipInput, MatChipInputEvent, MatChipRow } from "@angular/material/chips";
+import { MatFormField, MatLabel } from "@angular/material/input";
+import { MatIcon } from "@angular/material/icon";
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
-  selector: "aswg-chip-input",
+  selector: "app-aswg-chip-input",
   templateUrl: "./aswg-chip-input.component.html",
-  styleUrl: "./aswg-chip-input.component.scss",
-  standalone: false
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatChipGrid,
+    MatChipRow,
+    MatIcon,
+    MatChipInput,
+    MatTooltip
+  ],
+  styleUrl: "./aswg-chip-input.component.scss"
 })
 export class AswgChipInputComponent {
   protected readonly ENTER = ENTER;
@@ -14,9 +25,11 @@ export class AswgChipInputComponent {
 
   @Input()
   labelText: string = "";
+
   @Input()
   toolTipText: string = "";
-  @Input("data")
+
+  @Input()
   list: string[] = [];
 
   editEntry(localClientIp: string, event: MatChipEditedEvent) {

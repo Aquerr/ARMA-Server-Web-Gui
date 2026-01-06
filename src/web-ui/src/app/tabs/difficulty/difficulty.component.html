@@ -16,12 +16,12 @@
   </div>
 
   <div class="difficulty-page-content">
-    @for (difficultyProfile of difficultyProfiles; track difficultyProfile.name) {
+    @for (difficultyProfile of difficultyProfiles(); track difficultyProfile.name) {
       <app-difficulty-panel
         [difficultyProfile]="difficultyProfile"
         (activated)="onProfileActivate($event)"
-        (saved)="onProfileSave($event)"
-        (deleted)="onProfileDelete($event)"
+        (saved)="onProfileSave()"
+        (deleted)="onProfileDelete()"
       ></app-difficulty-panel>
     }
     <div>

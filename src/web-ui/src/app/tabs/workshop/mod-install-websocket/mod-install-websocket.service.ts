@@ -10,10 +10,8 @@ export class ModInstallWebsocketService {
   websocket!: WebSocket;
   isConnected: boolean = false;
 
-  @Output() workShopModInstallStatus: EventEmitter<WorkShopModInstallStatus> =
-    new EventEmitter<WorkShopModInstallStatus>();
-
-  constructor() {}
+  @Output() workShopModInstallStatus: EventEmitter<WorkShopModInstallStatus>
+    = new EventEmitter<WorkShopModInstallStatus>();
 
   connect() {
     if (this.websocket) {
@@ -22,7 +20,7 @@ export class ModInstallWebsocketService {
 
     const wsUrl = this.isHttps() ? API_WSS_BASE_URL : API_WS_BASE_URL;
     this.websocket = new WebSocket(wsUrl + "/workshop-mod-install-progress");
-    this.websocket.onopen = (event) => {
+    this.websocket.onopen = () => {
       this.isConnected = true;
     };
 

@@ -15,8 +15,8 @@ export class ServerLoggingService {
     return this.httpClient.get<LoggingProperties>(this.LOGGING_URL);
   }
 
-  saveLoggingSectionData(loggingSectionDataRequest: SaveLoggingPropertiesRequest): Observable<any> {
-    return this.httpClient.post(this.LOGGING_URL, loggingSectionDataRequest);
+  saveLoggingSectionData(loggingSectionDataRequest: SaveLoggingPropertiesRequest): Observable<void> {
+    return this.httpClient.post<void>(this.LOGGING_URL, loggingSectionDataRequest);
   }
 
   getLatestServerLogs(): Observable<LatestServerLogs> {

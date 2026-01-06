@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { CdlcComponent } from './cdlc.component';
+import { CdlcComponent } from "./cdlc.component";
 
-describe('CdlcComponent', () => {
+describe("CdlcComponent", () => {
   let component: CdlcComponent;
   let fixture: ComponentFixture<CdlcComponent>;
 
@@ -10,14 +10,14 @@ describe('CdlcComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CdlcComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(CdlcComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

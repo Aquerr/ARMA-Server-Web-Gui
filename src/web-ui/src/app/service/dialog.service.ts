@@ -5,6 +5,7 @@ import {
   CommonConfirmDialogComponent,
   CommonConfirmDialogComponentDialogData
 } from "../common-ui/common-confirm-dialog/common-confirm-dialog.component";
+import { take } from "rxjs";
 
 @Injectable({
   providedIn: "root"
@@ -14,7 +15,7 @@ export class DialogService {
 
   openCommonConfirmationDialog(
     data: CommonConfirmDialogComponentDialogData,
-    closeCallBack: (dialogResult: boolean) => any
+    closeCallBack: (dialogResult: boolean) => void
   ): void {
     this.matDialog
       .open(CommonConfirmDialogComponent, this.prepareDialogConfig(undefined, data))
@@ -22,26 +23,26 @@ export class DialogService {
       .subscribe(closeCallBack);
   }
 
-  open<T>(
+  open<T, R>(
     dialogComponent: ComponentType<T>,
-    closeCallback: (dialogResult: any) => any,
-    data?: any,
+    closeCallback: (dialogResult: R) => void,
+    data?: unknown,
     config?: MatDialogConfig
   ): void {
     const dialogConfig = this.prepareDialogConfig(config, data);
 
-    const subscription = this.matDialog
+    this.matDialog
       .open(dialogComponent, dialogConfig)
       .afterClosed()
+      .pipe(take(1))
       .subscribe({
-        next: (data) => {
-          closeCallback(data);
-          subscription.unsubscribe();
+        next: (dialogResult: R) => {
+          closeCallback(dialogResult);
         }
       });
   }
 
-  private prepareDialogConfig(initialConfig?: MatDialogConfig, data?: any) {
+  private prepareDialogConfig(initialConfig?: MatDialogConfig, data?: unknown) {
     if (initialConfig) {
       return {
         ...initialConfig,

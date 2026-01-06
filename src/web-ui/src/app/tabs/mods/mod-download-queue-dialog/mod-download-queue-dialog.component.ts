@@ -22,8 +22,9 @@ import { MatIconButton } from "@angular/material/button";
   styleUrl: "./mod-download-queue-dialog.component.scss"
 })
 export class ModDownloadQueueDialogComponent implements OnInit {
-  private readonly loadingSpinnerMaskService: LoadingSpinnerMaskService =
-    inject(LoadingSpinnerMaskService);
+  private readonly loadingSpinnerMaskService: LoadingSpinnerMaskService
+    = inject(LoadingSpinnerMaskService);
+
   private readonly workshopService: WorkshopService = inject(WorkshopService);
 
   modDownloadQueue: DownloadingMod[] = [];

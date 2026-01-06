@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpEvent } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { API_BASE_URL } from "src/environments/environment";
@@ -14,7 +14,7 @@ export class ServerModsService {
 
   constructor(private httpClient: HttpClient) {}
 
-  uploadMod(formData: FormData): Observable<any> {
+  uploadMod(formData: FormData): Observable<HttpEvent<object>> {
     return this.httpClient.post(this.MODS_FILES_URL, formData, {
       reportProgress: true,
       observe: "events"
@@ -31,12 +31,12 @@ export class ServerModsService {
     return this.httpClient.get<GetModsResponse>(this.MODS_URL);
   }
 
-  deleteMod(modName: string): Observable<any> {
-    return this.httpClient.delete(`${this.MODS_URL}`, { body: { name: modName } });
+  deleteMod(modName: string): Observable<void> {
+    return this.httpClient.delete<void>(`${this.MODS_URL}`, { body: { name: modName } });
   }
 
   saveEnabledMods(saveEnabledModsRequest: SaveEnabledModsRequest) {
-    return this.httpClient.post(`${this.MODS_URL}/enabled`, saveEnabledModsRequest);
+    return this.httpClient.post<void>(`${this.MODS_URL}/enabled`, saveEnabledModsRequest);
   }
 
   manageMod(name: string) {

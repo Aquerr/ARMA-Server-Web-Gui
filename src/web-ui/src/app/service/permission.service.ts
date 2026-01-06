@@ -12,12 +12,10 @@ export class PermissionService {
   notificationService: NotificationService = inject(NotificationService);
   router: Router = inject(Router);
 
-  constructor() {}
-
-  //TODO: Add observable methods that can be piped when succeed
+  // TODO: Add observable methods that can be piped when succeed
   hasAllAuthorities(requiredAuthorities: AswgAuthority[], shouldNotify: boolean): boolean {
     if (!this.authService.isAuthenticated()) {
-      this.router.navigate(["login"]);
+      void this.router.navigate(["login"]);
       return false;
     }
 
@@ -40,7 +38,7 @@ export class PermissionService {
 
   hasAnyAuthority(requiredAuthorities: AswgAuthority[], shouldNotify: boolean): boolean {
     if (!this.authService.isAuthenticated()) {
-      this.router.navigate(["login"]);
+      void this.router.navigate(["login"]);
       return false;
     }
 
@@ -62,7 +60,7 @@ export class PermissionService {
 
   isAuthenticated(): boolean {
     if (!this.authService.isAuthenticated()) {
-      this.router.navigate(["login"]);
+      void this.router.navigate(["login"]);
       return false;
     }
     return true;
@@ -77,7 +75,7 @@ export function hasAllAuthorities(
   requiredRoles: AswgAuthority[],
   shouldNotify: boolean = true
 ): CanActivateFn {
-  return (route, state) => {
+  return () => {
     return inject(PermissionService).hasAllAuthorities(requiredRoles, shouldNotify);
   };
 }
@@ -86,13 +84,13 @@ export function hasAnyAuthority(
   authorities: AswgAuthority[],
   shouldNotify: boolean = true
 ): CanActivateFn {
-  return (route, state) => {
+  return () => {
     return inject(PermissionService).hasAnyAuthority(authorities, shouldNotify);
   };
 }
 
 export function isAuthenticated(): CanActivateFn {
-  return (route, state) => {
+  return () => {
     return inject(PermissionService).isAuthenticated();
   };
 }

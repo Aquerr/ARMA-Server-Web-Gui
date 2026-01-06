@@ -20,8 +20,8 @@ export class ModSettingsService {
     return this.httpClient.get<ModSettings>(`${this.MOD_SETTINGS_ROOT_URL}/${id}`);
   }
 
-  deleteModSettings(id: number): Observable<any> {
-    return this.httpClient.delete(`${this.MOD_SETTINGS_ROOT_URL}/${id}`);
+  deleteModSettings(id: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.MOD_SETTINGS_ROOT_URL}/${id}`);
   }
 
   updateModSettings(id: number, modSettings: ModSettings) {
@@ -32,8 +32,8 @@ export class ModSettingsService {
     return this.httpClient.get<ModSettingsContent>(`${this.MOD_SETTINGS_ROOT_URL}/${id}/content`);
   }
 
-  saveModSettingsContent(id: number, content: string): Observable<any> {
-    return this.httpClient.put<any>(`${this.MOD_SETTINGS_ROOT_URL}/${id}/content`, {
+  saveModSettingsContent(id: number, content: string): Observable<unknown> {
+    return this.httpClient.put<unknown>(`${this.MOD_SETTINGS_ROOT_URL}/${id}/content`, {
       content: content
     } as ModSettingsContent);
   }

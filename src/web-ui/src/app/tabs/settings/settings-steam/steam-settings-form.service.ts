@@ -36,23 +36,23 @@ export class SteamSettingsFormService {
     } as SteamSettings;
   }
 
-  getSteamCmdPathControl(form: FormGroup): AbstractControl {
-    return form.get("steamCmdPath") as AbstractControl;
+  getSteamCmdPathControl(form: FormGroup): AbstractControl<string> {
+    return form.get("steamCmdPath") as AbstractControl<string>;
   }
 
-  getSteamCmdUsernameControl(form: FormGroup): AbstractControl {
-    return form.get("steamCmdUsername") as AbstractControl;
+  getSteamCmdUsernameControl(form: FormGroup): AbstractControl<string> {
+    return form.get("steamCmdUsername") as AbstractControl<string>;
   }
 
-  getSteamCmdPasswordControl(form: FormGroup): AbstractControl {
-    return form.get("steamCmdPassword") as AbstractControl;
+  getSteamCmdPasswordControl(form: FormGroup): AbstractControl<string> {
+    return form.get("steamCmdPassword") as AbstractControl<string>;
   }
 
-  getSteamCmdWorkshopContentPathControl(form: FormGroup): AbstractControl {
-    return form.get("steamCmdWorkshopContentPath") as AbstractControl;
+  getSteamCmdWorkshopContentPathControl(form: FormGroup): AbstractControl<string> {
+    return form.get("steamCmdWorkshopContentPath") as AbstractControl<string>;
   }
 
-  getSteamWebApiTokenControl(form: FormGroup): AbstractControl {
-    return form.get("steamWebApiToken") as AbstractControl;
+  getSteamWebApiTokenControl(form: FormGroup): AbstractControl<string> {
+    return form.get("steamWebApiToken") as AbstractControl<string>;
   }
 }

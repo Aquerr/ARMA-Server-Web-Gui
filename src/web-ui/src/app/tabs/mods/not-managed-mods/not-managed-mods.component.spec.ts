@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { NotManagedModsComponent } from './not-managed-mods.component';
+import { NotManagedModsComponent } from "./not-managed-mods.component";
 
-describe('NotManagedModsComponent', () => {
+describe("NotManagedModsComponent", () => {
   let component: NotManagedModsComponent;
   let fixture: ComponentFixture<NotManagedModsComponent>;
 
@@ -10,14 +10,14 @@ describe('NotManagedModsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [NotManagedModsComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(NotManagedModsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

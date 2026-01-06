@@ -11,7 +11,6 @@ import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask
   styleUrl: "./settings-jobs.component.scss"
 })
 export class SettingsJobsComponent implements OnInit {
-
   private readonly jobsSettingsService: JobSettingsService = inject(JobSettingsService);
   private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
 

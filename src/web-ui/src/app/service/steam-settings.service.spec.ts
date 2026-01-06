@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { SteamSettingsService } from './steam-settings.service';
+import { SteamSettingsService } from "./steam-settings.service";
 
-describe('SteamSettingsService', () => {
+describe("SteamSettingsService", () => {
   let service: SteamSettingsService;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('SteamSettingsService', () => {
     service = TestBed.inject(SteamSettingsService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });

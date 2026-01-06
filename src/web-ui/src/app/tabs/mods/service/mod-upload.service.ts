@@ -3,6 +3,7 @@ import { ServerModsService } from "../../../service/server-mods.service";
 import { NotificationService } from "../../../service/notification.service";
 import { Observable } from "rxjs";
 import { FileUploadService } from "../../../service/file-upload.service";
+import { HttpEvent } from "@angular/common/http";
 
 @Injectable({
   providedIn: "root"
@@ -19,7 +20,7 @@ export class ModUploadService extends FileUploadService {
     this.uploadFile(file, overwrite);
   }
 
-  doUpload(file: File, overwrite: boolean = false): Observable<any> {
+  doUpload(file: File, overwrite: boolean = false): Observable<HttpEvent<object>> {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("overwrite", overwrite.toString());

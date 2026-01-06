@@ -43,11 +43,11 @@ export class DifficultyPanelComponent {
 
   isInputAllowedKey(key: string) {
     return (
-      key === "Backspace" ||
-      key === "ArrowLeft" ||
-      key === "ArrowRight" ||
-      key === "Tab" ||
-      key === "Delete"
+      key === "Backspace"
+      || key === "ArrowLeft"
+      || key === "ArrowRight"
+      || key === "Tab"
+      || key === "Delete"
     );
   }
 
@@ -60,10 +60,10 @@ export class DifficultyPanelComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        let identifier =
-          difficultyProfile.id !== undefined ? difficultyProfile.id : difficultyProfile.name;
+        const identifier
+          = difficultyProfile.id ?? difficultyProfile.name;
         this.maskService.show();
-        this.difficultyService.deleteDifficulty(identifier).subscribe((response) => {
+        this.difficultyService.deleteDifficulty(identifier).subscribe(() => {
           this.maskService.hide();
           this.notificationService.successNotification("Difficulty profile has been deleted");
           this.deleted.emit(difficultyProfile);
@@ -74,7 +74,7 @@ export class DifficultyPanelComponent {
 
   saveDifficulty(difficultyProfile: DifficultyProfile) {
     this.maskService.show();
-    this.difficultyService.saveDifficulties([difficultyProfile]).subscribe((response) => {
+    this.difficultyService.saveDifficulties([difficultyProfile]).subscribe(() => {
       this.maskService.hide();
       this.notificationService.successNotification("Difficulty has been saved");
       this.saved.emit(difficultyProfile);

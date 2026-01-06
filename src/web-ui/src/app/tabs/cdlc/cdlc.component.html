@@ -1,7 +1,7 @@
 <div class="container">
   <h1>Creator DLCs</h1>
   <div class="cdlc-list">
-    @for (cdlc of cdlcList; track cdlc.id) {
+    @for (cdlc of cdlcList(); track cdlc.id) {
       <div class="cdlc-list-item">
         <span class="cdlc-list-item-header">
           {{ cdlc.name }}

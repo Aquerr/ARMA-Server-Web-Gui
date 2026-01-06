@@ -1,22 +1,43 @@
 // @ts-check
-const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
-const stylistic = require("@stylistic/eslint-plugin-ts")
+const stylistic = require("@stylistic/eslint-plugin");
+const { defineConfig } = require("eslint/config");
 
-module.exports = tseslint.config(
+module.exports = defineConfig([
   {
     files: ["**/*.ts"],
     extends: [
-      eslint.configs.recommended,
-      ...tseslint.configs.recommended,
-      ...tseslint.configs.stylistic,
+      ...tseslint.configs.recommendedTypeChecked,
+      {
+        languageOptions: {
+          parserOptions: {
+            projectService: true
+          }
+        }
+      },
+      ...tseslint.configs.stylisticTypeChecked,
       ...angular.configs.tsRecommended,
-      ...stylistic.configs.all
+      stylistic.configs.customize({
+        indent: 2,
+        quotes: "double",
+        semi: true,
+        commaDangle: "never",
+        arrowParens: true,
+        braceStyle: "1tbs"
+      })
     ],
     processor: angular.processInlineTemplates,
     rules: {
-      "@stylistic/ts/indent": ['error', 2],
+      "@angular-eslint/prefer-inject": ["off"],
+      "@typescript-eslint/no-inferrable-types": ["off"],
+      "@angular-eslint/prefer-standalone": ["warn"],
+      "@typescript-eslint/unbound-method": [
+        "error",
+        {
+          ignoreStatic: true
+        }
+      ],
       "@angular-eslint/directive-selector": [
         "error",
         {
@@ -40,4 +61,4 @@ module.exports = tseslint.config(
     extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
     rules: {}
   }
-);
+]);

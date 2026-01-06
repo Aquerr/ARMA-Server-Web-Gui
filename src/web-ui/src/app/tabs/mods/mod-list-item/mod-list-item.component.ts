@@ -18,11 +18,11 @@ import { NgOptimizedImage, NgStyle } from "@angular/common";
 import { MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
-import { FilesizePipe } from "../../../util/filesize.pipe";
+import { FilesizePipe } from "../../../util/pipe/filesize.pipe";
 import { MatCheckbox } from "@angular/material/checkbox";
 
 @Component({
-  selector: "[app-mod-list-item]",
+  selector: "app-mod-list-item",
   templateUrl: "./mod-list-item.component.html",
   imports: [
     MatAccordion,
@@ -42,7 +42,7 @@ import { MatCheckbox } from "@angular/material/checkbox";
 })
 export class ModListItemComponent {
   @Input() mod!: Mod;
-  @Output() onModDelete: EventEmitter<Mod> = new EventEmitter<Mod>();
+  @Output() modDeleted: EventEmitter<Mod> = new EventEmitter<Mod>();
   expanded: boolean = false;
 
   constructor(
@@ -69,9 +69,9 @@ export class ModListItemComponent {
 
   deleteMod(modName: string) {
     this.maskService.show();
-    this.modService.deleteMod(modName).subscribe((response) => {
+    this.modService.deleteMod(modName).subscribe(() => {
       this.maskService.hide();
-      this.onModDelete.next(this.mod);
+      this.modDeleted.next(this.mod);
     });
   }
 
@@ -91,7 +91,7 @@ export class ModListItemComponent {
 
   private forceUpdateMod(modId: number, modName: string) {
     this.maskService.show();
-    this.workshopService.installMod(modId, modName).subscribe((response) => {
+    this.workshopService.installMod(modId, modName).subscribe(() => {
       this.maskService.hide();
       this.notificationService.infoNotification("Mod update scheduled");
     });

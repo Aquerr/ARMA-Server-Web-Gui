@@ -3,7 +3,7 @@
   <div>
     <form [formGroup]="form" class="fields">
 
-      @let isFailed = formService.getLastStatus(form).value == JobStatus.FAILURE;
+      @let isFailed = formService.getLastStatus(form).value === JobStatus.FAILURE;
       <div class="information" [ngClass]="isFailed ? 'information-error-color' : 'information-success-color'">
         <div class="information-content">
           <div class="information-icon">

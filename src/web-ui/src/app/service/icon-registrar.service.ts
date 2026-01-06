@@ -6,8 +6,7 @@ import { DomSanitizer } from "@angular/platform-browser";
   providedIn: "root"
 })
 export class IconRegistrarService {
-
-  private matIconRegistry: MatIconRegistry = inject(MatIconRegistry)
+  private matIconRegistry: MatIconRegistry = inject(MatIconRegistry);
   private domSanitizer: DomSanitizer = inject(DomSanitizer);
 
   constructor() {

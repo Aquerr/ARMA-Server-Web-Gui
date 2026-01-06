@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { CdlcService } from './cdlc.service';
+import { CdlcService } from "./cdlc.service";
 
-describe('CdlcService', () => {
+describe("CdlcService", () => {
   let service: CdlcService;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('CdlcService', () => {
     service = TestBed.inject(CdlcService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });

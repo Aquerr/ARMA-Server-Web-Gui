@@ -8,23 +8,15 @@ import { NotificationService } from "../../../service/notification.service";
 import { SteamSettingsFormService } from "./steam-settings-form.service";
 import { SteamSettingsService } from "../../../service/steam-settings.service";
 import { MatTooltip } from "@angular/material/tooltip";
-import {
-  PasswordChangeDialogComponent
-} from "../../../common-ui/password-change-dialog/password-change-dialog.component";
-import {DialogService} from "../../../service/dialog.service";
+import { PasswordChangeDialogComponent } from "../../../common-ui/password-change-dialog/password-change-dialog.component";
+import { DialogService } from "../../../service/dialog.service";
 
 @Component({
   selector: "app-settings-steam",
-  imports: [
-    MatButton,
-    ReactiveFormsModule,
-    MatFormField,
-    MatLabel,
-    MatInput,
-    MatTooltip
-  ],
+  imports: [MatButton, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatTooltip],
   templateUrl: "./settings-steam.component.html",
-  styleUrl: "./settings-steam.component.scss"
+  styleUrl: "./settings-steam.component.scss",
+  providers: [PasswordChangeDialogComponent]
 })
 export class SettingsSteamComponent implements OnInit {
   public form!: FormGroup;
@@ -49,22 +41,20 @@ export class SettingsSteamComponent implements OnInit {
     this.maskService.show();
     this.steamSettingsService
       .saveSteamSettings(this.formService.asSettings(this.form))
-      .subscribe((response) => {
+      .subscribe(() => {
         this.maskService.hide();
         this.notificationService.successNotification("Settings have been saved!");
       });
   }
 
   public showEditSteamCmdPasswordModal() {
-    this.dialogService.open(PasswordChangeDialogComponent, (dialogResult) => {
+    this.dialogService.open(PasswordChangeDialogComponent, (dialogResult: string) => {
       if (dialogResult) {
         this.maskService.show();
-        this.steamSettingsService
-          .updateSteamPassword(dialogResult)
-          .subscribe((response) => {
-            this.maskService.hide();
-            this.notificationService.successNotification("SteamCmd password has been updated!");
-          });
+        this.steamSettingsService.updateSteamPassword(dialogResult).subscribe(() => {
+          this.maskService.hide();
+          this.notificationService.successNotification("SteamCmd password has been updated!");
+        });
       }
     });
   }

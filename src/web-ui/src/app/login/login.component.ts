@@ -1,8 +1,9 @@
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Component } from "@angular/core";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../service/auth.service";
 import { Router } from "@angular/router";
 import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: "app-login",
@@ -10,8 +11,8 @@ import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.servi
   styleUrls: ["./login.component.scss"],
   standalone: false
 })
-export class LoginComponent implements OnInit {
-  form: FormGroup;
+export class LoginComponent {
+  form: FormGroup<{ username: FormControl<string>; password: FormControl<string> }>;
 
   errorMessage?: string;
 
@@ -21,13 +22,11 @@ export class LoginComponent implements OnInit {
     private maskService: LoadingSpinnerMaskService,
     private router: Router
   ) {
-    this.form = this.formBuilder.group({
+    this.form = this.formBuilder.nonNullable.group({
       username: ["", Validators.required],
       password: ["", Validators.required]
     });
   }
-
-  ngOnInit(): void {}
 
   login() {
     this.maskService.show();
@@ -35,10 +34,10 @@ export class LoginComponent implements OnInit {
     if (formData.username && formData.password) {
       this.authService.authenticate(formData.username, formData.password).subscribe({
         next: () => {
-          this.router.navigateByUrl("/general");
+          void this.router.navigateByUrl("/general");
           this.maskService.hide();
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           if (err.status === 400) {
             this.errorMessage = "Bad username or password!";
           } else {

@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ModListsComponent } from './mod-lists.component';
+import { ModListsComponent } from "./mod-lists.component";
 
-describe('ModListsComponent', () => {
+describe("ModListsComponent", () => {
   let component: ModListsComponent;
   let fixture: ComponentFixture<ModListsComponent>;
 
@@ -10,14 +10,14 @@ describe('ModListsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ModListsComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ModListsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

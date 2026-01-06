@@ -11,15 +11,15 @@ import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms"
 export class NewMissionDialogComponent {
   missionType: "BUILT_IN" | "FILE" = "BUILT_IN";
   file: File | null = null;
-  form: FormGroup;
+  form: FormGroup<{ name: FormControl<string>; template: FormControl<string> }>;
 
   constructor(
     private dialogRef: MatDialogRef<NewMissionDialogComponent>,
     formBuilder: FormBuilder
   ) {
-    this.form = formBuilder.group({
-      name: new FormControl(""),
-      template: new FormControl("", [Validators.required, Validators.pattern("^\\S*$")])
+    this.form = formBuilder.nonNullable.group({
+      name: formBuilder.nonNullable.control(""),
+      template: formBuilder.nonNullable.control("", [Validators.required, Validators.pattern("^\\S*$")])
     });
   }
 

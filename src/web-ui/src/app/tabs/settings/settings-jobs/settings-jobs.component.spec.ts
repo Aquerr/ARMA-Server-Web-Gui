@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { SettingsJobsComponent } from './settings-jobs.component';
+import { SettingsJobsComponent } from "./settings-jobs.component";
 
-describe('SettingsJobsComponent', () => {
+describe("SettingsJobsComponent", () => {
   let component: SettingsJobsComponent;
   let fixture: ComponentFixture<SettingsJobsComponent>;
 
@@ -10,14 +10,14 @@ describe('SettingsJobsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [SettingsJobsComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(SettingsJobsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

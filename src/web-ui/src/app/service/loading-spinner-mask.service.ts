@@ -4,10 +4,7 @@ import { Injectable, signal } from "@angular/core";
   providedIn: "root"
 })
 export class LoadingSpinnerMaskService {
-
   public spinnerVisible = signal(false);
-
-  constructor() {}
 
   show(): void {
     this.spinnerVisible.set(true);

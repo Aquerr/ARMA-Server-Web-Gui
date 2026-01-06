@@ -18,10 +18,8 @@ import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
 
-import { MatInput } from "@angular/material/input";
-
 @Component({
-  selector: "aswg-chip-form-input",
+  selector: "app-aswg-chip-form-input",
   templateUrl: "./aswg-chip-form-input.component.html",
   styleUrl: "./aswg-chip-form-input.component.scss",
   standalone: true,
@@ -37,16 +35,18 @@ import { MatInput } from "@angular/material/input";
     MatLabel,
     MatTooltip,
     MatChipRemove
-]
+  ]
 })
 export class AswgChipFormInputComponent implements OnInit {
   protected readonly ENTER = ENTER;
   protected readonly COMMA = COMMA;
 
   @Input()
-  control!: AbstractControl<any, any>;
+  control!: AbstractControl<string[]>;
+
   @Input()
   parent!: FormGroup;
+
   @Input()
   labelText!: string;
 
@@ -84,7 +84,7 @@ export class AswgChipFormInputComponent implements OnInit {
   removeValue(value: string) {
     const index = this.control.value.indexOf(value);
     if (index >= 0) {
-      let list = this.control.value as string[];
+      const list = this.control.value;
       list.splice(index, 1);
       this.control.setValue(list);
       this.control.updateValueAndValidity();
@@ -103,7 +103,7 @@ export class AswgChipFormInputComponent implements OnInit {
 
     const index = this.control.value.indexOf(oldValue);
     if (index >= 0) {
-      let list = this.control.value as string[];
+      const list = this.control.value;
       list[index] = value;
       this.control.setValue(list);
       this.filterAutocompleteList();

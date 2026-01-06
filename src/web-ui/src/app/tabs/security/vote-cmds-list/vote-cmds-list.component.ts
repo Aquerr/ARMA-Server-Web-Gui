@@ -25,7 +25,7 @@ export class VoteCmdsListComponent implements OnInit {
   }
 
   deleteItem(item: CommandListItem) {
-    this.voteCommandsItems = this.voteCommandsItems.filter((value, index) => {
+    this.voteCommandsItems = this.voteCommandsItems.filter((value) => {
       return value.command.name != item.command.name;
     });
 
@@ -35,7 +35,7 @@ export class VoteCmdsListComponent implements OnInit {
   }
 
   addNewCommand() {
-    let item = new CommandListItem({} as VoteCmd);
+    const item = new CommandListItem({} as VoteCmd);
     this.voteCommandsItems.push(item);
   }
 }

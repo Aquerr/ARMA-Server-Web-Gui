@@ -104,86 +104,86 @@ export class NetworkFormService {
   }
 
   getUpnpControl(form: FormGroup) {
-    return form.get("upnp") as AbstractControl;
+    return form.get("upnp") as AbstractControl<boolean>;
   }
 
   getMaxPingControl(form: FormGroup) {
-    return form.get("maxPing") as AbstractControl;
+    return form.get("maxPing") as AbstractControl<number>;
   }
 
   getLoopbackControl(form: FormGroup) {
-    return form.get("loopback") as AbstractControl;
+    return form.get("loopback") as AbstractControl<boolean>;
   }
 
   getDisconnectTimeoutControl(form: FormGroup) {
-    return form.get("disconnectTimeout") as AbstractControl;
+    return form.get("disconnectTimeout") as AbstractControl<number>;
   }
 
   getMaxDesyncControl(form: FormGroup) {
-    return form.get("maxDesync") as AbstractControl;
+    return form.get("maxDesync") as AbstractControl<number>;
   }
 
   getMaxPacketLossControl(form: FormGroup) {
-    return form.get("maxPacketLoss") as AbstractControl;
+    return form.get("maxPacketLoss") as AbstractControl<number>;
   }
 
   getEnablePlayerDiagControl(form: FormGroup) {
-    return form.get("enablePlayerDiag") as AbstractControl;
+    return form.get("enablePlayerDiag") as AbstractControl<boolean>;
   }
 
   getSteamProtocolMaxDataSizeControl(form: FormGroup) {
-    return form.get("steamProtocolMaxDataSize") as AbstractControl;
+    return form.get("steamProtocolMaxDataSize") as AbstractControl<number>;
   }
 
   getMinBandwidth(form: FormGroup) {
-    return form.get("minBandwidth") as AbstractControl;
+    return form.get("minBandwidth") as AbstractControl<number>;
   }
 
   getMaxBandwidth(form: FormGroup) {
-    return form.get("maxBandwidth") as AbstractControl;
+    return form.get("maxBandwidth") as AbstractControl<number>;
   }
 
   getMaxMsgSend(form: FormGroup) {
-    return form.get("maxMsgSend") as AbstractControl;
+    return form.get("maxMsgSend") as AbstractControl<number>;
   }
 
   getMaxSizeGuaranteed(form: FormGroup) {
-    return form.get("maxSizeGuaranteed") as AbstractControl;
+    return form.get("maxSizeGuaranteed") as AbstractControl<number>;
   }
 
   getMaxSizeNonGuaranteed(form: FormGroup) {
-    return form.get("maxSizeNonGuaranteed") as AbstractControl;
+    return form.get("maxSizeNonGuaranteed") as AbstractControl<number>;
   }
 
   getMinErrorToSend(form: FormGroup) {
-    return form.get("minErrorToSend") as AbstractControl;
+    return form.get("minErrorToSend") as AbstractControl<number>;
   }
 
   getMinErrorToSendNear(form: FormGroup) {
-    return form.get("minErrorToSendNear") as AbstractControl;
+    return form.get("minErrorToSendNear") as AbstractControl<number>;
   }
 
   getMaxCustomFileSize(form: FormGroup) {
-    return form.get("maxCustomFileSize") as AbstractControl;
+    return form.get("maxCustomFileSize") as AbstractControl<number>;
   }
 
   getMaxPacketSize(form: FormGroup) {
-    return form.get("maxPacketSize") as AbstractControl;
+    return form.get("maxPacketSize") as AbstractControl<number>;
   }
 
   getManualKickTimeout(form: FormGroup) {
-    return form.get("manualKickTimeout") as AbstractControl;
+    return form.get("manualKickTimeout") as AbstractControl<number>;
   }
 
   getConnectivityKickTimeout(form: FormGroup) {
-    return form.get("connectivityKickTimeout") as AbstractControl;
+    return form.get("connectivityKickTimeout") as AbstractControl<number>;
   }
 
   getBattlEyeKickTimeout(form: FormGroup) {
-    return form.get("battlEyeKickTimeout") as AbstractControl;
+    return form.get("battlEyeKickTimeout") as AbstractControl<number>;
   }
 
   getHarmlessKickTimeout(form: FormGroup) {
-    return form.get("harmlessKickTimeout") as AbstractControl;
+    return form.get("harmlessKickTimeout") as AbstractControl<number>;
   }
 }

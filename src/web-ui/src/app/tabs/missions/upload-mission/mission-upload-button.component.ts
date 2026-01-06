@@ -1,6 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { MissionUploadService } from "../service/mission-upload.service";
-import { BehaviorSubject } from "rxjs";
 
 @Component({
   selector: "app-upload-mission",
@@ -8,14 +7,8 @@ import { BehaviorSubject } from "rxjs";
   styleUrls: ["./mission-upload-button.component.scss"],
   standalone: false
 })
-export class MissionUploadButtonComponent implements OnInit {
-  missionUploadedSubject!: BehaviorSubject<any>;
-
-  constructor(private missionUploadService: MissionUploadService) {
-    this.missionUploadedSubject = new BehaviorSubject<boolean>(false);
-  }
-
-  ngOnInit(): void {}
+export class MissionUploadButtonComponent {
+  private readonly missionUploadService = inject(MissionUploadService);
 
   onFileSelected(event: Event) {
     const target = event.target as HTMLInputElement;

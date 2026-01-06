@@ -27,7 +27,7 @@ export class ModPresetAddDialogComponent {
   }
 
   prepareDialogResult() {
-    return { create: true, modPresetName: this.form.get("modPresetName")?.value };
+    return { create: true, modPresetName: this.form.get("modPresetName")?.value as string };
   }
 
   closeDialog() {

@@ -9,10 +9,10 @@ import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.servi
   providedIn: "root"
 })
 export class ApiErrorHandlerService {
-  private readonly errorHandlers: Map<ApiErrorCode, Function> = new Map<ApiErrorCode, () => void>([
-    [ApiErrorCode.AUTH_TOKEN_EXPIRED, this.handleAuthTokenExpired],
-    [ApiErrorCode.BAD_AUTH_TOKEN, this.handleAuthTokenExpired],
-    [ApiErrorCode.AUTH_TOKEN_MISSING, this.handleAuthTokenMissing]
+  private readonly errorHandlers: Map<ApiErrorCode, () => void> = new Map<ApiErrorCode, () => void>([
+    [ApiErrorCode.AUTH_TOKEN_EXPIRED, this.handleAuthTokenExpired.bind(this)],
+    [ApiErrorCode.BAD_AUTH_TOKEN, this.handleAuthTokenExpired.bind(this)],
+    [ApiErrorCode.AUTH_TOKEN_MISSING, this.handleAuthTokenMissing.bind(this)]
   ]);
 
   private readonly authService = inject(AuthService);
@@ -35,7 +35,7 @@ export class ApiErrorHandlerService {
     } else if (apiErrorResponse.status === 404) {
       const errorMessage = apiErrorResponse.message || "Resource has not been found.";
       this.notificationService.errorNotification(errorMessage, "Not found");
-      this.router.navigate([""]);
+      void this.router.navigate([""]);
     } else {
       const errorMessage = apiErrorResponse.message || "An error occurred on the server.";
       this.notificationService.errorNotification(errorMessage, "Server error");
@@ -44,12 +44,12 @@ export class ApiErrorHandlerService {
 
   private handleAuthTokenExpired(): void {
     this.authService.clearAuth();
-    this.router.navigateByUrl("/login");
+    void this.router.navigateByUrl("/login");
     this.notificationService.warningNotification("Session expired. Please log in again.");
   }
 
   private handleAuthTokenMissing() {
-    this.router.navigateByUrl("/login");
+    void this.router.navigateByUrl("/login");
     this.notificationService.warningNotification("You are not authenticated. Please log in.");
   }
 }

@@ -65,8 +65,8 @@ const routes: Routes = [
     component: WorkshopComponent,
     canMatch: [
       () =>
-        hasAllAuthorities([AswgAuthority.WORKSHOP_INSTALL]) &&
-        inject(WorkshopService)
+        hasAllAuthorities([AswgAuthority.WORKSHOP_INSTALL])
+        && inject(WorkshopService)
           .canUseWorkshop()
           .pipe(map((response) => response.active))
     ]

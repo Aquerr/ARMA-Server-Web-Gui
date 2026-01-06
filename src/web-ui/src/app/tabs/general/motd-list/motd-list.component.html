@@ -24,7 +24,7 @@
             {{ motdItem.message }}
           </div>
         }
-        <span class="motd-list-item-delete" (click)="deleteMotdLine(i)">&#10006;</span>
+        <span aria-hidden="true" role="button" class="motd-list-item-delete" (click)="deleteMotdLine(i)">&#10006;</span>
       </div>
     }
     <div>

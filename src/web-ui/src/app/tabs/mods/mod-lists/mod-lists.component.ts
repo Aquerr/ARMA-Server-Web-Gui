@@ -1,4 +1,14 @@
-import { Component, inject, OnDestroy, OnInit, QueryList, ViewChildren } from "@angular/core";
+import {
+  Component,
+  effect,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  signal,
+  ViewChildren
+} from "@angular/core";
 import {
   CdkDragDrop,
   CdkDropListGroup,
@@ -12,6 +22,7 @@ import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask
 import { NotManagedModsComponent } from "../not-managed-mods/not-managed-mods.component";
 import { Subject, Subscription } from "rxjs";
 import { ModListComponent } from "../mod-list/mod-list.component";
+import { moveItemBetweenSignalLists } from "../../../util/signal/signal-utils";
 
 @Component({
   selector: "app-mod-lists",
@@ -24,19 +35,25 @@ export class ModListsComponent implements OnInit, OnDestroy {
   private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly modService: ServerModsService = inject(ServerModsService);
 
-  notManagedMods: Mod[] = [];
-  disabledMods: Mod[] = [];
-  enabledMods: Mod[] = [];
+  searchPhrase = input<string>("");
 
-  reloadModsDataSubject!: Subject<any>;
+  notManagedMods = signal<Mod[]>([]);
+  disabledMods = signal<Mod[]>([]);
+  enabledMods = signal<Mod[]>([]);
+
+  reloadModsDataSubject!: Subject<void>;
   reloadModsDataSubscription!: Subscription;
 
-  @ViewChildren(ModListComponent) modListComponents!: QueryList<ModListComponent>
+  @ViewChildren(ModListComponent) modListComponents!: QueryList<ModListComponent>;
 
   constructor() {
     this.reloadModsDataSubject = new Subject();
     this.reloadModsDataSubscription = this.reloadModsDataSubject.subscribe(() => {
       this.reloadMods();
+    });
+
+    effect(() => {
+      this.modListComponents?.forEach((component) => component.filterMods(this.searchPhrase()));
     });
   }
 
@@ -51,10 +68,10 @@ export class ModListsComponent implements OnInit, OnDestroy {
   public reloadMods() {
     this.maskService.show();
     this.modService.getInstalledMods().subscribe((modsResponse) => {
-      this.notManagedMods = modsResponse.notManagedMods;
-      this.disabledMods = modsResponse.disabledMods;
-      this.enabledMods = modsResponse.enabledMods;
-      this.modListComponents.forEach(component => component.reload());
+      this.notManagedMods.set(modsResponse.notManagedMods);
+      this.disabledMods.set(modsResponse.disabledMods);
+      this.enabledMods.set(modsResponse.enabledMods);
+      this.modListComponents.forEach((component) => component.reload());
 
       this.maskService.hide();
       if (this.notManagedMods.length > 0) {
@@ -65,18 +82,16 @@ export class ModListsComponent implements OnInit, OnDestroy {
     });
   }
 
-  onModItemDragDrop(event: CdkDragDrop<Mod[]>) {
+  onModItemDragDrop(event: CdkDragDrop<Mod[], Mod[], Mod>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      let movedMod = event.previousContainer.data[event.previousIndex];
+      const movedMod = event.previousContainer.data[event.previousIndex];
       // let currentIndex: number;
       if (event.previousContainer.id == "Enabled") {
-        this.removeModFromList(this.enabledMods, movedMod);
-        this.disabledMods.push(movedMod);
+        moveItemBetweenSignalLists(this.enabledMods, this.disabledMods, movedMod);
       } else {
-        this.removeModFromList(this.disabledMods, movedMod);
-        this.enabledMods.push(movedMod);
+        moveItemBetweenSignalLists(this.disabledMods, this.enabledMods, movedMod);
       }
 
       // Update view drag drop list
@@ -86,20 +101,20 @@ export class ModListsComponent implements OnInit, OnDestroy {
         event.previousIndex,
         event.currentIndex
       );
-      this.modListComponents.forEach(component => component.sortModList());
+      this.modListComponents.forEach((component) => component.sortModList());
     }
   }
 
-  onModDelete(mod: Mod) {
+  onModDelete() {
     this.notificationService.successNotification("Mod has been deleted!");
-    this.reloadModsDataSubject.next(null);
+    this.reloadModsDataSubject.next();
   }
 
   enableAllMods() {
     this.maskService.show();
     this.modService
-      .saveEnabledMods({ mods: this.enabledMods.concat(this.disabledMods) })
-      .subscribe((response) => {
+      .saveEnabledMods({ mods: this.enabledMods().concat(this.disabledMods()) })
+      .subscribe(() => {
         this.maskService.hide();
         this.reloadMods();
         this.notificationService.successNotification("Mods list updated!", "Success");
@@ -110,20 +125,10 @@ export class ModListsComponent implements OnInit, OnDestroy {
     this.maskService.show();
     this.modService
       .saveEnabledMods({ mods: [] } as SaveEnabledModsRequest)
-      .subscribe((response) => {
+      .subscribe(() => {
         this.maskService.hide();
         this.reloadMods();
         this.notificationService.successNotification("Mods list updated!", "Success");
       });
-  }
-
-  private removeModFromList(list: Mod[], mod: Mod) {
-    list.forEach((value, index) => {
-      if (value == mod) list.splice(index, 1);
-    });
-  }
-
-  public filterMods(searchPhrase: string) {
-    this.modListComponents.forEach(component => component.filterMods(searchPhrase));
   }
 }

@@ -6,7 +6,7 @@
   <h1>Missions</h1>
 
   <ng-template #dropZone>
-    <div app-drag-and-drop-overlay></div>
+    <app-drag-and-drop-overlay></app-drag-and-drop-overlay>
   </ng-template>
 
   @if (isFileDragged) {
@@ -30,12 +30,12 @@
         <div
           id="disabled-missions-list"
           cdkDropList
-          [cdkDropListData]="this.filteredDisabledMissions"
+          [cdkDropListData]="this.filteredDisabledMissions()"
           class="list"
           [cdkDropListSortingDisabled]="false"
           (cdkDropListDropped)="onMissionItemDropped($event)"
         >
-          @for (mission of this.filteredDisabledMissions; track mission) {
+          @for (mission of this.filteredDisabledMissions(); track mission) {
             <div
               class="list-item-container"
               cdkDrag
@@ -72,12 +72,12 @@
         <div
           id="enabled-missions-list"
           cdkDropList
-          [cdkDropListData]="this.filteredEnabledMissions"
+          [cdkDropListData]="this.filteredEnabledMissions()"
           class="list"
           [cdkDropListSortingDisabled]="false"
           (cdkDropListDropped)="onMissionItemDropped($event)"
         >
-          @for (mission of this.filteredEnabledMissions; track mission) {
+          @for (mission of this.filteredEnabledMissions(); track mission) {
             <div
               class="list-item-container"
               cdkDrag

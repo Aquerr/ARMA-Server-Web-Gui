@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { map, Observable } from "rxjs";
-import { HttpClient } from "@angular/common/http";
+import { map, Observable, tap } from "rxjs";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { API_BASE_URL } from "../../environments/environment";
 import { JwtTokenResponse } from "../model/jwt.model";
 import { AswgAuthority } from "../model/authority.model";
@@ -15,7 +15,7 @@ export class AuthService {
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  authenticate(username: string, password: string): Observable<any> {
+  authenticate(username: string, password: string): Observable<HttpResponse<JwtTokenResponse>> {
     return this.httpClient
       .post<JwtTokenResponse>(
         API_BASE_URL + "/auth",
@@ -29,11 +29,11 @@ export class AuthService {
           sessionStorage.setItem(AuthService.STORAGE_USERNAME_KEY, username);
           sessionStorage.setItem(
             AuthService.STORAGE_AUTH_TOKEN_KEY,
-            userData.body?.jwt ? userData.body?.jwt : ""
+            userData.body?.jwt ?? ""
           );
           sessionStorage.setItem(
             AuthService.STORAGE_AUTHORITIES_KEY,
-            JSON.stringify(userData.body?.authorities || [])
+            JSON.stringify(userData.body?.authorities ?? [])
           );
           return userData;
         })
@@ -41,8 +41,8 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    let user = this.getUsername();
-    let token = this.getAuthToken();
+    const user = this.getUsername();
+    const token = this.getAuthToken();
     return user != null && token != null;
   }
 
@@ -51,12 +51,10 @@ export class AuthService {
     sessionStorage.removeItem(AuthService.STORAGE_AUTH_TOKEN_KEY);
   }
 
-  logout(): void {
-    this.httpClient.post(`${API_BASE_URL}/auth/logout`, null).subscribe({
-      complete: () => {
-        this.clearAuth();
-      }
-    });
+  logout(): Observable<void> {
+    return this.httpClient
+      .post<void>(`${API_BASE_URL}/auth/logout`, null)
+      .pipe(tap(() => this.clearAuth()));
   }
 
   getUsername(): string | null {

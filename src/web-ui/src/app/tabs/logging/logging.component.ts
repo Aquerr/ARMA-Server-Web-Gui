@@ -32,7 +32,7 @@ export class LoggingComponent implements OnInit {
     };
 
     this.maskService.show();
-    this.serverLoggingService.saveLoggingSectionData(loggingSectionData).subscribe((response) => {
+    this.serverLoggingService.saveLoggingSectionData(loggingSectionData).subscribe(() => {
       this.maskService.hide();
       this.notificationService.successNotification("Log file has been updated!");
     });

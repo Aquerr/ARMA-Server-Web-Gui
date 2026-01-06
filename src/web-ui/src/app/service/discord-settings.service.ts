@@ -11,8 +11,6 @@ export class DiscordSettingsService {
   private readonly DISCORD_SETTINGS_URL = `${API_BASE_URL}/settings/discord`;
   private readonly httpClient = inject(HttpClient);
 
-  constructor() {}
-
   getDiscordSettings(): Observable<DiscordIntegrationSettings> {
     return this.httpClient.get<DiscordIntegrationSettings>(this.DISCORD_SETTINGS_URL);
   }

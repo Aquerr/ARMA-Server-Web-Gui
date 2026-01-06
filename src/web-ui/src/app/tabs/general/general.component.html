@@ -82,16 +82,16 @@
           <mat-option [value]="'CUSTOM'">Custom</mat-option>
         </mat-select>
       </mat-form-field>
-      <aswg-chip-input
+      <app-aswg-chip-input
         labelText="Headless Clients (IPs)"
         toolTipText="IP addresses of headless clients. Used to offload AI calculations from the server."
-        [data]="headlessClients"
-      ></aswg-chip-input>
-      <aswg-chip-input
+        [list]="headlessClients"
+      ></app-aswg-chip-input>
+      <app-aswg-chip-input
         labelText="Local Clients (IPs)"
         toolTipText="Indicates clients with unlimited bandwidth and nearly no latency."
-        [data]="localClients"
-      ></aswg-chip-input>
+        [list]="localClients"
+      ></app-aswg-chip-input>
     </div>
     <section class="motd-section">
       <app-motd-list #motdListComponent></app-motd-list>

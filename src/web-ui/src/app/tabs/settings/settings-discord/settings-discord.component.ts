@@ -21,7 +21,7 @@ import { MatLabel } from "@angular/material/form-field";
     MatFormField,
     MatSelect,
     MatLabel,
-    MatOption,
+    MatOption
   ]
 })
 export class SettingsDiscordComponent implements OnInit {
@@ -46,7 +46,7 @@ export class SettingsDiscordComponent implements OnInit {
     this.maskService.show();
     this.discordSettingsService
       .saveDiscordSettings(this.formService.asSettings(this.form))
-      .subscribe((response) => {
+      .subscribe(() => {
         this.maskService.hide();
         this.notificationService.successNotification("Settings have been saved!");
       });

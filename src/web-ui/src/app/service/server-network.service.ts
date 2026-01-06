@@ -18,8 +18,8 @@ export class ServerNetworkService {
 
   saveServerNetworkProperties(
     saveServerNetworkPropertiesRequest: ServerNetworkProperties
-  ): Observable<any> {
-    return this.httpClient.post(this.NETWORK_PROPERTIES_URL, saveServerNetworkPropertiesRequest);
+  ): Observable<void> {
+    return this.httpClient.post<void>(this.NETWORK_PROPERTIES_URL, saveServerNetworkPropertiesRequest);
   }
 }
 

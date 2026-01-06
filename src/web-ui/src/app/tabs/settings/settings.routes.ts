@@ -40,17 +40,17 @@ export const settingsRoutes: Routes = [
         path: "jobs",
         children: [
           {
-            path: '',
+            path: "",
             loadComponent: () =>
               import("./settings-jobs/settings-jobs.component").then(
                 (c) => c.SettingsJobsComponent
               ),
-            canActivate: [hasAllAuthorities([AswgAuthority.JOBS_SETTINGS_UPDATE])],
+            canActivate: [hasAllAuthorities([AswgAuthority.JOBS_SETTINGS_UPDATE])]
           },
           {
-            path: ':name',
-            loadComponent: () => import("./settings-jobs/job-view/job-view.component").then(c => c.JobViewComponent),
-            canActivate: [hasAllAuthorities([AswgAuthority.JOBS_SETTINGS_UPDATE])],
+            path: ":name",
+            loadComponent: () => import("./settings-jobs/job-view/job-view.component").then((c) => c.JobViewComponent),
+            canActivate: [hasAllAuthorities([AswgAuthority.JOBS_SETTINGS_UPDATE])]
           }
         ]
       }

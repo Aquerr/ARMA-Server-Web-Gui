@@ -14,7 +14,7 @@ import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask
 export class WorkshopItemComponent implements OnInit {
   @Input() workshopMod!: WorkshopMod;
   @Input() canInstall: boolean = false;
-  @Output() onModInstallDelete = new EventEmitter<any>();
+  @Output() modInstallDelete = new EventEmitter<void>();
 
   spinnerVisible: boolean = false;
   spinnerColor: string = "";
@@ -47,8 +47,8 @@ export class WorkshopItemComponent implements OnInit {
   }
 
   private removeFormattingCharacters(text: string): string {
-    const regex =
-      /\[h1\]|\[\/h1\]|\[h2\]|\[\/h2\]|\[b\]|\[\/b\]|\[u\]|\[\/u\]|\[i\]|\[\/i\]|\[url.*\]|\[\/url\]|\[list\]|\[\/list\]|\[olist\]|\[\/olist\]|\[code\]|\[\/code\\]|\[table\]|\[\/table\]|\[\*\]/g;
+    const regex
+      = /\[h1\]|\[\/h1\]|\[h2\]|\[\/h2\]|\[b\]|\[\/b\]|\[u\]|\[\/u\]|\[i\]|\[\/i\]|\[url.*\]|\[\/url\]|\[list\]|\[\/list\]|\[olist\]|\[\/olist\]|\[code\]|\[\/code\\]|\[table\]|\[\/table\]|\[\*\]/g;
     return text.replace(regex, "");
   }
 
@@ -60,16 +60,16 @@ export class WorkshopItemComponent implements OnInit {
   installMod(mod: WorkshopMod) {
     mod.isBeingInstalled = true;
     this.showSpinner(true);
-    this.workshopService.installMod(mod.fileId, mod.title).subscribe((response) => {
-      this.onModInstallDelete.emit();
+    this.workshopService.installMod(mod.fileId, mod.title).subscribe(() => {
+      this.modInstallDelete.emit();
     });
   }
 
   deleteMod(workshopMod: WorkshopMod) {
     this.maskService.show();
-    this.serverModsService.deleteMod(workshopMod.title).subscribe((response) => {
+    this.serverModsService.deleteMod(workshopMod.title).subscribe(() => {
       this.maskService.hide();
-      this.onModInstallDelete.emit();
+      this.modInstallDelete.emit();
     });
   }
 

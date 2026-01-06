@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 
 @Component({
   selector: "app-mod-delete-confirm-dialog",
@@ -6,8 +6,5 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./mod-delete-confirm-dialog.component.scss"],
   standalone: false
 })
-export class ModDeleteConfirmDialogComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
+export class ModDeleteConfirmDialogComponent {
 }

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { API_BASE_URL } from "../../environments/environment";
-import { Observable, of, throwError } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { PermissionService } from "./permission.service";
 import { AswgAuthority } from "../model/authority.model";
 import { MissionDifficulty } from "../model/mission.model";
@@ -23,7 +23,7 @@ export class ServerGeneralService {
   }
 
   saveGeneralProperties(saveGeneralProperties: SaveGeneralProperties) {
-    //TODO: Add observable methods to permissionservice that can be piped
+    // TODO: Add observable methods to permissionservice that can be piped
     if (!this.permissionService.hasAllAuthorities([AswgAuthority.GENERAL_SETTINGS_SAVE], true))
       return throwError(() => new Error("Access denied"));
 

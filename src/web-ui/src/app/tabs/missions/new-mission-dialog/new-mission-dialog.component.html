@@ -9,7 +9,7 @@
       </mat-select>
     </mat-form-field>
 
-    @if (missionType == "BUILT_IN") {
+    @if (missionType === "BUILT_IN") {
       <form [formGroup]="form" class="content">
         <mat-form-field>
           <mat-label>Name</mat-label>
@@ -22,9 +22,11 @@
       </form>
     }
 
-    @if (missionType == "FILE") {
+    @if (missionType === "FILE") {
       <div
         class="upload-drop-zone"
+        role="button"
+        aria-hidden="true"
         appDragAndDropFile
         (fileDropped)="onFileDropped($event)"
         (click)="fileInput.click()"

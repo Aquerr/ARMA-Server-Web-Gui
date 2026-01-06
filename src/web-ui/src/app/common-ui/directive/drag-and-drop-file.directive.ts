@@ -10,13 +10,10 @@ import {
   standalone: true
 })
 export class DragAndDropFileDirective {
-
-  @Input() dropZoneElement!: TemplateRef<any>;
+  @Input() dropZoneElement!: TemplateRef<unknown>;
 
   @Output() fileDragged = new EventEmitter<boolean>();
   @Output() fileDropped: EventEmitter<File> = new EventEmitter<File>();
-
-  constructor() {}
 
   @HostListener("dragover", ["$event"])
   onDragOver(event: DragEvent) {
@@ -56,10 +53,8 @@ export class DragAndDropFileDirective {
 
     const files = event.dataTransfer?.files;
     if (files) {
-      if (files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-          this.fileDropped.emit(files[i]);
-        }
+      for (const file of files) {
+        this.fileDropped.emit(file);
       }
     }
   }

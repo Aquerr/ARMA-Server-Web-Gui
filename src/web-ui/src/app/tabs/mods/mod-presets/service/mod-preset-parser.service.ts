@@ -5,8 +5,6 @@ import { ModPreset, ModPresetEntry } from "../../../../model/mod.model";
   providedIn: "root"
 })
 export class ModPresetParserService {
-  constructor() {}
-
   processModPresetFile(result: string | ArrayBuffer | null): ModPreset | null {
     if (typeof result !== "string") {
       console.error("Could not process file due to bad type...");
@@ -18,23 +16,21 @@ export class ModPresetParserService {
     const table = html.getElementsByClassName("mod-list")[0].firstElementChild as HTMLTableElement;
 
     const mods: ModPresetEntry[] = [];
-    for (let i = 0; i < table.rows.length; i++) {
-      const row = table.rows[i];
+    for (const row of table.rows) {
       const modId = this.getModIdFromRow(row);
       const modTitle = this.getModTitleFromRow(row);
       if (modId != null && modTitle != null) {
         mods.push({ id: modId, name: modTitle });
       }
     }
-    const presetName =
-      html.querySelector('meta[name="arma:PresetName"]')?.getAttribute("content") ?? "custom";
+    const presetName
+      = html.querySelector("meta[name=\"arma:PresetName\"]")?.getAttribute("content") ?? "custom";
 
     return { name: presetName, entries: mods };
   }
 
   private getModTitleFromRow(row: HTMLTableRowElement): string | null {
-    for (let i = 0; i < row.cells.length; i++) {
-      const cell = row.cells[i];
+    for (const cell of row.cells) {
       if (cell.getAttribute("data-type") == "DisplayName") {
         const modTitle = cell.innerText;
         return modTitle;
@@ -44,8 +40,7 @@ export class ModPresetParserService {
   }
 
   private getModIdFromRow(row: HTMLTableRowElement): number | null {
-    for (let i = 0; i < row.cells.length; i++) {
-      const cell = row.cells[i];
+    for (const cell of row.cells) {
       const linkElement = cell.firstElementChild;
       if (linkElement != null && linkElement.getAttribute("data-type") == "Link") {
         const href = linkElement.getAttribute("href");

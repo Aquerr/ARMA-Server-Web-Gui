@@ -19,7 +19,7 @@ export class AswgHttpInterceptor implements HttpInterceptor {
     private readonly apiErrorHandler: ApiErrorHandlerService
   ) {}
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (request.url.startsWith(API_BASE_URL)) {
       if (this.authService.getUsername() && this.authService.getAuthToken()) {
         request = request.clone({

@@ -52,8 +52,8 @@ export class SecurityComponent implements OnInit {
     }
   }
 
-  hasFormError(controlName: string, errorName: string): boolean {
-    return this.form.get(controlName)?.hasError(errorName)!;
+  hasFormError(controlName: string, errorName: string): boolean | undefined {
+    return this.form.get(controlName)?.hasError(errorName);
   }
 
   setVoteCmds($event: VoteCmd[]) {

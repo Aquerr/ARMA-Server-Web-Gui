@@ -49,7 +49,7 @@ export class WorkshopService {
 }
 
 interface ModDownloadQueueResponse {
-  mods: DownloadingMod[]
+  mods: DownloadingMod[];
 }
 
 interface WorkshopActiveResponse {

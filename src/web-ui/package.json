@@ -28,14 +28,13 @@
     "highlight.js": "^11.10.0",
     "ngx-toastr": "^19.1.0",
     "rxjs": "^7.8.0",
-    "tslib": "^2.8.0",
-    "zone.js": "~0.15.0"
+    "tslib": "^2.8.0"
   },
   "devDependencies": {
     "@angular/build": "^21.0.4",
     "@angular/cli": "^21.0.4",
     "@angular/compiler-cli": "^21.0.6",
-    "@stylistic/eslint-plugin-ts": "^4.4.0",
+    "@stylistic/eslint-plugin": "^5.6.1",
     "@types/highlight.js": "^9.12.4",
     "@types/jasmine": "^5.0.0",
     "angular-eslint": "21.1.0",
@@ -46,7 +45,6 @@
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "prettier": "3.7.4",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.50.0"
   }

@@ -5,18 +5,15 @@ import { JobSettings } from "../model/job-settings.model";
 import { API_BASE_URL } from "../../environments/environment";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class JobSettingsService {
-
   private readonly JOBS_SETTINGS_URL = `${API_BASE_URL}/settings/jobs`;
 
   private readonly httpClient: HttpClient = inject(HttpClient);
 
-  constructor() { }
-
   public getAllJobsNames(): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.JOBS_SETTINGS_URL}?names-only=true`)
+    return this.httpClient.get<string[]>(`${this.JOBS_SETTINGS_URL}?names-only=true`);
   }
 
   public getJobSettings(name: string): Observable<JobSettings> {
@@ -35,5 +32,5 @@ export class JobSettingsService {
 export interface UpdateJobSettingsRequest {
   enabled: boolean;
   cron: string;
-  parameters: { [key: string]: string;};
+  parameters: Record<string, string>;
 }

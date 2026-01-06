@@ -5,14 +5,11 @@ import { Observable } from "rxjs";
 import { Cdlc } from "../model/cdlc.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class CdlcService {
-
   private readonly CDLC_URL = `${API_BASE_URL}/cdlc`;
   private readonly httpClient = inject(HttpClient);
-
-  constructor() { }
 
   getAllCdlcs(): Observable<GetCdlcListResponse> {
     return this.httpClient.get<GetCdlcListResponse>(this.CDLC_URL);

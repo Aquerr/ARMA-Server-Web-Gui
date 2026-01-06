@@ -1,12 +1,12 @@
 <div class="container">
   <h1>Mod Settings</h1>
   <div class="mod-settings-page-content">
-    @for (modSettings of modSettingsList; track $index) {
+    @for (modSettings of modSettingsList(); track $index) {
       <app-mod-settings-panel
         #modSettingPanels
         [modSettings]="modSettings"
-        (deleted)="onModSettingsDelete($event)"
-        (activated)="onModSettingsActivate($event)"
+        (modSettingsDeleted)="onModSettingsDelete($event)"
+        (modSettingsActivated)="onModSettingsActivate($event)"
       >
       </app-mod-settings-panel>
     }

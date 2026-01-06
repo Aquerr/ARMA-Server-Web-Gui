@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { OverwriteCommandlineParamsModalComponent } from './overwrite-commandline-params-modal.component';
+import { OverwriteCommandlineParamsModalComponent } from "./overwrite-commandline-params-modal.component";
 
-describe('OverwriteCommandlineParamsModalComponent', () => {
+describe("OverwriteCommandlineParamsModalComponent", () => {
   let component: OverwriteCommandlineParamsModalComponent;
   let fixture: ComponentFixture<OverwriteCommandlineParamsModalComponent>;
 
@@ -10,14 +10,14 @@ describe('OverwriteCommandlineParamsModalComponent', () => {
     await TestBed.configureTestingModule({
       imports: [OverwriteCommandlineParamsModalComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(OverwriteCommandlineParamsModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

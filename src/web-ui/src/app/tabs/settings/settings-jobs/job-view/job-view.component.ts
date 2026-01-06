@@ -48,7 +48,7 @@ export class JobViewComponent implements OnInit {
   public jobName: string = "";
 
   ngOnInit(): void {
-    this.jobName = this.activatedRoute.snapshot.params["name"];
+    this.jobName = this.activatedRoute.snapshot.params["name"] as string;
 
     this.form = this.formService.getForm();
 
@@ -66,14 +66,14 @@ export class JobViewComponent implements OnInit {
   save() {
     this.maskService.show();
 
-    const parameters: { [key: string]: string } = {};
-    this.form.value.parameters.forEach((parameter: any) => {
+    const parameters: Record<string, string> = {};
+    this.formService.getParametersControl(this.form).value.forEach((parameter: { name: string; description: string; value: string }) => {
       parameters[parameter.name] = parameter.value;
     });
 
     const request = {
-      enabled: this.form.value.enabled,
-      cron: this.form.value.cron,
+      enabled: this.formService.getEnabledControl(this.form).value,
+      cron: this.formService.getCronControl(this.form).value,
       parameters: parameters
     } as UpdateJobSettingsRequest;
 
@@ -90,13 +90,13 @@ export class JobViewComponent implements OnInit {
     const onCloseCallback = (result: boolean) => {
       if (!result) return;
       this.maskService.show();
-      this.jobSettingsService.runJobNow(this.jobName).subscribe(response => {
+      this.jobSettingsService.runJobNow(this.jobName).subscribe(() => {
         this.maskService.hide();
         this.notificationService.successNotification("Job has been started!");
       });
     };
     this.dialogService.openCommonConfirmationDialog({
       question: `Are you sure you want to start <strong>${this.jobName}</strong> job now?`
-    }, onCloseCallback)
+    }, onCloseCallback);
   }
 }

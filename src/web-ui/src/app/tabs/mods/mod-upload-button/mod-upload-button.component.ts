@@ -9,8 +9,6 @@ import { Component, EventEmitter, Output } from "@angular/core";
 export class ModUploadButtonComponent {
   @Output() fileSelected: EventEmitter<File> = new EventEmitter<File>();
 
-  constructor() {}
-
   onFileSelected(event: Event) {
     const target = event.target as HTMLInputElement;
 

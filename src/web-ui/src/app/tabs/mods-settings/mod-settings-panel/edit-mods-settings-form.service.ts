@@ -38,18 +38,18 @@ export class EditModsSettingsFormService {
   }
 
   getIdControl(form: FormGroup) {
-    return form.get("id") as AbstractControl;
+    return form.get("id") as AbstractControl<number | undefined>;
   }
 
   getNameControl(form: FormGroup) {
-    return form.get("name") as AbstractControl;
+    return form.get("name") as AbstractControl<string>;
   }
 
   getActiveControl(form: FormGroup) {
-    return form.get("active") as AbstractControl;
+    return form.get("active") as AbstractControl<boolean>;
   }
 
   getContentControl(form: FormGroup) {
-    return form.get("content") as AbstractControl;
+    return form.get("content") as AbstractControl<string | undefined>;
   }
 }
