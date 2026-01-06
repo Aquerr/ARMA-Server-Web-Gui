@@ -22,7 +22,6 @@
               "browser": ""
             },
             "index": "src/index.html",
-            "polyfills": [],
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
@@ -89,15 +88,9 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": [],
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
-            "scripts": []
+            "browsers": ["chrome"]
           }
         },
         "lint": {
@@ -137,6 +130,7 @@
     }
   },
   "cli": {
+    "packageManager": "npm",
     "analytics": false,
     "schematicCollections": ["angular-eslint"]
   }
