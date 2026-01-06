@@ -14,12 +14,13 @@ import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { FormsModule } from "@angular/forms";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatOption, MatSelect } from "@angular/material/select";
+import { MatButton } from "@angular/material/button";
 
 @Component({
   selector: "app-general",
   templateUrl: "./general.component.html",
   styleUrls: ["./general.component.scss"],
-  imports: [AswgChipInputComponent, MatFormField, MatLabel, FormsModule, MatInput, MatTooltip, MatSelect, MatOption, MotdListComponent]
+  imports: [AswgChipInputComponent, MatFormField, MatLabel, FormsModule, MatInput, MatTooltip, MatSelect, MatOption, MotdListComponent, MatButton]
 })
 export class GeneralComponent implements AfterViewInit {
   @ViewChild("motdListComponent") motdListComponent!: MotdListComponent;
