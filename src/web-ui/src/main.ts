@@ -7,7 +7,7 @@ import { AswgHttpInterceptor } from "./app/interceptors/aswg-http.interceptor";
 import { LoadingSpinnerMaskService } from "./app/service/loading-spinner-mask.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppRoutingModule } from "./app/app-routing.module";
-import { ToastrModule } from "ngx-toastr";
+import { provideToastr } from "ngx-toastr";
 
 if (environment.production) {
   enableProdMode();
@@ -16,7 +16,8 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     provideZonelessChangeDetection(),
-    importProvidersFrom(BrowserAnimationsModule, AppRoutingModule, ToastrModule.forRoot()),
+    provideToastr(),
+    importProvidersFrom(BrowserAnimationsModule, AppRoutingModule),
     { provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true },
     provideHttpClient(withInterceptorsFromDi()),
     LoadingSpinnerMaskService

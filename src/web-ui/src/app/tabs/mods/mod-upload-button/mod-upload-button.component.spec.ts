@@ -8,7 +8,7 @@ describe("UploadModComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ModUploadButtonComponent]
+      imports: [ModUploadButtonComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModUploadButtonComponent);

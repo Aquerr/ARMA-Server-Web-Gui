@@ -14,6 +14,7 @@ describe("ModListComponent", () => {
 
     fixture = TestBed.createComponent(ModListComponent);
     component = fixture.componentInstance;
+    component.mods = [];
     fixture.detectChanges();
   });
 

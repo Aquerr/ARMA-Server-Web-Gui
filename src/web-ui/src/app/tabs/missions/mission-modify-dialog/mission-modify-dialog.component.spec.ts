@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { MissionModifyDialogComponent } from "./mission-modify-dialog.component";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 describe("MissionModifyDialogComponent", () => {
   let component: MissionModifyDialogComponent;
@@ -8,7 +9,17 @@ describe("MissionModifyDialogComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MissionModifyDialogComponent]
+      imports: [MissionModifyDialogComponent],
+      providers: [
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {}
+        },
+        {
+          provide: MatDialogRef,
+          useValue: {}
+        }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MissionModifyDialogComponent);

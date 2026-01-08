@@ -7,7 +7,7 @@
     "build": "ng build",
     "prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "ng test --coverage",
     "lint": "ng lint"
   },
   "private": true,
@@ -38,6 +38,7 @@
     "@types/highlight.js": "^9.12.4",
     "@types/jasmine": "^5.0.0",
     "@vitest/browser-webdriverio": "^4.0.16",
+    "@vitest/coverage-v8": "^4.0.16",
     "angular-eslint": "21.1.0",
     "eslint": "^9.39.2",
     "jasmine-core": "^5.0.0",

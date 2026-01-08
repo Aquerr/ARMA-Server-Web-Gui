@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { NotManagedModsComponent } from "./not-managed-mods.component";
+import { provideToastr } from "ngx-toastr";
 
 describe("NotManagedModsComponent", () => {
   let component: NotManagedModsComponent;
@@ -8,7 +9,8 @@ describe("NotManagedModsComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NotManagedModsComponent]
+      imports: [NotManagedModsComponent],
+      providers: [provideToastr()]
     })
       .compileComponents();
 

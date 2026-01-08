@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SettingsUserPanelComponent } from "./settings-user-panel.component";
+import { AswgUser } from "../../../../service/users.service";
 
 describe("SettingsUserPanelComponent", () => {
   let component: SettingsUserPanelComponent;
@@ -13,6 +14,14 @@ describe("SettingsUserPanelComponent", () => {
 
     fixture = TestBed.createComponent(SettingsUserPanelComponent);
     component = fixture.componentInstance;
+    component.user = {
+      id: 1,
+      username: "user",
+      password: "test",
+      authorities: [],
+      locked: false,
+      lastLoginDate: new Date().toDateString()
+    } as AswgUser;
     fixture.detectChanges();
   });
 

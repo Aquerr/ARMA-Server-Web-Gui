@@ -1,12 +1,17 @@
 import { TestBed } from "@angular/core/testing";
 
 import { ServerStatusService } from "./server-status.service";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 
 describe("ServerStatusService", () => {
   let service: ServerStatusService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClientTesting()
+      ]
+    });
     service = TestBed.inject(ServerStatusService);
   });
 

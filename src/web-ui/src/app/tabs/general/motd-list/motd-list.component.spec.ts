@@ -8,7 +8,7 @@ describe("MotdListComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MotdListComponent]
+      imports: [MotdListComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MotdListComponent);

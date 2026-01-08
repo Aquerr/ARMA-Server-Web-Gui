@@ -8,7 +8,7 @@ describe("ModForceUpdateConfirmDialogComponent", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ModForceUpdateConfirmDialogComponent]
+      imports: [ModForceUpdateConfirmDialogComponent]
     });
     fixture = TestBed.createComponent(ModForceUpdateConfirmDialogComponent);
     component = fixture.componentInstance;

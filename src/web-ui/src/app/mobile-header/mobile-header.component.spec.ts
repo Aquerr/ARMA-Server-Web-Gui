@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { MobileHeaderComponent } from "./mobile-header.component";
+import { provideRouter } from "@angular/router";
 
 describe("HeaderComponent", () => {
   let component: MobileHeaderComponent;
@@ -8,7 +9,8 @@ describe("HeaderComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MobileHeaderComponent]
+      imports: [MobileHeaderComponent],
+      providers: [provideRouter([])]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MobileHeaderComponent);

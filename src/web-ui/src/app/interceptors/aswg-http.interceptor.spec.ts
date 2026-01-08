@@ -1,11 +1,12 @@
 import { TestBed } from "@angular/core/testing";
 
 import { AswgHttpInterceptor } from "./aswg-http.interceptor";
+import { provideToastr } from "ngx-toastr";
 
-describe("AuthInterceptor", () => {
+describe("AswgHttpInterceptor", () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
-      providers: [AswgHttpInterceptor]
+      providers: [AswgHttpInterceptor, provideToastr()]
     })
   );
 

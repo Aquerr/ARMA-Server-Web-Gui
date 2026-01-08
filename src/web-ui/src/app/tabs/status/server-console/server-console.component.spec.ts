@@ -8,7 +8,7 @@ describe("ServerConsoleComponent", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ServerConsoleComponent]
+      imports: [ServerConsoleComponent]
     });
     fixture = TestBed.createComponent(ServerConsoleComponent);
     component = fixture.componentInstance;

@@ -8,7 +8,7 @@ describe("AswgSpinnerComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AswgSpinnerComponent]
+      imports: [AswgSpinnerComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AswgSpinnerComponent);

@@ -14,7 +14,6 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDialogModule } from "@angular/material/dialog";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DragDropModule } from "@angular/cdk/drag-drop";
-import { ToastrModule } from "ngx-toastr";
 import { MatSelectModule } from "@angular/material/select";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
@@ -49,7 +48,6 @@ import { NgTemplateOutlet } from "@angular/common";
     ReactiveFormsModule,
     FormsModule,
     DragDropModule,
-    ToastrModule,
     MatSelectModule,
     MatProgressBarModule,
     MatSnackBarModule,
@@ -67,7 +65,6 @@ import { NgTemplateOutlet } from "@angular/common";
   ]
 })
 export class AppComponent implements OnInit {
-  title = "arma-web-gui";
   isMobile: boolean = false;
   version = signal<string>("");
 

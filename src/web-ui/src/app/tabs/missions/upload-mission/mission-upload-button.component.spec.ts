@@ -1,14 +1,16 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { MissionUploadButtonComponent } from "./mission-upload-button.component";
+import { provideToastr } from "ngx-toastr";
 
-describe("UploadMissionComponent", () => {
+describe("MissionUploadButtonComponent", () => {
   let component: MissionUploadButtonComponent;
   let fixture: ComponentFixture<MissionUploadButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MissionUploadButtonComponent]
+      imports: [MissionUploadButtonComponent],
+      providers: [provideToastr()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MissionUploadButtonComponent);

@@ -8,7 +8,7 @@ describe("ModDeleteConfirmDialogComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ModDeleteConfirmDialogComponent]
+      imports: [ModDeleteConfirmDialogComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModDeleteConfirmDialogComponent);

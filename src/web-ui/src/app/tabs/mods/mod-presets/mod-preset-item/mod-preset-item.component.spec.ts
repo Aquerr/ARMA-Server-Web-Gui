@@ -8,7 +8,7 @@ describe("ModPresetItemComponent", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ModPresetItemComponent]
+      imports: [ModPresetItemComponent]
     });
     fixture = TestBed.createComponent(ModPresetItemComponent);
     component = fixture.componentInstance;

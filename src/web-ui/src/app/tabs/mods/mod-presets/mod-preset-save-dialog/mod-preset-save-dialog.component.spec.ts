@@ -8,7 +8,7 @@ describe("ModPresetSaveDialogComponent", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ModPresetSaveDialogComponent]
+      imports: [ModPresetSaveDialogComponent]
     });
     fixture = TestBed.createComponent(ModPresetSaveDialogComponent);
     component = fixture.componentInstance;
