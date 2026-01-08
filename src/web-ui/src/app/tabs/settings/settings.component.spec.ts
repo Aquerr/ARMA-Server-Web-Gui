@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SettingsComponent } from "./settings.component";
 import { provideRouter } from "@angular/router";
+import { IconRegistrarService } from "../../service/icon-registrar.service";
 
 describe("SettingsComponent", () => {
   let component: SettingsComponent;
@@ -12,6 +13,8 @@ describe("SettingsComponent", () => {
       imports: [SettingsComponent],
       providers: [provideRouter([])]
     });
+
+    TestBed.inject(IconRegistrarService); // To load aswg icons
     fixture = TestBed.createComponent(SettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
