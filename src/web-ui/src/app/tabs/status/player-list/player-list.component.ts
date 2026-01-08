@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, input, InputSignal } from "@angular/core";
 import { ArmaServerPlayer } from "../../../model/arma-server-player.model";
 import { MatList, MatListItem } from "@angular/material/list";
 import { MatIcon } from "@angular/material/icon";
@@ -14,5 +14,5 @@ import { MatIcon } from "@angular/material/icon";
   styleUrls: ["./player-list.component.scss"]
 })
 export class PlayerListComponent {
-  playerList: ArmaServerPlayer[] = [];
+  playerList: InputSignal<ArmaServerPlayer[]> = input<ArmaServerPlayer[]>([]);
 }

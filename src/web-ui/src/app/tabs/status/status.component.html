@@ -1,10 +1,7 @@
 <div class="container">
   <h1>Server Status</h1>
   <div>
-    Status:
-    <span [ngStyle]="isServerOffline() ? { color: 'red' } : { color: 'green' }">{{
-      getServerStatus().statusText
-    }}</span>
+    Status: <span [ngStyle]="isServerOffline() ? { color: 'red' } : { color: 'green' }">{{ serverStatus().statusText }}</span>
   </div>
   <div style="margin-top: 5px">
     <div style="display: flex">
@@ -29,5 +26,5 @@
       </div>
     </div>
     <app-server-console></app-server-console>
-    <app-player-list #playerListComponent></app-player-list>
+    <app-player-list [playerList]="playerList()"></app-player-list>
   </div>

@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { CommonConfirmDialogComponent } from "./common-confirm-dialog.component";
-import { importProvidersFrom } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 describe("CommonConfirmDialogComponent", () => {
   let component: CommonConfirmDialogComponent;

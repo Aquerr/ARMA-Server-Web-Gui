@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { DifficultyPanelComponent } from "./difficulty-panel.component";
 import { provideToastr } from "ngx-toastr";
-import { DifficultyOptions, DifficultyProfile } from "../../../model/difficulty-profile.model";
+import { DifficultyProfile } from "../../../model/difficulty-profile.model";
 
 describe("DifficultyPanelComponent", () => {
   let component: DifficultyPanelComponent;
