@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { MotdListComponent } from "./motd-list.component";
+import { FormControl } from "@angular/forms";
+import { inputBinding } from "@angular/core";
 
 describe("MotdListComponent", () => {
   let component: MotdListComponent;
@@ -11,8 +13,14 @@ describe("MotdListComponent", () => {
       imports: [MotdListComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MotdListComponent);
+    fixture = TestBed.createComponent(MotdListComponent, {
+      bindings: [
+        inputBinding("motdControl", () => new FormControl()),
+        inputBinding("motdIntervalControl", () => new FormControl())
+      ]
+    });
     component = fixture.componentInstance;
+
     fixture.detectChanges();
   });
 

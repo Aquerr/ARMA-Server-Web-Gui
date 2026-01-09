@@ -1,16 +1,19 @@
 <div class="container">
   <h1>General</h1>
-  <div class="general-properties">
+  <div class="general-properties" [formGroup]="form">
     <div class="fields">
       <mat-form-field class="width-35">
         <mat-label>Server directory</mat-label>
-        <input name="server-directory" [(ngModel)]="serverDirectory" matInput type="text" />
+        <input name="server-directory" formControlName="serverDirectory" matInput type="text" />
+        @if (form.controls.serverDirectory.hasError('required')) {
+          <mat-error>This field is required!</mat-error>
+        }
       </mat-form-field>
       <mat-form-field class="width-35">
         <mat-label>Mods directory</mat-label>
         <input
           name="mods-directory"
-          [(ngModel)]="modsDirectory"
+          formControlName="modsDirectory"
           matInput
           type="text"
           matTooltip="Optional option. Specifies mods directory relative to server directory.
@@ -22,56 +25,74 @@
         <mat-label>Hostname</mat-label>
         <input
           name="hostname"
-          [(ngModel)]="hostname"
+          formControlName="hostname"
           matInput
           type="text"
           matTooltip="Also determines the configuration profile used by the game"
           matTooltipPosition="right"
         />
+        @if (form.controls.hostname.hasError('required')) {
+          <mat-error>This field is required!</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Port</mat-label>
-        <input name="port" [(ngModel)]="port" matInput type="number" min="0" />
+        <input name="port" formControlName="port" matInput type="number" min="0" />
+        @if (form.controls.port.hasError('required')) {
+          <mat-error>This field is required!</mat-error>
+        }
       </mat-form-field>
       <mat-form-field class="max-players-field">
         <mat-label>Max players</mat-label>
-        <input name="max-players" [(ngModel)]="maxPlayers" matInput type="number" min="0" />
+        <input name="max-players" formControlName="maxPlayers" matInput type="number" min="0" />
+        @if (form.controls.maxPlayers.hasError('required')) {
+          <mat-error>This field is required!</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Branch</mat-label>
-        <mat-select [(ngModel)]="branch" name="branch" matTooltip="The server steam branch to use. May require server update.">
+        <mat-select formControlName="branch" name="branch" matTooltip="The server steam branch to use. May require server update.">
           <mat-option [value]="'public'">Main (public)</mat-option>
           <mat-option [value]="'profiling'">Profiling (profiling)</mat-option>
           <mat-option [value]="'contact'">Contact (contact)</mat-option>
           <mat-option [value]="'creatordlc'">Creator DLC (creatordlc)</mat-option>
         </mat-select>
+        @if (form.controls.branch.hasError('required')) {
+          <mat-error>This field is required!</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Persistent</mat-label>
         <mat-select
-          [(ngModel)]="persistent"
+          formControlName="persistent"
           name="persistent"
           matTooltip="If yes then mission keeps running even when all players disconnect"
         >
           <mat-option [value]="true">Yes</mat-option>
           <mat-option [value]="false">No</mat-option>
         </mat-select>
+        @if (form.controls.persistent.hasError('required')) {
+          <mat-error>This field is required!</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Drawing in map</mat-label>
         <mat-select
-          [(ngModel)]="drawingInMap"
+          formControlName="drawingInMap"
           name="drawing-in-map"
           matTooltip="Enabled the ability to place markers and draw lines on map"
         >
           <mat-option [value]="true">Yes</mat-option>
           <mat-option [value]="false">No</mat-option>
         </mat-select>
+        @if (form.controls.drawingInMap.hasError('required')) {
+          <mat-error>This field is required!</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Forced difficulty</mat-label>
         <mat-select
-          [(ngModel)]="forcedDifficulty"
+          formControlName="forcedDifficulty"
           name="drawing-in-map"
           matTooltip="Enforces the selected difficulty on the server. Set to 'Empty' to make mission settings decide about the difficulty."
         >
@@ -82,25 +103,25 @@
           <mat-option [value]="'CUSTOM'">Custom</mat-option>
         </mat-select>
       </mat-form-field>
-      <app-aswg-chip-input
+      <app-aswg-chip-form-input
         labelText="Headless Clients (IPs)"
         toolTipText="IP addresses of headless clients. Used to offload AI calculations from the server."
-        [list]="headlessClients"
-      ></app-aswg-chip-input>
-      <app-aswg-chip-input
+        [control]="form.controls.headlessClients"
+      ></app-aswg-chip-form-input>
+      <app-aswg-chip-form-input
         labelText="Local Clients (IPs)"
         toolTipText="Indicates clients with unlimited bandwidth and nearly no latency."
-        [list]="localClients"
-      ></app-aswg-chip-input>
+        [control]="form.controls.localClients"
+      ></app-aswg-chip-form-input>
     </div>
     <section class="motd-section">
-      <app-motd-list #motdListComponent></app-motd-list>
+      <app-motd-list [motdControl]="form.controls.motd" [motdIntervalControl]="form.controls.motdInterval"></app-motd-list>
     </section>
     <section class="command-line-params-section">
       <mat-label>Current command-line parameters</mat-label>
       <div class="command-line-params-wrapper">
-        <textarea class="command-line-params" disabled [textContent]="formatCommandLineParams(commandLineParams)" style="resize: none;"></textarea>
-        @if (canOverwriteCommandLineParams && hasOverwriteCommandLineParamsPermission()) {
+        <textarea class="command-line-params" disabled [textContent]="formatCommandLineParams(commandLineParams())" style="resize: none;"></textarea>
+        @if (form.controls.canOverwriteCommandLineParams.value && hasOverwriteCommandLineParamsPermission()) {
           <button mat-flat-button color="primary" (click)="overrideCommandLineParams()">Overwrite</button>
         }
       </div>

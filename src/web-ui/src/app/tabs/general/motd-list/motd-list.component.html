@@ -1,7 +1,7 @@
 <h4>Messages of the day</h4>
 <section class="motd-section">
   <div class="motd-list" cdkDropList (cdkDropListDropped)="onReorderList($event)">
-    @for (motdItem of motd; track motdItem; let i = $index) {
+    @for (motdItem of motdControl().value; track motdItem; let i = $index) {
       <div
         cdkDrag
         class="motd-list-item"
@@ -35,9 +35,9 @@
   </div>
   <mat-form-field class="motd-interval">
     <mat-label>Motd Interval</mat-label>
-    <input name="motd-interval" [(ngModel)]="motdInterval" matInput type="number" min="0" />
+    <input name="motd-interval" [formControl]="motdIntervalControl()" matInput type="number" min="0" />
+    @if (motdIntervalControl().hasError('required')) {
+      <mat-error>This field is required!</mat-error>
+    }
   </mat-form-field>
 </section>
-<!--<mat-list class="mtod-list">-->
-<!--  <mat-list-item class="motd-list-item" role="listitem" *ngFor="let motdLine of motd">{{motdLine}}</mat-list-item>-->
-<!--</mat-list>-->

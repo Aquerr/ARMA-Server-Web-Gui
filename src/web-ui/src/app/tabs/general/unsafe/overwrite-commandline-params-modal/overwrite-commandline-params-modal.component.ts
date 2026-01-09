@@ -37,8 +37,6 @@ export class OverwriteCommandlineParamsModalComponent {
   form: FormGroup;
 
   constructor(@Inject(MAT_DIALOG_DATA) public currentParams: string) {
-    console.log(currentParams);
-
     this.form = this.formBuilder.group({
       parameters: [currentParams]
     });

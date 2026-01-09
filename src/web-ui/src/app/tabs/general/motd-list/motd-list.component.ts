@@ -1,9 +1,10 @@
-import { Component } from "@angular/core";
+import { Component, input } from "@angular/core";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
-import { FormsModule } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatIcon } from "@angular/material/icon";
-import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { MatError, MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatButton } from "@angular/material/button";
+import { MotdItem } from "../general-form.service";
 
 @Component({
   selector: "app-motd-list",
@@ -16,50 +17,35 @@ import { MatButton } from "@angular/material/button";
     MatLabel,
     MatInput,
     MatButton,
-    CdkDrag
+    CdkDrag,
+    ReactiveFormsModule,
+    MatError
   ],
   styleUrls: ["./motd-list.component.scss"]
 })
 export class MotdListComponent {
-  motd: MotdItem[] = [];
-  motdInterval: number = 5;
+  motdControl = input.required<FormControl<MotdItem[]>>();
+  motdIntervalControl = input.required<FormControl<number>>();
 
   deleteMotdLine(motdLineIndex: number) {
-    this.motd = this.motd.filter((value, index) => {
+    this.motdControl().patchValue(this.motdControl().value.filter((value, index) => {
       return index != motdLineIndex;
-    });
+    }));
   }
 
   addNewMotdLine() {
-    this.motd.push(new MotdItem(""));
-  }
-
-  populateModtList(motdList: string[]) {
-    this.motd = motdList.map((message) => new MotdItem(message));
+    this.motdControl().patchValue([...this.motdControl().value, new MotdItem("")]);
   }
 
   onReorderList(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.motd, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.motdControl().value, event.previousIndex, event.currentIndex);
   }
 
   onMotdItemDoubleClick(motdItem: MotdItem) {
     motdItem.editing = !motdItem.editing;
   }
 
-  getMotdMessages() {
-    return this.motd.map((item) => item.message);
-  }
-
   onItemUpdate(motdItem: MotdItem) {
     motdItem.editing = false;
-  }
-}
-
-class MotdItem {
-  message: string = "";
-  editing: boolean = false;
-
-  constructor(message: string) {
-    this.message = message;
   }
 }

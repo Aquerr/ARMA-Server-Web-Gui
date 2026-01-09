@@ -1,43 +1,31 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Component, signal } from "@angular/core";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
-import { SaveGeneralProperties, ServerGeneralService } from "../../service/server-general.service";
+import { ServerGeneralService } from "../../service/server-general.service";
 import { NotificationService } from "../../service/notification.service";
 import { MotdListComponent } from "./motd-list/motd-list.component";
-import { MissionDifficulty } from "../../model/mission.model";
 import { UnsafeService } from "../../service/unsafe.service";
 import { OverwriteCommandlineParamsModalComponent } from "./unsafe/overwrite-commandline-params-modal/overwrite-commandline-params-modal.component";
 import { DialogService } from "../../service/dialog.service";
 import { PermissionService } from "../../service/permission.service";
 import { AswgAuthority } from "../../model/authority.model";
-import { AswgChipInputComponent } from "../../common-ui/aswg-chip-input/aswg-chip-input.component";
-import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
-import { FormsModule } from "@angular/forms";
+import { MatError, MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { MatButton } from "@angular/material/button";
+import { GeneralFormGroup, GeneralFormService } from "./general-form.service";
+import { AswgChipFormInputComponent } from "../../common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
 
 @Component({
   selector: "app-general",
   templateUrl: "./general.component.html",
   styleUrls: ["./general.component.scss"],
-  imports: [AswgChipInputComponent, MatFormField, MatLabel, FormsModule, MatInput, MatTooltip, MatSelect, MatOption, MotdListComponent, MatButton]
+  imports: [MatFormField, MatLabel, FormsModule, MatInput, MatTooltip, MatSelect, MatOption, MotdListComponent, MatButton, ReactiveFormsModule, AswgChipFormInputComponent, MatError]
 })
 export class GeneralComponent implements AfterViewInit {
-  @ViewChild("motdListComponent") motdListComponent!: MotdListComponent;
+  form: FormGroup<GeneralFormGroup>;
 
-  commandLineParams: string = "";
-  canOverwriteCommandLineParams: boolean = false;
-  serverDirectory: string = "";
-  modsDirectory: string = "";
-  hostname: string = "";
-  port: number = 2302;
-  maxPlayers: number = 64;
-  persistent: boolean = false;
-  drawingInMap: boolean = true;
-  headlessClients: string[] = [];
-  localClients: string[] = [];
-  forcedDifficulty: MissionDifficulty | null = null;
-  branch: string = "public";
+  commandLineParams = signal<string>("");
 
   constructor(
     private readonly permissionsService: PermissionService,
@@ -46,8 +34,11 @@ export class GeneralComponent implements AfterViewInit {
     private readonly notificationService: NotificationService,
     private readonly unsafeService: UnsafeService,
     private readonly dialogService: DialogService,
-    private readonly changeDetectorRef: ChangeDetectorRef
-  ) {}
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly generalFormService: GeneralFormService
+  ) {
+    this.form = this.generalFormService.createForm();
+  }
 
   ngAfterViewInit() {
     this.maskService.show();
@@ -55,25 +46,14 @@ export class GeneralComponent implements AfterViewInit {
   }
 
   save() {
+    this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      return;
+    }
+
     this.maskService.show();
-
-    const saveGeneralProperties = {
-      serverDirectory: this.serverDirectory,
-      modsDirectory: this.modsDirectory,
-      hostname: this.hostname,
-      port: this.port,
-      maxPlayers: this.maxPlayers,
-      motd: this.motdListComponent.getMotdMessages(),
-      motdInterval: this.motdListComponent.motdInterval,
-      persistent: this.persistent,
-      drawingInMap: this.drawingInMap,
-      headlessClients: this.headlessClients,
-      localClients: this.localClients,
-      forcedDifficulty: this.forcedDifficulty,
-      branch: this.branch
-    } as SaveGeneralProperties;
-
-    this.serverGeneralService.saveGeneralProperties(saveGeneralProperties).subscribe(() => {
+    const generalProperties = this.generalFormService.asGeneralProperties(this.form.controls);
+    this.serverGeneralService.saveGeneralProperties(generalProperties).subscribe(() => {
       this.maskService.hide();
       this.notificationService.successNotification(
         "General settings have been updated!",
@@ -84,21 +64,8 @@ export class GeneralComponent implements AfterViewInit {
 
   private reloadGeneralProperties() {
     this.serverGeneralService.getGeneralProperties().subscribe((response) => {
-      this.commandLineParams = response.commandLineParams;
-      this.canOverwriteCommandLineParams = response.canOverwriteCommandLineParams;
-      this.serverDirectory = response.serverDirectory;
-      this.modsDirectory = response.modsDirectory;
-      this.port = response.port;
-      this.hostname = response.hostname;
-      this.maxPlayers = response.maxPlayers;
-      this.motdListComponent.populateModtList(response.motd);
-      this.motdListComponent.motdInterval = response.motdInterval;
-      this.persistent = response.persistent;
-      this.drawingInMap = response.drawingInMap;
-      this.headlessClients = response.headlessClients;
-      this.localClients = response.localClients;
-      this.forcedDifficulty = response.forcedDifficulty;
-      this.branch = response.branch;
+      this.generalFormService.setForm(this.form.controls, response);
+      this.commandLineParams.set(response.commandLineParams);
       this.maskService.hide();
       this.changeDetectorRef.markForCheck();
     });
@@ -120,7 +87,7 @@ export class GeneralComponent implements AfterViewInit {
       this.dialogService.open(
         OverwriteCommandlineParamsModalComponent,
         closeCallback,
-        this.commandLineParams,
+        this.commandLineParams(),
         {
           width: "550px"
         }
