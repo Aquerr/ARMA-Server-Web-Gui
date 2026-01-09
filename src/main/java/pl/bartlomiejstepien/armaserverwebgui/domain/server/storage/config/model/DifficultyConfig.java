@@ -17,7 +17,7 @@ public class DifficultyConfig
         private CustomDifficulty customDifficulty = new CustomDifficulty();
 
         @CfgProperty(name = "CustomAILevel", isClass = true, type = PropertyType.CLASS)
-        private CustomDifficulty.CustomAiLevel customAiLevel = new CustomDifficulty.CustomAiLevel();
+        private CustomAiLevel customAiLevel = new CustomAiLevel();
 
         @Data
         public static class CustomDifficulty
@@ -84,15 +84,15 @@ public class DifficultyConfig
                 @CfgProperty(name = "multipleSaves", type = PropertyType.INTEGER)
                 int multipleSaves = 1;
             }
+        }
 
-            @Data
-            public static class CustomAiLevel
-            {
-                @CfgProperty(name = "skillAI", type = PropertyType.RAW_STRING)
-                private String skillAI = "0.5";
-                @CfgProperty(name = "precisionAI", type = PropertyType.RAW_STRING)
-                private String precisionAI = "0.5";
-            }
+        @Data
+        public static class CustomAiLevel
+        {
+            @CfgProperty(name = "skillAI", type = PropertyType.RAW_STRING)
+            private String skillAI = "0.5";
+            @CfgProperty(name = "precisionAI", type = PropertyType.RAW_STRING)
+            private String precisionAI = "0.5";
         }
     }
 }

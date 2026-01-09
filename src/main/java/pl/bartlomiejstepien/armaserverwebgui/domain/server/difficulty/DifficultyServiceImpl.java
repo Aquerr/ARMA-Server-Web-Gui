@@ -221,6 +221,10 @@ public class DifficultyServiceImpl implements DifficultyService
     private DifficultyConfig map(DifficultyProfile difficultyProfile)
     {
         DifficultyConfig difficultyConfig = new DifficultyConfig();
+
+        difficultyConfig.getDifficultyPresets().getCustomAiLevel().setPrecisionAI(difficultyProfile.getOptions().getPrecisionAI());
+        difficultyConfig.getDifficultyPresets().getCustomAiLevel().setSkillAI(difficultyProfile.getOptions().getSkillAI());
+
         DifficultyConfig.DifficultyPresets.CustomDifficulty customDifficulty = difficultyConfig.getDifficultyPresets().getCustomDifficulty();
         customDifficulty.setAiLevelPreset(difficultyProfile.getOptions().getAiLevelPreset());
 
