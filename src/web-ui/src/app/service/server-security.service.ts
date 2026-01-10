@@ -30,6 +30,8 @@ export interface SaveServerSecurityRequest {
   allowedFilePatching: number;
   filePatchingIgnoredClients: string[];
   allowedLoadFileExtensions: string[];
+  allowedPreprocessFileExtensions: string[];
+  allowedHTMLLoadExtensions: string[];
   adminUUIDs: string[];
   allowedVoteCmds: VoteCmd[];
   kickDuplicate: boolean;
@@ -43,9 +45,11 @@ export interface GetServerSecurityResponse {
   serverCommandPassword: string;
   battleEye: boolean;
   verifySignatures: boolean;
-  allowedFilePatching: number;
+  allowedFilePatching: AllowedFilePatching;
   filePatchingIgnoredClients: string[];
   allowedLoadFileExtensions: string[];
+  allowedPreprocessFileExtensions: string[];
+  allowedHTMLLoadExtensions: string[];
   adminUUIDs: string[];
   allowedVoteCmds: VoteCmd[];
   kickDuplicate: boolean;

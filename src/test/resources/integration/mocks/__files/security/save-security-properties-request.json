@@ -11,6 +11,12 @@
   "allowedLoadFileExtensions": [
     "SQF"
   ],
+  "allowedPreprocessFileExtensions": [
+    "hpp", "sqs"
+  ],
+  "allowedHTMLLoadExtensions": [
+    "html"
+  ],
   "adminUUIDs": [
     "12341235421321"
   ],

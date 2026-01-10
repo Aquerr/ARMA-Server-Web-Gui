@@ -93,6 +93,13 @@ public class ArmaServerConfig
     private String[] allowedLoadFileExtensions = {"hpp", "sqs", "sqf", "fsm", "cpp", "paa", "txt", "xml", "inc", "ext", "sqm", "ods",
             "fxy", "lip", "csv", "kb", "bik", "bikb", "html", "htm", "biedi"};
 
+    @CfgProperty(name = "allowedPreprocessFileExtensions[]", type = PropertyType.ARRAY_OF_STRINGS)
+    private String[] allowedPreprocessFileExtensions = {"hpp", "sqs", "sqf", "fsm", "cpp", "paa", "txt", "xml", "inc", "ext",
+            "sqm", "ods", "fxy", "lip", "csv", "kb", "bik", "bikb", "html", "htm", "biedi"};
+
+    @CfgProperty(name = "allowedHTMLLoadExtensions[]", type = PropertyType.ARRAY_OF_STRINGS)
+    private String[] allowedHTMLLoadExtensions = { "htm", "html", "xml", "txt" };
+
     @CfgProperty(name = "admins[]", type = PropertyType.ARRAY_OF_STRINGS)
     private String[] admins = {};
 

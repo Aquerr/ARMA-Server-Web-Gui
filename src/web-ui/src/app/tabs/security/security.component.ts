@@ -2,9 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { AllowedFilePatching, ServerSecurityService } from "../../service/server-security.service";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
-import { SecurityFormService } from "./security-form.service";
+import { SecurityFormControls, SecurityFormService } from "./security-form.service";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { VoteCmd } from "../../model/vote-cmd.model";
 import { MatError, MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatTooltip } from "@angular/material/tooltip";
 import { AswgChipFormInputComponent } from "../../common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
@@ -31,7 +30,7 @@ import { MatButton } from "@angular/material/button";
   styleUrls: ["./security.component.scss"]
 })
 export class SecurityComponent implements OnInit {
-  public form: FormGroup;
+  public form: FormGroup<SecurityFormControls>;
 
   protected readonly AllowedFilePatching = AllowedFilePatching;
 
@@ -72,9 +71,5 @@ export class SecurityComponent implements OnInit {
 
   hasFormError(controlName: string, errorName: string): boolean | undefined {
     return this.form.get(controlName)?.hasError(errorName);
-  }
-
-  setVoteCmds($event: VoteCmd[]) {
-    this.form.get("allowedVoteCmds")?.setValue($event);
   }
 }

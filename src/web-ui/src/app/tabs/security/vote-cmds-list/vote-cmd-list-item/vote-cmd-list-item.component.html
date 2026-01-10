@@ -1,99 +1,41 @@
-<mat-card class="vote-cmd-list-item" (dblclick)="doubleClick()">
-  <mat-card-content>
-    @if (item.editing) {
-      <div class="">
-        <form matTooltip="Double-click to lock">
-          <mat-form-field>
-            <mat-label>Name</mat-label>
-            <input
-              matInput
-              [(ngModel)]="item.command.name"
-              [ngModelOptions]="{ standalone: true }"
-              (keydown.enter)="onEnter()"
-              />
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Allowed Pre Mission</mat-label>
-            <mat-select
-              [(ngModel)]="item.command.allowedPreMission"
-              [ngModelOptions]="{ standalone: true }"
-              >
-              <mat-option [value]="true">Yes</mat-option>
-              <mat-option [value]="false">No</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Allowed Post Mission</mat-label>
-            <mat-select
-              [(ngModel)]="item.command.allowedPostMission"
-              [ngModelOptions]="{ standalone: true }"
-              >
-              <mat-option [value]="true">Yes</mat-option>
-              <mat-option [value]="false">No</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Voting Threshold</mat-label>
-            <input
-              matInput
-              [(ngModel)]="item.command.votingThreshold"
-              [ngModelOptions]="{ standalone: true }"
-              (keydown.enter)="onEnter()"
-              />
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Percentage Side Voting Threshold</mat-label>
-            <input
-              matInput
-              [(ngModel)]="item.command.percentageSideVotingThreshold"
-              [ngModelOptions]="{ standalone: true }"
-              (keydown.enter)="onEnter()"
-              />
-          </mat-form-field>
-        </form>
-      </div>
-    } @else {
-      <form matTooltip="Double-click to edit">
+<mat-card (dblclick)="doubleClick()" class="vote-cmd-list-item">
+  <mat-card-content [formGroup]="form">
+    <div class="">
+      <form [formGroup]="form.controls.command" [matTooltip]="form.controls.editing.value ? 'Double-click to lock' : 'Double-click to edit'">
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input matInput [value]="item.command.name" [disabled]="true" />
+          <input (keydown.enter)="onEnter()" formControlName="name" matInput />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Allowed Pre Mission</mat-label>
-          <mat-select
-            [(ngModel)]="item.command.allowedPreMission"
-            [ngModelOptions]="{ standalone: true }"
-            [disabled]="true"
-            >
+          <mat-select formControlName="allowedPreMission">
             <mat-option [value]="true">Yes</mat-option>
             <mat-option [value]="false">No</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Allowed Post Mission</mat-label>
-          <mat-select
-            [(ngModel)]="item.command.allowedPostMission"
-            [ngModelOptions]="{ standalone: true }"
-            [disabled]="true"
-            >
+          <mat-select formControlName="allowedPostMission">
             <mat-option [value]="true">Yes</mat-option>
             <mat-option [value]="false">No</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Voting Threshold</mat-label>
-          <input matInput [value]="item.command.votingThreshold" [disabled]="true" />
+          <input (keydown.enter)="onEnter()" formControlName="votingThreshold" matInput />
         </mat-form-field>
         <mat-form-field>
           <mat-label>Percentage Side Voting Threshold</mat-label>
-          <input matInput [value]="item.command.percentageSideVotingThreshold" [disabled]="true" />
+          <input (keydown.enter)="onEnter()" formControlName="percentageSideVotingThreshold" matInput />
         </mat-form-field>
       </form>
-      <div class="text-center">
-        <button mat-icon-button (click)="deleteClick()">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-    }
+      @if (form.controls.editing.value) {
+        <div class="text-center">
+          <button mat-icon-button (click)="deleteClick()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
   </mat-card-content>
 </mat-card>

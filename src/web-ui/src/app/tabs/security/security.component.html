@@ -130,6 +130,20 @@
         [control]="formService.getFilePatchingIgnoredClientsControl(form)"
         [parent]="form"
       ></app-aswg-chip-form-input>
+      <app-aswg-chip-form-input
+        style="width: 100%"
+        labelText="Allowed Preprocess File Extensions"
+        toolTipText="Only allow files with listed extensions to be loaded via preprocessFile / preprocessFileLineNumbers commands. Not listing any extension means everything is allowed. Defining the setting as empty arrays means nothing is allowed."
+        [control]="form.controls.allowedPreprocessFileExtensions"
+        [parent]="form"
+      ></app-aswg-chip-form-input>
+      <app-aswg-chip-form-input
+        style="width: 100%"
+        labelText="Allowed HTML Load Extensions"
+        toolTipText="Only allow files and URLs with listed extensions to be loaded via htmlLoad command. Not listing any extension means everything is allowed. Defining the setting as empty arrays means nothing is allowed."
+        [control]="form.controls.allowedHTMLLoadExtensions"
+        [parent]="form"
+      ></app-aswg-chip-form-input>
       <mat-form-field
         matTooltip="Percentage of votes needed to confirm a vote. 0.3 = 30%"
         matTooltipPosition="right"
@@ -164,8 +178,7 @@
         </mat-label
         >
         <app-vote-cmds-list
-          [formGroup]="form"
-          (listChanged)="setVoteCmds($event)"
+          [control]="form.controls.allowedVoteCmds"
         ></app-vote-cmds-list>
       </div>
     </div>

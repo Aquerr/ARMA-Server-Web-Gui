@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { VoteCmd } from "../../../model/vote-cmd.model";
 import { CommandListItem } from "./vote-cmd-list-item/vote-cmd-list-item.model";
-import { FormGroup } from "@angular/forms";
+import { FormControl } from "@angular/forms";
 import { MatIconButton } from "@angular/material/button";
 import { VoteCmdListItemComponent } from "./vote-cmd-list-item/vote-cmd-list-item.component";
 import { MatIcon } from "@angular/material/icon";
@@ -16,33 +16,17 @@ import { MatIcon } from "@angular/material/icon";
   ],
   styleUrl: "./vote-cmds-list.component.scss"
 })
-export class VoteCmdsListComponent implements OnInit {
-  // @Input() voteCommands: VoteCmd[] = [];
+export class VoteCmdsListComponent {
+  @Input() control: FormControl<CommandListItem[]> | undefined;
 
-  @Input() formGroup: FormGroup | undefined;
-
-  @Output() listChanged: EventEmitter<VoteCmd[]> = new EventEmitter<VoteCmd[]>();
-
-  voteCommandsItems: CommandListItem[] = [];
-
-  ngOnInit(): void {
-    this.formGroup?.get("allowedVoteCmds")?.valueChanges.subscribe((event: VoteCmd[]) => {
-      this.voteCommandsItems = event.map((cmd) => new CommandListItem(cmd));
-    });
-  }
-
-  deleteItem(item: CommandListItem) {
-    this.voteCommandsItems = this.voteCommandsItems.filter((value) => {
-      return value.command.name != item.command.name;
-    });
-
-    this.formGroup
-      ?.get("allowedVoteCmds")
-      ?.setValue(this.voteCommandsItems.map((item) => item.command));
+  deleteItem(index: number) {
+    this.control?.patchValue(this.control?.value.filter((value, itemIndex) => {
+      return index != itemIndex;
+    }));
   }
 
   addNewCommand() {
-    const item = new CommandListItem({} as VoteCmd);
-    this.voteCommandsItems.push(item);
+    const item = new CommandListItem({} as VoteCmd, true);
+    this.control?.patchValue([...this.control?.value, item]);
   }
 }

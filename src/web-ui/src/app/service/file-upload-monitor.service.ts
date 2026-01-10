@@ -88,7 +88,6 @@ export class FileUploadMonitorService {
 
         if (response.type == HttpEventType.Response) {
           this.removeFileWithName(file.name);
-          console.log("Response:", response);
           this.fileUploadedSubject.next(file);
         }
       },
@@ -107,7 +106,6 @@ export class FileUploadMonitorService {
 
   showUploadProgressSnackBar() {
     if (!this.fileUploadSnackBarRef) {
-      console.log("Opening file upload...");
       this.fileUploadSnackBarRef = this.matSnackBar.openFromComponent(FileUploadSnackBarComponent, {
         data: this
       });

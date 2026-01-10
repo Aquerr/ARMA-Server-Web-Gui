@@ -20,6 +20,8 @@ public class ServerSecurityProperties
     private AllowedFilePatching allowedFilePatching;
     private List<String> filePatchingIgnoredClients;
     private List<String> allowedLoadFileExtensions;
+    private List<String> allowedPreprocessFileExtensions;
+    private List<String> allowedHTMLLoadExtensions;
     private List<String> adminUUIDs;
     private List<VoteCommand> voteCommands;
     private boolean kickDuplicate;

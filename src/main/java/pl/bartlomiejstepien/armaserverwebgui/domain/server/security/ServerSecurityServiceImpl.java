@@ -31,8 +31,10 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
                 .allowedFilePatching(ofNullable(ServerSecurityProperties.AllowedFilePatching.findByConfigValue(armaServerConfig.getAllowedFilePatching()))
                         .orElseThrow(() -> new RuntimeException("Could not find AllowedFilePatching for config value = "
                                 + armaServerConfig.getAllowedFilePatching())))
-                .filePatchingIgnoredClients(Arrays.stream(armaServerConfig.getFilePatchingExceptions()).toList())
+                .filePatchingIgnoredClients(Arrays.asList(armaServerConfig.getFilePatchingExceptions()))
                 .allowedLoadFileExtensions(Arrays.asList(armaServerConfig.getAllowedLoadFileExtensions()))
+                .allowedPreprocessFileExtensions(Arrays.asList(armaServerConfig.getAllowedPreprocessFileExtensions()))
+                .allowedHTMLLoadExtensions(Arrays.asList(armaServerConfig.getAllowedHTMLLoadExtensions()))
                 .adminUUIDs(Arrays.asList(armaServerConfig.getAdmins()))
                 .voteCommands(ofNullable(armaServerConfig.getAllowedVoteCmds())
                         .map(cmds -> Arrays.stream(cmds)
@@ -63,6 +65,8 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
         armaServerConfig.setAllowedFilePatching(serverSecurityProperties.getAllowedFilePatching().getConfigValue());
         armaServerConfig.setFilePatchingExceptions(serverSecurityProperties.getFilePatchingIgnoredClients().toArray(new String[0]));
         armaServerConfig.setAllowedLoadFileExtensions(serverSecurityProperties.getAllowedLoadFileExtensions().toArray(new String[0]));
+        armaServerConfig.setAllowedPreprocessFileExtensions(serverSecurityProperties.getAllowedPreprocessFileExtensions().toArray(new String[0]));
+        armaServerConfig.setAllowedHTMLLoadExtensions(serverSecurityProperties.getAllowedHTMLLoadExtensions().toArray(new String[0]));
         armaServerConfig.setAdmins(serverSecurityProperties.getAdminUUIDs().toArray(new String[0]));
         armaServerConfig.setAllowedVoteCmds(ofNullable(serverSecurityProperties.getVoteCommands())
                 .map(voteCommands -> voteCommands.stream()
