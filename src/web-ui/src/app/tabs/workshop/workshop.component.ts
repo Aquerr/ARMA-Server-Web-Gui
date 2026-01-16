@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, signal } from "@angular/core";
 import { WorkshopMod } from "../../model/workshop.model";
 import { WorkshopService } from "../../service/workshop.service";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
@@ -21,7 +21,8 @@ import { WorkshopItemComponent } from "./workshop-item/workshop-item.component";
     MatInput,
     WorkshopItemComponent
   ],
-  styleUrls: ["./workshop.component.scss"]
+  styleUrls: ["./workshop.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkshopComponent implements OnInit, OnDestroy {
   workshopMods: WorkshopMod[] = [];
@@ -30,6 +31,8 @@ export class WorkshopComponent implements OnInit, OnDestroy {
   nextCursor: string = "";
   searchBoxControl!: FormControl;
   private lastSearchText: string = "";
+
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
   // Paginator
   totalInstalledMods = signal(0);
@@ -113,6 +116,7 @@ export class WorkshopComponent implements OnInit, OnDestroy {
       this.installedWorkshopMods.push(...this.modsUnderInstallation);
       this.showInstalledWorkshopsModsPage(0, 10);
       this.totalInstalledMods.set(this.installedWorkshopMods.length);
+      this.changeDetectorRef.markForCheck();
     });
   }
 
@@ -121,6 +125,7 @@ export class WorkshopComponent implements OnInit, OnDestroy {
     const endIndex = pageIndex * pageSize + pageSize;
 
     this.installedWorkshopModsToShow = this.installedWorkshopMods.slice(startIndex, endIndex);
+    this.changeDetectorRef.markForCheck();
   }
 
   changePage(event: PageEvent) {
