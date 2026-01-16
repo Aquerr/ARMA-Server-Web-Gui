@@ -1,4 +1,4 @@
-import { Component, input, InputSignal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, InputSignal } from "@angular/core";
 import { ArmaServerPlayer } from "../../../model/arma-server-player.model";
 import { MatList, MatListItem } from "@angular/material/list";
 import { MatIcon } from "@angular/material/icon";
@@ -11,7 +11,8 @@ import { MatIcon } from "@angular/material/icon";
     MatListItem,
     MatIcon
   ],
-  styleUrls: ["./player-list.component.scss"]
+  styleUrls: ["./player-list.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlayerListComponent {
   playerList: InputSignal<ArmaServerPlayer[]> = input<ArmaServerPlayer[]>([]);

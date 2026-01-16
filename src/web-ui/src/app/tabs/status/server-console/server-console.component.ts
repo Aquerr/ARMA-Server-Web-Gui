@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, signal, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, signal, ViewChild } from "@angular/core";
 import { ServerLoggingService } from "../../../service/server-logging.service";
 import { API_BASE_URL } from "../../../../environments/environment";
 import FetchEventSource from "fetch-event-source";
@@ -8,7 +8,8 @@ import { Observable } from "rxjs";
 @Component({
   selector: "app-server-console",
   templateUrl: "./server-console.component.html",
-  styleUrls: ["./server-console.component.scss"]
+  styleUrls: ["./server-console.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ServerConsoleComponent implements OnInit, OnDestroy {
   @ViewChild("console") private console!: ElementRef<HTMLDivElement>;

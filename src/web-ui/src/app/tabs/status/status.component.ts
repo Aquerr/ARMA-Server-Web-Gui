@@ -1,4 +1,13 @@
-import { Component, computed, DestroyRef, OnInit, signal, WritableSignal } from "@angular/core";
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal
+} from "@angular/core";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { ServerStatusService } from "../../service/server-status.service";
 import { ServerStatus, Status } from "./model/status.model";
@@ -20,9 +29,12 @@ import { ArmaServerPlayer } from "../../model/arma-server-player.model";
   selector: "app-status",
   templateUrl: "./status.component.html",
   styleUrls: ["./status.component.scss"],
-  imports: [ServerConsoleComponent, NgStyle, MatCheckbox, FormsModule, PlayerListComponent, MatButton]
+  imports: [ServerConsoleComponent, NgStyle, MatCheckbox, FormsModule, PlayerListComponent, MatButton],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StatusComponent implements OnInit {
+  private changeDetectorRef = inject(ChangeDetectorRef);
+
   serverStatus: WritableSignal<ServerStatus> = signal<{ status: Status; statusText: string }>({ status: Status.OFFLINE, statusText: "Offline" });
   playerList: WritableSignal<ArmaServerPlayer[]> = signal<ArmaServerPlayer[]>([]);
 
@@ -62,6 +74,7 @@ export class StatusComponent implements OnInit {
       .subscribe((response) => {
         this.serverStatus.set(response.status);
         this.playerList.set(response.playerList);
+        this.changeDetectorRef.markForCheck();
       });
   }
 

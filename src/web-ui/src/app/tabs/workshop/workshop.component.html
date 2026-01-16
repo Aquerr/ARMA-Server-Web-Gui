@@ -9,7 +9,7 @@
   <div class="workshop">
     <h2>Workshop mods</h2>
     <div class="workshop-list">
-      @for (workshopMod of workshopMods; track workshopMod) {
+      @for (workshopMod of workshopMods(); track workshopMod) {
         <app-workshop-item
           [workshopMod]="workshopMod"
           [canInstall]="canInstall(workshopMod)"
@@ -38,12 +38,12 @@
         >
         </app-workshop-item>
       }
-      @if (installedWorkshopMods.length === 0) {
+      @if (installedWorkshopMods().length === 0) {
         <div>
           <span>No workshop items are installed. :(</span>
         </div>
       }
-      @if (installedWorkshopMods.length > 0) {
+      @if (installedWorkshopMods().length > 0) {
         <div>
           <mat-paginator
             (page)="changePage($event)"
