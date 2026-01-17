@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from "@angular/core";
 import { CdlcService } from "../../service/cdlc.service";
 import { Cdlc } from "../../model/cdlc.model";
 import { NotificationService } from "src/app/service/notification.service";
@@ -10,7 +10,8 @@ import { MatTooltip } from "@angular/material/tooltip";
   selector: "app-cdlc",
   imports: [MatButton, MatTooltip],
   templateUrl: "./cdlc.component.html",
-  styleUrl: "./cdlc.component.scss"
+  styleUrl: "./cdlc.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CdlcComponent implements OnInit {
   private readonly cdlcService: CdlcService = inject(CdlcService);

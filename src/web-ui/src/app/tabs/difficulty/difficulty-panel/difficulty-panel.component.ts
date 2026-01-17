@@ -1,13 +1,16 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, model, output } from "@angular/core";
 import { DifficultyProfile } from "../../../model/difficulty-profile.model";
 import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { ServerDifficultyService } from "../../../service/server-difficulty.service";
 import { NotificationService } from "../../../service/notification.service";
 import { MatDialog } from "@angular/material/dialog";
-import { DifficultyDeleteConfirmDialogComponent } from "../difficulty-delete-confirm-dialog/difficulty-delete-confirm-dialog.component";
+import {
+  DifficultyDeleteConfirmDialogComponent
+} from "../difficulty-delete-confirm-dialog/difficulty-delete-confirm-dialog.component";
 import {
   MatAccordion,
-  MatExpansionPanel, MatExpansionPanelDescription,
+  MatExpansionPanel,
+  MatExpansionPanelDescription,
   MatExpansionPanelHeader,
   MatExpansionPanelTitle
 } from "@angular/material/expansion";
@@ -40,13 +43,15 @@ import { MatButton, MatIconButton } from "@angular/material/button";
     MatButton,
     MatIconButton
   ],
-  styleUrl: "./difficulty-panel.component.scss"
+  styleUrl: "./difficulty-panel.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DifficultyPanelComponent {
-  @Input() difficultyProfile!: DifficultyProfile;
-  @Output() activated = new EventEmitter<DifficultyProfile>();
-  @Output() saved = new EventEmitter<DifficultyProfile>();
-  @Output() deleted = new EventEmitter<DifficultyProfile>();
+  difficultyProfile = model.required<DifficultyProfile>();
+
+  activated = output<DifficultyProfile>();
+  saved = output<DifficultyProfile>();
+  deleted = output<DifficultyProfile>();
 
   editingTitle: boolean = false;
 
@@ -59,7 +64,11 @@ export class DifficultyPanelComponent {
 
   toggleActive(event: MouseEvent) {
     event.stopPropagation();
-    this.activated.emit(this.difficultyProfile);
+    this.difficultyProfile.update((profile) => {
+      profile.active = !profile.active;
+      return profile;
+    });
+    this.activated.emit(this.difficultyProfile());
   }
 
   allowDecimals(event: KeyboardEvent) {

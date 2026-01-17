@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, signal } from "@angular/core";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
 import { ServerDifficultyService } from "../../service/server-difficulty.service";
@@ -15,7 +15,8 @@ import { MatButton } from "@angular/material/button";
     DifficultyPanelComponent,
     MatButton
   ],
-  styleUrl: "./difficulty.component.scss"
+  styleUrl: "./difficulty.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DifficultyComponent implements OnInit {
   difficultyProfiles = signal<DifficultyProfile[]>([]);
@@ -94,13 +95,16 @@ export class DifficultyComponent implements OnInit {
   }
 
   onProfileActivate(difficultyProfile: DifficultyProfile) {
-    if (!difficultyProfile.active) {
+    if (difficultyProfile.active) {
       this.difficultyProfiles.update((oldProfiles) => oldProfiles.map((profile) => {
-        profile.active = false;
+        if (profile != difficultyProfile) {
+          return {
+            ...profile, active: false
+          };
+        }
         return profile;
       }));
     }
-    difficultyProfile.active = !difficultyProfile.active;
   }
 
   onProfileSave() {
