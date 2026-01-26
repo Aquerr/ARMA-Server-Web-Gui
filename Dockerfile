@@ -1,8 +1,15 @@
 FROM eclipse-temurin:25-jre AS runner
 
+ARG VERSION=0.0.0
+
 USER root
 
 LABEL maintainer=Aquerr
+LABEL description="user-friendly management GUI for Arma 3 server"
+LABEL version="${VERSION}"
+
+ENV APP_USER=aswg
+ENV APP_GROUP=aswg
 
 # Intall SteamCMD
 RUN apt-get -y update \
@@ -12,22 +19,24 @@ RUN apt-get -y update \
     && cd /steamcmd \
     && curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
 
+# Install GOSU
+RUN apt-get update \
+ && apt-get install --update -y gosu \
+ && rm -rf /var/lib/apt/lists/* \
+    gosu nobody true
+
 # Intall ASWG
-RUN groupadd --gid 1001 aswg \
-    && useradd --home-dir /home/aswg --create-home --uid 1001 --gid 1001 aswg \
-    && mkdir /aswg \
+RUN mkdir /aswg \
     && mkdir /aswg/config \
     && mkdir /aswg/data \
+    && mkdir /aswg/logs \
     && mkdir /aswg/arma-server/ \
-    && mkdir /aswg/arma-server/mods \
-    && chown aswg:aswg -R /aswg \
-    && chown aswg:aswg -R /steamcmd
+    && mkdir /aswg/arma-server/mods
 
 WORKDIR /aswg
 
 COPY ./target/arma-server-web-gui-*.jar /aswg/aswg.jar
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY --chmod=755 entrypoint.sh /entrypoint.sh
 
 # ASWG Properties
 ENV ASWG_STEAMCMD_PATH="/steamcmd/steamcmd.sh"
@@ -48,6 +57,5 @@ VOLUME ["/aswg/arma-server", "/aswg/data", "/aswg/config"]
 EXPOSE 8085/tcp
 EXPOSE 2302-2306/udp
 
-USER aswg:aswg
-
-ENTRYPOINT ["sh", "/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["java", "-jar", "/aswg/aswg.jar"]

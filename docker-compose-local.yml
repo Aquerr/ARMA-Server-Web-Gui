@@ -5,7 +5,10 @@ services:
       context: .
       dockerfile: Dockerfile.prod
     restart: on-failure:3
-    user: "1001:1001"
+    environment:
+      # Can be omitted to run as root, but it is highly recommended to provide these environment variables and not run as root.
+      PUID: 1001 # Your user id (UID)
+      PGID: 1001 # Your group id (GID)
     ports:
       - "8085:8085/tcp"
       - "2302-2306:2302-2306/udp"
