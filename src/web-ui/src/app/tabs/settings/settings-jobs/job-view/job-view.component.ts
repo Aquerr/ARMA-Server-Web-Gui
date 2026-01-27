@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { JobSettingsFormService } from "./job-settings-form.service";
 import { MatHint, MatLabel, MatOption, MatSelect } from "@angular/material/select";
@@ -32,7 +32,8 @@ import { DialogService } from "../../../../service/dialog.service";
     NgClass
   ],
   templateUrl: "./job-view.component.html",
-  styleUrl: "./job-view.component.scss"
+  styleUrl: "./job-view.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JobViewComponent implements OnInit {
   public form!: FormGroup;
@@ -44,6 +45,7 @@ export class JobViewComponent implements OnInit {
   private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   private readonly dialogService: DialogService = inject(DialogService);
+  private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   public jobName: string = "";
 
@@ -56,6 +58,7 @@ export class JobViewComponent implements OnInit {
     this.jobSettingsService.getJobSettings(this.jobName).subscribe((response) => {
       this.formService.setForm(this.form, response);
       this.maskService.hide();
+      this.changeDetectorRef.markForCheck();
     });
   }
 

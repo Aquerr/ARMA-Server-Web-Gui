@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { DiscordSettingsFormService } from "./discord-settings-form.service";
 import { DiscordSettingsService } from "../../../service/discord-settings.service";
@@ -22,7 +22,8 @@ import { MatLabel } from "@angular/material/form-field";
     MatSelect,
     MatLabel,
     MatOption
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsDiscordComponent implements OnInit {
   public form!: FormGroup;
@@ -31,6 +32,7 @@ export class SettingsDiscordComponent implements OnInit {
   private readonly discordSettingsService: DiscordSettingsService = inject(DiscordSettingsService);
   private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService: NotificationService = inject(NotificationService);
+  private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     this.form = this.formService.getForm();
@@ -39,6 +41,7 @@ export class SettingsDiscordComponent implements OnInit {
     this.discordSettingsService.getDiscordSettings().subscribe((response) => {
       this.formService.setForm(this.form, response);
       this.maskService.hide();
+      this.changeDetectorRef.markForCheck();
     });
   }
 

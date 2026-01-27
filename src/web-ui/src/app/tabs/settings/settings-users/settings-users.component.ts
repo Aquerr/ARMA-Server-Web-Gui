@@ -1,4 +1,12 @@
-import { Component, inject, OnInit, signal, WritableSignal } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal
+} from "@angular/core";
 import { AswgUser, UsersService } from "../../../service/users.service";
 import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../../service/notification.service";
@@ -12,13 +20,15 @@ import { FormsModule } from "@angular/forms";
   selector: "app-settings-users",
   templateUrl: "./settings-users.component.html",
   styleUrl: "./settings-users.component.scss",
-  imports: [MatIcon, FormsModule, MatButtonModule, SettingsUserPanelComponent]
+  imports: [MatIcon, FormsModule, MatButtonModule, SettingsUserPanelComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsUsersComponent implements OnInit {
   private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly dialogService: DialogService = inject(DialogService);
   private readonly usersService: UsersService = inject(UsersService);
+  private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   users: WritableSignal<AswgUser[]> = signal([]);
 
@@ -83,6 +93,7 @@ export class SettingsUsersComponent implements OnInit {
     this.usersService.getUsers().subscribe((users) => {
       this.users.set(users);
       this.maskService.hide();
+      this.changeDetectorRef.detectChanges();
     });
   }
 

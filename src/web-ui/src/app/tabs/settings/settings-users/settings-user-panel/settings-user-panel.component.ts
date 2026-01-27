@@ -1,10 +1,12 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { AswgUser } from "../../../../service/users.service";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { EditUserFormService } from "./edit-user-form.service";
 import { AswgAuthority } from "../../../../model/authority.model";
 import { DialogService } from "../../../../service/dialog.service";
-import { PasswordChangeDialogComponent } from "../../../../common-ui/password-change-dialog/password-change-dialog.component";
+import {
+  PasswordChangeDialogComponent
+} from "../../../../common-ui/password-change-dialog/password-change-dialog.component";
 import {
   MatAccordion,
   MatExpansionPanel,
@@ -40,7 +42,8 @@ import { DatePipe } from "@angular/common";
     MatButtonModule,
     DatePipe
   ],
-  providers: [PasswordChangeDialogComponent]
+  providers: [PasswordChangeDialogComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsUserPanelComponent implements OnInit {
   formService: EditUserFormService = inject(EditUserFormService);
