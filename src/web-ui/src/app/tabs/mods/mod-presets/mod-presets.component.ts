@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, input, Output, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, input, Output, ViewChild } from "@angular/core";
 import {
   ModPresetImportRequest,
   ModPresetModParam,
@@ -29,7 +29,8 @@ import { ModPresetItemComponent } from "./mod-preset-item/mod-preset-item.compon
     ModPresetItemComponent,
     MatMenuTrigger
   ],
-  styleUrls: ["./mod-presets.component.scss"]
+  styleUrls: ["./mod-presets.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModPresetsComponent {
   @ViewChild("presetFileInput") fileInputComponent!: ElementRef<HTMLInputElement>;

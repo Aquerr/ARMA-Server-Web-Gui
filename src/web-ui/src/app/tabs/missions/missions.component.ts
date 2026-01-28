@@ -1,9 +1,19 @@
-import { ChangeDetectorRef, Component, computed, OnDestroy, OnInit, signal } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  OnDestroy,
+  OnInit,
+  signal
+} from "@angular/core";
 import { Subject, Subscription } from "rxjs";
 import { ServerMissionsService } from "../../service/server-missions.service";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { MatDialog } from "@angular/material/dialog";
-import { MissionDeleteConfirmDialogComponent } from "./mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
+import {
+  MissionDeleteConfirmDialogComponent
+} from "./mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
 import { NotificationService } from "../../service/notification.service";
 import { MissionModifyDialogComponent } from "./mission-modify-dialog/mission-modify-dialog.component";
 import { Mission } from "../../model/mission.model";
@@ -50,7 +60,8 @@ import { MissionUploadButtonComponent } from "./upload-mission/mission-upload-bu
     MatIcon,
     MissionUploadButtonComponent
   ],
-  styleUrls: ["./missions.component.scss"]
+  styleUrls: ["./missions.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MissionsComponent implements OnInit, OnDestroy {
   disabledMissions = signal<Mission[]>([]);

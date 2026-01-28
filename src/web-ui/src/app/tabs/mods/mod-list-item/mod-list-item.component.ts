@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { Mod } from "../../../model/mod.model";
 import { ModDeleteConfirmDialogComponent } from "../mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -38,7 +38,8 @@ import { MatCheckbox } from "@angular/material/checkbox";
     NgOptimizedImage,
     MatExpansionPanel
   ],
-  styleUrls: ["./mod-list-item.component.scss"]
+  styleUrls: ["./mod-list-item.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModListItemComponent {
   @Input() mod!: Mod;

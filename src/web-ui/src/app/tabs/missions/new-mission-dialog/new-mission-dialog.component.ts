@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import {
   MatDialogActions,
   MatDialogClose,
@@ -32,7 +32,8 @@ import { MatButton } from "@angular/material/button";
     MatDialogClose,
     MatInput
   ],
-  styleUrl: "./new-mission-dialog.component.scss"
+  styleUrl: "./new-mission-dialog.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewMissionDialogComponent {
   missionType: "BUILT_IN" | "FILE" = "BUILT_IN";

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { WorkshopService } from "../../../service/workshop.service";
 import { DownloadingMod } from "../../../model/workshop.model";
@@ -19,13 +19,15 @@ import { MatIconButton } from "@angular/material/button";
     MatDialogClose
   ],
   templateUrl: "./mod-download-queue-dialog.component.html",
-  styleUrl: "./mod-download-queue-dialog.component.scss"
+  styleUrl: "./mod-download-queue-dialog.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModDownloadQueueDialogComponent implements OnInit {
   private readonly loadingSpinnerMaskService: LoadingSpinnerMaskService
     = inject(LoadingSpinnerMaskService);
 
   private readonly workshopService: WorkshopService = inject(WorkshopService);
+  private readonly changeDetectionRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   modDownloadQueue: DownloadingMod[] = [];
 
@@ -34,6 +36,7 @@ export class ModDownloadQueueDialogComponent implements OnInit {
     this.workshopService.getModDownloadQueue().subscribe((response) => {
       this.modDownloadQueue = response.mods;
       this.loadingSpinnerMaskService.hide();
+      this.changeDetectionRef.markForCheck();
     });
   }
 }

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ComponentRef,
   Inject,
@@ -37,7 +38,8 @@ import { MatButton } from "@angular/material/button";
     MatDialogClose,
     MatInput
   ],
-  styleUrls: ["./mission-modify-dialog.component.scss"]
+  styleUrls: ["./mission-modify-dialog.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MissionModifyDialogComponent implements OnInit {
   @ViewChild("viewContainerRef", { read: ViewContainerRef, static: true })

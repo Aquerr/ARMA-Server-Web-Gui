@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, signal, ViewChild } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal, ViewChild } from "@angular/core";
 import { Subject, Subscription } from "rxjs";
 import { LoadingSpinnerMaskService } from "src/app/service/loading-spinner-mask.service";
 import { ServerModsService } from "src/app/service/server-mods.service";
@@ -38,7 +38,8 @@ import { ModUploadButtonComponent } from "./mod-upload-button/mod-upload-button.
     ModListsComponent,
     ModUploadButtonComponent
   ],
-  styleUrls: ["./mods.component.scss"]
+  styleUrls: ["./mods.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModsComponent implements OnInit, OnDestroy, AfterViewInit {
   reloadModsDataSubject: Subject<void>;

@@ -1,10 +1,11 @@
 import {
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
-  EventEmitter,
+  EventEmitter, inject,
   Input,
   OnChanges,
   OnInit,
-  Output
+  Output, signal, WritableSignal
 } from "@angular/core";
 import { CdkDrag, CdkDragDrop, CdkDropList } from "@angular/cdk/drag-drop";
 import { MatButton } from "@angular/material/button";
@@ -30,9 +31,12 @@ export type SortBy = "Name_Asc" | "Name_Desc" | "Size_Asc" | "Size_Desc";
     MatLabel
   ],
   templateUrl: "./mod-list.component.html",
-  styleUrl: "./mod-list.component.scss"
+  styleUrl: "./mod-list.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModListComponent implements OnInit, OnChanges {
+  private readonly changeDetectionRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+
   @Input() listHeader!: string;
   @Input() moveAllModsButtonName!: string;
   @Input() moveAllModsButtonIcon!: string;
@@ -42,7 +46,7 @@ export class ModListComponent implements OnInit, OnChanges {
   @Output() modItemDragDrop = new EventEmitter<CdkDragDrop<Mod[], Mod[], Mod>>();
   @Output() modDelete = new EventEmitter<Mod>();
 
-  filteredMods: Mod[] = [];
+  filteredMods: WritableSignal<Mod[]> = signal([]);
   sortBy: SortBy = "Name_Asc";
 
   ngOnInit() {
@@ -54,7 +58,7 @@ export class ModListComponent implements OnInit, OnChanges {
   }
 
   public reload() {
-    this.filteredMods = [...this.mods].sort((a, b) => a.name.localeCompare(b.name));
+    this.filteredMods.set([...this.mods].sort((a, b) => a.name.localeCompare(b.name)));
   }
 
   moveAllMods() {
@@ -70,26 +74,29 @@ export class ModListComponent implements OnInit, OnChanges {
   }
 
   filterMods(searchPhrase: string) {
-    this.filteredMods = this.mods.filter((mod) =>
-      mod.name.toLowerCase().includes(searchPhrase.toLowerCase())
-    );
+    this.filteredMods.set(this.mods.filter((mod) => mod.name.toLowerCase()
+      .includes(searchPhrase.toLowerCase())));
     this.sortModList();
   }
 
   public sortModList() {
+    let sortingFunction: (a: Mod, b: Mod) => number;
     switch (this.sortBy) {
       case "Name_Asc":
-        this.filteredMods.sort((a, b) => a.name.localeCompare(b.name));
+        sortingFunction = (a, b) => a.name.localeCompare(b.name);
         break;
       case "Name_Desc":
-        this.filteredMods.sort((a, b) => a.name.localeCompare(b.name)).reverse();
+        sortingFunction = (a, b) => b.name.localeCompare(a.name);
         break;
       case "Size_Asc":
-        this.filteredMods.sort((a, b) => a.sizeBytes - b.sizeBytes);
+        sortingFunction = (a, b) => a.sizeBytes - b.sizeBytes;
         break;
       case "Size_Desc":
-        this.filteredMods.sort((a, b) => a.sizeBytes - b.sizeBytes).reverse();
+        sortingFunction = (a, b) => b.sizeBytes - a.sizeBytes;
         break;
     }
+
+    this.filteredMods.update((oldMods) => oldMods.sort(sortingFunction));
+    this.changeDetectionRef.markForCheck();
   }
 }

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   effect,
   inject,
@@ -9,12 +10,7 @@ import {
   signal,
   ViewChildren
 } from "@angular/core";
-import {
-  CdkDragDrop,
-  CdkDropListGroup,
-  moveItemInArray,
-  transferArrayItem
-} from "@angular/cdk/drag-drop";
+import { CdkDragDrop, CdkDropListGroup, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
 import { Mod } from "../../../model/mod.model";
 import { SaveEnabledModsRequest, ServerModsService } from "../../../service/server-mods.service";
 import { NotificationService } from "../../../service/notification.service";
@@ -28,7 +24,8 @@ import { moveItemBetweenSignalLists } from "../../../util/signal/signal-utils";
   selector: "app-mod-lists",
   imports: [CdkDropListGroup, NotManagedModsComponent, ModListComponent],
   templateUrl: "./mod-lists.component.html",
-  styleUrl: "./mod-lists.component.scss"
+  styleUrl: "./mod-lists.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModListsComponent implements OnInit, OnDestroy {
   private readonly maskService: LoadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
@@ -53,7 +50,8 @@ export class ModListsComponent implements OnInit, OnDestroy {
     });
 
     effect(() => {
-      this.modListComponents?.forEach((component) => component.filterMods(this.searchPhrase()));
+      const searchPhrase = this.searchPhrase();
+      this.modListComponents?.forEach((component) => component.filterMods(searchPhrase));
     });
   }
 
@@ -87,7 +85,6 @@ export class ModListsComponent implements OnInit, OnDestroy {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       const movedMod = event.previousContainer.data[event.previousIndex];
-      // let currentIndex: number;
       if (event.previousContainer.id == "Enabled") {
         moveItemBetweenSignalLists(this.enabledMods, this.disabledMods, movedMod);
       } else {

@@ -21,13 +21,12 @@
     [id]="listHeader"
     cdkDropList
     class="list-container"
-    [cdkDropListData]="filteredMods"
-    [cdkDropListSortingDisabled]="true"
+    [cdkDropListData]="filteredMods()"
+    cdkDropListSortingDisabled
     (cdkDropListDropped)="onModItemDragDrop($event)"
   >
-    @for (mod of filteredMods; track mod.name) {
+    @for (mod of filteredMods(); track mod.name) {
       <app-mod-list-item
-        app-mod-list-item
         [mod]="mod"
         (modDeleted)="onModDelete($event)"
         cdkDrag
