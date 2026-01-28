@@ -21,7 +21,7 @@
         }
       </div>
       @if (isAuthenticated()) {
-        <button mat-icon-button color="primary" (click)="logout()">
+        <button mat-icon-button color="primary" (click)="logout()" matTooltip="Logout">
           <mat-icon [fontIcon]="'logout'"></mat-icon>
         </button>
       }
