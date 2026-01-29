@@ -3,8 +3,8 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
-import lombok.extern.jackson.Jacksonized;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -77,7 +77,8 @@ public class LoggingRestController
 
     @Data
     @Builder
-    @Jacksonized
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class LoggingProperties
     {
         private String logFile;
