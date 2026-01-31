@@ -13,15 +13,11 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.exception.UsernameAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.AswgUserEntity;
-import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.AuthorityEntity;
 import pl.bartlomiejstepien.armaserverwebgui.repository.UserAuthorityRepository;
 import pl.bartlomiejstepien.armaserverwebgui.repository.UserRepository;
 
 import java.time.OffsetDateTime;
 import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -29,7 +25,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService
 {
+    private final UserSessionService userSessionService;
     private final PasswordEncoder passwordEncoder;
+    private final UserLoaderService userLoaderService;
     private final UserRepository userRepository;
     private final UserAuthorityRepository userAuthorityRepository;
     private final ASWGConfig aswgConfig;
@@ -54,43 +52,14 @@ public class UserServiceImpl implements UserService
         }
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public AswgUser getUser(String username)
-    {
-        AswgUserEntity userEntity = userRepository.findByUsername(username).orElse(null);
-        if (userEntity == null)
-            return null;
-        Set<AuthorityEntity> authorityEntities = fetchAuthorities(userEntity);
-        return toAswgUser(userEntity, authorityEntities);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public AswgUserWithPassword getUserWithPassword(String username)
-    {
-        AswgUserEntity userEntity = userRepository.findByUsername(username).orElse(null);
-        if (userEntity == null)
-            return null;
-        Set<AuthorityEntity> authorityEntities = fetchAuthorities(userEntity);
-        return toAswgUserWithPassword(userEntity, authorityEntities);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<AswgUser> getUsers()
-    {
-        return userRepository.findAll().stream()
-                .map(entity -> toAswgUser(entity, fetchAuthorities(entity)))
-                .toList();
-    }
-
     @Transactional
     @Override
     public void deleteUser(int userId)
     {
+        String username = this.userLoaderService.getUser(userId).getUsername();
         this.userRepository.deleteById(userId);
         this.userAuthorityRepository.deleteByUserId(userId);
+        this.userSessionService.evict(username);
     }
 
     @Transactional
@@ -101,6 +70,7 @@ public class UserServiceImpl implements UserService
                 .orElseThrow(() -> new IllegalArgumentException("Username does not exist"));
         userAuthorityRepository.deleteByUserId(userEntity.getId());
         userRepository.deleteById(userEntity.getId());
+        this.userSessionService.evict(username);
     }
 
     @Transactional
@@ -128,7 +98,7 @@ public class UserServiceImpl implements UserService
 
     @Transactional
     @Override
-    public void updateUser(AswgUserWithPassword user)
+    public void updateUser(AswgUser user)
     {
         if (user.getId() == null)
             throw new IllegalArgumentException("No user id to update has been provided!");
@@ -140,9 +110,6 @@ public class UserServiceImpl implements UserService
                     AswgUserEntity entityToUpdate = new AswgUserEntity();
                     entityToUpdate.setId(entity.getId());
                     entityToUpdate.setUsername(entity.getUsername());
-                    entityToUpdate.setPassword(Optional.ofNullable(user.getPassword())
-                            .map(passwordEncoder::encode)
-                            .orElse(entity.getPassword()));
                     entityToUpdate.setLocked(user.isLocked());
                     entityToUpdate.setCreatedDateTime(entity.getCreatedDateTime());
                     entityToUpdate.setLastSuccessLoginDateTime(entity.getLastSuccessLoginDateTime());
@@ -152,6 +119,7 @@ public class UserServiceImpl implements UserService
                 .ifPresent(entity -> this.userAuthorityRepository.saveUserAuthorities(entity.getId(), user.getAuthorities().stream()
                         .map(AswgAuthority::getCode)
                         .collect(Collectors.toSet())));
+        this.userSessionService.evict(user.getUsername());
     }
 
     @Override
@@ -164,6 +132,7 @@ public class UserServiceImpl implements UserService
 
         userEntity.setPassword(passwordEncoder.encode(password));
         this.userRepository.save(userEntity);
+        this.userSessionService.evict(userEntity.getUsername());
     }
 
     @Override
@@ -194,35 +163,6 @@ public class UserServiceImpl implements UserService
                 .build();
     }
 
-    private AswgUser toAswgUser(AswgUserEntity userEntity, Set<AuthorityEntity> authorityEntities)
-    {
-        return toDomain(userEntity).toBuilder()
-                .authorities(authorityEntities.stream()
-                        .map(this::toDomainAuthority)
-                        .collect(Collectors.toSet()))
-                .build();
-    }
-
-    private AswgUserWithPassword toAswgUserWithPassword(AswgUserEntity userEntity, Set<AuthorityEntity> authorityEntities)
-    {
-        return toDomainWithPassword(userEntity).toBuilder()
-                .authorities(authorityEntities.stream()
-                        .map(this::toDomainAuthority)
-                        .collect(Collectors.toSet()))
-                .build();
-    }
-
-    private AswgAuthority toDomainAuthority(AuthorityEntity authorityEntity)
-    {
-        return AswgAuthority.findByCode(authorityEntity.getCode())
-                .orElseThrow(() -> new RuntimeException("User has an invalid authority: " + authorityEntity.getCode()));
-    }
-
-    private Set<AuthorityEntity> fetchAuthorities(AswgUserEntity entity)
-    {
-        return userAuthorityRepository.findUserAuthorities(entity.getId());
-    }
-
     private void resetDefaultAswgUserIfNeeded(AswgUserEntity entity)
     {
         // Authorities reset
@@ -251,27 +191,5 @@ public class UserServiceImpl implements UserService
         log.info("Creating default aswg user: {}", aswgConfig.getUsername());
         AswgUserWithPassword aswgUser = prepareDefaultAswgUser();
         addNewUser(aswgUser);
-    }
-
-    private AswgUserWithPassword toDomainWithPassword(AswgUserEntity entity)
-    {
-        return AswgUserWithPassword.builder()
-                .id(entity.getId())
-                .username(entity.getUsername())
-                .password(entity.getPassword())
-                .createdDate(entity.getCreatedDateTime())
-                .locked(entity.isLocked())
-                .build();
-    }
-
-    private AswgUser toDomain(AswgUserEntity entity)
-    {
-        return AswgUserWithPassword.builder()
-                .id(entity.getId())
-                .username(entity.getUsername())
-                .createdDate(entity.getCreatedDateTime())
-                .locked(entity.isLocked())
-                .lastLoginDate(entity.getLastSuccessLoginDateTime())
-                .build();
     }
 }

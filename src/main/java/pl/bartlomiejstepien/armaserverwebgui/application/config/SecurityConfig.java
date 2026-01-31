@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,10 +22,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthenticationEntryPoint;
-import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtAuthenticationManager;
-import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtService;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtAuthenticationConverter;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtAuthenticationProvider;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.filter.JwtFilter;
-import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 
 import java.util.List;
 
@@ -41,9 +41,9 @@ public class SecurityConfig
     {
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http,
-                                               AuthenticationManager jwtAuthenticationManager,
                                                AswgAuthenticationEntryPoint aswgAuthenticationEntryPoint,
-                                               JwtService jwtService
+                                               AuthenticationManager authenticationManager,
+                                               JwtAuthenticationConverter jwtAuthenticationConverter
         ) throws Exception
         {
             http.authorizeHttpRequests(auths ->
@@ -66,10 +66,9 @@ public class SecurityConfig
                     .anonymous(AbstractHttpConfigurer::disable)
                     .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .logout(AbstractHttpConfigurer::disable)
-                    .addFilterAfter(new JwtFilter(jwtService, jwtAuthenticationManager), LogoutFilter.class)
+                    .addFilterAfter(new JwtFilter(authenticationManager, jwtAuthenticationConverter), LogoutFilter.class)
                     .formLogin((AbstractHttpConfigurer::disable))
                     .httpBasic(AbstractHttpConfigurer::disable)
-                    .authenticationManager(jwtAuthenticationManager)
                     .exceptionHandling(exceptionHandlingSpec ->
                     {
                         exceptionHandlingSpec.accessDeniedHandler(new AccessDeniedHandlerImpl());
@@ -81,10 +80,9 @@ public class SecurityConfig
         }
 
         @Bean
-        public JwtAuthenticationManager jwtAuthenticationManager(UserService userService,
-                                                                 JwtService jwtService)
+        public AuthenticationManager authenticationManager(JwtAuthenticationProvider jwtAuthenticationProvider)
         {
-            return new JwtAuthenticationManager(userService, jwtService);
+            return new ProviderManager(jwtAuthenticationProvider);
         }
 
         @Bean

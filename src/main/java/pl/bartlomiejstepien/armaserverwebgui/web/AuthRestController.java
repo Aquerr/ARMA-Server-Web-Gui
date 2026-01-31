@@ -13,6 +13,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.auth.AuthService;
 import pl.bartlomiejstepien.armaserverwebgui.application.auth.JwtToken;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthority;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserLoaderService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.UserProfileResponse;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AuthRestController
 {
-    private final UserService userService;
+    private final UserLoaderService userLoaderService;
     private final AuthService authService;
     private final JwtService jwtService;
 
@@ -49,7 +50,7 @@ public class AuthRestController
     @GetMapping("/myself")
     public ResponseEntity<UserProfileResponse> getMyself(Principal principal)
     {
-        return Optional.ofNullable(this.userService.getUser(principal.getName()))
+        return Optional.ofNullable(this.userLoaderService.getUser(principal.getName()))
                 .map(this::toUserProfileResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());

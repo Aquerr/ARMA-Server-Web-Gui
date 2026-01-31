@@ -19,6 +19,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaSer
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserDetails;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -257,7 +258,7 @@ public class ProcessServiceImpl implements ProcessService
             if (steamService.isSteamCmdInstalled())
             {
                 log.info("Scheduling Arma update");
-                UUID taskId = steamService.scheduleArmaUpdate(authenticationFacade.getCurrentUser().map(AswgUser::getUsername).orElse(null));
+                UUID taskId = steamService.scheduleArmaUpdate(authenticationFacade.getCurrentUser().map(AswgUserDetails::getUsername).orElse(null));
 
                 // Wait for update
                 while (true)

@@ -23,6 +23,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModFileSt
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserDetails;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 
 import java.io.IOException;
@@ -76,7 +77,7 @@ public class ModServiceImpl implements ModService
     @Override
     public void installModFromWorkshop(long fileId, String modName)
     {
-        steamService.scheduleWorkshopModDownload(fileId, modName, true, authenticationFacade.getCurrentUser().map(AswgUser::getUsername).orElse(null));
+        steamService.scheduleWorkshopModDownload(fileId, modName, true, authenticationFacade.getCurrentUser().map(AswgUserDetails::getUsername).orElse(null));
     }
 
     @Override

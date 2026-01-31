@@ -9,12 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import pl.bartlomiejstepien.armaserverwebgui.application.auth.AswgAuthentication;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.exception.BadAuthTokenException;
-import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtService;
+import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtAuthenticationConverter;
 import pl.bartlomiejstepien.armaserverwebgui.application.tracing.HttpTracingFields;
 
 import java.io.IOException;
@@ -23,14 +23,14 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter
 {
-    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final JwtAuthenticationConverter jwtAuthenticationConverter;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
     {
-        String jwt = jwtService.extractJwt(request);
-        if (jwt == null)
+        AswgAuthentication aswgAuthentication = jwtAuthenticationConverter.convert(request);
+        if (aswgAuthentication == null)
         {
             filterChain.doFilter(request, response);
             return;
@@ -38,7 +38,7 @@ public class JwtFilter extends OncePerRequestFilter
 
         try
         {
-            Authentication authentication = authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(jwt, jwt));
+            Authentication authentication = authenticationManager.authenticate(aswgAuthentication);
             authenticate(authentication);
             MDC.put(HttpTracingFields.USER_ID.getFieldName(), authentication.getName()); // Will be cleared in LogbookFilter
             filterChain.doFilter(request, response);

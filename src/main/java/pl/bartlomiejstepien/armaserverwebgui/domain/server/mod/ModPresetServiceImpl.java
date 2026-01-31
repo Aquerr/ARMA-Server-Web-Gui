@@ -15,6 +15,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetEn
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSaveParams;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserDetails;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetEntryRepository;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetRepository;
 
@@ -159,7 +160,7 @@ public class ModPresetServiceImpl implements ModPresetService
         steamService.scheduleWorkshopModDownload(
                 modsToDownload,
                 false,
-                "IMPORT_PRESET by " + authenticationFacade.getCurrentUser().map(AswgUser::getUsername).orElse(null)
+                "IMPORT_PRESET by " + authenticationFacade.getCurrentUser().map(AswgUserDetails::getUsername).orElse(null)
         );
     }
 

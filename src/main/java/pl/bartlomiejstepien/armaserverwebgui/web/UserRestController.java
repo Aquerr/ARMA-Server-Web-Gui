@@ -16,6 +16,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionUsersDelete;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionUsersUpdate;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionUsersView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserLoaderService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
@@ -32,12 +33,13 @@ import java.util.stream.Collectors;
 public class UserRestController
 {
     private final UserService userService;
+    private final UserLoaderService userLoaderService;
 
     @HasPermissionUsersView
     @GetMapping
     public List<AswgUser> getUsers()
     {
-        return userService.getUsers();
+        return userLoaderService.getUsers();
     }
 
     @HasPermissionUsersAdd
@@ -59,9 +61,8 @@ public class UserRestController
     public void updateUser(@PathVariable("id") int userId,
                            @RequestBody UpdateUserRequest updateUserRequest)
     {
-        this.userService.updateUser(AswgUserWithPassword.builder()
+        this.userService.updateUser(AswgUser.builder()
                 .id(userId)
-                .password(updateUserRequest.getPassword())
                 .locked(updateUserRequest.isLocked())
                 .authorities(updateUserRequest.getAuthorities().stream()
                         .map(AswgAuthority::findByCode)
@@ -102,7 +103,6 @@ public class UserRestController
     @Data
     public static class UpdateUserRequest
     {
-        private String password;
         private Set<String> authorities;
         private boolean locked;
     }
