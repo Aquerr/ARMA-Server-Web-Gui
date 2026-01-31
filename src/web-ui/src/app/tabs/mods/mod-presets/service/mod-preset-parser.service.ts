@@ -5,14 +5,14 @@ import { ModPreset, ModPresetEntry } from "../../../../model/mod.model";
   providedIn: "root"
 })
 export class ModPresetParserService {
-  processModPresetFile(result: string | ArrayBuffer | null): ModPreset | null {
-    if (typeof result !== "string") {
+  processModPresetFile(fileContents: string | ArrayBuffer | null): ModPreset | null {
+    if (typeof fileContents !== "string") {
       console.error("Could not process file due to bad type...");
       return null;
     }
 
     const html = document.createElement("html");
-    html.innerHTML = result;
+    html.innerHTML = fileContents;
     const table = html.getElementsByClassName("mod-list")[0].firstElementChild as HTMLTableElement;
 
     const mods: ModPresetEntry[] = [];
@@ -24,7 +24,7 @@ export class ModPresetParserService {
       }
     }
     const presetName
-      = html.querySelector("meta[name=\"arma:PresetName\"]")?.getAttribute("content") ?? "custom";
+      = html.querySelector("meta[name=\"arma:PresetName\"]")?.getAttribute("content");
 
     return { name: presetName, entries: mods };
   }
@@ -32,8 +32,7 @@ export class ModPresetParserService {
   private getModTitleFromRow(row: HTMLTableRowElement): string | null {
     for (const cell of row.cells) {
       if (cell.getAttribute("data-type") == "DisplayName") {
-        const modTitle = cell.innerText;
-        return modTitle;
+        return cell.innerText;
       }
     }
     return null;

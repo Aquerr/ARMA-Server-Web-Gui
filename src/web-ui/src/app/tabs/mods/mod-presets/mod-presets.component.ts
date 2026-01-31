@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, input, Output, ViewChild } from "@angular/core";
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  input,
+  Output,
+  signal,
+  ViewChild
+} from "@angular/core";
 import {
   ModPresetImportRequest,
   ModPresetModParam,
@@ -17,6 +26,7 @@ import { MatButton } from "@angular/material/button";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { MatDivider } from "@angular/material/list";
 import { ModPresetItemComponent } from "./mod-preset-item/mod-preset-item.component";
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
 
 @Component({
   selector: "app-mod-presets",
@@ -27,7 +37,8 @@ import { ModPresetItemComponent } from "./mod-preset-item/mod-preset-item.compon
     MatDivider,
     MatMenuItem,
     ModPresetItemComponent,
-    MatMenuTrigger
+    MatMenuTrigger,
+    MatPaginator
   ],
   styleUrls: ["./mod-presets.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -40,12 +51,18 @@ export class ModPresetsComponent {
 
   @Output() modPresetSelected: EventEmitter<string> = new EventEmitter<string>();
 
+  // Paginator
+  totalPresets = signal(0);
+  presetsToShow: string[] = [];
+  pageIndex: number = 0;
+
   constructor(
     private modsService: ServerModsService,
     private maskService: LoadingSpinnerMaskService,
     private notificationService: NotificationService,
     private matDialog: MatDialog,
-    private modPresetParserService: ModPresetParserService
+    private modPresetParserService: ModPresetParserService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.reloadModPresets();
   }
@@ -72,7 +89,7 @@ export class ModPresetsComponent {
         }
 
         const modPresetImportRequest = {
-          name: modPreset.name,
+          name: modPreset.name ?? this.removeFileExtension(file.name),
           modParams: modPreset.entries.map(
             (entry) => ({ id: entry.id, title: entry.name }) as ModPresetModParam
           )
@@ -91,10 +108,16 @@ export class ModPresetsComponent {
     }
   }
 
+  private removeFileExtension(fileName: string): string {
+    return fileName.replace(/\.[^/.]+$/, "");
+  }
+
   private reloadModPresets() {
     this.maskService.show();
     this.modsService.getModPresetsNames().subscribe((response) => {
       this.modPresets = response.presets;
+      this.totalPresets.set(this.modPresets.length);
+      this.showPresetsPage(0, 10);
       this.maskService.hide();
     });
   }
@@ -188,5 +211,23 @@ export class ModPresetsComponent {
         });
       }
     });
+  }
+
+  public changePage(event: PageEvent): void {
+    this.showPresetsPage(event.pageIndex, event.pageSize);
+  }
+
+  private showPresetsPage(pageIndex: number, pageSize: number) {
+    const startIndex = pageIndex * pageSize;
+    const endIndex = pageIndex * pageSize + pageSize;
+
+    this.presetsToShow = this.modPresets.slice(startIndex, endIndex);
+    this.pageIndex = pageIndex;
+    this.changeDetectorRef.markForCheck();
+  }
+
+  onPaginationClick($event: PointerEvent) {
+    $event.stopPropagation();
+    $event.preventDefault();
   }
 }

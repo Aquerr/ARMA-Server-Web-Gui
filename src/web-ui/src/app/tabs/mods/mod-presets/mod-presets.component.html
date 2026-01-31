@@ -1,15 +1,6 @@
 <div class="mod-preset-menu-button">
   <button mat-button [matMenuTriggerFor]="presetMenu">Mod presets</button>
   <mat-menu #presetMenu [class]="'aswg-menu-default'">
-    @for (preset of modPresets; track preset) {
-      <app-mod-preset-item
-        [presetName]="preset"
-        (presetSelected)="onPresetSelect($event)"
-        (presetDeleted)="onPresetDelete($event)"
-        (presetSaved)="onPresetSaved($event)"
-      ></app-mod-preset-item>
-    }
-    <mat-divider></mat-divider>
     <button mat-menu-item (click)="newPresetClick()">New preset...</button>
     <mat-divider></mat-divider>
     <input
@@ -18,7 +9,28 @@
       #presetFileInput
       (change)="modPresetImport($event)"
       accept="text/html"
-      />
+    />
     <button mat-menu-item (click)="presetImportClick()">Import preset...</button>
+    <mat-divider></mat-divider>
+    @for (preset of presetsToShow; track preset) {
+      <app-mod-preset-item
+        [presetName]="preset"
+        (presetSelected)="onPresetSelect($event)"
+        (presetDeleted)="onPresetDelete($event)"
+        (presetSaved)="onPresetSaved($event)"
+      ></app-mod-preset-item>
+    }
+    <div class="paginator-sticky">
+      <mat-divider></mat-divider>
+      <mat-paginator
+        (page)="changePage($event)"
+        [length]="totalPresets()"
+        [pageSize]="10"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="[10, totalPresets()]"
+        aria-label="Select page"
+        (click)="onPaginationClick($event)"
+      ></mat-paginator>
+    </div>
   </mat-menu>
 </div>

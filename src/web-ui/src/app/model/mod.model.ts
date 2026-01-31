@@ -17,6 +17,6 @@ export interface ModPresetEntry {
 }
 
 export interface ModPreset {
-  name: string;
+  name: string | null | undefined;
   entries: ModPresetEntry[];
 }
