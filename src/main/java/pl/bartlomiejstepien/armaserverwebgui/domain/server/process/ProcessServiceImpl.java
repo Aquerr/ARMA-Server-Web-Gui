@@ -162,9 +162,7 @@ public class ProcessServiceImpl implements ProcessService
             throw new ServerIsAlreadyRunningException("Server is already running!");
 
         if (serverStartUpLock.isLocked())
-        {
             throw new ServerIsAlreadyRunningException("Server is starting!");
-        }
 
         serverStartUpLock.lock();
 

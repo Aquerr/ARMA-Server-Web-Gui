@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.discord;
 
+import org.springframework.scheduling.annotation.Async;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.DiscordMessageCreator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
@@ -22,6 +23,7 @@ public class DiscordIntegration
         this.discordMessageCreators = discordMessageCreators;
     }
 
+    @Async
     public void sendMessage(MessageKind messageKind)
     {
         if (!discordProperties.isEnabled())
