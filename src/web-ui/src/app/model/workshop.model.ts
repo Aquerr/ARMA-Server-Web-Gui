@@ -6,6 +6,7 @@ export interface WorkshopQueryRequest {
 export interface WorkShopModInstallRequest {
   fileId: number;
   modName: string;
+  installDependencies: boolean;
 }
 
 export interface WorkShopModInstallResponse {
@@ -29,6 +30,7 @@ export class WorkshopMod {
   modWorkshopUrl: string = "";
   previewUrl: string = "";
   title: string = "";
+  dependencies: number[] = [];
 }
 
 export interface WorkShopModInstallStatus {

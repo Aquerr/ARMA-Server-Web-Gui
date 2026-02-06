@@ -2,7 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
 import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsCollection;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
@@ -17,13 +17,11 @@ public interface ModService
 
     boolean checkModFileExists(String modName);
 
-    ModsView getModsView();
+    ModsCollection getModsView();
 
-    void installModFromWorkshop(long fileId, String modName);
+    void installModFromWorkshop(long fileId, String modName, boolean installDependencies);
 
     List<WorkshopModInstallationRequest> getWorkShopModInstallRequests();
-
-    InstalledModEntity saveToDB(InstalledModEntity installedModEntity);
 
     void deleteFromDB(long id);
 

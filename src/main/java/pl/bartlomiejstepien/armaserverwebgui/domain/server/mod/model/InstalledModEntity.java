@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 /**
  * Represents installed and managed mod by ASWG.
@@ -56,6 +58,10 @@ public class InstalledModEntity
 
     @Column(name = "server_mod")
     private boolean serverMod;
+
+    @Column(name = "dependencies_ids", unique = false, nullable = false)
+    @Convert(converter = ListOfLongsConverter.class)
+    private List<Long> dependenciesIds;
 
     public String getModDirectoryName()
     {

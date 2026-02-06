@@ -26,14 +26,18 @@ public class InstalledModEntityHelper
         installedModBuilder.createdDate(OffsetDateTime.now());
         installedModBuilder.lastWorkshopUpdateDate(fileSystemMod.getLastUpdated());
 
-        tryPopulateModPreviewUrl(fileSystemMod.getWorkshopFileId(), installedModBuilder);
+        tryPopulateWorkshopData(fileSystemMod.getWorkshopFileId(), installedModBuilder);
         return installedModBuilder.build();
     }
 
-    private void tryPopulateModPreviewUrl(long publishedFileId,
-                                          InstalledModEntity.InstalledModEntityBuilder installedModBuilder)
+    private void tryPopulateWorkshopData(long publishedFileId,
+                                         InstalledModEntity.InstalledModEntityBuilder installedModBuilder)
     {
         Optional.ofNullable(steamService.getWorkshopMod(publishedFileId))
-                .ifPresent(workshopMod -> installedModBuilder.previewUrl(workshopMod.getPreviewUrl()));
+                .ifPresent(workshopMod ->
+                {
+                    installedModBuilder.previewUrl(workshopMod.getPreviewUrl());
+                    installedModBuilder.dependenciesIds(workshopMod.getDependencies());
+                });
     }
 }

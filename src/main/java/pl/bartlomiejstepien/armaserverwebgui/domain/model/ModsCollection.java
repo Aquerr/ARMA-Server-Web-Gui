@@ -9,9 +9,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ModsView
+public class ModsCollection
 {
-    private List<ModView> disabledMods;
-    private List<ModView> enabledMods;
-    private List<ModView> notManagedMods;
+    private List<Mod> disabledMods;
+    private List<Mod> enabledMods;
+    private List<Mod> notManagedMods;
 }

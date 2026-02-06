@@ -16,8 +16,8 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModsUpdate;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsCollection;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 
 import java.util.HashSet;
@@ -74,16 +74,16 @@ public class ModsRestController
     @Value(staticConstructor = "of")
     public static class GetModsResponse
     {
-        List<ModView> disabledMods;
-        List<ModView> enabledMods;
-        List<ModView> notManagedMods;
+        List<Mod> disabledMods;
+        List<Mod> enabledMods;
+        List<Mod> notManagedMods;
 
-        private static GetModsResponse of(ModsView modsView)
+        private static GetModsResponse of(ModsCollection modsCollection)
         {
             return new GetModsResponse(
-                    modsView.getDisabledMods(),
-                    modsView.getEnabledMods(),
-                    modsView.getNotManagedMods()
+                    modsCollection.getDisabledMods(),
+                    modsCollection.getEnabledMods(),
+                    modsCollection.getNotManagedMods()
             );
         }
     }

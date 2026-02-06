@@ -10,8 +10,9 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
 import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModStatus;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsCollection;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.FileUtils;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
@@ -73,13 +74,13 @@ class ModsRestControllerTest extends BaseIntegrationTest
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        var getModsResponse = getAuthenticatedRequest("/api/v1/mods", ModsView.class);
+        var getModsResponse = getAuthenticatedRequest("/api/v1/mods", ModsCollection.class);
 
         var enabledModView = getModsResponse.getBody().getDisabledMods().stream()
-                        .filter(modView -> modView.getName().equals("@testmod5"))
+                        .filter(mod -> mod.getName().equals("@testmod5"))
                         .findFirst();
 
-        assertThat(enabledModView).map(ModView::isFileExists).get().isEqualTo(true);
+        assertThat(enabledModView).map(Mod::getStatus).get().isEqualTo(ModStatus.READY);
 
         cleanUpMods();
     }

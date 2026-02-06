@@ -1,17 +1,19 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { WorkshopMod } from "../../../model/workshop.model";
-import { WorkshopService } from "../../../service/workshop.service";
+import { ModDependencyStatus, WorkshopService } from "../../../service/workshop.service";
 import { ServerModsService } from "../../../service/server-mods.service";
 import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { MatButton } from "@angular/material/button";
-import { AswgSpinnerComponent } from "../../../aswg-spinner/aswg-spinner.component";
+import { DialogService } from "../../../service/dialog.service";
+import {
+  WorkshopInstallDependenciesDialogComponent
+} from "../workshop-install-dependencies-dialog/workshop-install-dependencies-dialog.component";
 
 @Component({
   selector: "app-workshop-item",
   templateUrl: "./workshop-item.component.html",
   imports: [
-    MatButton,
-    AswgSpinnerComponent
+    MatButton
   ],
   styleUrls: ["./workshop-item.component.scss"]
 })
@@ -20,19 +22,16 @@ export class WorkshopItemComponent implements OnInit {
   @Input() canInstall: boolean = false;
   @Output() modInstallDelete = new EventEmitter<void>();
 
-  spinnerVisible: boolean = false;
   spinnerColor: string = "";
 
   constructor(
     private workshopService: WorkshopService,
     private serverModsService: ServerModsService,
-    private maskService: LoadingSpinnerMaskService
+    private maskService: LoadingSpinnerMaskService,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
-    if (this.workshopMod.isBeingInstalled) {
-      this.showSpinner(true);
-    }
     this.spinnerColor = document.documentElement.style.getPropertyValue("--aswg-primary-color");
   }
 
@@ -61,10 +60,32 @@ export class WorkshopItemComponent implements OnInit {
     return text.substring(0, text.lastIndexOf(separator, maxLen));
   }
 
-  installMod(mod: WorkshopMod) {
-    mod.isBeingInstalled = true;
-    this.showSpinner(true);
-    this.workshopService.installMod(mod.fileId, mod.title).subscribe(() => {
+  installMod(selectedWorkshopMod: WorkshopMod) {
+    this.maskService.show();
+    this.workshopService.getModDependencies(selectedWorkshopMod.fileId).subscribe((response) => {
+      this.maskService.hide();
+
+      const missingDependencies = response.dependencies.filter((dependency) => dependency.status === ModDependencyStatus.NOT_INSTALLED);
+      if (missingDependencies.length > 0) {
+        this.dialogService.open(WorkshopInstallDependenciesDialogComponent, (dialogResult: string) => {
+          if (!dialogResult) {
+            return;
+          }
+
+          const installWithDependencies = dialogResult == "install-with-dependencies";
+          this.doInstallMod(selectedWorkshopMod, installWithDependencies);
+        }, missingDependencies, {
+          width: "600px"
+        });
+      } else {
+        this.doInstallMod(selectedWorkshopMod, false);
+      }
+    });
+  }
+
+  doInstallMod(selectedWorkshopMod: WorkshopMod, installDependencies: boolean): void {
+    selectedWorkshopMod.isBeingInstalled = true;
+    this.workshopService.installMod(selectedWorkshopMod.fileId, selectedWorkshopMod.title, installDependencies).subscribe(() => {
       this.modInstallDelete.emit();
     });
   }
@@ -75,16 +96,5 @@ export class WorkshopItemComponent implements OnInit {
       this.maskService.hide();
       this.modInstallDelete.emit();
     });
-  }
-
-  showSpinner(value: boolean) {
-    setTimeout(() => {
-      if (value) {
-        this.maskService.show();
-      } else {
-        this.maskService.hide();
-      }
-      this.spinnerVisible = value;
-    }, 2000);
   }
 }

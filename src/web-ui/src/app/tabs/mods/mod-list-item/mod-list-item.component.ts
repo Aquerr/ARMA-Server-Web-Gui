@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { Mod } from "../../../model/mod.model";
+import { Mod, ModStatus } from "../../../model/mod.model";
 import { ModDeleteConfirmDialogComponent } from "../mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
@@ -45,6 +45,8 @@ export class ModListItemComponent {
   @Input() mod!: Mod;
   @Output() modDeleted: EventEmitter<Mod> = new EventEmitter<Mod>();
   expanded: boolean = false;
+
+  readonly modStatus = ModStatus;
 
   constructor(
     private matDialog: MatDialog,

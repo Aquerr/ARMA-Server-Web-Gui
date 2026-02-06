@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Confirmation</h1>
+<div mat-dialog-content>
+  <h4>Selected mod requires other mods to work: </h4>
+  <div>
+    <ul>
+      @for (dependency of dependenciesReadOnly(); track dependency.modId) {
+        <li>{{ dependency.modId + ' - ' + dependency.modName }}</li>
+      }
+    </ul>
+  </div>
+  <h4>Do you want to install these dependencies as well?</h4>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="'install-with-dependencies'">Install with dependencies</button>
+  <button mat-button [mat-dialog-close]="'just-install'" cdkFocusInitial>Just install</button>
+  <button mat-button mat-dialog-close cdkFocusInitial>Close</button>
+</div>

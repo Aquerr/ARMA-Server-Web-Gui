@@ -1,0 +1,1 @@
+ALTER TABLE installed_mod ADD COLUMN dependencies_ids VARCHAR(255);

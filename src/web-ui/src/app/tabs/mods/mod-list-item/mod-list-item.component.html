@@ -22,9 +22,9 @@
         <div>
           <span style="filter: brightness(50%); white-space: nowrap;">{{ mod.sizeBytes | filesize }}</span>
         </div>
-        @if (!mod.fileExists) {
-          <mat-icon matTooltip="Mod files seems to be missing" [color]="'warn'" style="margin-left: 10px">warning
-          </mat-icon>
+        @if (mod.status === modStatus.MISSING_FILES) {
+        } @else if (mod.status === modStatus.MISSING_DEPENDENCY_MODS) {
+          <mat-icon matTooltip="Missing dependencies" [color]="'warn'" style="margin-left: 10px">warning</mat-icon>
         }
       </mat-panel-description>
     </mat-expansion-panel-header>

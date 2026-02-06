@@ -4,11 +4,18 @@ export interface Mod {
   serverMod: boolean;
   previewUrl: string;
   workshopUrl: string;
-  fileExists: boolean;
+  status: ModStatus;
   lastWorkshopUpdateDateTime: string;
   lastWorkshopUpdateAttemptDateTime: string;
   sizeBytes: number;
   directoryName: string;
+}
+
+export enum ModStatus {
+  INSTALLING = "INSTALLING",
+  MISSING_DEPENDENCY_MODS = "MISSING_DEPENDENCY_MODS",
+  MISSING_FILES = "MISSING_FILES",
+  READY = "READY"
 }
 
 export interface ModPresetEntry {

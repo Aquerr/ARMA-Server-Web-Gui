@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import static java.util.Optional.ofNullable;
 
@@ -106,6 +107,7 @@ public class SteamCmdModInstallHelper
                         .map(DotnetDateTimeUtils::dotnetTicksToOffsetDateTime)
                         .orElse(OffsetDateTime.now())));
         installedModBuilder.lastWorkshopUpdateAttemptDate(OffsetDateTime.now());
+        installedModBuilder.dependenciesIds(ofNullable(workshopMod).map(WorkshopMod::getDependencies).orElse(List.of()));
 
         installedModRepository.saveAndFlush(installedModBuilder.build());
         log.info("Mod: {} saved in DB", modName);

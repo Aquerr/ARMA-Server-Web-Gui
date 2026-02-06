@@ -1,8 +1,10 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.steam;
 
 import io.github.aquerr.steamwebapiclient.exception.HttpClientException;
+import io.github.aquerr.steamwebapiclient.request.GetDetailsRequest;
 import io.github.aquerr.steamwebapiclient.request.PublishedFileDetailsRequest;
 import io.github.aquerr.steamwebapiclient.request.WorkShopQueryFilesRequest;
+import io.github.aquerr.steamwebapiclient.response.FileDetailsResponse;
 import io.github.aquerr.steamwebapiclient.response.PublishedFileDetailsResponse;
 import io.github.aquerr.steamwebapiclient.response.WorkShopQueryResponse;
 import lombok.AllArgsConstructor;
@@ -17,7 +19,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamWebApiClien
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopQueryParams;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -81,15 +82,19 @@ public class SteamWebApiService
         try
         {
             log.info("Fetching workshop mod info for mod id: {}", modId);
-            WorkshopMod workshopMod = Optional.ofNullable(this.steamWebApiClientWrapper.getSteamWebApiClient().getSteamRemoteStorageClient()
-                            .getPublishedFileDetails(new PublishedFileDetailsRequest(List.of(modId))))
-                    .map(PublishedFileDetailsResponse::getResponse)
-                    .map(PublishedFileDetailsResponse.QueryFilesResponse::getPublishedFileDetails)
+            WorkshopMod workshopMod = Optional.ofNullable(this.steamWebApiClientWrapper.getSteamWebApiClient().getSteamPublishedFileWebApiClient()
+                            .getDetails(GetDetailsRequest.builder()
+                                    .appId(SteamUtils.ARMA_APP_ID)
+                                    .publishedFileIds(List.of(modId))
+                                    .includeChildren(true)
+                                    .build()))
+                    .map(FileDetailsResponse::getResponse)
+                    .map(FileDetailsResponse.QueryFilesResponse::getPublishedFileDetails)
                     .filter(list -> !list.isEmpty())
                     .map(List::getFirst)
                     .map(this.armaWorkshopModConverter::convert)
                     .orElse(null);
-            log.info("Got workshop info for mod: {}", workshopMod);
+            log.info("Got workshop info for mod: {}", Optional.ofNullable(workshopMod).map(WorkshopMod::getTitle).orElse(null));
             return workshopMod;
         }
         catch (Exception exception)

@@ -7,8 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.AuthenticationFacade;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.EnabledMod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModView;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsView;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.Mod;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModStatus;
+import pl.bartlomiejstepien.armaserverwebgui.domain.model.ModsCollection;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.InstalledModConverter;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.converter.ModWorkshopUrlBuilder;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModFileAlreadyExistsException;
@@ -16,13 +17,13 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModIdAl
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.ModIdCannotBeZeroException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.exception.NotManagedModNotFoundException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.RelatedMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModFileStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
-import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserDetails;
 import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 
@@ -30,7 +31,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,6 +52,7 @@ public class ModServiceImpl implements ModService
     private final ModKeyService modKeyService;
     private final ModWorkshopUrlBuilder modWorkshopUrlBuilder;
     private final InstalledModEntityHelper installedModEntityHelper;
+    private final ModDependenciesService modDependenciesService;
 
     @Override
     @Transactional
@@ -75,22 +79,24 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public void installModFromWorkshop(long fileId, String modName)
+    public void installModFromWorkshop(long fileId, String modName, boolean installDependencies)
     {
-        steamService.scheduleWorkshopModDownload(fileId, modName, true, authenticationFacade.getCurrentUser().map(AswgUserDetails::getUsername).orElse(null));
+        String issuer = authenticationFacade.getCurrentUser().map(AswgUserDetails::getUsername).orElse(null);
+        if (installDependencies)
+        {
+            Map<Long, String> dependenciesToInstall = this.modDependenciesService.getDependencies(fileId).stream()
+                    .filter(relatedMod -> RelatedMod.Status.NOT_INSTALLED.equals(relatedMod.getStatus()))
+                    .collect(Collectors.toMap(RelatedMod::getWorkshopFileId, RelatedMod::getName));
+            steamService.scheduleWorkshopModDownload(dependenciesToInstall, true, issuer);
+        }
+
+        steamService.scheduleWorkshopModDownload(fileId, modName, true, issuer);
     }
 
     @Override
     public List<WorkshopModInstallationRequest> getWorkShopModInstallRequests()
     {
         return steamService.getInstallingMods();
-    }
-
-    @Transactional
-    @Override
-    public InstalledModEntity saveToDB(InstalledModEntity installedModEntity)
-    {
-        return this.installedModRepository.save(installedModEntity);
     }
 
     @Transactional
@@ -107,7 +113,7 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public ModsView getModsView()
+    public ModsCollection getModsView()
     {
         return toModsView(getInstalledModsFromFileSystem(), getInstalledMods());
     }
@@ -204,7 +210,7 @@ public class ModServiceImpl implements ModService
         Path normalizedModPath = this.modFileStorage.renameModFolderToLowerCaseWithUnderscores(fileSystemMod.getModDirectory().getPath().toAbsolutePath());
         this.modFileStorage.normalizeEachFileNameInFolderRecursively(normalizedModPath);
 
-        saveToDB(installedModEntityHelper.toEntity(FileSystemMod.from(normalizedModPath)));
+        this.installedModRepository.save(installedModEntityHelper.toEntity(FileSystemMod.from(normalizedModPath)));
     }
 
     @Override
@@ -243,63 +249,72 @@ public class ModServiceImpl implements ModService
         installedModRepository.save(installedModEntityHelper.toEntity(FileSystemMod.from(modDirectory)));
     }
 
-    private ModsView toModsView(
+    private ModsCollection toModsView(
             List<FileSystemMod> fileSystemMods,
             List<InstalledModEntity> installedModEntities)
     {
-        ModsView modsView = new ModsView();
-        List<ModView> disabledModViews = installedModEntities.stream()
+        List<Mod> disabledMods = installedModEntities.stream()
                 .filter(mod -> !mod.isEnabled())
                 .map(mod -> asModView(mod, fileSystemMods))
                 .toList();
 
-        List<ModView> enabledModViews = installedModEntities.stream()
+        List<Mod> enabledMods = installedModEntities.stream()
                 .filter(InstalledModEntity::isEnabled)
                 .map(mod -> asModView(mod, fileSystemMods))
                 .toList();
 
-        List<ModView> notManagedMods = findNotManagedMods(fileSystemMods, installedModEntities).stream()
+        List<Mod> notManagedMods = findNotManagedMods(fileSystemMods, installedModEntities).stream()
                 .map(this::asModView)
                 .toList();
 
-        modsView.setDisabledMods(disabledModViews);
-        modsView.setEnabledMods(enabledModViews);
-        modsView.setNotManagedMods(notManagedMods);
-        return modsView;
+        return new ModsCollection(disabledMods, enabledMods, notManagedMods);
     }
 
-    private ModView asModView(FileSystemMod fileSystemMod)
+    private Mod asModView(FileSystemMod fileSystemMod)
     {
-        return ModView.builder()
+        return Mod.builder()
                 .workshopFileId(fileSystemMod.getWorkshopFileId())
                 .name(fileSystemMod.getName())
                 .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(fileSystemMod.getWorkshopFileId()))
-                .fileExists(fileSystemMod.hasFiles())
+                .status(fileSystemMod.hasFiles() ? ModStatus.READY : ModStatus.MISSING_FILES)
                 .sizeBytes(fileSystemMod.getModDirectory().getSizeBytes())
                 .lastWorkshopUpdateDateTime(fileSystemMod.getLastUpdated())
                 .directoryName(fileSystemMod.getModDirectory().getDirectoryName())
                 .build();
     }
 
-    private ModView asModView(InstalledModEntity modEntity, List<FileSystemMod> fileSystemMods)
+    private Mod asModView(InstalledModEntity modEntity, List<FileSystemMod> fileSystemMods)
     {
-        return ModView.builder()
+        FileSystemMod fileSystemMod = fileSystemMods.stream().filter(mod -> mod.getModDirectory().getDirectoryName().equals(modEntity.getModDirectoryName()))
+                .findFirst()
+                .orElse(null);
+        List<RelatedMod> relatedMods = this.modDependenciesService.getDependencies(modEntity.getWorkshopFileId());
+
+        return Mod.builder()
                 .workshopFileId(modEntity.getWorkshopFileId())
                 .name(modEntity.getName())
                 .serverMod(modEntity.isServerMod())
                 .previewUrl(modEntity.getPreviewUrl())
                 .workshopUrl(modWorkshopUrlBuilder.buildUrlForFileId(modEntity.getWorkshopFileId()))
-                .fileExists(fileSystemMods.stream().filter(mod -> mod.getModDirectory().getDirectoryName().equals(modEntity.getModDirectoryName()))
-                        .findFirst()
-                        .map(FileSystemMod::hasFiles)
-                        .orElse(false))
-                .sizeBytes(fileSystemMods.stream().filter(mod -> mod.getModDirectory().getDirectoryName().equals(modEntity.getModDirectoryName()))
-                        .findFirst()
-                        .map(mod -> mod.getModDirectory().getSizeBytes())
+                .status(calculateModStatus(fileSystemMod, relatedMods))
+                .sizeBytes(Optional.ofNullable(fileSystemMod)
+                        .map(FileSystemMod::getModDirectory)
+                        .map(ModDirectory::getSizeBytes)
                         .orElse(0L))
                 .lastWorkshopUpdateDateTime(modEntity.getLastWorkshopUpdateDate())
                 .lastWorkshopUpdateAttemptDateTime(modEntity.getLastWorkshopUpdateAttemptDate())
                 .directoryName(modEntity.getModDirectoryName())
                 .build();
+    }
+
+    private ModStatus calculateModStatus(FileSystemMod fileSystemMod, List<RelatedMod> relatedMods)
+    {
+        if (fileSystemMod == null || !fileSystemMod.hasFiles())
+            return ModStatus.MISSING_FILES;
+
+        if (relatedMods.stream().anyMatch(relatedMod -> relatedMod.getStatus() == RelatedMod.Status.NOT_INSTALLED))
+            return ModStatus.MISSING_DEPENDENCY_MODS;
+
+        return ModStatus.READY;
     }
 }

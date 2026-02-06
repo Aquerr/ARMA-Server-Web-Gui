@@ -25,3 +25,5 @@ databaseChangeLog:
       path: db/changelog/012-last-mod-update-attempt/
   - includeAll:
       path: db/changelog/013-job-execution-history/
+  - includeAll:
+      path: db/changelog/014-mod-dependencies/

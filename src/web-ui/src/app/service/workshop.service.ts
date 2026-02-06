@@ -20,6 +20,7 @@ export class WorkshopService {
   private readonly API_INSTALL_MOD = `${API_BASE_URL}/workshop/install`;
   private readonly API_WORKSHOP_ACTIVE = `${API_BASE_URL}/workshop/active`;
   private readonly API_MOD_DOWNLOAD_QUEUE = `${API_BASE_URL}/workshop/download-queue`;
+  private readonly API_WORKSHOP_MOD = `${API_BASE_URL}/workshop/mod`;
 
   constructor(private readonly httpClient: HttpClient) {}
 
@@ -30,12 +31,16 @@ export class WorkshopService {
     );
   }
 
+  getModDependencies(modId: number): Observable<WorkshopModDependenciesResponse> {
+    return this.httpClient.get<WorkshopModDependenciesResponse>(`${this.API_WORKSHOP_MOD}/${modId}/dependencies`);
+  }
+
   getInstalledWorkshopItems(): Observable<InstalledWorkshopItemsResponse> {
     return this.httpClient.get<InstalledWorkshopItemsResponse>(this.API_INSTALLED_ITEMS);
   }
 
-  installMod(fileId: number, modName: string): Observable<WorkShopModInstallResponse> {
-    const request = { fileId: fileId, modName: modName } as WorkShopModInstallRequest;
+  installMod(fileId: number, modName: string, installDependencies: boolean = false): Observable<WorkShopModInstallResponse> {
+    const request = { fileId: fileId, modName: modName, installDependencies: installDependencies } as WorkShopModInstallRequest;
     return this.httpClient.post<WorkShopModInstallResponse>(this.API_INSTALL_MOD, request);
   }
 
@@ -54,4 +59,20 @@ interface ModDownloadQueueResponse {
 
 interface WorkshopActiveResponse {
   active: boolean;
+}
+
+interface WorkshopModDependenciesResponse {
+  modId: number;
+  dependencies: ModDependency[];
+}
+
+export interface ModDependency {
+  modId: number;
+  modName: string;
+  status: ModDependencyStatus;
+}
+
+export enum ModDependencyStatus {
+  INSTALLED = "INSTALLED",
+  NOT_INSTALLED = "NOT_INSTALLED"
 }
