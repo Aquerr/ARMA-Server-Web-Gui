@@ -80,7 +80,8 @@ export class ModSettingsPanelComponent implements OnInit, AfterViewInit {
     if (!this.getContent() && this.modSettings.id) {
       this.maskService.show();
       this.modSettingsService.getModSettingsContent(this.modSettings.id).subscribe((response) => {
-        this.formService.setContentControl(this.form, response.content);
+        // this.formService.setContentControl(this.form, response.content);
+        this.jar.updateCode(response.content);
         this.maskService.hide();
       });
     }
@@ -147,13 +148,12 @@ export class ModSettingsPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onCodeChange() {
-    this.formService.setContentControl(this.form, this.jar.toString());
-  }
-
   private prepareCodeJar() {
     this.jar = CodeJar(this.codeElement.nativeElement, withLineNumbers(ModSettingsPanelComponent.highlightMethod), {
       tab: "\t"
+    });
+    this.jar.onUpdate((code) => {
+      this.formService.setContentControl(this.form, code);
     });
   }
 }
