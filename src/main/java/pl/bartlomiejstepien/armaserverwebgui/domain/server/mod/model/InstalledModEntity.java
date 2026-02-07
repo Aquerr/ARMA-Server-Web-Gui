@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,7 +62,7 @@ public class InstalledModEntity
 
     @Column(name = "dependencies_ids", unique = false, nullable = false)
     @Convert(converter = ListOfLongsConverter.class)
-    private List<Long> dependenciesIds;
+    private List<Long> dependenciesIds = new ArrayList<>();
 
     public String getModDirectoryName()
     {

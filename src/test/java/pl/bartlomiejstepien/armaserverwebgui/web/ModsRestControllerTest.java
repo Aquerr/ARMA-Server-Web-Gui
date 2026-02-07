@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static pl.bartlomiejstepien.armaserverwebgui.TestUtils.loadJsonIntegrationContractFor;
@@ -131,6 +132,7 @@ class ModsRestControllerTest extends BaseIntegrationTest
                 .directoryPath("@testmod3")
                 .workshopFileId(456L)
                 .createdDate(OffsetDateTime.now())
+                .dependenciesIds(List.of())
                 .build());
     }
 
@@ -145,6 +147,7 @@ class ModsRestControllerTest extends BaseIntegrationTest
                 .directoryPath("@testmod1")
                 .workshopFileId(123L)
                 .createdDate(OffsetDateTime.now())
+                .dependenciesIds(List.of())
                 .build());
     }
 

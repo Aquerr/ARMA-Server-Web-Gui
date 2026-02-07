@@ -5,7 +5,7 @@
     "serverMod" : true,
     "previewUrl" : null,
     "workshopUrl" : "https://steamcommunity.com/sharedfiles/filedetails/?id=123",
-    "fileExists" : false,
+    "status" : "MISSING_FILES",
     "sizeBytes" : 0,
     "lastWorkshopUpdateDateTime" : null
   } ],
@@ -15,7 +15,7 @@
     "serverMod" : false,
     "previewUrl" : null,
     "workshopUrl" : "https://steamcommunity.com/sharedfiles/filedetails/?id=456",
-    "fileExists" : true,
+    "status" : "READY",
     "sizeBytes" : 46,
     "lastWorkshopUpdateDateTime" : null
   } ],
@@ -25,7 +25,7 @@
     "serverMod" : false,
     "previewUrl" : null,
     "workshopUrl" : "https://steamcommunity.com/sharedfiles/filedetails/?id=0",
-    "fileExists" : true,
+    "status" : "READY",
     "sizeBytes" : 0,
     "lastWorkshopUpdateDateTime" : null,
     "directoryName" : "@TESTMOD4"
@@ -35,7 +35,7 @@
     "serverMod" : false,
     "previewUrl" : null,
     "workshopUrl" : "https://steamcommunity.com/sharedfiles/filedetails/?id=999",
-    "fileExists" : true,
+    "status" : "READY",
     "sizeBytes" : 16,
     "lastWorkshopUpdateDateTime" : null,
     "directoryName" : "@TESTMOD5"

@@ -8,6 +8,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSyste
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -25,6 +26,7 @@ public class InstalledModEntityHelper
         installedModBuilder.directoryPath(fileSystemMod.getModDirectory().getPath().toAbsolutePath().toString());
         installedModBuilder.createdDate(OffsetDateTime.now());
         installedModBuilder.lastWorkshopUpdateDate(fileSystemMod.getLastUpdated());
+        installedModBuilder.dependenciesIds(List.of());
 
         tryPopulateWorkshopData(fileSystemMod.getWorkshopFileId(), installedModBuilder);
         return installedModBuilder.build();
