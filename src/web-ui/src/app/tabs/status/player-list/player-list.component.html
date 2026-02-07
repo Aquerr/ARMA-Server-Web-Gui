@@ -1,11 +1,11 @@
 <div style="margin-top: 1rem">
   <h3>Player list</h3>
   <div class="player-list-container">
-    <mat-list id="player-list" role="list">
+    <mat-list class="player-list" role="list">
       @for (player of playerList(); track player) {
-        <mat-list-item>
+        <mat-list-item class="player-list-item">
           <mat-icon matListItemIcon>person</mat-icon>
-          <div matListItemTitle>{{ player.name }}</div>
+          <span matListItemTitle>{{ player.name }}</span>
         </mat-list-item>
       }
     </mat-list>

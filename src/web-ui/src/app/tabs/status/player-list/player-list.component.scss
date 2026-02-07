@@ -1,3 +1,19 @@
 .player-list-container {
-  border: #393a34 solid 1px;
+  border-radius: 5px;
+  box-shadow:
+    0 0 5px 0 #444c56;
+}
+
+.player-list {
+  padding: 0;
+}
+
+.player-list-item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.player-list-item:not(:last-child) {
+  border-bottom: #2d333b solid 2px;
 }
