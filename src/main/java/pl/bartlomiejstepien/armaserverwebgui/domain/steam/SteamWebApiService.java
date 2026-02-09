@@ -45,7 +45,8 @@ public class SteamWebApiService
                     .numPerPage(10)
                     .searchText(StringUtils.hasText(params.getSearchText()) ? params.getSearchText() : null)
                     .returnPreviews(true)
-                    .queryType(WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TOTAL_UNIQUE_SUBSCRIPTIONS)
+                    .days(-1)
+                    .queryType(WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TREND)
                     .fileType(WorkShopQueryFilesRequest.PublishedFileInfoMatchingFileType.ITEMS)
                     .returnChildren(true)
                     .build());

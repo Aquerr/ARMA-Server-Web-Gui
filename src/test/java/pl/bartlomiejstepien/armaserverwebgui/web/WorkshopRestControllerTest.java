@@ -34,7 +34,7 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
         cacheManager.getCache("workshop-query").clear();
 
         // given
-        wireMockServer.stubFor(get("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=9&return_kv_tags=false&appid=107410&days=0&include_recent_votes_only=false&page=&return_previews=true&search_text=search_phrase")
+        wireMockServer.stubFor(get("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=3&return_kv_tags=false&appid=107410&days=-1&include_recent_votes_only=false&page=&return_previews=true&search_text=search_phrase")
                 .willReturn(aResponse()
                         .withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_query_steam_response.json"))
                         .withStatus(200)));
@@ -45,7 +45,7 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
         executeQueryWorkshop(prepareQueryRequest("search_phrase"), "workshop/workshop_query_response.json");
 
         wireMockServer.verify(1, RequestPatternBuilder.newRequestPattern()
-                .withUrl("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=9&return_kv_tags=false&appid=107410&days=0&include_recent_votes_only=false&page=&return_previews=true&search_text=search_phrase"));
+                .withUrl("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=3&return_kv_tags=false&appid=107410&days=-1&include_recent_votes_only=false&page=&return_previews=true&search_text=search_phrase"));
     }
 
     @Test
@@ -55,12 +55,12 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
         cacheManager.getCache("workshop-query").clear();
 
         // given
-        wireMockServer.stubFor(get("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=9&return_kv_tags=false&appid=107410&days=0&include_recent_votes_only=false&page=&return_previews=true&search_text=search_phrase")
+        wireMockServer.stubFor(get("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=3&return_kv_tags=false&appid=107410&days=-1&include_recent_votes_only=false&page=&return_previews=true&search_text=search_phrase")
                 .willReturn(aResponse()
                         .withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_query_steam_response.json"))
                         .withStatus(200)));
 
-        wireMockServer.stubFor(get("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=9&return_kv_tags=false&appid=107410&days=0&include_recent_votes_only=false&page=&return_previews=true&search_text=another_phrase")
+        wireMockServer.stubFor(get("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=3&return_kv_tags=false&appid=107410&days=-1&include_recent_votes_only=false&page=&return_previews=true&search_text=another_phrase")
                 .willReturn(aResponse()
                         .withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_query_steam_response.json"))
                         .withStatus(200)));
