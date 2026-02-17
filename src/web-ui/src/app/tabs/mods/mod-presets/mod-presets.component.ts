@@ -16,17 +16,19 @@ import {
 } from "../../../service/server-mods.service";
 import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../../service/notification.service";
-import { MatDialog } from "@angular/material/dialog";
 import { ModPresetAddDialogComponent } from "./mod-preset-add-dialog/mod-preset-add-dialog.component";
-import { ModPresetSaveDialogComponent } from "./mod-preset-save-dialog/mod-preset-save-dialog.component";
 import { Mod } from "../../../model/mod.model";
-import { ModPresetDeleteDialogComponent } from "./mod-preset-delete-dialog/mod-preset-delete-dialog.component";
 import { ModPresetParserService } from "./service/mod-preset-parser.service";
 import { MatButton } from "@angular/material/button";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { MatDivider } from "@angular/material/list";
 import { ModPresetItemComponent } from "./mod-preset-item/mod-preset-item.component";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
+import { DialogService } from "../../../service/dialog.service";
+import {
+  ModPresetImportDialogComponent,
+  ModPresetImportDialogData
+} from "./mod-preset-import-dialog/mod-preset-import-dialog.component";
 
 @Component({
   selector: "app-mod-presets",
@@ -60,7 +62,7 @@ export class ModPresetsComponent {
     private modsService: ServerModsService,
     private maskService: LoadingSpinnerMaskService,
     private notificationService: NotificationService,
-    private matDialog: MatDialog,
+    private dialogService: DialogService,
     private modPresetParserService: ModPresetParserService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
@@ -88,21 +90,30 @@ export class ModPresetsComponent {
           return;
         }
 
-        const modPresetImportRequest = {
-          name: modPreset.name ?? this.removeFileExtension(file.name),
-          modParams: modPreset.entries.map(
-            (entry) => ({ id: entry.id, title: entry.name }) as ModPresetModParam
-          )
-        } as ModPresetImportRequest;
+        this.maskService.hide();
+        this.dialogService.open(ModPresetImportDialogComponent, (dialogResult: boolean) => {
+          if (dialogResult) {
+            const modPresetImportRequest = {
+              name: modPreset.name ?? this.removeFileExtension(file.name),
+              modParams: modPreset.entries.map(
+                (entry) => ({ id: entry.id, title: entry.name }) as ModPresetModParam
+              )
+            } as ModPresetImportRequest;
 
-        this.modsService.importPreset(modPresetImportRequest).subscribe(() => {
-          this.maskService.hide();
-          this.reloadModPresets();
-          this.notificationService.successNotification(
-            "Mod preset has been imported!",
-            "Preset Imported!"
-          );
-        });
+            this.maskService.show();
+            this.modsService.importPreset(modPresetImportRequest).subscribe(() => {
+              this.maskService.hide();
+              this.reloadModPresets();
+              this.notificationService.successNotification(
+                "Mod preset has been imported!",
+                "Preset Imported!"
+              );
+            });
+          }
+        }, {
+          modPresetName: modPreset.name ?? this.removeFileExtension(file.name),
+          modEntries: modPreset.entries
+        } as ModPresetImportDialogData);
       };
       reader.readAsText(file);
     }
@@ -150,21 +161,19 @@ export class ModPresetsComponent {
   }
 
   private showModalNewPreset() {
-    const dialogRef = this.matDialog.open(ModPresetAddDialogComponent, {
-      width: "250px",
-      enterAnimationDuration: "200ms",
-      exitAnimationDuration: "200ms"
-    });
-
-    dialogRef.afterClosed().subscribe((result: { create: boolean | undefined; modPresetName: string }) => {
-      if (result.create) {
+    this.dialogService.open(ModPresetAddDialogComponent, (dialogResult: { create: boolean | undefined; modPresetName: string }) => {
+      if (dialogResult.create) {
         this.modsService
-          .savePreset({ name: result.modPresetName, modNames: [] })
+          .savePreset({ name: dialogResult.modPresetName, modNames: [] })
           .subscribe(() => {
             this.reloadModPresets();
             this.notificationService.successNotification("Mod preset created!");
           });
       }
+    }, {
+      width: "250px",
+      enterAnimationDuration: "200ms",
+      exitAnimationDuration: "200ms"
     });
   }
 
@@ -173,14 +182,13 @@ export class ModPresetsComponent {
   }
 
   private showModalSavePreset(presetName: string) {
-    const dialogRef = this.matDialog.open(ModPresetSaveDialogComponent, {
-      width: "250px",
-      enterAnimationDuration: "200ms",
-      exitAnimationDuration: "200ms"
-    });
-
-    dialogRef.afterClosed().subscribe((result: { create: boolean; modPresetName: string }) => {
-      if (result) {
+    this.dialogService.openCommonConfirmationDialog({
+      question: "<p>Enabled mods will be saved as selected preset.</p>"
+        + "<p>Are you sure you want to save?</p>",
+      confirmButtonLabel: "Save",
+      cancelButtonLabel: "Cancel"
+    }, (dialogResult: boolean) => {
+      if (dialogResult) {
         this.modsService
           .savePreset({
             name: presetName,
@@ -195,14 +203,14 @@ export class ModPresetsComponent {
   }
 
   private showModalDeletePreset(presetName: string) {
-    const dialogRef = this.matDialog.open(ModPresetDeleteDialogComponent, {
-      width: "350px",
-      enterAnimationDuration: "200ms",
-      exitAnimationDuration: "200ms"
-    });
-
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      if (result) {
+    this.dialogService.openCommonConfirmationDialog({
+      question: "<p>Selected mod preset will be deleted.</p>"
+        + "<p><b>No mods will be deleted in this process.</b></p>"
+        + "<p>Are you sure you want to proceed?</p>",
+      confirmButtonLabel: "Delete",
+      cancelButtonLabel: "Cancel"
+    }, (dialogResult: boolean) => {
+      if (dialogResult) {
         this.maskService.show();
         this.modsService.deletePreset(presetName).subscribe(() => {
           this.removePresetFromList(this.modPresets, presetName);
