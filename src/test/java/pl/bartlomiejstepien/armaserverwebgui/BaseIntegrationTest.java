@@ -15,6 +15,7 @@ import pl.bartlomiejstepien.armaserverwebgui.config.AswgTestConfiguration;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthority;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.UserCreateCommand;
 import pl.bartlomiejstepien.armaserverwebgui.repository.AuthorityRepository;
 import pl.bartlomiejstepien.armaserverwebgui.repository.UserAuthorityRepository;
 import pl.bartlomiejstepien.armaserverwebgui.repository.UserRepository;
@@ -57,7 +58,13 @@ public abstract class BaseIntegrationTest
     {
         userAuthorityRepository.deleteAll();
         userRepository.deleteAll();
-        userService.addNewUser(TEST_USER);
+        userService.addNewUser(UserCreateCommand.builder()
+                .id(TEST_USER.getId())
+                .username(TEST_USER.getUsername())
+                .password(TEST_USER.getPassword())
+                .authorities(TEST_USER.getAuthorities())
+                .createdDate(TEST_USER.getCreatedDate())
+                .build());
     }
 
     protected String createJwtForTestUser()

@@ -37,6 +37,13 @@ public class UserSessionService
 
     public void evict(String username)
     {
-        this.userSessionCache.invalidate(username);
+        try
+        {
+            this.userSessionCache.invalidate(username);
+        }
+        catch (Exception exception)
+        {
+            //ignored
+        }
     }
 }

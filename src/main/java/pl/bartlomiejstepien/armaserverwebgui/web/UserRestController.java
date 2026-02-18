@@ -19,9 +19,11 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserLoaderService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
-import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.UserCreateCommand;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.UserUpdateCommand;
 import pl.bartlomiejstepien.armaserverwebgui.web.request.PasswordChangeRequest;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -46,13 +48,14 @@ public class UserRestController
     @PostMapping
     public void addUser(@RequestBody NewUserRequest userRequest)
     {
-        this.userService.addNewUser(AswgUserWithPassword.builder()
+        this.userService.addNewUser(UserCreateCommand.builder()
                 .username(userRequest.getUsername())
                 .password(userRequest.getPassword())
                 .authorities(userRequest.getAuthorities().stream()
                         .map(AswgAuthority::findByCode)
                         .map(Optional::orElseThrow)
                         .collect(Collectors.toSet()))
+                .createdDate(OffsetDateTime.now())
                 .build());
     }
 
@@ -61,8 +64,8 @@ public class UserRestController
     public void updateUser(@PathVariable("id") int userId,
                            @RequestBody UpdateUserRequest updateUserRequest)
     {
-        this.userService.updateUser(AswgUser.builder()
-                .id(userId)
+        this.userService.updateUser(UserUpdateCommand.builder()
+                .userId(userId)
                 .locked(updateUserRequest.isLocked())
                 .authorities(updateUserRequest.getAuthorities().stream()
                         .map(AswgAuthority::findByCode)

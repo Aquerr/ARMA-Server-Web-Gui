@@ -1,7 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.user;
 
-import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
-import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.UserCreateCommand;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.UserUpdateCommand;
 
 import java.time.OffsetDateTime;
 
@@ -11,9 +11,9 @@ public interface UserService
 
     void deleteUser(String username);
 
-    void addNewUser(AswgUserWithPassword user);
+    void addNewUser(UserCreateCommand createCommand);
 
-    void updateUser(AswgUser user);
+    void updateUser(UserUpdateCommand updateCommand);
 
     void updatePassword(int userId, String password);
 

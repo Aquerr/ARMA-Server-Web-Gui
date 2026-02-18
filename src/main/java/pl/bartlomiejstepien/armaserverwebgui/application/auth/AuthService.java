@@ -8,7 +8,6 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.exception.BadC
 import pl.bartlomiejstepien.armaserverwebgui.application.security.jwt.JwtService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserLoaderService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.user.UserSessionService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
 

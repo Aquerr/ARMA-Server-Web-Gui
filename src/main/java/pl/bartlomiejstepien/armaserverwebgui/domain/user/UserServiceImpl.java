@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.AswgAuthority;
-import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
-import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserWithPassword;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.UserCreateCommand;
+import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.UserUpdateCommand;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.exception.UsernameAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.model.AswgUserEntity;
 import pl.bartlomiejstepien.armaserverwebgui.repository.UserAuthorityRepository;
@@ -75,21 +75,21 @@ public class UserServiceImpl implements UserService
 
     @Transactional
     @Override
-    public void addNewUser(AswgUserWithPassword user)
+    public void addNewUser(UserCreateCommand createCommand)
     {
-        AswgUserEntity userEntity = this.userRepository.findByUsername(user.getUsername()).orElse(null);
+        AswgUserEntity userEntity = this.userRepository.findByUsername(createCommand.getUsername()).orElse(null);
         if (userEntity != null)
             throw new UsernameAlreadyExistsException("Given username already exists!");
 
-        AswgUserEntity newUserEntity = toEntity(withEncodedPassword(user).toBuilder()
+        AswgUserEntity newUserEntity = toEntity(withEncodedPassword(createCommand).toBuilder()
                 .createdDate(OffsetDateTime.now())
                 .build());
         newUserEntity = userRepository.save(newUserEntity);
-        userAuthorityRepository.saveUserAuthorities(newUserEntity.getId(), user.getAuthorities().stream()
+        userAuthorityRepository.saveUserAuthorities(newUserEntity.getId(), createCommand.getAuthorities().stream()
                 .map(AswgAuthority::getCode).collect(Collectors.toSet()));
     }
 
-    private AswgUserWithPassword withEncodedPassword(AswgUserWithPassword entity)
+    private UserCreateCommand withEncodedPassword(UserCreateCommand entity)
     {
         return entity.toBuilder()
                 .password(passwordEncoder.encode(entity.getPassword()))
@@ -98,28 +98,26 @@ public class UserServiceImpl implements UserService
 
     @Transactional
     @Override
-    public void updateUser(AswgUser user)
+    public void updateUser(UserUpdateCommand updateCommand)
     {
-        if (user.getId() == null)
+        if (updateCommand.getUserId() == null)
             throw new IllegalArgumentException("No user id to update has been provided!");
 
         // Merge with existing
-        this.userRepository.findById(user.getId())
+        this.userRepository.findById(updateCommand.getUserId())
                 .map(entity ->
                 {
-                    AswgUserEntity entityToUpdate = new AswgUserEntity();
-                    entityToUpdate.setId(entity.getId());
-                    entityToUpdate.setUsername(entity.getUsername());
-                    entityToUpdate.setLocked(user.isLocked());
-                    entityToUpdate.setCreatedDateTime(entity.getCreatedDateTime());
-                    entityToUpdate.setLastSuccessLoginDateTime(entity.getLastSuccessLoginDateTime());
-                    return entityToUpdate;
+                    entity.setLocked(updateCommand.isLocked());
+                    return entity;
                 })
                 .map(this.userRepository::save)
-                .ifPresent(entity -> this.userAuthorityRepository.saveUserAuthorities(entity.getId(), user.getAuthorities().stream()
-                        .map(AswgAuthority::getCode)
-                        .collect(Collectors.toSet())));
-        this.userSessionService.evict(user.getUsername());
+                .ifPresent(entity ->
+                {
+                    this.userAuthorityRepository.saveUserAuthorities(entity.getId(), updateCommand.getAuthorities().stream()
+                            .map(AswgAuthority::getCode)
+                            .collect(Collectors.toSet()));
+                    this.userSessionService.evict(entity.getUsername());
+                });
     }
 
     @Override
@@ -142,20 +140,20 @@ public class UserServiceImpl implements UserService
         this.userRepository.updateLastSuccessLoginDateTime(userId, loginDateTime);
     }
 
-    private AswgUserEntity toEntity(AswgUserWithPassword user)
+    private static AswgUserEntity toEntity(UserCreateCommand createCommand)
     {
         AswgUserEntity entity = new AswgUserEntity();
-        entity.setId(user.getId());
-        entity.setUsername(user.getUsername());
-        entity.setPassword(user.getPassword());
-        entity.setLocked(user.isLocked());
-        entity.setCreatedDateTime(user.getCreatedDate());
+        entity.setId(createCommand.getId());
+        entity.setUsername(createCommand.getUsername());
+        entity.setPassword(createCommand.getPassword());
+        entity.setLocked(createCommand.isLocked());
+        entity.setCreatedDateTime(createCommand.getCreatedDate());
         return entity;
     }
 
-    private AswgUserWithPassword prepareDefaultAswgUser()
+    private UserCreateCommand prepareDefaultAswgUserCreateCommand()
     {
-        return AswgUserWithPassword.builder()
+        return UserCreateCommand.builder()
                 .username(this.aswgConfig.getUsername())
                 .password(this.aswgConfig.getPassword())
                 .createdDate(OffsetDateTime.now())
@@ -189,7 +187,7 @@ public class UserServiceImpl implements UserService
     private void insertDefaultAswgUser()
     {
         log.info("Creating default aswg user: {}", aswgConfig.getUsername());
-        AswgUserWithPassword aswgUser = prepareDefaultAswgUser();
-        addNewUser(aswgUser);
+        UserCreateCommand createCommand = prepareDefaultAswgUserCreateCommand();
+        addNewUser(createCommand);
     }
 }
