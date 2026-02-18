@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>Preset Import Confirmation</h1>
+<div mat-dialog-content>
+  <h4><strong>Preset name:</strong> {{ modPresetName() }}</h4>
+  <div>
+    <h4><strong>Mods:</strong></h4>
+    @for (mod of modPresetEntries(); track mod.id) {
+      <div class="mod-entry-item">
+        <mat-icon
+          [ngClass]="mod.status === 'READY' ? 'downloaded-mod' : 'not-downloaded-mod'"
+          [fontIcon]="mod.status === 'READY' ? 'check_circle' : 'download_for_offline'"
+          [matTooltip]="mod.status === 'READY' ? 'This mod is ready to use' : 'This mod will be downloaded'"
+        ></mat-icon>
+        <span>{{ mod.id + ' - ' + mod.name }}</span>
+      </div>
+    }
+  </div>
+  <hr>
+  <h4>Are you sure you want to import this mod preset?</h4>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true">Import</button>
+  <button mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
+</div>

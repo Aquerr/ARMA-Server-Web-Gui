@@ -1,5 +1,6 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -17,7 +18,7 @@ import {
 import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../../service/notification.service";
 import { ModPresetAddDialogComponent } from "./mod-preset-add-dialog/mod-preset-add-dialog.component";
-import { Mod } from "../../../model/mod.model";
+import { Mod, ModStatus } from "../../../model/mod.model";
 import { ModPresetParserService } from "./service/mod-preset-parser.service";
 import { MatButton } from "@angular/material/button";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
@@ -26,9 +27,11 @@ import { ModPresetItemComponent } from "./mod-preset-item/mod-preset-item.compon
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { DialogService } from "../../../service/dialog.service";
 import {
-  ModPresetImportDialogComponent,
-  ModPresetImportDialogData
-} from "./mod-preset-import-dialog/mod-preset-import-dialog.component";
+  ModPresetImportConfirmationDialogComponent,
+  ModPresetImportDialogData, ModToImport
+} from "./mod-preset-import-confirmation-dialog/mod-preset-import-confirmation-dialog.component";
+import { WorkshopService } from "../../../service/workshop.service";
+import { map } from "rxjs";
 
 @Component({
   selector: "app-mod-presets",
@@ -64,6 +67,7 @@ export class ModPresetsComponent {
     private notificationService: NotificationService,
     private dialogService: DialogService,
     private modPresetParserService: ModPresetParserService,
+    private worksopService: WorkshopService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
     this.reloadModPresets();
@@ -90,33 +94,61 @@ export class ModPresetsComponent {
           return;
         }
 
-        this.maskService.hide();
-        this.dialogService.open(ModPresetImportDialogComponent, (dialogResult: boolean) => {
-          if (dialogResult) {
-            const modPresetImportRequest = {
-              name: modPreset.name ?? this.removeFileExtension(file.name),
-              modParams: modPreset.entries.map(
-                (entry) => ({ id: entry.id, title: entry.name }) as ModPresetModParam
-              )
-            } as ModPresetImportRequest;
+        this.worksopService.getInstalledWorkshopItems().pipe(map((response) => {
+          return modPreset.entries.map((entry) => {
+            const modToImport = {
+              id: entry.id,
+              name: entry.name,
+              status: ModStatus.MISSING_FILES
+            };
 
-            this.maskService.show();
-            this.modsService.importPreset(modPresetImportRequest).subscribe(() => {
-              this.maskService.hide();
-              this.reloadModPresets();
-              this.notificationService.successNotification(
-                "Mod preset has been imported!",
-                "Preset Imported!"
-              );
-            });
-          }
-        }, {
-          modPresetName: modPreset.name ?? this.removeFileExtension(file.name),
-          modEntries: modPreset.entries
-        } as ModPresetImportDialogData);
+            const foundMod = response.mods.find((workshopMod) => workshopMod.fileId === entry.id);
+            if (foundMod) {
+              modToImport.status = ModStatus.READY;
+            } else {
+              const modUnderInstallation = response.modsUnderInstallation.find((modUnderInstallation) => modUnderInstallation.fileId);
+              if (modUnderInstallation) {
+                modToImport.status = ModStatus.INSTALLING;
+              }
+            }
+
+            return modToImport;
+          }) || [];
+        })).subscribe((modsToImport: ModToImport[]) => {
+          this.maskService.hide();
+          this.showPresetImportConfirmationDialog(file, modPreset.name, modsToImport);
+        });
       };
       reader.readAsText(file);
     }
+  }
+
+  private showPresetImportConfirmationDialog(file: File, modPresetName: string | null | undefined, modsToImport: ModToImport[]) {
+    this.dialogService.open(ModPresetImportConfirmationDialogComponent, (dialogResult: boolean) => {
+      if (dialogResult) {
+        const modPresetImportRequest = {
+          name: modPresetName ?? this.removeFileExtension(file.name),
+          modParams: modsToImport.map(
+            (entry) => ({ id: entry.id, title: entry.name }) as ModPresetModParam
+          )
+        } as ModPresetImportRequest;
+
+        this.maskService.show();
+        this.modsService.importPreset(modPresetImportRequest).subscribe(() => {
+          this.maskService.hide();
+          this.reloadModPresets();
+          this.notificationService.successNotification(
+            "Mod preset has been imported!",
+            "Preset Imported!"
+          );
+        });
+      }
+    }, {
+      modPresetName: modPresetName ?? this.removeFileExtension(file.name),
+      modEntries: modsToImport
+    } as ModPresetImportDialogData, {
+      width: "600px"
+    });
   }
 
   private removeFileExtension(fileName: string): string {

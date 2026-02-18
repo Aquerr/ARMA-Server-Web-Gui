@@ -8,7 +8,10 @@ import {
   MatDialogTitle
 } from "@angular/material/dialog";
 import { ReactiveFormsModule } from "@angular/forms";
-import { ModPresetEntry } from "../../../../model/mod.model";
+import { ModStatus } from "../../../../model/mod.model";
+import { MatIcon } from "@angular/material/icon";
+import { MatTooltip } from "@angular/material/tooltip";
+import { NgClass } from "@angular/common";
 
 @Component({
   selector: "app-mod-preset-import-dialog",
@@ -18,14 +21,17 @@ import { ModPresetEntry } from "../../../../model/mod.model";
     MatDialogClose,
     MatDialogContent,
     MatDialogTitle,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIcon,
+    MatTooltip,
+    NgClass
   ],
-  templateUrl: "./mod-preset-import-dialog.component.html",
-  styleUrl: "./mod-preset-import-dialog.component.scss"
+  templateUrl: "./mod-preset-import-confirmation-dialog.component.html",
+  styleUrl: "./mod-preset-import-confirmation-dialog.component.scss"
 })
-export class ModPresetImportDialogComponent {
+export class ModPresetImportConfirmationDialogComponent {
   public readonly modPresetName = signal<string | null>(null);
-  public readonly modPresetEntries = signal<ModPresetEntry[]>([]);
+  public readonly modPresetEntries = signal<ModToImport[]>([]);
 
   constructor(@Inject(MAT_DIALOG_DATA) dialogData: ModPresetImportDialogData) {
     this.modPresetName.set(dialogData.modPresetName);
@@ -35,5 +41,11 @@ export class ModPresetImportDialogComponent {
 
 export interface ModPresetImportDialogData {
   modPresetName: string;
-  modEntries: ModPresetEntry[];
+  modEntries: ModToImport[];
+}
+
+export interface ModToImport {
+  id: number;
+  name: string;
+  status: ModStatus;
 }

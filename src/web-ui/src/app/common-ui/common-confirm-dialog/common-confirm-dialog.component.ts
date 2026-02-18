@@ -22,8 +22,8 @@ import { MatButton } from "@angular/material/button";
 })
 export class CommonConfirmDialogComponent {
   question: string = "";
-  confirmButtonLabel = signal<string>("Yes");
-  cancelButtonLabel = signal<string>("No");
+  confirmButtonLabel = signal<string>("Confirm");
+  cancelButtonLabel = signal<string>("Cancel");
   headerLabel = signal<string>("Confirmation");
 
   constructor(@Inject(MAT_DIALOG_DATA) dialogData: CommonConfirmDialogComponentDialogData) {
