@@ -5,9 +5,9 @@
 [![Discord](https://img.shields.io/discord/447076657698963466.svg?color=blue&label=Discord&logo=Discord&logoColor=white)](https://discord.gg/Zg3rWta)
 
 ## General
-ASWG is a user-friendly management gui for Arma 3 servers.
+ASWG is a user-friendly management GUI for Arma 3 server.
 
-It is a web application that was built with a goal to provide easy way to manage Arma server located on Linux systems (however it supports Windows as well!).
+It is a web application that was built with a goal to provide an easy way to manage Arma server located on Linux systems (however it supports Windows as well!).
 
 You can easily start/stop your server, view server console, change server configuration `server.cfg`, install missions and manage mods. Also, it allows you to automatically download and install workshop mods via SteamCMD.
 
@@ -24,10 +24,12 @@ Check the feature list below to get to know more.
 * Linux support (currently tested on Ubuntu)
 * [Docker support](https://hub.docker.com/r/aquerr/arma-server-web-gui)
 * Server Console + Player list
-* Editing of server configuration
+* Edit server configuration (server.cfg and basic.cfg)
+* Difficulty management
 * Mods management
-* Mission management
-* Workshop and mods installation via SteamCMD (manual installation required for SteamCMD)
+* Missions management
+* Load exported mod presets from Arma 3 Launcher
+* Workshop and mods installation via SteamCMD (see installation instructions below)
 * Multi-user support
 
 ### Screenshots
@@ -40,7 +42,7 @@ Check the feature list below to get to know more.
 
 # Setup
 
-ASWG can be setup manually on a system or via Docker.
+ASWG can be installed directly on a system or via Docker.
 
 ## Manual Setup
 
@@ -53,7 +55,7 @@ ASWG can be setup manually on a system or via Docker.
   - To change `ASWG` port, for example to `8444`. Run it with `java -Dserver.port=8444 -jar aswg.jar`
 - ASWG configuration file will be created after on first run. Edit it to set the ASWG username and password. Restart ASWG after making changes.
 - Open `http://localhost:8085` to enter ASWG.
-- Extra: If you want to use steam workshop and download mods automatically, configure steamcmd properties.
+- Extra: If you want to use steam workshop and download mods automatically, configure SteamCMD properties.
 
 For SteamCMD installation check [SteamCMD wiki](https://developer.valvesoftware.com/wiki/SteamCMD).
 
@@ -62,6 +64,9 @@ For SteamCMD installation check [SteamCMD wiki](https://developer.valvesoftware.
 Docker image can be found [here](https://hub.docker.com/r/aquerr/arma-server-web-gui)
 
 Sample docker compose can be found [here](https://github.com/Aquerr/ARMA-Server-Web-Gui/blob/main/docker-compose.yml)
+
+Note: ASWG Docker image already contains SteamCMD so you don't need to install it by yourself.
+You still need to configure it through ASWG interface if you want to use it.
 
 # Building
 
@@ -76,11 +81,11 @@ Sample docker compose can be found [here](https://github.com/Aquerr/ARMA-Server-
 Many thanks to:
 - **[mateo9x](https://github.com/mateo9x)** (for help with dark theme and some front-end things)
 
-## Used by
+## Used By
 
-Units/Communities using ASWG:
+Units/Communities using/supporting ASWG:
 
-<img width="200" src="https://tispmc.pl/assets/tis_logo.png" alt="TIS Unit Logo">
+<img width="200" src="https://avatars.githubusercontent.com/u/232053251?v=4" alt="TIS Unit Logo">
 
 If you want to add your unit/group here, you are more than welcome to do it through a [PR](https://github.com/Aquerr/ARMA-Server-Web-Gui/pulls) or let me know via [Discord](https://discord.gg/Zg3rWta).
 
