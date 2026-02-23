@@ -26,14 +26,17 @@
       </div>
     }
     @if (workshopMod.isBeingInstalled) {
-      <div
-        class="spinner"
-        style="position: relative; max-width: 30px; max-height: 30px; margin-top: 10px"
-        >
+      <div class="spinner">
+        <span>{{ workshopMod.progress }}% Installing...</span>
+      </div>
+<!--      <div-->
+<!--        class="spinner"-->
+<!--        style="position: relative; max-width: 30px; max-height: 30px; margin-top: 10px"-->
+<!--        >-->
         <!-- TODO: Pass mod title to spinner to make it unique -->
 <!--        <app-aswg-spinner [fullScreen]="false"></app-aswg-spinner>-->
-        <span style="margin-left: 40px">Installing...</span>
-      </div>
+<!--        <span style="margin-left: 40px"></span>-->
+<!--      </div>-->
     }
   </div>
 </div>

@@ -1,22 +1,16 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.process;
 
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerProcessStatus;
 
 import java.util.List;
 
 public interface ProcessService
 {
-    SseEmitter getServerLogEmitter();
-
-    ServerStatus getServerStatus();
+    ServerProcessStatus getProcessStatus();
 
     void startServer(boolean performUpdate);
 
     void stopServer();
-
-    List<ArmaServerPlayer> getServerPlayers();
 
     List<String> getLatestServerLogs();
 }

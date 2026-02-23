@@ -27,6 +27,7 @@ export class WorkshopMod {
   description: string = "";
   fileId: number = 0;
   isBeingInstalled: boolean = false;
+  progress = 0;
   modWorkshopUrl: string = "";
   previewUrl: string = "";
   title: string = "";

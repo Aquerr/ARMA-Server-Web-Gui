@@ -113,9 +113,9 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
-    public ModsCollection getModsView()
+    public ModsCollection getModsCollection()
     {
-        return toModsView(getInstalledModsFromFileSystem(), getInstalledMods());
+        return toModsCollection(getInstalledModsFromFileSystem(), getInstalledMods());
     }
 
     @Override
@@ -249,7 +249,7 @@ public class ModServiceImpl implements ModService
         installedModRepository.save(installedModEntityHelper.toEntity(FileSystemMod.from(modDirectory)));
     }
 
-    private ModsCollection toModsView(
+    private ModsCollection toModsCollection(
             List<FileSystemMod> fileSystemMods,
             List<InstalledModEntity> installedModEntities)
     {

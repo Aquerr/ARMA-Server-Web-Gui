@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionLogsView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.LoggingService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ProcessService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.log.SseServerServerProcessLogsObserver;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class LoggingRestController
 {
     private final LoggingService loggingService;
     private final ProcessService processService;
+    private final SseServerServerProcessLogsObserver sseServerServerProcessLogsObserver;
 
     @GetMapping("/properties")
     public LoggingProperties getLoggingProperties()
@@ -58,7 +60,7 @@ public class LoggingRestController
         {
             throw new AccessDeniedException("Unauthorized SSE connection");
         }
-        return this.processService.getServerLogEmitter();
+        return this.sseServerServerProcessLogsObserver.getServerLogEmitter();
     }
 
     private pl.bartlomiejstepien.armaserverwebgui.domain.server.logging.model.LoggingProperties toDomainModel(LoggingProperties loggingProperties)

@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionServerStartStop;
 import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ProcessService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.ServerStatusService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.dto.ServerStatus;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 
 import java.util.List;
 
@@ -19,15 +21,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatusController
 {
+    private final ServerStatusService serverStatusService;
     private final ProcessService processService;
+    private final SteamService steamService;
 
     @GetMapping
     public StatusResponse getServerStatus()
     {
-        ServerStatus status = processService.getServerStatus();
+        ServerStatus status = serverStatusService.getServerStatus();
         List<ArmaServerPlayer> players = List.of();
         if (status.getStatus() == ServerStatus.Status.ONLINE)
-            players = processService.getServerPlayers();
+            players = steamService.getServerPlayers();
         return new StatusResponse(status, players);
     }
 

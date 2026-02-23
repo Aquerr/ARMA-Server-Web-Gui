@@ -47,6 +47,7 @@ export class WorkshopComponent implements OnInit, OnDestroy {
     this.modInstallWebsocketService.workShopModInstallStatus.subscribe((modInstallStatus) => {
       const workshopMod = this.workshopMods().find((mod) => mod.fileId === modInstallStatus.fileId);
       if (workshopMod) {
+        workshopMod.progress = modInstallStatus.status;
         workshopMod.isBeingInstalled = modInstallStatus.status != 100;
       }
     });
@@ -110,6 +111,7 @@ export class WorkshopComponent implements OnInit, OnDestroy {
         return {
           fileId: request.fileId,
           title: request.modName,
+          progress: 0,
           isBeingInstalled: true
         } as WorkshopMod;
       }));

@@ -7,7 +7,7 @@
       <div class="mod-entry-item">
         <mat-icon
           [ngClass]="mod.status === 'READY' ? 'downloaded-mod' : 'not-downloaded-mod'"
-          [fontIcon]="mod.status === 'READY' ? 'check_circle' : 'download_for_offline'"
+          [fontIcon]="mod.status | presetModStatusToIcon"
           [matTooltip]="mod.status === 'READY' ? 'This mod is ready to use' : 'This mod will be downloaded'"
         ></mat-icon>
         <span>{{ mod.id + ' - ' + mod.name }}</span>

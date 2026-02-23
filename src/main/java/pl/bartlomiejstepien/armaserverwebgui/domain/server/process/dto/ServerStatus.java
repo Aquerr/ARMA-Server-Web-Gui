@@ -1,4 +1,4 @@
-package pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model;
+package pl.bartlomiejstepien.armaserverwebgui.domain.server.process.dto;
 
 import lombok.Value;
 

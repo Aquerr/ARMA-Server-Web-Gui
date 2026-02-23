@@ -36,7 +36,7 @@ public class ModsRestController
     @GetMapping
     public GetModsResponse getMods()
     {
-        return GetModsResponse.of(this.modService.getModsView());
+        return GetModsResponse.of(this.modService.getModsCollection());
     }
 
     @HasPermissionModsUpdate

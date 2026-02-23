@@ -1,24 +1,19 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.process;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.AuthenticationFacade;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.DiscordIntegration;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.MessageKind;
-import pl.bartlomiejstepien.armaserverwebgui.domain.model.ArmaServerPlayer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerIsAlreadyRunningException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.exception.ServerNotInstalledException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.log.ServerProcessLogMessageObserver;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ArmaServerParameters;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerStatus;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.process.model.ServerProcessStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserDetails;
 
 import java.io.BufferedReader;
@@ -36,11 +31,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Service
@@ -48,7 +38,6 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 public class ProcessServiceImpl implements ProcessService
 {
-    private static final Logger SERVER_LOGGER = LoggerFactory.getLogger("arma-server");
     private static final String PID_FILE_NAME = "arma_server.pid";
 
     private final AuthenticationFacade authenticationFacade;
@@ -59,13 +48,15 @@ public class ProcessServiceImpl implements ProcessService
 
     private final ASWGConfig aswgConfig;
 
+    private final List<ServerProcessLogMessageObserver> logMessageObservers;
+
     @Value("${aswg.logs.location}")
     private String logsLocation;
 
     @Value("${server.log.file.name}")
     private String serverLogFileName;
 
-    private volatile ServerStatus.Status serverStatus;
+    private volatile ServerProcessStatus processStatus;
 
     private final ReentrantLock serverStartUpLock = new ReentrantLock();
 
@@ -73,71 +64,13 @@ public class ProcessServiceImpl implements ProcessService
     private Thread ioServerThread;
     private Thread ioServerErrorThread;
 
-    private static final ConcurrentLinkedDeque<SseEmitter> serverLogsEmitters = new ConcurrentLinkedDeque<>();
-    private static final ScheduledExecutorService SERVER_LOGS_EMITTER_HEALTHCHECK_SERVICE = Executors.newSingleThreadScheduledExecutor();
-
-    @PostConstruct
-    public void postConstruct()
+    public ServerProcessStatus getProcessStatus()
     {
-        SERVER_LOGS_EMITTER_HEALTHCHECK_SERVICE.scheduleAtFixedRate(this::performServerLogsEmittersHealthcheck, 5, 10, TimeUnit.SECONDS);
-    }
+        if (processStatus == ServerProcessStatus.UPDATING)
+            return processStatus;
+        else if (processStatus == ServerProcessStatus.STARTING)
+            return processStatus;
 
-    private void performServerLogsEmittersHealthcheck()
-    {
-        try
-        {
-            serverLogsEmitters.forEach(emitter ->
-            {
-                try
-                {
-                    emitter.send(SseEmitter.event().name("ping").data("healthcheck"));
-                }
-                catch (IOException ex)
-                {
-                    log.warn("SseEmitter did not respond to ping event. Connection will be closed.", ex);
-                    emitter.complete(); //Not needed... but just in case...
-                }
-            });
-        }
-        catch (Exception exception)
-        {
-            log.warn("Could not perform SseEmitters healthcheck. Reason: {}", exception.getMessage());
-        }
-    }
-
-    @Override
-    public SseEmitter getServerLogEmitter()
-    {
-        SseEmitter emitter = new SseEmitter(0L);
-        emitter.onTimeout(() ->
-        {
-            serverLogsEmitters.remove(emitter);
-            log.info("SseEmitter timeout");
-            emitter.complete();
-        });
-        emitter.onError(throwable ->
-        {
-            serverLogsEmitters.remove(emitter);
-            log.warn("SseEmitter error", throwable);
-            emitter.complete();
-        });
-        emitter.onCompletion(() -> serverLogsEmitters.remove(emitter));
-        serverLogsEmitters.add(emitter);
-        return emitter;
-    }
-
-    @Override
-    public ServerStatus getServerStatus()
-    {
-        //TODO: Get status from server healthcheck (status monitoring) here.
-
-        log.info("Fetching server status...");
-        if (ServerStatus.Status.UPDATING == serverStatus)
-            return ServerStatus.of(ServerStatus.Status.UPDATING, "Updating");
-        else if (ServerStatus.Status.STARTING == serverStatus)
-            return ServerStatus.of(ServerStatus.Status.STARTING, "Starting");
-        else if (this.steamService.isServerRunning())
-            return ServerStatus.of(ServerStatus.Status.ONLINE, "Online");
         long pid;
         try
         {
@@ -148,17 +81,15 @@ public class ProcessServiceImpl implements ProcessService
             throw new RuntimeException("Could not get server pid.", e);
         }
 
-        if (pid == 0)
-            return ServerStatus.of(ServerStatus.Status.OFFLINE, "Offline");
-        else if (processAliveChecker.isPidAlive(pid))
-            return ServerStatus.of(ServerStatus.Status.RUNNING_BUT_NOT_DETECTED_BY_STEAM, "Running but not detected by Steam");
-        return ServerStatus.of(ServerStatus.Status.OFFLINE, "Offline");
+        if (pid != 0 && processAliveChecker.isPidAlive(pid))
+            return ServerProcessStatus.RUNNING;
+        return ServerProcessStatus.NOT_RUNNING;
     }
 
     @Override
     public void startServer(boolean performUpdate)
     {
-        if (getServerStatus().getStatus() != ServerStatus.Status.OFFLINE)
+        if (this.getProcessStatus() != ServerProcessStatus.NOT_RUNNING)
             throw new ServerIsAlreadyRunningException("Server is already running!");
 
         if (serverStartUpLock.isLocked())
@@ -168,7 +99,7 @@ public class ProcessServiceImpl implements ProcessService
 
         try
         {
-            serverStatus = ServerStatus.Status.STARTING;
+            updateStatus(ServerProcessStatus.STARTING);
 
             if (performUpdate)
             {
@@ -177,17 +108,21 @@ public class ProcessServiceImpl implements ProcessService
             }
 
             sendDiscordMessage(MessageKind.SERVER_STARTED);
-            serverStatus = ServerStatus.Status.STARTING;
             startServerProcess();
             serverStartUpLock.unlock();
             //TODO: Start server healthcheck (status monitoring) here.
         }
         catch (Exception exception)
         {
-            serverStatus = ServerStatus.Status.OFFLINE;
+            updateStatus(ServerProcessStatus.NOT_RUNNING);
             serverStartUpLock.unlock();
             throw exception;
         }
+    }
+
+    private void updateStatus(ServerProcessStatus processStatus)
+    {
+        this.processStatus = processStatus;
     }
 
     private void sendDiscordMessage(MessageKind messageKind)
@@ -230,11 +165,11 @@ public class ProcessServiceImpl implements ProcessService
 
                 saveServerPid(pid);
                 handleProcessInputOutput(process);
-                this.serverStatus = ServerStatus.Status.ONLINE;
+                updateStatus(ServerProcessStatus.RUNNING);
             }
             catch (IOException e)
             {
-                this.serverStatus = ServerStatus.Status.OFFLINE;
+                updateStatus(ServerProcessStatus.NOT_RUNNING);
                 log.error("Error", e);
                 stopServer();
             }
@@ -252,7 +187,7 @@ public class ProcessServiceImpl implements ProcessService
     {
         try
         {
-            this.serverStatus = ServerStatus.Status.UPDATING;
+            updateStatus(ServerProcessStatus.UPDATING);
             if (steamService.isSteamCmdInstalled())
             {
                 log.info("Scheduling Arma update");
@@ -278,7 +213,7 @@ public class ProcessServiceImpl implements ProcessService
         }
         finally
         {
-            this.serverStatus = ServerStatus.Status.STARTING;
+            updateStatus(ServerProcessStatus.STARTING);
         }
     }
 
@@ -289,13 +224,13 @@ public class ProcessServiceImpl implements ProcessService
         try
         {
             pid = getServerPid();
-            log.info("Found server pid={}", pid);
         }
         catch (IOException e)
         {
             throw new RuntimeException("Could not get server pid.", e);
         }
 
+        log.info("Found server pid={}", pid);
 
         ProcessHandle.of(pid).ifPresent(processHandle ->
         {
@@ -320,7 +255,7 @@ public class ProcessServiceImpl implements ProcessService
                 this.serverThread.interrupt();
                 this.serverThread = null;
             }
-            this.serverStatus = ServerStatus.Status.OFFLINE;
+            updateStatus(ServerProcessStatus.NOT_RUNNING);
         });
 
         try
@@ -332,13 +267,6 @@ public class ProcessServiceImpl implements ProcessService
             throw new RuntimeException("Could not save server pid.", e);
         }
         sendDiscordMessage(MessageKind.SERVER_STOPPED);
-    }
-
-    @Override
-    public List<ArmaServerPlayer> getServerPlayers()
-    {
-        log.info("Fetching server players...");
-        return this.steamService.getServerPlayers();
     }
 
     @Override
@@ -371,8 +299,7 @@ public class ProcessServiceImpl implements ProcessService
                 String line = null;
                 while ((line = reader.readLine()) != null)
                 {
-                    SERVER_LOGGER.info(line);
-                    CompletableFuture.runAsync(new SubmitLogTask(line));
+                    handleProcessLog(line);
                 }
                 reader.close();
             }
@@ -392,8 +319,7 @@ public class ProcessServiceImpl implements ProcessService
                 String line = null;
                 while ((line = reader.readLine()) != null)
                 {
-                    SERVER_LOGGER.info(line);
-                    CompletableFuture.runAsync(new SubmitLogTask(line));
+                    handleProcessLog(line);
                 }
                 reader.close();
             }
@@ -407,6 +333,21 @@ public class ProcessServiceImpl implements ProcessService
         this.ioServerErrorThread.start();
         this.ioServerThread.setDaemon(true);
         this.ioServerThread.start();
+    }
+
+    private void handleProcessLog(String line)
+    {
+        for (ServerProcessLogMessageObserver observer : this.logMessageObservers)
+        {
+            try
+            {
+                observer.handleServerLogMessage(line);
+            }
+            catch (Exception exception)
+            {
+                log.warn("Log observer produced an error", exception);
+            }
+        }
     }
 
     private void saveServerPid(long pid) throws IOException
@@ -442,32 +383,5 @@ public class ProcessServiceImpl implements ProcessService
     private File getServerLogsFile()
     {
         return Paths.get(this.logsLocation).resolve(serverLogFileName).toFile();
-    }
-
-    @lombok.Value
-    private static class SubmitLogTask implements Runnable
-    {
-        String log;
-
-        @Override
-        public void run()
-        {
-            emitSseLog(log);
-        }
-
-        private void emitSseLog(String line)
-        {
-            serverLogsEmitters.forEach(emitter ->
-            {
-                try
-                {
-                    emitter.send(line);
-                }
-                catch (IOException e)
-                {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
     }
 }

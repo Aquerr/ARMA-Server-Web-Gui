@@ -17,7 +17,7 @@ public interface ModService
 
     boolean checkModFileExists(String modName);
 
-    ModsCollection getModsView();
+    ModsCollection getModsCollection();
 
     void installModFromWorkshop(long fileId, String modName, boolean installDependencies);
 
