@@ -32,13 +32,12 @@ public class SteamCmdAppUpdateParameters implements ProcessParameters
                 "+app_update"
         ));
 
+        params.add(String.valueOf(appId));
+
         if (SteamArmaBranch.PUBLIC != branch)
         {
-            params.add("\"" + appId + " -beta " + branch.getCode() + "\"");
-        }
-        else
-        {
-            params.add(String.valueOf(appId));
+            params.add("-beta");
+            params.add(branch.getCode());
         }
 
         params.addAll(List.of(
