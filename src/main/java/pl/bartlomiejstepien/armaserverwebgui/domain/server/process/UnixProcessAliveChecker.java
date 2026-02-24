@@ -30,7 +30,7 @@ public class UnixProcessAliveChecker implements ProcessAliveChecker
             boolean isPidRunning = false;
             while ((strLine = bufferedReader.readLine()) != null)
             {
-                if (strLine.contains(" " + processId + " "))
+                if (strLine.contains(String.valueOf(processId)))
                 {
                     isPidRunning = true;
                     break;
