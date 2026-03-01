@@ -127,7 +127,7 @@ public class LogbookConfig
                 putInMdc(aswgHttpLog);
                 if (environment.acceptsProfiles(Profiles.of("file-json-logs")))
                 {
-                    log.info("Server request {}", aswgHttpLog.getRequestBody());
+                    log.info("Server request: {}", aswgHttpLog.getRequestBody());
                 }
                 else
                 {
@@ -149,7 +149,7 @@ public class LogbookConfig
                 putInMdc(aswgHttpLog);
                 if (environment.acceptsProfiles(Profiles.of("file-json-logs")))
                 {
-                    log.info("Server response {}", aswgHttpLog.getResponseBody());
+                    log.info("Server response: {}", aswgHttpLog.getResponseBody());
                 }
                 else
                 {

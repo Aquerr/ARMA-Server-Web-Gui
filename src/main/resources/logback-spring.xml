@@ -37,12 +37,15 @@
                                 "thread": "%thread",
                                 "method": "%X{method}",
                                 "correlation-id": "%X{correlation-id}",
+                                "userId": "%X{user-id}",
                                 "request.host": "%X{request-host}",
                                 "request.uri": "%X{uri}",
                                 "request.user-agent": "%X{user-agent}",
-                                "request.content-type": "%X{request-content-type}",
+                                "request.content-type": "%X{content-type}",
+                                "request.ip-address": "%X{ip-address}",
                                 "response.content-type": "%X{response-content-type}",
                                 "response.duration": "%X{duration}",
+                                "response.status": "%X{status}",
                                 "message": "%message",
                                 "exception": "%throwable"
                             }
