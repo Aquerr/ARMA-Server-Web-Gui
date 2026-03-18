@@ -199,7 +199,7 @@ public class ASWGConfig
         configurationProperties.setProperty(DISCORD_MESSAGE_SERVER_STARTING, this.discordProperties.getMessageServerStarting());
         configurationProperties.setProperty(DISCORD_MESSAGE_SERVER_START, this.discordProperties.getMessageServerStart());
         configurationProperties.setProperty(DISCORD_MESSAGE_SERVER_STOP, this.discordProperties.getMessageServerStop());
-        configurationProperties.setProperty(DISCORD_MESSAGE_SERVER_UPDATE, this.discordProperties.getMessageServerUpdate());
+        configurationProperties.setProperty(DISCORD_MESSAGE_SERVER_UPDATE, this.discordProperties.getMessageServerUpdating());
 
         // Unsafe
         configurationProperties.setProperty(UNSAFE_OVERWRITE_SERVER_STARTUP_PARAMS_ENABLED_PROPERTY,
@@ -234,8 +234,8 @@ public class ASWGConfig
         private String messageServerStart;
         @Value("${aswg.discord.message.server-stop:}")
         private String messageServerStop;
-        @Value("${aswg.discord.message.server-update:}")
-        private String messageServerUpdate;
+        @Value("${aswg.discord.message.server-updating:}")
+        private String messageServerUpdating;
     }
 
     @Data

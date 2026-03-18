@@ -1,5 +1,6 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   computed,
   DestroyRef,
@@ -9,14 +10,18 @@ import {
   WritableSignal
 } from "@angular/core";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
-import { ServerStatusService } from "../../service/server-status.service";
+import { ServerStatusResponse, ServerStatusService } from "../../service/server-status.service";
 import { ServerStatus, Status } from "./model/status.model";
 import { NotificationService } from "../../service/notification.service";
 import { PlayerListComponent } from "./player-list/player-list.component";
 import { ApiErrorCode, ApiErrorResponse } from "../../api/api-error.model";
 import { DialogService } from "../../service/dialog.service";
 import { HttpErrorResponse } from "@angular/common/http";
-import { interval, switchMap } from "rxjs";
+import {
+  interval,
+  Subscription,
+  switchMap
+} from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ServerConsoleComponent } from "./server-console/server-console.component";
 import { NgStyle } from "@angular/common";
@@ -35,8 +40,14 @@ import { ArmaServerPlayer } from "../../model/arma-server-player.model";
 export class StatusComponent implements OnInit {
   private changeDetectorRef = inject(ChangeDetectorRef);
 
-  serverStatus: WritableSignal<ServerStatus> = signal<{ status: Status; statusText: string }>({ status: Status.OFFLINE, statusText: "Offline" });
+  serverStatus: WritableSignal<ServerStatus> = signal<{ status: Status; statusText: string }>({
+    status: Status.OFFLINE,
+    statusText: "Offline"
+  });
+
   playerList: WritableSignal<ArmaServerPlayer[]> = signal<ArmaServerPlayer[]>([]);
+  private serverStatusCheck$!: Subscription;
+  private offlineStatusChecks = 0;
 
   canToggleServer = computed(() => {
     return this.serverStatus().status == Status.ONLINE
@@ -54,7 +65,8 @@ export class StatusComponent implements OnInit {
     private serverStatusService: ServerStatusService,
     private dialogService: DialogService,
     private destroyRef: DestroyRef
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.maskService.show();
@@ -63,19 +75,28 @@ export class StatusComponent implements OnInit {
       this.playerList.set(response.playerList);
       this.maskService.hide();
     });
+    this.refreshServerStatus();
+
+    this.destroyRef.onDestroy(() => {
+      this.serverStatusCheck$.unsubscribe();
+    });
   }
 
   refreshServerStatus() {
-    interval(5000)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        switchMap(() => this.serverStatusService.getStatus())
-      )
-      .subscribe((response) => {
-        this.serverStatus.set(response.status);
-        this.playerList.set(response.playerList);
-        this.changeDetectorRef.markForCheck();
-      });
+    if (this.serverStatusCheck$) {
+      this.serverStatusCheck$.unsubscribe();
+    }
+
+    this.serverStatusCheck$ = interval(5000).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      switchMap(() => this.serverStatusService.getStatus())
+    ).subscribe((response) => {
+      this.stopStatusCheckIfOfflineThreeTimes(response);
+
+      this.serverStatus.set(response.status);
+      this.playerList.set(response.playerList);
+      this.changeDetectorRef.markForCheck();
+    });
   }
 
   toggleServer() {
@@ -141,5 +162,18 @@ ASWG can try to install it, but it is recommended to do it manually. <br>Should 
       .subscribe(() => {
         this.notificationService.infoNotification("Server is stopping...", "Information");
       });
+  }
+
+  private stopStatusCheckIfOfflineThreeTimes(response: ServerStatusResponse) {
+    if (this.serverStatus().status === Status.OFFLINE && response.status.status === Status.OFFLINE) {
+      this.offlineStatusChecks++;
+      if (this.offlineStatusChecks > 2) {
+        this.offlineStatusChecks = 0;
+        this.serverStatusCheck$.unsubscribe();
+        return;
+      }
+    } else {
+      this.offlineStatusChecks = 0;
+    }
   }
 }

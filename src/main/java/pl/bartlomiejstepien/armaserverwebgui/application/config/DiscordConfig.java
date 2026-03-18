@@ -15,7 +15,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.PlayerJoined
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.ServerStartedMessageCreator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.ServerStartingMessageCreator;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.ServerStoppedMessageCreator;
-import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.ServerUpdatedMessageCreator;
+import pl.bartlomiejstepien.armaserverwebgui.domain.discord.message.ServerUpdatingMessageCreator;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.Map;
@@ -51,9 +51,9 @@ public class DiscordConfig
     }
 
     @Bean
-    public ServerUpdatedMessageCreator serverUpdatedMessageCreator(ASWGConfig aswgConfig)
+    public ServerUpdatingMessageCreator serverUpdatingMessageCreator(ASWGConfig aswgConfig)
     {
-        return new ServerUpdatedMessageCreator(aswgConfig);
+        return new ServerUpdatingMessageCreator(aswgConfig);
     }
 
     @Bean
@@ -68,7 +68,7 @@ public class DiscordConfig
             DiscordMessageCreator serverStartingMessageCreator,
             DiscordMessageCreator serverStartedMessageCreator,
             DiscordMessageCreator serverStoppedMessageCreator,
-            DiscordMessageCreator serverUpdatedMessageCreator
+            DiscordMessageCreator serverUpdatingMessageCreator
     )
     {
         return Map.of(
@@ -76,7 +76,7 @@ public class DiscordConfig
                 MessageKind.SERVER_STARTING, serverStartingMessageCreator,
                 MessageKind.SERVER_STARTED, serverStartedMessageCreator,
                 MessageKind.SERVER_STOPPED, serverStoppedMessageCreator,
-                MessageKind.SERVER_UPDATED, serverUpdatedMessageCreator
+                MessageKind.SERVER_UPDATING, serverUpdatingMessageCreator
         );
     }
 

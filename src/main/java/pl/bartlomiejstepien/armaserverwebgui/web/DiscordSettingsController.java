@@ -27,7 +27,7 @@ public class DiscordSettingsController
                 discordProperties.getMessageServerStarting(),
                 discordProperties.getMessageServerStart(),
                 discordProperties.getMessageServerStop(),
-                discordProperties.getMessageServerUpdate()
+                discordProperties.getMessageServerUpdating()
         );
     }
 
@@ -41,7 +41,7 @@ public class DiscordSettingsController
         discordProperties.setMessageServerStarting(settings.serverStartingMessage());
         discordProperties.setMessageServerStart(settings.serverStartMessage());
         discordProperties.setMessageServerStop(settings.serverStopMessage());
-        discordProperties.setMessageServerUpdate(settings.serverUpdateMessage());
+        discordProperties.setMessageServerUpdating(settings.serverUpdateMessage());
         this.aswgConfig.saveToFile();
     }
 

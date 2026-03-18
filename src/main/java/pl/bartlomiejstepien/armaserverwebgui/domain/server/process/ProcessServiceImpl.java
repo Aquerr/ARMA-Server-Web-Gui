@@ -103,7 +103,7 @@ public class ProcessServiceImpl implements ProcessService
 
             if (performUpdate)
             {
-                sendDiscordMessage(MessageKind.SERVER_UPDATED);
+                sendDiscordMessage(MessageKind.SERVER_UPDATING);
                 tryUpdateArmaServer();
             }
 
@@ -205,6 +205,7 @@ public class ProcessServiceImpl implements ProcessService
                         break;
                     }
                 }
+                log.info("Game update completed!");
             }
         }
         catch (InterruptedException e)

@@ -5,7 +5,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.discord.model.DiscordMessage;
 
 @RequiredArgsConstructor
-public class ServerUpdatedMessageCreator implements DiscordMessageCreator
+public class ServerUpdatingMessageCreator implements DiscordMessageCreator
 {
     private final ASWGConfig aswgConfig;
 
@@ -13,7 +13,7 @@ public class ServerUpdatedMessageCreator implements DiscordMessageCreator
     public DiscordMessage create()
     {
         return DiscordMessage.ofSingleEmbed(DiscordMessage.Embed.builder()
-                .title(aswgConfig.getDiscordProperties().getMessageServerUpdate())
+                .title(aswgConfig.getDiscordProperties().getMessageServerUpdating())
                 .build());
     }
 }
