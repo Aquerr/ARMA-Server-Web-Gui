@@ -45,14 +45,14 @@ public class WorkshopRestController
         return steamService.queryWorkshopMods(toWorkshopQueryParams(request));
     }
 
-    @HasPermissionWorkshopInstall
+    @HasPermissionWorkshopView
     @GetMapping("/installed-items")
     public InstalledItemsResponse getInstalledItems()
     {
         return toInstalledItemsResponse(this.modService.getInstalledWorkshopMods(), this.modService.getWorkShopModInstallRequests());
     }
 
-    @HasPermissionWorkshopInstall
+    @HasPermissionWorkshopView
     @GetMapping("/download-queue")
     public ModDownloadQueueResponse getDownloadQueue()
     {
