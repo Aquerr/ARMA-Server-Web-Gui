@@ -54,6 +54,9 @@ export class AswgChipFormInputComponent implements OnInit {
   toolTipText: string = "";
 
   @Input()
+  sort: (a: string, b: string) => number = (a, b) => a?.localeCompare(b);
+
+  @Input()
   autocompleteList: string[] = [];
 
   autocompleteFilteredList: string[] = [];
@@ -63,7 +66,7 @@ export class AswgChipFormInputComponent implements OnInit {
   }
 
   getEntries(): string[] {
-    return this.control.value;
+    return this.control.value?.sort(this.sort);
   }
 
   addEntry(event: MatChipInputEvent) {
