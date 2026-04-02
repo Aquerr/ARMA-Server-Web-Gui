@@ -85,7 +85,8 @@ Many thanks to:
 
 Units/Communities using/supporting ASWG:
 
-<img width="200" src="https://avatars.githubusercontent.com/u/232053251?v=4" alt="TIS Unit Logo">
+<img width="200" src="used_by_units/logo_tis.png" alt="Tactical Intervention Syndicate unit logo">
+<img width="200" src="used_by_units/logo_grupo_atlas.png" alt="GRUPO ATLAS unit logo">
 
 If you want to add your unit/group here, you are more than welcome to do it through a [PR](https://github.com/Aquerr/ARMA-Server-Web-Gui/pulls) or let me know via [Discord](https://discord.gg/Zg3rWta).
 
