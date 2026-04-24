@@ -1,8 +1,24 @@
-# ASWG - Arma Server Web Gui
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="readme_data/aswg_logo_light.png">
+    <source media="(prefers-color-scheme: light)" srcset="readme_data/aswg_logo_dark.png">
+    <img src="readme_data/aswg_logo_dark.png" alt="ASWG Logo">
+  </picture>
+</div>
+<div align="center">
+  <p style="font-size: 2rem; font-weight: bold">ASWG - Arma Server Web Gui</p>
 
-![License](https://img.shields.io/github/license/aquerr/arma-server-web-gui.svg?label=License)
-[![Docker Image Version](https://img.shields.io/docker/v/aquerr/arma-server-web-gui?label=Docker%20Image)](https://hub.docker.com/r/aquerr/arma-server-web-gui)
-[![Discord](https://img.shields.io/discord/447076657698963466.svg?color=blue&label=Discord&logo=Discord&logoColor=white)](https://discord.gg/Zg3rWta)
+  <a href="https://img.shields.io/github/license/aquerr/arma-server-web-gui.svg?label=License">
+    <img src="https://img.shields.io/github/license/aquerr/arma-server-web-gui.svg?label=License" alt="License">
+  </a>
+  <a href="https://hub.docker.com/r/aquerr/arma-server-web-gui">
+    <img src="https://img.shields.io/docker/v/aquerr/arma-server-web-gui?label=Docker%20Image" alt="Docker Image Version">
+  </a>
+  <a href="https://discord.gg/Zg3rWta">
+    <img src="https://img.shields.io/discord/447076657698963466.svg?color=blue&label=Discord&logo=Discord&logoColor=white" alt="Discord">
+  </a>
+</div>
+
 
 ## General
 ASWG is a user-friendly management GUI for Arma 3 server.
@@ -83,10 +99,10 @@ Many thanks to:
 
 ## Used By
 
-Units/Communities using/supporting ASWG:
+Communities using ASWG:
 
-<img width="200" src="used_by_units/logo_tis.png" alt="Tactical Intervention Syndicate unit logo">
-<img width="200" src="used_by_units/logo_grupo_atlas.png" alt="GRUPO ATLAS unit logo">
+<img width="200" src="readme_data/used_by_units/logo_tis.png" alt="Tactical Intervention Syndicate unit logo">
+<img width="200" src="readme_data/used_by_units/logo_grupo_atlas.png" alt="GRUPO ATLAS unit logo">
 
 If you want to add your unit/group here, you are more than welcome to do it through a [PR](https://github.com/Aquerr/ARMA-Server-Web-Gui/pulls) or let me know via [Discord](https://discord.gg/Zg3rWta).
 
