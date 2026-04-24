@@ -100,9 +100,10 @@ Many thanks to:
 ## Used By
 
 Communities using ASWG:
-
-<img width="200" src="readme_data/used_by_units/logo_tis.png" alt="Tactical Intervention Syndicate unit logo">
-<img width="200" src="readme_data/used_by_units/logo_grupo_atlas.png" alt="GRUPO ATLAS unit logo">
+<div>
+  <img width="200" src="readme_data/used_by_units/logo_tis.png" alt="Tactical Intervention Syndicate unit logo">
+  <img width="200" src="readme_data/used_by_units/logo_grupo_atlas.png" alt="GRUPO ATLAS unit logo">
+</div>
 
 If you want to add your unit/group here, you are more than welcome to do it through a [PR](https://github.com/Aquerr/ARMA-Server-Web-Gui/pulls) or let me know via [Discord](https://discord.gg/Zg3rWta).
 
