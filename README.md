@@ -2,11 +2,11 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="readme_data/aswg_logo_light.png">
     <source media="(prefers-color-scheme: light)" srcset="readme_data/aswg_logo_dark.png">
-    <img src="readme_data/aswg_logo_dark.png" alt="ASWG Logo">
+    <img src="readme_data/aswg_logo_dark.png" alt="ASWG Logo" style="width: 720px">
   </picture>
 </div>
 <div align="center">
-  <p style="font-size: 2rem; font-weight: bold">ASWG - Arma Server Web Gui</p>
+  <h1 style="font-size: 2rem; font-weight: bold">ASWG - Arma Server Web Gui</h1>
 
   <a href="https://img.shields.io/github/license/aquerr/arma-server-web-gui.svg?label=License">
     <img src="https://img.shields.io/github/license/aquerr/arma-server-web-gui.svg?label=License" alt="License">
