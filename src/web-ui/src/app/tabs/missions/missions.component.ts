@@ -2,42 +2,27 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed,
+  inject,
   OnDestroy,
   OnInit,
-  signal
+  signal, ViewChild, AfterViewInit
 } from "@angular/core";
 import { Subject, Subscription } from "rxjs";
 import { ServerMissionsService } from "../../service/server-missions.service";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
-import { MatDialog } from "@angular/material/dialog";
-import {
-  MissionDeleteConfirmDialogComponent
-} from "./mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
 import { NotificationService } from "../../service/notification.service";
-import { MissionModifyDialogComponent } from "./mission-modify-dialog/mission-modify-dialog.component";
 import { Mission } from "../../model/mission.model";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
-import {
-  CdkDrag,
-  CdkDragDrop,
-  CdkDropList,
-  CdkDropListGroup,
-  moveItemInArray,
-  transferArrayItem
-} from "@angular/cdk/drag-drop";
 import { MissionUploadService } from "./service/mission-upload.service";
 import { NewMissionDialogComponent } from "./new-mission-dialog/new-mission-dialog.component";
 import { DialogService } from "../../service/dialog.service";
-import { moveItemBetweenSignalLists } from "../../util/signal/signal-utils";
 import { DragAndDropFileDirective } from "../../common-ui/directive/drag-and-drop-file.directive";
 import { DragDropOverlay } from "../../common-ui/drag-and-drop-overlay/drag-and-drop-overlay.component";
 import { NgClass, NgTemplateOutlet } from "@angular/common";
-import { MatButton, MatIconButton } from "@angular/material/button";
+import { MatButton } from "@angular/material/button";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
-import { MatTooltip } from "@angular/material/tooltip";
-import { MatIcon } from "@angular/material/icon";
 import { MissionUploadButtonComponent } from "./upload-mission/mission-upload-button.component";
+import { MissionListsComponent } from "./mission-lists/mission-lists.component";
 
 @Component({
   selector: "app-missions",
@@ -52,39 +37,23 @@ import { MissionUploadButtonComponent } from "./upload-mission/mission-upload-bu
     MatLabel,
     ReactiveFormsModule,
     MatInput,
-    CdkDropListGroup,
-    CdkDropList,
-    CdkDrag,
-    MatIconButton,
-    MatTooltip,
-    MatIcon,
-    MissionUploadButtonComponent
+    MissionUploadButtonComponent,
+    MissionListsComponent
   ],
   styleUrls: ["./missions.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MissionsComponent implements OnInit, OnDestroy {
-  disabledMissions = signal<Mission[]>([]);
-  enabledMissions = signal<Mission[]>([]);
-  filteredDisabledMissions = computed<Mission[]>(() => {
-    const missions = [...this.disabledMissions()];
-    const searchPhrase = this.searchPhrase();
-    if (searchPhrase == "") return missions;
-    return missions.filter((mission) => {
-      return mission.template.toLowerCase().includes(searchPhrase.toLowerCase());
-    });
-  });
+export class MissionsComponent implements OnInit, OnDestroy, AfterViewInit {
+  public searchPhrase = signal<string>("");
+  public enabledMissions = signal<Mission[]>([]);
 
-  filteredEnabledMissions = computed<Mission[]>(() => {
-    const missions = [...this.enabledMissions()];
-    const searchPhrase = this.searchPhrase();
-    if (searchPhrase == "") return missions;
-    return missions.filter((mission) => {
-      return mission.template.toLowerCase().includes(searchPhrase.toLowerCase());
-    });
-  });
+  @ViewChild(MissionListsComponent) missionListsComponent!: MissionListsComponent;
 
-  searchPhrase = signal<string>("");
+  private readonly missionUploadService = inject(MissionUploadService);
+  private readonly missionsService = inject(ServerMissionsService);
+  private readonly maskService = inject(LoadingSpinnerMaskService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly dialogService = inject(DialogService);
 
   reloadMissionsDataSubject: Subject<void>;
   reloadMissionDataSubscription!: Subscription;
@@ -92,18 +61,11 @@ export class MissionsComponent implements OnInit, OnDestroy {
   searchBoxControl!: FormControl;
   isFileDragged: boolean = false;
 
-  constructor(
-    private missionsService: ServerMissionsService,
-    private maskService: LoadingSpinnerMaskService,
-    private notificationService: NotificationService,
-    private matDialog: MatDialog,
-    private missionUploadService: MissionUploadService,
-    private dialogService: DialogService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {
+  constructor() {
     this.reloadMissionsDataSubject = new Subject();
     this.reloadMissionDataSubscription = this.reloadMissionsDataSubject.subscribe(() => {
-      this.reloadMissions();
+      this.missionListsComponent.reloadMissions();
+      this.enabledMissions = this.missionListsComponent.enabledMissions;
     });
     this.missionUploadSubscription = this.missionUploadService.fileUploadedSubject.subscribe(
       (file) => {
@@ -117,9 +79,12 @@ export class MissionsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.searchBoxControl = new FormControl("");
     this.searchBoxControl.valueChanges.subscribe((value) => {
-      this.filterMissions(value as string);
+      this.searchPhrase.set(value as string);
     });
-    this.reloadMissions();
+  }
+
+  ngAfterViewInit() {
+    this.enabledMissions = this.missionListsComponent.enabledMissions;
   }
 
   ngOnDestroy(): void {
@@ -149,40 +114,9 @@ export class MissionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private reloadMissions(): void {
-    this.maskService.show();
-    this.missionsService.getInstalledMissions().subscribe((response) => {
-      this.disabledMissions.set(response.disabledMissions);
-      this.enabledMissions.set(response.enabledMissions);
-      this.maskService.hide();
-    });
-  }
-
-  showMissionDeleteConfirmationDialog(missionTemplate: string): void {
-    const dialogRef = this.matDialog.open(MissionDeleteConfirmDialogComponent, {
-      width: "250px",
-      enterAnimationDuration: "200ms",
-      exitAnimationDuration: "200ms"
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.deleteMission(missionTemplate);
-      }
-    });
-  }
-
-  deleteMission(missionTemplate: string) {
-    this.maskService.show();
-    this.missionsService.deleteMission(missionTemplate).subscribe(() => {
-      this.maskService.hide();
-      this.notificationService.successNotification("Mission has been deleted!");
-      this.reloadMissionsDataSubject.next();
-    });
-  }
-
   save() {
     this.maskService.show();
+    this.enabledMissions = this.missionListsComponent.enabledMissions;
     this.missionsService
       .saveEnabledMissions({ missions: this.enabledMissions() })
       .subscribe(() => {
@@ -191,59 +125,17 @@ export class MissionsComponent implements OnInit, OnDestroy {
       });
   }
 
-  showMissionModifyDialog(mission: Mission) {
-    const dialogRef = this.matDialog.open(MissionModifyDialogComponent, {
-      minWidth: "500px",
-      enterAnimationDuration: "200ms",
-      exitAnimationDuration: "200ms",
-      data: mission
-    });
-
-    dialogRef.afterClosed().subscribe((mission: Mission) => {
-      if (mission) {
-        this.updateMission(mission);
-        this.changeDetectorRef.markForCheck();
-      }
-    });
-  }
-
-  filterMissions(searchPhrase: string) {
-    this.searchPhrase.set(searchPhrase);
-  }
-
-  onMissionItemDropped(event: CdkDragDrop<Mission[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      const movedMission = event.previousContainer.data[event.previousIndex];
-      if (event.previousContainer.id == "enabled-missions-list") {
-        moveItemBetweenSignalLists(this.enabledMissions, this.disabledMissions, movedMission);
-      } else {
-        moveItemBetweenSignalLists(this.disabledMissions, this.enabledMissions, movedMission);
-      }
-
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    }
-  }
-
   addNewMission() {
-    const dialogRef = this.matDialog.open(NewMissionDialogComponent, {
-      width: "450px",
-      enterAnimationDuration: "200ms",
-      exitAnimationDuration: "200ms"
-    });
-
-    dialogRef.afterClosed().subscribe((result: { file: File; template: string | undefined; name: string }) => {
+    this.dialogService.open(NewMissionDialogComponent, (result: { file: File; template: string | undefined; name: string }) => {
       if (result.file) {
         this.onFileDropped(result.file);
       } else if (result.template) {
         this.addBuiltInMission(result.name, result.template);
       }
+    }, {}, {
+      width: "450px",
+      enterAnimationDuration: "200ms",
+      exitAnimationDuration: "200ms"
     });
   }
 
@@ -251,21 +143,9 @@ export class MissionsComponent implements OnInit, OnDestroy {
     this.maskService.show();
     this.missionsService.addTemplateMission(name, template).subscribe(() => {
       this.maskService.hide();
-      this.reloadMissions();
       this.notificationService.successNotification("Mission added!");
+      this.reloadMissionsDataSubject.next();
     });
-  }
-
-  private updateMission(mission: Mission) {
-    this.maskService.show();
-    this.missionsService.updateMission(mission.id, mission).subscribe(() => {
-      this.maskService.hide();
-      this.notificationService.successNotification("Mission updated!");
-    });
-  }
-
-  getMissionNameForDisplay(mission: Mission) {
-    return mission.name || mission.template;
   }
 
   setFileDragged(isFileDragged: boolean) {

@@ -77,7 +77,7 @@ public class MissionRestController
     @Value
     public static class GetMissionsResponse
     {
-        List<Mission> disabledMissions;
+        List<Mission> disabledMissions; // Create separate Mission dto for REST
         List<Mission> enabledMissions;
 
         private static GetMissionsResponse of(Missions missions)

@@ -4,6 +4,7 @@ export interface Mission {
   template: string;
   difficulty: MissionDifficulty;
   parameters: MissionParam[];
+  sizeBytes: number;
 }
 
 export interface MissionParam {

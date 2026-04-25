@@ -75,17 +75,6 @@ public class MissionConverter
         }
     }
 
-    public Mission convertToDomainMission(ArmaServerConfig.Missions.Mission armaMission)
-    {
-        Mission mission = new Mission();
-        mission.setName(armaMission.getTemplate());
-        mission.setDifficulty(Mission.Difficulty.findOrDefault(Optional.ofNullable(armaMission.getDifficulty())
-                .map(String::toUpperCase)
-                .orElse(null)));
-        mission.setParameters(convertToDomainMissionParameters(armaMission.getParams()));
-        return mission;
-    }
-
     public ArmaServerConfig.Missions.Mission convertToArmaMissionObject(Mission mission)
     {
         ArmaServerConfig.Missions.Mission armaMission = new ArmaServerConfig.Missions.Mission();
@@ -93,13 +82,6 @@ public class MissionConverter
         armaMission.setDifficulty(mission.getDifficulty().name().toLowerCase());
         armaMission.setParams(convertToArmaMissionParams(mission.getParameters()));
         return armaMission;
-    }
-
-    private Set<Mission.Parameter> convertToDomainMissionParameters(Map<String, String> params)
-    {
-        return params.entrySet().stream()
-                .map(entry -> new Mission.Parameter(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toSet());
     }
 
     private Map<String, String> convertToArmaMissionParams(Set<Mission.Parameter> parameters)

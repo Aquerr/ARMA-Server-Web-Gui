@@ -1,0 +1,17 @@
+<div class="mission-list-group" cdkDropListGroup>
+  <app-mission-list [missions]="disabledMissions()"
+                [listHeader]="'Disabled'"
+                (moveAll)="enableAllMissions()"
+                (missionItemDragDrop)="onMissionItemDragDrop($event)"
+                (missionDelete)="onMissionDelete()"
+                [moveAllMissionsButtonName]="'Enable all'"
+                [moveAllMissionsButtonIcon]="'arrow_forward'"></app-mission-list>
+
+  <app-mission-list [missions]="enabledMissions()"
+                [listHeader]="'Enabled'"
+                (moveAll)="disableAllMissions()"
+                (missionItemDragDrop)="onMissionItemDragDrop($event)"
+                (missionDelete)="onMissionDelete()"
+                [moveAllMissionsButtonName]="'Disable all'"
+                [moveAllMissionsButtonIcon]="'arrow_backward'"></app-mission-list>
+</div>

@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class Mission
@@ -19,6 +19,7 @@ public class Mission
     private Long id;
     private String name;
     private String template;
+    private Long sizeBytes;
 
     @Builder.Default
     private Difficulty difficulty = Difficulty.REGULAR;

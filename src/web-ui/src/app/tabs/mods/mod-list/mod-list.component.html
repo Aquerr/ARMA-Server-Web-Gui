@@ -16,21 +16,22 @@
   </mat-form-field>
 </div>
 
-<div class="list-container">
+<div class="list-wrapper">
   <div
     [id]="listHeader"
     cdkDropList
-    class="list-container"
+    class="list"
     [cdkDropListData]="filteredMods()"
     cdkDropListSortingDisabled
     (cdkDropListDropped)="onModItemDragDrop($event)"
   >
     @for (mod of filteredMods(); track mod.name) {
-      <app-mod-list-item
-        [mod]="mod"
-        (modDeleted)="onModDelete($event)"
-        cdkDrag
-      ></app-mod-list-item>
+      <div class="drag-item" cdkDrag>
+        <app-mod-list-item
+          [mod]="mod"
+          (modDeleted)="onModDelete($event)"
+        ></app-mod-list-item>
+      </div>
     }
   </div>
 </div>

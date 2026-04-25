@@ -1,0 +1,21 @@
+<h2 class="mission-list-header">
+  {{ listHeader }} <span class="brightness-50">({{ missions().length }})</span>
+</h2>
+<div class="list-wrapper">
+  <div
+    [id]="listHeader"
+    cdkDropList
+    class="list"
+    [cdkDropListData]="filteredMissions()"
+    (cdkDropListDropped)="onMissionItemDragDrop($event)"
+  >
+    @for (mission of filteredMissions(); track mission.name) {
+      <div class="drag-item" cdkDrag>
+        <app-mission-list-item
+          [mission]="mission"
+          (missionDeleted)="onMissionDelete($event)"
+        ></app-mission-list-item>
+      </div>
+    }
+  </div>
+</div>

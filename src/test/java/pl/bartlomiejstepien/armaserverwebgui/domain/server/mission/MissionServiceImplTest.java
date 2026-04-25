@@ -60,6 +60,7 @@ class MissionServiceImplTest
     {
         Mission mission = prepareMission(MISSION_NAME_1);
         mission.setEnabled(false);
+        mission.setSizeBytes(null);
         MissionEntity missionEntity = prepareMissionEntity(MISSION_NAME_1);
         MultipartFile multipartFile = mock(MultipartFile.class);
         given(multipartFile.getOriginalFilename()).willReturn(MISSION_NAME_1);
@@ -164,6 +165,7 @@ class MissionServiceImplTest
                 .enabled(true)
                 .difficulty(Mission.Difficulty.REGULAR)
                 .parameters(Collections.emptySet())
+                .sizeBytes(0L)
                 .build();
     }
 

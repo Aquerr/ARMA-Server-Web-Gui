@@ -1,0 +1,30 @@
+<div
+  class="list-item-container"
+>
+  <div style="flex: 72%; display: flex; flex-direction: column">
+    <span style="font-weight: bold">{{ missionDisplayName() }}</span>
+    <span>Difficulty: {{ mission().difficulty }}</span>
+    <span style="filter: brightness(50%)">Template: {{ mission().template }}</span>
+  </div>
+  <div style="white-space: nowrap; filter: brightness(50%)">
+    {{ mission().sizeBytes | filesize }}
+  </div>
+  <div class="text-center" style="flex: 14%">
+    <button
+      mat-icon-button
+      matTooltip="Configure parameters"
+      (click)="showMissionModifyDialog()"
+    >
+      <mat-icon>settings</mat-icon>
+    </button>
+  </div>
+  <div class="text-center" style="flex: 14%">
+    <button
+      mat-icon-button
+      matTooltip="Delete the mission"
+      (click)="showMissionDeleteConfirmationDialog()"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</div>

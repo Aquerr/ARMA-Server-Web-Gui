@@ -45,15 +45,19 @@ export class MissionModifyDialogComponent implements OnInit {
   @ViewChild("viewContainerRef", { read: ViewContainerRef, static: true })
   viewContainerRef!: ViewContainerRef;
 
+  mission: Mission;
+
   name: string = "";
   template: string = "";
   difficulty: MissionDifficulty = MissionDifficulty.REGULAR;
   parameters: MissionParam[] = [];
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public mission: Mission,
+    @Inject(MAT_DIALOG_DATA) dialogData: MissionModifyDialogData,
     public dialogRef: MatDialogRef<MissionModifyDialogComponent>
-  ) {}
+  ) {
+    this.mission = dialogData.mission;
+  }
 
   ngOnInit(): void {
     if (this.mission.parameters) {
@@ -100,4 +104,8 @@ export class MissionModifyDialogComponent implements OnInit {
     this.mission.template = this.template;
     this.dialogRef.close(this.mission);
   }
+}
+
+export interface MissionModifyDialogData {
+  mission: Mission;
 }

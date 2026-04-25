@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 
@@ -58,18 +59,44 @@ public class MissionFileFileStorageImpl implements MissionFileStorage
     @Override
     public boolean deleteMission(String template)
     {
+        if (!StringUtils.hasText(template))
+            return false;
+
+        final File file = findMissionFile(template);
+        if (file != null)
+        {
+            return file.delete();
+        }
+        return false;
+    }
+
+    @Override
+    public long getMissionFileSize(String template)
+    {
+        if (!StringUtils.hasText(template))
+            return 0;
+
+        final File file = findMissionFile(template);
+        if (file != null)
+        {
+            return file.length();
+        }
+        return 0;
+    }
+
+    private File findMissionFile(String template)
+    {
         final File[] files = this.missionsDirectory.get().toFile().listFiles();
         if (files != null)
         {
             for (final File file : files)
             {
-                if (file.getName().equals(missionFileNameHelper.resolveFileName(template)))
+                if (file.getName().equalsIgnoreCase(missionFileNameHelper.resolveFileName(template)))
                 {
-                    return file.delete();
+                    return file;
                 }
             }
         }
-
-        return false;
+        return null;
     }
 }

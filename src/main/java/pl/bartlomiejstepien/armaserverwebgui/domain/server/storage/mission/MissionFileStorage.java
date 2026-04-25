@@ -14,4 +14,6 @@ public interface MissionFileStorage
     List<String> getInstalledMissionTemplates();
 
     boolean deleteMission(String template);
+
+    long getMissionFileSize(String template);
 }

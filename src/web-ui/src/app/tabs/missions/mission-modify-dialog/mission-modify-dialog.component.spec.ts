@@ -13,7 +13,10 @@ describe("MissionModifyDialogComponent", () => {
       providers: [
         {
           provide: MAT_DIALOG_DATA,
-          useValue: {}
+          useValue: {
+            mission: {
+            }
+          }
         },
         {
           provide: MatDialogRef,

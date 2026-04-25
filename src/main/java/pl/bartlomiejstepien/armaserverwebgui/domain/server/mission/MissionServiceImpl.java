@@ -93,6 +93,9 @@ public class MissionServiceImpl implements MissionService
     {
         Map<Boolean, List<Mission>> groupedMissions = this.missionRepository.findAll().stream()
                 .map(this.missionConverter::convertToDomainMission)
+                .map((mission) -> mission.toBuilder()
+                        .sizeBytes(this.missionFileStorage.getMissionFileSize(mission.getTemplate()))
+                        .build())
                 .collect(Collectors.groupingBy(Mission::isEnabled));
 
         Missions missions = new Missions();
