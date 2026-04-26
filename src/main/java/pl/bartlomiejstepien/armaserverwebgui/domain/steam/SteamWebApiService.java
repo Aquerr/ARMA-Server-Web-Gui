@@ -35,6 +35,16 @@ public class SteamWebApiService
     @Cacheable(cacheNames = "workshop-query")
     public ArmaWorkshopQueryResponse queryWorkshopMods(WorkshopQueryParams params)
     {
+        if (params.isSearchByModId())
+        {
+            WorkshopMod workshopMod = getWorkshopMod(Long.parseLong(params.getCursor().trim()));
+            if (workshopMod == null)
+                return ArmaWorkshopQueryResponse.builder().build();
+            return ArmaWorkshopQueryResponse.builder()
+                    .mods(List.of(workshopMod))
+                    .build();
+        }
+
         WorkShopQueryResponse workShopQueryResponse;
         try
         {

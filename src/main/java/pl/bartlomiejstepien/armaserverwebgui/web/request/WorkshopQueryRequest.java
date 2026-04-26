@@ -11,4 +11,5 @@ public class WorkshopQueryRequest
 {
     private String cursor;
     private String searchText;
+    private Boolean searchByModId;
 }

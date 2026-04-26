@@ -1,6 +1,7 @@
 export interface WorkshopQueryRequest {
   cursor: string;
   searchText: string;
+  searchByModId: boolean;
 }
 
 export interface WorkShopModInstallRequest {

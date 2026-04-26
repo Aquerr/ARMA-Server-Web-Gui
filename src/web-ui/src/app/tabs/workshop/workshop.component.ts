@@ -8,6 +8,7 @@ import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatButton } from "@angular/material/button";
 import { WorkshopItemComponent } from "./workshop-item/workshop-item.component";
+import { MatCheckbox } from "@angular/material/checkbox";
 
 @Component({
   selector: "app-workshop",
@@ -19,7 +20,8 @@ import { WorkshopItemComponent } from "./workshop-item/workshop-item.component";
     MatButton,
     MatPaginator,
     MatInput,
-    WorkshopItemComponent
+    WorkshopItemComponent,
+    MatCheckbox
   ],
   styleUrls: ["./workshop.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -29,7 +31,8 @@ export class WorkshopComponent implements OnInit, OnDestroy {
   installedWorkshopMods = signal<WorkshopMod[]>([]);
   modsUnderInstallation = signal<WorkshopMod[]>([]);
   nextCursor: string = "";
-  searchBoxControl!: FormControl;
+  searchBoxControl!: FormControl<string>;
+  searchByModIdControl!: FormControl<boolean>;
   private lastSearchText: string = "";
 
   private changeDetectorRef = inject(ChangeDetectorRef);
@@ -43,7 +46,8 @@ export class WorkshopComponent implements OnInit, OnDestroy {
     private readonly maskService: LoadingSpinnerMaskService,
     private readonly modInstallWebsocketService: ModInstallWebsocketService
   ) {
-    this.searchBoxControl = new FormControl<string>("");
+    this.searchBoxControl = new FormControl<string>("", { nonNullable: true });
+    this.searchByModIdControl = new FormControl<boolean>(false, { nonNullable: true });
     this.modInstallWebsocketService.workShopModInstallStatus.subscribe((modInstallStatus) => {
       const workshopMod = this.workshopMods().find((mod) => mod.fileId === modInstallStatus.fileId);
       if (workshopMod) {
@@ -64,7 +68,7 @@ export class WorkshopComponent implements OnInit, OnDestroy {
 
   onSearchBoxKeyDown($event: KeyboardEvent) {
     if ($event.code === "Enter" || $event.code === "NumpadEnter") {
-      this.searchWorkshop("", this.searchBoxControl.value as string);
+      this.searchWorkshop("", this.searchBoxControl.value);
     }
   }
 
@@ -76,7 +80,7 @@ export class WorkshopComponent implements OnInit, OnDestroy {
     this.maskService.show();
     this.lastSearchText = searchText;
     this.workshopService
-      .queryWorkshop({ cursor: cursor, searchText: this.lastSearchText })
+      .queryWorkshop({ cursor: cursor, searchText: this.lastSearchText, searchByModId: this.searchByModIdControl.value })
       .subscribe((response) => {
         this.nextCursor = response.nextCursor;
 

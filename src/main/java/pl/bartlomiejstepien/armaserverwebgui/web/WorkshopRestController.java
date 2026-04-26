@@ -22,6 +22,7 @@ import pl.bartlomiejstepien.armaserverwebgui.web.request.WorkshopQueryRequest;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.ModDownloadQueueResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/workshop")
@@ -103,6 +104,7 @@ public class WorkshopRestController
         return WorkshopQueryParams.builder()
                 .cursor(request.getCursor())
                 .searchText(request.getSearchText())
+                .searchByModId(Optional.ofNullable(request.getSearchByModId()).orElse(false))
                 .build();
     }
 

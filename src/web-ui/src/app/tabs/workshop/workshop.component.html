@@ -1,10 +1,15 @@
 <div class="container">
   <h1>Workshop</h1>
-  <div>
-    <mat-form-field>
-      <mat-label>Search workshop</mat-label>
-      <input matInput [formControl]="searchBoxControl" (keydown)="onSearchBoxKeyDown($event)" />
-    </mat-form-field>
+  <div class="search-bar-wrapper">
+    <div>
+      <mat-form-field>
+        <mat-label>Search workshop</mat-label>
+        <input matInput [formControl]="searchBoxControl" (keydown)="onSearchBoxKeyDown($event)" />
+      </mat-form-field>
+    </div>
+    <div class="search-by-mod-checkbox">
+      <mat-checkbox [formControl]="searchByModIdControl">Search by mod id</mat-checkbox>
+    </div>
   </div>
   <div class="workshop">
     <h2>Workshop mods</h2>
