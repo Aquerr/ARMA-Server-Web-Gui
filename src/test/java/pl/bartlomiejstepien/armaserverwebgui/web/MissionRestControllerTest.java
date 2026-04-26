@@ -88,8 +88,8 @@ class MissionRestControllerTest extends BaseIntegrationTest
         var response2 = getAuthenticatedRequest("/api/v1/missions", MissionRestController.GetMissionsResponse.class);
 
         assertTrue(response2.getStatusCode().is2xxSuccessful());
-        assertThat(response2.getBody().getEnabledMissions()).isEmpty();
-        assertThat(response2.getBody().getDisabledMissions()).isEmpty();
+        assertThat(response2.getBody().enabledMissions()).isEmpty();
+        assertThat(response2.getBody().disabledMissions()).isEmpty();
     }
 
     @Test
@@ -117,7 +117,7 @@ class MissionRestControllerTest extends BaseIntegrationTest
         var response2 = getAuthenticatedRequest("/api/v1/missions", MissionRestController.GetMissionsResponse.class);
 
         assertTrue(response2.getStatusCode().is2xxSuccessful());
-        assertThat(response2.getBody().getEnabledMissions()).isEmpty();
-        assertThat(response2.getBody().getDisabledMissions()).isEmpty();
+        assertThat(response2.getBody().enabledMissions()).isEmpty();
+        assertThat(response2.getBody().disabledMissions()).isEmpty();
     }
 }

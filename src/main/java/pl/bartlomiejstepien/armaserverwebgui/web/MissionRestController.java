@@ -2,7 +2,6 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +19,8 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.MissionService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
+import pl.bartlomiejstepien.armaserverwebgui.web.converter.MissionApiModelConverter;
+import pl.bartlomiejstepien.armaserverwebgui.web.model.MissionApiModel;
 
 import java.util.List;
 
@@ -30,19 +31,23 @@ import java.util.List;
 public class MissionRestController
 {
     private final MissionService missionService;
+    private final MissionApiModelConverter missionApiModelConverter;
 
     @HasPermissionMissionView
     @GetMapping
     public GetMissionsResponse getMissions()
     {
-        return GetMissionsResponse.of(this.missionService.getMissions());
+        Missions missions = this.missionService.getMissions();
+        return GetMissionsResponse.of(missions.getEnabledMissions().stream().map(this.missionApiModelConverter::toApiModel).toList(),
+                missions.getDisabledMissions().stream().map(this.missionApiModelConverter::toApiModel).toList()
+        );
     }
 
     @HasPermissionMissionUpdate
     @PostMapping("/enabled")
     public ResponseEntity<?> saveEnabledMissionList(@RequestBody SaveEnabledMissionListRequest saveEnabledMissionListRequest)
     {
-        this.missionService.saveEnabledMissionList(saveEnabledMissionListRequest.getMissions());
+        this.missionService.saveEnabledMissionList(saveEnabledMissionListRequest.getMissionTemplates());
         return ResponseEntity.ok().build();
     }
 
@@ -69,27 +74,26 @@ public class MissionRestController
     @HasPermissionMissionUpdate
     @PutMapping("/id/{id}")
     public void updateMission(@PathVariable("id") long id,
-                              @RequestBody Mission mission)
+                              @RequestBody MissionApiModel mission)
     {
-        this.missionService.updateMission(id, mission);
+        this.missionService.updateMission(id, this.missionApiModelConverter.toDto(mission));
     }
 
-    @Value
-    public static class GetMissionsResponse
+    /**
+     * @param disabledMissions Create separate Mission dto for REST
+     */
+    public record GetMissionsResponse(List<MissionApiModel> disabledMissions, List<MissionApiModel> enabledMissions)
     {
-        List<Mission> disabledMissions; // Create separate Mission dto for REST
-        List<Mission> enabledMissions;
-
-        private static GetMissionsResponse of(Missions missions)
+        private static GetMissionsResponse of(List<MissionApiModel> enabled, List<MissionApiModel> disabled)
         {
-            return new GetMissionsResponse(missions.getDisabledMissions(), missions.getEnabledMissions());
+            return new GetMissionsResponse(enabled, disabled);
         }
     }
 
     @Data
     public static class SaveEnabledMissionListRequest
     {
-        private List<Mission> missions;
+        private List<String> missionTemplates;
     }
 
     @Data

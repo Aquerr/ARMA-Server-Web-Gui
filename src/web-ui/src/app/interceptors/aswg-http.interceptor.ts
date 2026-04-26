@@ -1,15 +1,9 @@
 import { Injectable } from "@angular/core";
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-  HttpErrorResponse
-} from "@angular/common/http";
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import { Observable, tap } from "rxjs";
 import { AuthService } from "../service/auth.service";
 import { API_BASE_URL } from "../../environments/environment";
-import { ApiErrorResponse } from "../api/api-error.model";
+import { ApiErrorCode, ApiErrorResponse } from "../api/api-error.model";
 import { ApiErrorHandlerService } from "../api/api-error-handler.service";
 
 @Injectable()
@@ -30,9 +24,18 @@ export class AswgHttpInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       tap({
-        error: (error: HttpErrorResponse) => {
-          const apiErrorResponse = error.error as ApiErrorResponse;
-          if (apiErrorResponse && apiErrorResponse) {
+        error: (response: HttpErrorResponse) => {
+          if (response.error instanceof Blob) {
+            this.apiErrorHandler.handleError({
+              message: response.message,
+              code: response.status === 403 ? ApiErrorCode.ACCESS_DENIED : ApiErrorCode.SERVER_ERROR,
+              status: response.status
+            } satisfies ApiErrorResponse);
+            return;
+          }
+
+          const apiErrorResponse = response.error as ApiErrorResponse;
+          if (apiErrorResponse) {
             this.apiErrorHandler.handleError(apiErrorResponse);
           }
         }

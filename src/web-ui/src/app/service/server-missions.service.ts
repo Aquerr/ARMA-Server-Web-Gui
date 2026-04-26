@@ -50,6 +50,13 @@ export class ServerMissionsService {
   updateMission(id: number, mission: Mission) {
     return this.httpClient.put(`${this.MISSIONS_URL}/id/${id}`, mission);
   }
+
+  downloadMission(id: number) {
+    return this.httpClient.get(`${this.MISSIONS_FILES_URL}/${id}/download`, {
+      responseType: "blob",
+      observe: "response"
+    });
+  }
 }
 
 export interface GetMissionsResponse {
@@ -58,7 +65,7 @@ export interface GetMissionsResponse {
 }
 
 export interface SaveEnabledMissionsRequest {
-  missions: Mission[];
+  missionTemplates: string[];
 }
 
 export interface DoesMissionExistsResponse {

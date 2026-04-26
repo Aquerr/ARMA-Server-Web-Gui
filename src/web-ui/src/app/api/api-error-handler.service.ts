@@ -12,7 +12,8 @@ export class ApiErrorHandlerService {
   private readonly errorHandlers: Map<ApiErrorCode, () => void> = new Map<ApiErrorCode, () => void>([
     [ApiErrorCode.AUTH_TOKEN_EXPIRED, this.handleAuthTokenExpired.bind(this)],
     [ApiErrorCode.BAD_AUTH_TOKEN, this.handleAuthTokenExpired.bind(this)],
-    [ApiErrorCode.AUTH_TOKEN_MISSING, this.handleAuthTokenMissing.bind(this)]
+    [ApiErrorCode.AUTH_TOKEN_MISSING, this.handleAuthTokenMissing.bind(this)],
+    [ApiErrorCode.ACCESS_DENIED, this.handleAccessDenied.bind(this)]
   ]);
 
   private readonly authService = inject(AuthService);
@@ -48,8 +49,12 @@ export class ApiErrorHandlerService {
     this.notificationService.warningNotification("Session expired. Please log in again.");
   }
 
-  private handleAuthTokenMissing() {
+  private handleAuthTokenMissing(): void {
     void this.router.navigateByUrl("/login");
     this.notificationService.warningNotification("You are not authenticated. Please log in.");
+  }
+
+  private handleAccessDenied(): void {
+    this.notificationService.warningNotification("You don't have access to do this!");
   }
 }

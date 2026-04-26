@@ -7,6 +7,11 @@ import pl.bartlomiejstepien.armaserverwebgui.application.ApiExceptionCode;
 @ApiException(status = HttpStatus.NOT_FOUND, code = ApiExceptionCode.MISSION_NOT_FOUND, messageKey = "aswg.mission.not-found")
 public class MissionNotFoundException extends RuntimeException
 {
+    public MissionNotFoundException(long missionId)
+    {
+        super("Mission not found for id = " + missionId);
+    }
+
     public MissionNotFoundException(String message)
     {
         super(message);

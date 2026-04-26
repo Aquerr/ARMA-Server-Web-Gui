@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mission;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,12 +11,16 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionFileAlreadyExistsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.MissionNotFoundException;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.ServerConfigStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ArmaServerConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionFileNameHelper;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionFileStorage;
 import pl.bartlomiejstepien.armaserverwebgui.repository.MissionRepository;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -77,13 +82,13 @@ public class MissionServiceImpl implements MissionService
 
     @Transactional
     @Override
-    public void saveEnabledMissionList(List<Mission> missions)
+    public void saveEnabledMissionList(List<String> missionTemplates)
     {
         this.missionRepository.disableAll();
-        if (missions.isEmpty())
+        if (missionTemplates.isEmpty())
             return;
 
-        this.missionRepository.updateAllByTemplateSetEnabled(missions.stream().map(Mission::getTemplate).toList());
+        this.missionRepository.updateAllByTemplateSetEnabled(missionTemplates);
         syncConfigMissions();
     }
 
@@ -126,6 +131,15 @@ public class MissionServiceImpl implements MissionService
         this.missionRepository.findById(id).orElseThrow(() -> new MissionNotFoundException("Mission not found for id = " + id));
         missionRepository.save(missionConverter.convertToEntity(mission));
         syncConfigMissions();
+    }
+
+    @Override
+    public File getMissionFile(long missionId)
+    {
+        MissionEntity missionEntity = this.missionRepository.findById(missionId)
+                .orElseThrow(() -> new MissionNotFoundException(missionId));
+
+        return this.missionFileStorage.getMissionFile(missionEntity.getTemplate());
     }
 
     private void syncConfigMissions()

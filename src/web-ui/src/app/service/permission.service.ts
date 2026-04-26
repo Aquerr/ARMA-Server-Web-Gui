@@ -8,9 +8,9 @@ import { NotificationService } from "./notification.service";
   providedIn: "root"
 })
 export class PermissionService {
-  authService: AuthService = inject(AuthService);
-  notificationService: NotificationService = inject(NotificationService);
-  router: Router = inject(Router);
+  private readonly authService: AuthService = inject(AuthService);
+  private readonly notificationService: NotificationService = inject(NotificationService);
+  private readonly router: Router = inject(Router);
 
   // TODO: Add observable methods that can be piped when succeed
   hasAllAuthorities(requiredAuthorities: AswgAuthority[], shouldNotify: boolean): boolean {

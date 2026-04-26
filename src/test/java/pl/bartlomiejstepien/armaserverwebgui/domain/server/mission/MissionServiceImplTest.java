@@ -60,7 +60,6 @@ class MissionServiceImplTest
     {
         Mission mission = prepareMission(MISSION_NAME_1);
         mission.setEnabled(false);
-        mission.setSizeBytes(null);
         MissionEntity missionEntity = prepareMissionEntity(MISSION_NAME_1);
         MultipartFile multipartFile = mock(MultipartFile.class);
         given(multipartFile.getOriginalFilename()).willReturn(MISSION_NAME_1);
@@ -105,7 +104,7 @@ class MissionServiceImplTest
         MissionEntity missionEntity2 = prepareMissionEntity(MISSION_NAME_2);
         Mission mission1 = prepareMission(MISSION_NAME_1);
         Mission mission2 = prepareMission(MISSION_NAME_2);
-        List<Mission> missions = List.of(mission1, mission2);
+        List<String> missions = List.of(MISSION_NAME_1, MISSION_NAME_2);
 
         given(missionRepository.findAll()).willReturn(List.of(missionEntity1, missionEntity2));
         given(missionConverter.convertToDomainMission(missionEntity1)).willReturn(prepareMission(MISSION_NAME_1));

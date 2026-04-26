@@ -1,5 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission;
 
+import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -84,6 +85,14 @@ public class MissionFileFileStorageImpl implements MissionFileStorage
         return 0;
     }
 
+    @Nullable
+    @Override
+    public File getMissionFile(String template)
+    {
+        return findMissionFile(template);
+    }
+
+    @Nullable
     private File findMissionFile(String template)
     {
         final File[] files = this.missionsDirectory.get().toFile().listFiles();

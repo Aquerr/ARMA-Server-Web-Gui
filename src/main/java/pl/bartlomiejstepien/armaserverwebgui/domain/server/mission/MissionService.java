@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
 
+import java.io.File;
 import java.util.List;
 
 public interface MissionService
@@ -14,11 +15,13 @@ public interface MissionService
 
     boolean deleteMission(String template);
 
-    void saveEnabledMissionList(List<Mission> missions);
+    void saveEnabledMissionList(List<String> missionTemplates);
 
     Missions getMissions();
 
     void addMission(String name, String template);
 
     void updateMission(long id, Mission mission);
+
+    File getMissionFile(long missionId);
 }

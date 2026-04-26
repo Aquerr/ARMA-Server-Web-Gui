@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, computed, inject, input, output, ViewEncapsulation } from "@angular/core";
+import { ChangeDetectorRef, Component, computed, inject, input, output } from "@angular/core";
 import { MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
@@ -12,6 +12,9 @@ import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask
 import { NotificationService } from "../../../service/notification.service";
 import { ServerMissionsService } from "../../../service/server-missions.service";
 import { FilesizePipe } from "../../../util/pipe/filesize.pipe";
+import { HttpResponse } from "@angular/common/http";
+import { PermissionService } from "../../../service/permission.service";
+import { AswgAuthority } from "../../../model/authority.model";
 
 @Component({
   selector: "app-mission-list-item",
@@ -38,6 +41,7 @@ export class MissionListItemComponent {
   private readonly maskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService = inject(NotificationService);
   private readonly missionsService = inject(ServerMissionsService);
+  private readonly permissionService = inject(PermissionService);
 
   showMissionModifyDialog() {
     this.dialogService.open(MissionModifyDialogComponent, (mission: Mission) => {
@@ -79,5 +83,38 @@ export class MissionListItemComponent {
       this.maskService.hide();
       this.notificationService.successNotification("Mission updated!");
     });
+  }
+
+  public downloadMission() {
+    if (!this.permissionService.hasAllAuthorities([AswgAuthority.MISSIONS_DOWNLOAD], true)) {
+      return;
+    }
+
+    this.maskService.show();
+    this.missionsService.downloadMission(this.mission().id).subscribe({
+      next: (response) => {
+        const url = window.URL.createObjectURL(response.body!);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = MissionListItemComponent.getFileName(response) ?? this.mission().template + ".pbo";
+
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+      },
+      complete: () => {
+        this.maskService.hide();
+      }
+    });
+  }
+
+  private static getFileName(httpResponse: HttpResponse<Blob>) {
+    const disposition
+      = httpResponse.headers.get("Content-Disposition");
+
+    const match = disposition?.match(/filename="(.+)"/);
+
+    return match?.[1];
   }
 }

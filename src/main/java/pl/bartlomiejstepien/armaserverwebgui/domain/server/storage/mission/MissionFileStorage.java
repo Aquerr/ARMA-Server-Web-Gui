@@ -1,7 +1,9 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission;
 
+import jakarta.annotation.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -16,4 +18,6 @@ public interface MissionFileStorage
     boolean deleteMission(String template);
 
     long getMissionFileSize(String template);
+
+    @Nullable File getMissionFile(String template);
 }

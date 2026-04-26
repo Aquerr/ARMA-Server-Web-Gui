@@ -118,7 +118,7 @@ export class MissionsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.maskService.show();
     this.enabledMissions = this.missionListsComponent.enabledMissions;
     this.missionsService
-      .saveEnabledMissions({ missions: this.enabledMissions() })
+      .saveEnabledMissions({ missionTemplates: this.enabledMissions().map((mission) => mission.template) })
       .subscribe(() => {
         this.maskService.hide();
         this.notificationService.successNotification("Active mission list saved!", "Success");

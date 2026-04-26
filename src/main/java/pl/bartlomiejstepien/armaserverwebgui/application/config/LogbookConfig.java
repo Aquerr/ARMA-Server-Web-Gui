@@ -45,7 +45,14 @@ import static org.zalando.logbook.core.Conditions.requestTo;
 @Configuration(proxyBeanMethods = false)
 public class LogbookConfig
 {
-    private static final String[] IGNORED_FILE_CONTENT = new String[] {"text/html", "text/css", "text/javascript", "application/javascript", "image/*"};
+    private static final String[] IGNORED_FILE_CONTENT = new String[] {
+            "text/html",
+            "text/css",
+            "text/javascript",
+            "application/javascript",
+            "image/*",
+            "application/octet-stream"
+    };
 
     @Bean
     public FilterRegistrationBean<LogbookFilter> logbookFilterFilterRegistrationBean(Logbook logbook)

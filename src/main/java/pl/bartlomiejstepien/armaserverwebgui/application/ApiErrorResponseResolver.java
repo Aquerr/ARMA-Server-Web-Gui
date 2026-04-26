@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.i18n.MessageService;
 import pl.bartlomiejstepien.armaserverwebgui.web.response.RestErrorResponse;
@@ -23,6 +24,11 @@ public class ApiErrorResponseResolver
         }
         else
         {
+            if (throwable instanceof AccessDeniedException)
+            {
+                return RestErrorResponse.of(HttpStatus.FORBIDDEN.getReasonPhrase(), ApiExceptionCode.ACCESS_DENIED.name(), HttpStatus.FORBIDDEN.value());
+            }
+
             return RestErrorResponse.of(
                     HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
                     DEFAULT_ERROR_CODE,

@@ -65,7 +65,7 @@ export class MissionListsComponent implements OnInit, OnDestroy {
   protected enableAllMissions() {
     this.maskService.show();
     this.missionsService
-      .saveEnabledMissions({ missions: this.enabledMissions().concat(this.disabledMissions()) })
+      .saveEnabledMissions({ missionTemplates: this.enabledMissions().concat(this.disabledMissions()).map((mission) => mission.template) })
       .subscribe(() => {
         this.maskService.hide();
         this.reloadMissions();
@@ -102,7 +102,7 @@ export class MissionListsComponent implements OnInit, OnDestroy {
   protected disableAllMissions() {
     this.maskService.show();
     this.missionsService
-      .saveEnabledMissions({ missions: [] } as SaveEnabledMissionsRequest)
+      .saveEnabledMissions({ missionTemplates: [] } as SaveEnabledMissionsRequest)
       .subscribe(() => {
         this.maskService.hide();
         this.reloadMissions();
