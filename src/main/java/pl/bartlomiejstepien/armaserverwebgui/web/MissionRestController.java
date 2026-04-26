@@ -86,7 +86,7 @@ public class MissionRestController
     {
         private static GetMissionsResponse of(List<MissionApiModel> enabled, List<MissionApiModel> disabled)
         {
-            return new GetMissionsResponse(enabled, disabled);
+            return new GetMissionsResponse(disabled, enabled);
         }
     }
 

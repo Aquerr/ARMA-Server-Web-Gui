@@ -1,3 +1,14 @@
+.mission-list-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.mission-list-buttons .mat-icon {
+  color: white !important;
+}
+
 .list-wrapper {
   width: 100%;
   max-width: 100%;
