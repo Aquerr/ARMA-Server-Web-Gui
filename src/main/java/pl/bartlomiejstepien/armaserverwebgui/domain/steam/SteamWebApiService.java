@@ -37,7 +37,7 @@ public class SteamWebApiService
     {
         if (params.isSearchByModId())
         {
-            WorkshopMod workshopMod = getWorkshopMod(Long.parseLong(params.getCursor().trim()));
+            WorkshopMod workshopMod = getWorkshopMod(Long.parseLong(params.getSearchText().trim()));
             if (workshopMod == null)
                 return ArmaWorkshopQueryResponse.builder().build();
             return ArmaWorkshopQueryResponse.builder()
