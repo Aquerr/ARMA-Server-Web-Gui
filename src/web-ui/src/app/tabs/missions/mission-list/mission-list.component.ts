@@ -11,6 +11,8 @@ import {
 import { CdkDrag, CdkDragDrop, CdkDropList } from "@angular/cdk/drag-drop";
 import { MissionListItemComponent } from "../mission-list-item/mission-list-item.component";
 import { Mission } from "../../../model/mission.model";
+import { MatButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: "app-mission-list",
@@ -18,7 +20,9 @@ import { Mission } from "../../../model/mission.model";
   imports: [
     CdkDropList,
     MissionListItemComponent,
-    CdkDrag
+    CdkDrag,
+    MatButton,
+    MatIcon
 
   ],
   styleUrls: ["./mission-list.component.scss"]
@@ -36,12 +40,16 @@ export class MissionListComponent implements OnInit, OnChanges {
 
   filteredMissions: WritableSignal<Mission[]> = signal([]);
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.reload();
   }
 
-  ngOnChanges() {
+  public ngOnChanges(): void {
     this.reload();
+  }
+
+  public moveAllMissions(): void {
+    this.moveAll.emit({});
   }
 
   public reload() {

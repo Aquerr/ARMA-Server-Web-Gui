@@ -1,6 +1,11 @@
 <h2 class="mission-list-header">
   {{ listHeader }} <span class="brightness-50">({{ missions().length }})</span>
 </h2>
+<div class="mod-list-buttons">
+  <button mat-button (click)="moveAllMissions()">
+    {{moveAllMissionsButtonName}}<mat-icon>{{moveAllMissionsButtonIcon}}</mat-icon>
+  </button>
+</div>
 <div class="list-wrapper">
   <div
     [id]="listHeader"
