@@ -90,7 +90,7 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "runnerConfig": "vitest.config.js"
+            "runnerConfig": "vitest.config.ts"
           }
         },
         "lint": {
