@@ -73,12 +73,38 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
         wireMockServer.verify(2, RequestPatternBuilder.allRequests());
     }
 
+    @Test
+    void queryShouldReturnWorkshopModWhenSearchModById() throws JSONException
+    {
+        wireMockServer.resetAll();
+        wireMockServer.stubFor(get("/IPublishedFileService/GetDetails/v1?" +
+                "publishedfileids[0]=123&short_description=false&language=0&includevotes=false" +
+                "&includeadditionalpreviews=false&includechildren=true" +
+                "&includekvtags=false&strip_description_bbcode=false" +
+                "&return_playtime_stats=false&includetags=false&includereactions=false&appid=107410&admin_query=false&includemetadata=false" +
+                "&key=test-api-key&includeforsaledata=false")
+                .willReturn(aResponse()
+                        .withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_get_mod_steam_response.json"))
+                        .withStatus(200)));
+
+        executeQueryWorkshop(new WorkshopQueryRequest("", "123", true, "POPULARITY", -1 ), "workshop/workshop_query_mod_id_search_response.json");
+
+        wireMockServer.verify(1, RequestPatternBuilder.newRequestPattern()
+                .withUrl("/IPublishedFileService/GetDetails/v1?" +
+                        "publishedfileids[0]=123&short_description=false&language=0&includevotes=false" +
+                        "&includeadditionalpreviews=false&includechildren=true" +
+                        "&includekvtags=false&strip_description_bbcode=false" +
+                        "&return_playtime_stats=false&includetags=false&includereactions=false&appid=107410&admin_query=false&includemetadata=false" +
+                        "&key=test-api-key&includeforsaledata=false"));
+
+    }
+
     private WorkshopQueryRequest prepareQueryRequest(String searchPhrase)
     {
         return new WorkshopQueryRequest("*", searchPhrase, false, "POPULARITY", -1);
     }
 
-    private void executeQueryWorkshop(WorkshopQueryRequest request, String exptectedResponseJsonFile) throws JSONException
+    private void executeQueryWorkshop(WorkshopQueryRequest request, String expectedResponseJsonFile) throws JSONException
     {
         var response = postAuthenticatedRequest(
                 "http://localhost:" + serverPort + "/api/v1/workshop/query",
@@ -86,7 +112,7 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
                 MediaType.APPLICATION_JSON_VALUE,
                 String.class);
         JSONAssert.assertEquals(
-                TestUtils.loadJsonIntegrationContractFor(exptectedResponseJsonFile),
+                TestUtils.loadJsonIntegrationContractFor(expectedResponseJsonFile),
                 response.getBody(),
                 JSONCompareMode.LENIENT
         );

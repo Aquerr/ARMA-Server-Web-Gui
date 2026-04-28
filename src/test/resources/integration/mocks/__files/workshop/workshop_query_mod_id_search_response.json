@@ -1,0 +1,11 @@
+{
+  "mods": [
+    {
+      "fileId": 123,
+      "title": "First Mod",
+      "description": "First Mod Desc",
+      "previewUrl": "http://modpreview.com",
+      "modWorkshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=123"
+    }
+  ]
+}
