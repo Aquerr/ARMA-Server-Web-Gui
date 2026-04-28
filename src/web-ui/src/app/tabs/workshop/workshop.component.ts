@@ -67,19 +67,24 @@ export class WorkshopComponent implements OnInit, OnDestroy {
     }
   ]);
 
-  public sortingTypesSelectOptions = signal<SelectOption<string>[]>([{
-    value: WorkshopSortingType.POPULARITY,
-    label: "Popularity"
-  }, {
-    value: WorkshopSortingType.MOST_SUBSCRIBERS,
-    label: "Most subscribers"
-  }, {
-    value: WorkshopSortingType.LAST_UPDATED,
-    label: "Last updated"
-  }, {
-    value: WorkshopSortingType.PUBLICATION_DATE,
-    label: "Publication date"
-  }]);
+  public sortingTypesSelectOptions = signal<SelectOption<string>[]>([
+    {
+      value: WorkshopSortingType.TEXT_RELEVANCE,
+      label: "Search Relevance"
+    },
+    {
+      value: WorkshopSortingType.POPULARITY,
+      label: "Popularity"
+    }, {
+      value: WorkshopSortingType.MOST_SUBSCRIBERS,
+      label: "Most subscribers"
+    }, {
+      value: WorkshopSortingType.LAST_UPDATED,
+      label: "Last updated"
+    }, {
+      value: WorkshopSortingType.PUBLICATION_DATE,
+      label: "Publication date"
+    }]);
 
   private lastSearchText: string = "";
 
@@ -96,7 +101,7 @@ export class WorkshopComponent implements OnInit, OnDestroy {
   ) {
     this.searchBoxControl = new FormControl<string>("", { nonNullable: true });
     this.searchByModIdControl = new FormControl<boolean>(false, { nonNullable: true });
-    this.sortingControl = new FormControl<WorkshopSortingType>(WorkshopSortingType.POPULARITY, { nonNullable: true });
+    this.sortingControl = new FormControl<WorkshopSortingType>(WorkshopSortingType.TEXT_RELEVANCE, { nonNullable: true });
     this.daysPeriodControl = new FormControl<number>(1, { nonNullable: true });
     this.modInstallWebsocketService.workShopModInstallStatus.subscribe((modInstallStatus) => {
       const workshopMod = this.workshopMods().find((mod) => mod.fileId === modInstallStatus.fileId);

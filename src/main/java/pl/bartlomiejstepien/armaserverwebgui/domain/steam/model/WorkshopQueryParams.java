@@ -20,6 +20,7 @@ public class WorkshopQueryParams
     @Getter
     public enum SortingType
     {
+        TEXT_RELEVANCE("TEXT_RELEVANCE"),
         POPULARITY("POPULARITY"),
         PUBLICATION_DATE("PUBLICATION_DATE"),
         LAST_UPDATED("LAST_UPDATED"),

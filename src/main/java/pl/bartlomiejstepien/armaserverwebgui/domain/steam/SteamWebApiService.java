@@ -78,7 +78,11 @@ public class SteamWebApiService
 
     private static WorkShopQueryFilesRequest.PublishedFileQueryType mapToQueryType(WorkshopQueryParams.SortingType sortingType)
     {
-        if (sortingType == WorkshopQueryParams.SortingType.POPULARITY)
+        if (sortingType == WorkshopQueryParams.SortingType.TEXT_RELEVANCE)
+        {
+            return WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TEXT_SEARCH;
+        }
+        else if (sortingType == WorkshopQueryParams.SortingType.POPULARITY)
         {
             return WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TREND;
         }
