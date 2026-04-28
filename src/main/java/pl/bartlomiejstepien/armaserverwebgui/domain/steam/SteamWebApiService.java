@@ -86,6 +86,10 @@ public class SteamWebApiService
         {
             return WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TREND;
         }
+        else if (sortingType == WorkshopQueryParams.SortingType.TOP_RATED)
+        {
+            return WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_VOTE;
+        }
         else if (sortingType == WorkshopQueryParams.SortingType.MOST_SUBSCRIBERS)
         {
             return WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TOTAL_UNIQUE_SUBSCRIPTIONS;

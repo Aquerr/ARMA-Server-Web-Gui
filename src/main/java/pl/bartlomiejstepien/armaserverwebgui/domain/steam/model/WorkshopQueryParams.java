@@ -22,6 +22,7 @@ public class WorkshopQueryParams
     {
         TEXT_RELEVANCE("TEXT_RELEVANCE"),
         POPULARITY("POPULARITY"),
+        TOP_RATED("TOP_RATED"),
         PUBLICATION_DATE("PUBLICATION_DATE"),
         LAST_UPDATED("LAST_UPDATED"),
         MOST_SUBSCRIBERS("MOST_SUBSCRIBERS");
@@ -37,7 +38,7 @@ public class WorkshopQueryParams
         {
             return Optional.ofNullable(code)
                     .flatMap(branchCode -> Arrays.stream(values())
-                            .filter(sortingType -> sortingType.getCode().equals(branchCode.toLowerCase()))
+                            .filter(sortingType -> sortingType.getCode().equals(branchCode.toUpperCase()))
                             .findFirst());
         }
     }

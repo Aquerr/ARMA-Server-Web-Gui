@@ -31,9 +31,11 @@ import { SelectOption } from "../../model/control.model";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkshopComponent implements OnInit, OnDestroy {
-  workshopMods = signal<WorkshopMod[]>([]);
-  installedWorkshopMods = signal<WorkshopMod[]>([]);
-  modsUnderInstallation = signal<WorkshopMod[]>([]);
+  public workshopSortingType = WorkshopSortingType;
+
+  public workshopMods = signal<WorkshopMod[]>([]);
+  public installedWorkshopMods = signal<WorkshopMod[]>([]);
+  public modsUnderInstallation = signal<WorkshopMod[]>([]);
   nextCursor: string = "";
   searchBoxControl!: FormControl<string>;
   searchByModIdControl!: FormControl<boolean>;
@@ -47,19 +49,19 @@ export class WorkshopComponent implements OnInit, OnDestroy {
     },
     {
       value: 7,
-      label: "Week"
+      label: "7 days"
     },
     {
       value: 30,
-      label: "Month"
+      label: "30 days"
     },
     {
       value: 90,
-      label: "Three months"
+      label: "90 days"
     },
     {
       value: 365,
-      label: "Year"
+      label: "365 days"
     },
     {
       value: -1,
@@ -75,7 +77,12 @@ export class WorkshopComponent implements OnInit, OnDestroy {
     {
       value: WorkshopSortingType.POPULARITY,
       label: "Popularity"
-    }, {
+    },
+    {
+      value: WorkshopSortingType.TOP_RATED,
+      label: "Top rated"
+    },
+    {
       value: WorkshopSortingType.MOST_SUBSCRIBERS,
       label: "Most subscribers"
     }, {
@@ -140,7 +147,7 @@ export class WorkshopComponent implements OnInit, OnDestroy {
         searchText: this.lastSearchText,
         searchByModId: this.searchByModIdControl.value,
         sortingType: this.sortingControl.value,
-        daysPeriod: this.daysPeriodControl.value
+        daysPeriod: this.sortingControl.value == WorkshopSortingType.POPULARITY ? this.daysPeriodControl.value : -1
       })
       .subscribe((response) => {
         this.nextCursor = response.nextCursor;

@@ -19,14 +19,16 @@
           }
         </mat-select>
       </mat-form-field>
-      <mat-form-field>
-        <mat-label>Time</mat-label>
-        <mat-select [formControl]="daysPeriodControl">
-          @for (daysPeriod of daysPeriodSelectOptions(); track daysPeriod.value) {
-            <mat-option [value]="daysPeriod.value">{{ daysPeriod.label }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+      @if (sortingControl.value === workshopSortingType.POPULARITY) {
+        <mat-form-field>
+          <mat-label>Period</mat-label>
+          <mat-select [formControl]="daysPeriodControl">
+            @for (daysPeriod of daysPeriodSelectOptions(); track daysPeriod.value) {
+              <mat-option [value]="daysPeriod.value">{{ daysPeriod.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
     </div>
   </div>
   <div class="workshop">

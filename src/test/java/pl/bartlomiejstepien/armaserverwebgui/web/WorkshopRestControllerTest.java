@@ -34,18 +34,17 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
         cacheManager.getCache("workshop-query").clear();
 
         // given
-        wireMockServer.stubFor(get("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=3&return_kv_tags=false&appid=107410&days=-1&include_recent_votes_only=false&page=&return_previews=true&search_text=search_phrase")
-                .willReturn(aResponse()
-                        .withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_query_steam_response.json"))
-                        .withStatus(200)));
+        wireMockServer.stubFor(
+                get("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=3&return_kv_tags=false&appid=107410&days=-1&include_recent_votes_only=false&page=&return_previews=true&search_text=search_phrase").willReturn(
+                        aResponse().withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_query_steam_response.json")).withStatus(200)));
 
         // when
         // then
         executeQueryWorkshop(prepareQueryRequest("search_phrase"), "workshop/workshop_query_response.json");
         executeQueryWorkshop(prepareQueryRequest("search_phrase"), "workshop/workshop_query_response.json");
 
-        wireMockServer.verify(1, RequestPatternBuilder.newRequestPattern()
-                .withUrl("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=3&return_kv_tags=false&appid=107410&days=-1&include_recent_votes_only=false&page=&return_previews=true&search_text=search_phrase"));
+        wireMockServer.verify(1, RequestPatternBuilder.newRequestPattern().withUrl(
+                "/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=12&return_kv_tags=false&appid=107410&days=-1&include_recent_votes_only=false&page=&return_previews=true&search_text=search_phrase"));
     }
 
     @Test
@@ -55,15 +54,13 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
         cacheManager.getCache("workshop-query").clear();
 
         // given
-        wireMockServer.stubFor(get("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=3&return_kv_tags=false&appid=107410&days=-1&include_recent_votes_only=false&page=&return_previews=true&search_text=search_phrase")
-                .willReturn(aResponse()
-                        .withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_query_steam_response.json"))
-                        .withStatus(200)));
+        wireMockServer.stubFor(
+                get("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=12&return_kv_tags=false&appid=107410&days=-1&include_recent_votes_only=false&page=&return_previews=true&search_text=search_phrase").willReturn(
+                        aResponse().withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_query_steam_response.json")).withStatus(200)));
 
-        wireMockServer.stubFor(get("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=3&return_kv_tags=false&appid=107410&days=-1&include_recent_votes_only=false&page=&return_previews=true&search_text=another_phrase")
-                .willReturn(aResponse()
-                        .withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_query_steam_response.json"))
-                        .withStatus(200)));
+        wireMockServer.stubFor(
+                get("/IPublishedFileService/QueryFiles/v1?cursor=*&creator_appid=0&filetype=0&requiredtags=&return_for_sale_data=false&language=0&return_short_description=false&omitted_flags=&child_publishedfileid=0&return_playtime_stats=false&totalonly=false&return_children=true&required_flags=&excludedtags=&return_vote_data=false&key=test-api-key&match_all_tags=false&return_metadata=false&return_tags=false&cache_max_age_seconds=0&numperpage=10&ids_only=false&query_type=12&return_kv_tags=false&appid=107410&days=-1&include_recent_votes_only=false&page=&return_previews=true&search_text=another_phrase").willReturn(
+                        aResponse().withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_query_steam_response.json")).withStatus(200)));
 
         // when
         // then
@@ -77,23 +74,17 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
     void queryShouldReturnWorkshopModWhenSearchModById() throws JSONException
     {
         wireMockServer.resetAll();
-        wireMockServer.stubFor(get("/IPublishedFileService/GetDetails/v1?" +
-                "publishedfileids[0]=123&short_description=false&language=0&includevotes=false" +
-                "&includeadditionalpreviews=false&includechildren=true" +
-                "&includekvtags=false&strip_description_bbcode=false" +
+        wireMockServer.stubFor(get("/IPublishedFileService/GetDetails/v1?" + "publishedfileids[0]=123&short_description=false&language=0&includevotes=false" +
+                "&includeadditionalpreviews=false&includechildren=true" + "&includekvtags=false&strip_description_bbcode=false" +
                 "&return_playtime_stats=false&includetags=false&includereactions=false&appid=107410&admin_query=false&includemetadata=false" +
-                "&key=test-api-key&includeforsaledata=false")
-                .willReturn(aResponse()
-                        .withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_get_mod_steam_response.json"))
-                        .withStatus(200)));
+                "&key=test-api-key&includeforsaledata=false").willReturn(
+                aResponse().withBody(TestUtils.loadJsonIntegrationContractFor("workshop/workshop_get_mod_steam_response.json")).withStatus(200)));
 
-        executeQueryWorkshop(new WorkshopQueryRequest("", "123", true, "POPULARITY", -1 ), "workshop/workshop_query_mod_id_search_response.json");
+        executeQueryWorkshop(new WorkshopQueryRequest("", "123", true, "POPULARITY", -1), "workshop/workshop_query_mod_id_search_response.json");
 
-        wireMockServer.verify(1, RequestPatternBuilder.newRequestPattern()
-                .withUrl("/IPublishedFileService/GetDetails/v1?" +
-                        "publishedfileids[0]=123&short_description=false&language=0&includevotes=false" +
-                        "&includeadditionalpreviews=false&includechildren=true" +
-                        "&includekvtags=false&strip_description_bbcode=false" +
+        wireMockServer.verify(1, RequestPatternBuilder.newRequestPattern().withUrl(
+                "/IPublishedFileService/GetDetails/v1?" + "publishedfileids[0]=123&short_description=false&language=0&includevotes=false" +
+                        "&includeadditionalpreviews=false&includechildren=true" + "&includekvtags=false&strip_description_bbcode=false" +
                         "&return_playtime_stats=false&includetags=false&includereactions=false&appid=107410&admin_query=false&includemetadata=false" +
                         "&key=test-api-key&includeforsaledata=false"));
 
@@ -101,20 +92,13 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
 
     private WorkshopQueryRequest prepareQueryRequest(String searchPhrase)
     {
-        return new WorkshopQueryRequest("*", searchPhrase, false, "POPULARITY", -1);
+        return new WorkshopQueryRequest("*", searchPhrase, false, "TEXT_RELEVANCE", -1);
     }
 
     private void executeQueryWorkshop(WorkshopQueryRequest request, String expectedResponseJsonFile) throws JSONException
     {
-        var response = postAuthenticatedRequest(
-                "http://localhost:" + serverPort + "/api/v1/workshop/query",
-                request,
-                MediaType.APPLICATION_JSON_VALUE,
-                String.class);
-        JSONAssert.assertEquals(
-                TestUtils.loadJsonIntegrationContractFor(expectedResponseJsonFile),
-                response.getBody(),
-                JSONCompareMode.LENIENT
-        );
+        var response =
+                postAuthenticatedRequest("http://localhost:" + serverPort + "/api/v1/workshop/query", request, MediaType.APPLICATION_JSON_VALUE, String.class);
+        JSONAssert.assertEquals(TestUtils.loadJsonIntegrationContractFor(expectedResponseJsonFile), response.getBody(), JSONCompareMode.LENIENT);
     }
 }
