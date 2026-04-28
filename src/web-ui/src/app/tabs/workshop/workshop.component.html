@@ -1,14 +1,32 @@
 <div class="container">
   <h1>Workshop</h1>
   <div class="search-bar-wrapper">
-    <div>
+    <div style="display: flex; flex-direction: row">
       <mat-form-field>
         <mat-label>Search workshop</mat-label>
         <input matInput [formControl]="searchBoxControl" (keydown)="onSearchBoxKeyDown($event)" />
       </mat-form-field>
+      <div class="search-by-mod-checkbox">
+        <mat-checkbox [formControl]="searchByModIdControl">Search by mod id</mat-checkbox>
+      </div>
     </div>
-    <div class="search-by-mod-checkbox">
-      <mat-checkbox [formControl]="searchByModIdControl">Search by mod id</mat-checkbox>
+    <div style="display: flex; flex-direction: row; gap: 1rem;">
+      <mat-form-field>
+        <mat-label>Sorting</mat-label>
+        <mat-select [formControl]="sortingControl">
+          @for (sortingType of sortingTypesSelectOptions(); track sortingType.value) {
+            <mat-option [value]="sortingType.value">{{ sortingType.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Time</mat-label>
+        <mat-select [formControl]="daysPeriodControl">
+          @for (daysPeriod of daysPeriodSelectOptions(); track daysPeriod.value) {
+            <mat-option [value]="daysPeriod.value">{{ daysPeriod.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
   <div class="workshop">

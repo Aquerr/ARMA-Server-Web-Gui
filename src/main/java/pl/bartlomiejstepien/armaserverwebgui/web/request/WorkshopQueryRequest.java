@@ -12,4 +12,6 @@ public class WorkshopQueryRequest
     private String cursor;
     private String searchText;
     private Boolean searchByModId;
+    private String sortingType;
+    private Integer daysPeriod;
 }

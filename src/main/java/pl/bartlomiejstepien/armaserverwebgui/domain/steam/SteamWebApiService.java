@@ -35,31 +35,21 @@ public class SteamWebApiService
     @Cacheable(cacheNames = "workshop-query")
     public ArmaWorkshopQueryResponse queryWorkshopMods(WorkshopQueryParams params)
     {
-        if (params.isSearchByModId())
-        {
-            WorkshopMod workshopMod = getWorkshopMod(Long.parseLong(params.getSearchText().trim()));
-            if (workshopMod == null)
-                return ArmaWorkshopQueryResponse.builder().build();
-            return ArmaWorkshopQueryResponse.builder()
-                    .mods(List.of(workshopMod))
-                    .build();
-        }
-
         WorkShopQueryResponse workShopQueryResponse;
         try
         {
             workShopQueryResponse = steamWebApiClientWrapper.getSteamWebApiClient().getSteamPublishedFileWebApiClient()
                     .queryFiles(WorkShopQueryFilesRequest.builder()
-                    .appId(SteamUtils.ARMA_APP_ID)
-                    .cursor(StringUtils.hasText(params.getCursor()) ? params.getCursor() : "*")
-                    .numPerPage(10)
-                    .searchText(StringUtils.hasText(params.getSearchText()) ? params.getSearchText() : null)
-                    .returnPreviews(true)
-                    .days(-1)
-                    .queryType(WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TREND)
-                    .fileType(WorkShopQueryFilesRequest.PublishedFileInfoMatchingFileType.ITEMS)
-                    .returnChildren(true)
-                    .build());
+                            .appId(SteamUtils.ARMA_APP_ID)
+                            .cursor(StringUtils.hasText(params.getCursor()) ? params.getCursor() : "*")
+                            .numPerPage(10)
+                            .searchText(StringUtils.hasText(params.getSearchText()) ? params.getSearchText() : null)
+                            .returnPreviews(true)
+                            .days(params.getDaysPeriod())
+                            .queryType(mapToQueryType(params.getSortingType()))
+                            .fileType(WorkShopQueryFilesRequest.PublishedFileInfoMatchingFileType.ITEMS)
+                            .returnChildren(true)
+                            .build());
         }
         catch (HttpClientException exception)
         {
@@ -84,6 +74,27 @@ public class SteamWebApiService
                 .nextCursor(nextPageCursor)
                 .mods(workshopMods)
                 .build();
+    }
+
+    private static WorkShopQueryFilesRequest.PublishedFileQueryType mapToQueryType(WorkshopQueryParams.SortingType sortingType)
+    {
+        if (sortingType == WorkshopQueryParams.SortingType.POPULARITY)
+        {
+            return WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TREND;
+        }
+        else if (sortingType == WorkshopQueryParams.SortingType.MOST_SUBSCRIBERS)
+        {
+            return WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TOTAL_UNIQUE_SUBSCRIPTIONS;
+        }
+        else if (sortingType == WorkshopQueryParams.SortingType.LAST_UPDATED)
+        {
+            return WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_LAST_UPDATED_DATE;
+        }
+        else if (sortingType == WorkshopQueryParams.SortingType.PUBLICATION_DATE)
+        {
+            return WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_PUBLICATION_DATE;
+        }
+        return WorkShopQueryFilesRequest.PublishedFileQueryType.RANKED_BY_TREND;
     }
 
     @Cacheable("workshop-get-mod")

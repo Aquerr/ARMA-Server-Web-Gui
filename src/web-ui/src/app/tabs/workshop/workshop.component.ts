@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, signal } from "@angular/core";
-import { WorkshopMod } from "../../model/workshop.model";
+import { WorkshopMod, WorkshopSortingType } from "../../model/workshop.model";
 import { WorkshopService } from "../../service/workshop.service";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { ModInstallWebsocketService } from "./mod-install-websocket/mod-install-websocket.service";
@@ -9,6 +9,8 @@ import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatButton } from "@angular/material/button";
 import { WorkshopItemComponent } from "./workshop-item/workshop-item.component";
 import { MatCheckbox } from "@angular/material/checkbox";
+import { MatOption, MatSelect } from "@angular/material/select";
+import { SelectOption } from "../../model/control.model";
 
 @Component({
   selector: "app-workshop",
@@ -21,7 +23,9 @@ import { MatCheckbox } from "@angular/material/checkbox";
     MatPaginator,
     MatInput,
     WorkshopItemComponent,
-    MatCheckbox
+    MatCheckbox,
+    MatSelect,
+    MatOption
   ],
   styleUrls: ["./workshop.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -33,6 +37,50 @@ export class WorkshopComponent implements OnInit, OnDestroy {
   nextCursor: string = "";
   searchBoxControl!: FormControl<string>;
   searchByModIdControl!: FormControl<boolean>;
+  sortingControl!: FormControl<WorkshopSortingType>;
+  daysPeriodControl!: FormControl<number>;
+
+  public daysPeriodSelectOptions = signal<SelectOption<number>[]>([
+    {
+      value: 1,
+      label: "Today"
+    },
+    {
+      value: 7,
+      label: "Week"
+    },
+    {
+      value: 30,
+      label: "Month"
+    },
+    {
+      value: 90,
+      label: "Three months"
+    },
+    {
+      value: 365,
+      label: "Year"
+    },
+    {
+      value: -1,
+      label: "All time"
+    }
+  ]);
+
+  public sortingTypesSelectOptions = signal<SelectOption<string>[]>([{
+    value: WorkshopSortingType.POPULARITY,
+    label: "Popularity"
+  }, {
+    value: WorkshopSortingType.MOST_SUBSCRIBERS,
+    label: "Most subscribers"
+  }, {
+    value: WorkshopSortingType.LAST_UPDATED,
+    label: "Last updated"
+  }, {
+    value: WorkshopSortingType.PUBLICATION_DATE,
+    label: "Publication date"
+  }]);
+
   private lastSearchText: string = "";
 
   private changeDetectorRef = inject(ChangeDetectorRef);
@@ -48,6 +96,8 @@ export class WorkshopComponent implements OnInit, OnDestroy {
   ) {
     this.searchBoxControl = new FormControl<string>("", { nonNullable: true });
     this.searchByModIdControl = new FormControl<boolean>(false, { nonNullable: true });
+    this.sortingControl = new FormControl<WorkshopSortingType>(WorkshopSortingType.POPULARITY, { nonNullable: true });
+    this.daysPeriodControl = new FormControl<number>(1, { nonNullable: true });
     this.modInstallWebsocketService.workShopModInstallStatus.subscribe((modInstallStatus) => {
       const workshopMod = this.workshopMods().find((mod) => mod.fileId === modInstallStatus.fileId);
       if (workshopMod) {
@@ -80,7 +130,13 @@ export class WorkshopComponent implements OnInit, OnDestroy {
     this.maskService.show();
     this.lastSearchText = searchText;
     this.workshopService
-      .queryWorkshop({ cursor: cursor, searchText: this.lastSearchText, searchByModId: this.searchByModIdControl.value })
+      .queryWorkshop({
+        cursor: cursor,
+        searchText: this.lastSearchText,
+        searchByModId: this.searchByModIdControl.value,
+        sortingType: this.sortingControl.value,
+        daysPeriod: this.daysPeriodControl.value
+      })
       .subscribe((response) => {
         this.nextCursor = response.nextCursor;
 

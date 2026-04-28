@@ -42,7 +42,19 @@ public class SteamServiceImpl implements SteamService
     @Override
     public ArmaWorkshopQueryResponse queryWorkshopMods(WorkshopQueryParams params)
     {
-        return steamWebApiService.queryWorkshopMods(params);
+        if (params.isSearchByModId())
+        {
+            WorkshopMod workshopMod = getWorkshopMod(Long.parseLong(params.getSearchText().trim()));
+            if (workshopMod == null)
+                return ArmaWorkshopQueryResponse.builder().build();
+            return ArmaWorkshopQueryResponse.builder()
+                    .mods(List.of(workshopMod))
+                    .build();
+        }
+        else
+        {
+            return steamWebApiService.queryWorkshopMods(params);
+        }
     }
 
     @Override

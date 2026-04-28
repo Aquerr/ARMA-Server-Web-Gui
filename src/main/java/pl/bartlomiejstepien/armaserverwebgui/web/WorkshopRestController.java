@@ -105,6 +105,8 @@ public class WorkshopRestController
                 .cursor(request.getCursor())
                 .searchText(request.getSearchText())
                 .searchByModId(Optional.ofNullable(request.getSearchByModId()).orElse(false))
+                .sortingType(WorkshopQueryParams.SortingType.findByCode(request.getSortingType()).orElse(WorkshopQueryParams.SortingType.POPULARITY))
+                .daysPeriod(Optional.ofNullable(request.getDaysPeriod()).orElse(1))
                 .build();
     }
 

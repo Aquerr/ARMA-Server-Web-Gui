@@ -75,7 +75,7 @@ class WorkshopRestControllerTest extends BaseIntegrationTest
 
     private WorkshopQueryRequest prepareQueryRequest(String searchPhrase)
     {
-        return new WorkshopQueryRequest("*", searchPhrase, false);
+        return new WorkshopQueryRequest("*", searchPhrase, false, "POPULARITY", -1);
     }
 
     private void executeQueryWorkshop(WorkshopQueryRequest request, String exptectedResponseJsonFile) throws JSONException

@@ -2,6 +2,8 @@ export interface WorkshopQueryRequest {
   cursor: string;
   searchText: string;
   searchByModId: boolean;
+  sortingType: WorkshopSortingType;
+  daysPeriod: number;
 }
 
 export interface WorkShopModInstallRequest {
@@ -45,4 +47,11 @@ export interface DownloadingMod {
   title: string;
   installAttemptCount: number;
   issuer: string;
+}
+
+export enum WorkshopSortingType {
+  POPULARITY = "POPULARITY",
+  PUBLICATION_DATE = "PUBLICATION_DATE",
+  LAST_UPDATED = "LAST_UPDATED",
+  MOST_SUBSCRIBERS = "MOST_SUBSCRIBERS"
 }
