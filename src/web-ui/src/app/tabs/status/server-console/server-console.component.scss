@@ -1,11 +1,11 @@
 .server-console {
   background-color: #24292e;
-  height: 300px;
+  height: 350px;
   width: 100%;
   color: darkgrey;
-  white-space: pre-line;
+  white-space: pre-wrap;
   padding: 5px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 @media (max-width: 800px) {

@@ -2,10 +2,16 @@
   width: 35%;
 }
 
-.fields {
+.section-fields {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.section-fields * {
+  max-width: 100%;
 }
 
 .general-properties {
@@ -26,10 +32,13 @@
 }
 
 .command-line-params {
+  display: block;
   color: black;
   width: 100%;
+  overflow-y: auto;
   text-overflow: ellipsis;
-  height: 4rem;
+  height: 6rem;
+  resize: vertical;
 }
 
 @media (max-width: 800px) {

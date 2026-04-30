@@ -5,6 +5,7 @@ import { MatIcon } from "@angular/material/icon";
 import { MatError, MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatButton } from "@angular/material/button";
 import { MotdItem } from "../general-form.service";
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
   selector: "app-motd-list",
@@ -19,7 +20,8 @@ import { MotdItem } from "../general-form.service";
     MatButton,
     CdkDrag,
     ReactiveFormsModule,
-    MatError
+    MatError,
+    MatTooltip
   ],
   styleUrls: ["./motd-list.component.scss"]
 })

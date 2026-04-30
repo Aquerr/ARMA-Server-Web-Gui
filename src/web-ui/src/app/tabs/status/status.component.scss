@@ -1,3 +1,34 @@
+::ng-deep #perform-update > div > div.mdc-checkbox {
+  padding: 0px !important;
+}
+
+::ng-deep
+#perform-update
+> div
+> div.mdc-checkbox
+> .mat-mdc-checkbox-touch-target,
+::ng-deep
+#perform-update
+> div
+> div.mdc-checkbox
+> .mdc-checkbox__native-control {
+  height: 18px !important;
+  width: 18px !important;
+}
+
+::ng-deep
+#perform-update
+> div
+> div.mdc-checkbox
+> .mdc-checkbox__background {
+  top: 0px !important;
+  left: 0px !important;
+}
+
+#perform-update {
+  margin: 0.5rem 0 1rem 0;
+}
+
 @media (max-width: 800px) {
   .container {
     display: flex;

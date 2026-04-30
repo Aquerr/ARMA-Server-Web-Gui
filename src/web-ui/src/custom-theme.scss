@@ -1,19 +1,5 @@
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
 @use "@angular/material" as mat;
-// Plus imports for other components in your app.
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
-//  The following line adds:
-//    1. Default typography styles for all components
-//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
-//  If you specify typography styles for the components you use elsewhere, you should delete this line.
-//  If you don't need the default component typographies but still want the hierarchy styles,
-//  you can delete this line and instead use:
-//    `@include mat.legacy-typography-hierarchy(mat.define-legacy-typography-config());`
 @include mat.elevation-classes();
 @include mat.app-background();
 @include mat.all-component-typographies();
@@ -21,17 +7,11 @@
 //TODO: Create our own palette
 $arma-web-gui-palette: ();
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
 $arma-web-gui-primary: mat.m2-define-palette(mat.$m2-indigo-palette);
 $arma-web-gui-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
 
-// The warn palette is optional (defaults to red).
 $arma-web-gui-warn: mat.m2-define-palette(mat.$m2-red-palette);
 
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
 $arma-web-gui-theme: mat.m2-define-light-theme(
   (
     color: (
@@ -42,7 +22,25 @@ $arma-web-gui-theme: mat.m2-define-light-theme(
   )
 );
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
+
 @include mat.all-component-themes($arma-web-gui-theme);
+
+//html {
+//  color-scheme: light dark;
+//  @include mat.theme((
+//    color: mat.$green-palette,
+//    typography: Roboto,
+//    density: 0
+//  ));
+//
+//  @include mat.chips-overrides((
+//    elevated-container-color: var(--aswg-icon-color),
+//    selected-disabled-trailing-icon-color: var(--aswg-icon-color),
+//    with-icon-disabled-icon-color: var(--aswg-icon-color),
+//    with-icon-icon-color: var(--aswg-icon-color),
+//    with-trailing-icon-trailing-icon-color: red,
+//    with-trailing-icon-disabled-trailing-icon-color: var(--aswg-icon-color),
+//    with-icon-selected-icon-color: var(--aswg-icon-color),
+//    selected-trailing-icon-color: var(--aswg-icon-color)
+//  ))
+//}

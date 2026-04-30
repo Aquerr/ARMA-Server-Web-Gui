@@ -55,7 +55,7 @@ export class ModsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(ModListsComponent) modListsComponent!: ModListsComponent;
 
   constructor(
-    private modService: ServerModsService,
+    private modsService: ServerModsService,
     private maskService: LoadingSpinnerMaskService,
     private notificationService: NotificationService,
     private modUploadService: ModUploadService,
@@ -92,7 +92,7 @@ export class ModsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onFileDropped(file: File) {
     this.maskService.show();
-    this.modService.checkModFilesExists(file.name).subscribe((response) => {
+    this.modsService.checkModFilesExists(file.name).subscribe((response) => {
       this.maskService.hide();
       if (response.exists) {
         const onCloseCallback = (result: boolean) => {
@@ -115,7 +115,7 @@ export class ModsComponent implements OnInit, OnDestroy, AfterViewInit {
   save() {
     this.maskService.show();
     this.enabledMods = this.modListsComponent.enabledMods;
-    this.modService
+    this.modsService
       .saveEnabledMods({ mods: this.modListsComponent.enabledMods() })
       .subscribe(() => {
         this.maskService.hide();
@@ -123,8 +123,13 @@ export class ModsComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  onModPresetSelected() {
-    this.reloadModsDataSubject.next();
+  onModPresetSelected(presetName: string) {
+    this.maskService.show();
+    this.modsService.selectPreset({ name: presetName }).subscribe(() => {
+      this.maskService.hide();
+      this.notificationService.successNotification("Mod preset loaded!");
+      this.reloadModsDataSubject.next();
+    });
   }
 
   setFileDragged(isFileDragged: boolean) {

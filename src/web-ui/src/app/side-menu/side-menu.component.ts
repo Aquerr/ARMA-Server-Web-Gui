@@ -9,6 +9,7 @@ import { fromPromise } from "rxjs/internal/observable/innerFrom";
 import { MatDivider, MatListItem, MatNavList } from "@angular/material/list";
 import { MatIcon } from "@angular/material/icon";
 import { NgClass } from "@angular/common";
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
   selector: "app-side-menu",
@@ -18,7 +19,8 @@ import { NgClass } from "@angular/common";
     MatListItem,
     MatIcon,
     MatDivider,
-    NgClass
+    NgClass,
+    MatTooltip
   ],
   styleUrls: ["./side-menu.component.scss"]
 })

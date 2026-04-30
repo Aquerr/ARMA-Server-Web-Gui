@@ -36,7 +36,7 @@
       class="aswg-list-item"
       [ngClass]="isWorkshopActive ? '' : 'aswg-list-item-inactive'"
       (click)="routerLinkClicked('/workshop')"
-      >
+    >
       <span>Workshop</span>
       <mat-icon [fontIcon]="'home_repair_service'"></mat-icon>
     </mat-list-item>
@@ -50,12 +50,12 @@
         <span>Change theme</span>
         @if (!darkMode) {
           <mat-icon class="theme-icon" matTooltip="Change theme"
-            >nightlight
+          >nightlight
           </mat-icon>
         }
         @if (darkMode) {
           <mat-icon class="theme-icon" matTooltip="Change theme"
-            >light_mode
+          >light_mode
           </mat-icon>
         }
       </mat-list-item>

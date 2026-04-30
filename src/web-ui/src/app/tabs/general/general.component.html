@@ -1,15 +1,15 @@
 <div class="container">
   <h1>General</h1>
   <div class="general-properties" [formGroup]="form">
-    <div class="fields">
-      <mat-form-field class="width-35">
+    <section class="section-fields">
+      <mat-form-field style="width: 440px;">
         <mat-label>Server directory</mat-label>
         <input name="server-directory" formControlName="serverDirectory" matInput type="text" />
         @if (form.controls.serverDirectory.hasError('required')) {
           <mat-error>This field is required!</mat-error>
         }
       </mat-form-field>
-      <mat-form-field class="width-35">
+      <mat-form-field style="width: 440px">
         <mat-label>Mods directory</mat-label>
         <input
           name="mods-directory"
@@ -21,106 +21,126 @@
           matTooltipPosition="right"
         />
       </mat-form-field>
-      <mat-form-field class="width-50">
-        <mat-label>Hostname</mat-label>
-        <input
-          name="hostname"
-          formControlName="hostname"
-          matInput
-          type="text"
-          matTooltip="Also determines the configuration profile used by the game"
-          matTooltipPosition="right"
-        />
-        @if (form.controls.hostname.hasError('required')) {
-          <mat-error>This field is required!</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Port</mat-label>
-        <input name="port" formControlName="port" matInput type="number" min="0" />
-        @if (form.controls.port.hasError('required')) {
-          <mat-error>This field is required!</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field class="max-players-field">
-        <mat-label>Max players</mat-label>
-        <input name="max-players" formControlName="maxPlayers" matInput type="number" min="0" />
-        @if (form.controls.maxPlayers.hasError('required')) {
-          <mat-error>This field is required!</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Branch</mat-label>
-        <mat-select formControlName="branch" name="branch" matTooltip="The server steam branch to use. May require server update.">
-          <mat-option [value]="'public'">Main (public)</mat-option>
-          <mat-option [value]="'profiling'">Profiling (profiling)</mat-option>
-          <mat-option [value]="'contact'">Contact (contact)</mat-option>
-          <mat-option [value]="'creatordlc'">Creator DLC (creatordlc)</mat-option>
-        </mat-select>
-        @if (form.controls.branch.hasError('required')) {
-          <mat-error>This field is required!</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Persistent</mat-label>
-        <mat-select
-          formControlName="persistent"
-          name="persistent"
-          matTooltip="If yes then mission keeps running even when all players disconnect"
-        >
-          <mat-option [value]="true">Yes</mat-option>
-          <mat-option [value]="false">No</mat-option>
-        </mat-select>
-        @if (form.controls.persistent.hasError('required')) {
-          <mat-error>This field is required!</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Drawing in map</mat-label>
-        <mat-select
-          formControlName="drawingInMap"
-          name="drawing-in-map"
-          matTooltip="Enabled the ability to place markers and draw lines on map"
-        >
-          <mat-option [value]="true">Yes</mat-option>
-          <mat-option [value]="false">No</mat-option>
-        </mat-select>
-        @if (form.controls.drawingInMap.hasError('required')) {
-          <mat-error>This field is required!</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Forced difficulty</mat-label>
-        <mat-select
-          formControlName="forcedDifficulty"
-          name="drawing-in-map"
-          matTooltip="Enforces the selected difficulty on the server. Set to 'Empty' to make mission settings decide about the difficulty."
-        >
-          <mat-option [value]="null">Empty</mat-option>
-          <mat-option [value]="'RECRUIT'">Recruit</mat-option>
-          <mat-option [value]="'REGULAR'">Regular</mat-option>
-          <mat-option [value]="'VETERAN'">Veteran</mat-option>
-          <mat-option [value]="'CUSTOM'">Custom</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <app-aswg-chip-form-input
-        labelText="Headless Clients (IPs)"
-        toolTipText="IP addresses of headless clients. Used to offload AI calculations from the server."
-        [control]="form.controls.headlessClients"
-      ></app-aswg-chip-form-input>
-      <app-aswg-chip-form-input
-        labelText="Local Clients (IPs)"
-        toolTipText="Indicates clients with unlimited bandwidth and nearly no latency."
-        [control]="form.controls.localClients"
-      ></app-aswg-chip-form-input>
-    </div>
-    <section class="motd-section">
-      <app-motd-list [motdControl]="form.controls.motd" [motdIntervalControl]="form.controls.motdInterval"></app-motd-list>
     </section>
+    <hr>
+    <section>
+      <h1>Server host</h1>
+      <div class="section-fields">
+        <mat-form-field>
+          <mat-label>Hostname</mat-label>
+          <input
+            name="hostname"
+            formControlName="hostname"
+            matInput
+            type="text"
+            matTooltip="Also determines the configuration profile used by the game"
+            matTooltipPosition="right"
+          />
+          @if (form.controls.hostname.hasError('required')) {
+            <mat-error>This field is required!</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Port</mat-label>
+          <input name="port" formControlName="port" matInput type="number" min="0" />
+          @if (form.controls.port.hasError('required')) {
+            <mat-error>This field is required!</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="max-players-field">
+          <mat-label>Max players</mat-label>
+          <input name="max-players" formControlName="maxPlayers" matInput type="number" min="0" />
+          @if (form.controls.maxPlayers.hasError('required')) {
+            <mat-error>This field is required!</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="section-fields">
+        <mat-form-field style="width: 440px;">
+          <mat-label>Branch</mat-label>
+          <mat-select formControlName="branch" name="branch"
+                      matTooltip="The server steam branch to use. May require server update.">
+            <mat-option [value]="'public'">Main (public)</mat-option>
+            <mat-option [value]="'profiling'">Profiling (profiling)</mat-option>
+            <mat-option [value]="'contact'">Contact (contact)</mat-option>
+            <mat-option [value]="'creatordlc'">Creator DLC (creatordlc)</mat-option>
+          </mat-select>
+          @if (form.controls.branch.hasError('required')) {
+            <mat-error>This field is required!</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div>
+        <app-aswg-chip-form-input
+          labelText="Headless Clients (IPs)"
+          toolTipText="IP addresses of headless clients. Used to offload AI calculations from the server."
+          [control]="form.controls.headlessClients"
+        ></app-aswg-chip-form-input>
+        <app-aswg-chip-form-input
+          labelText="Local Clients (IPs)"
+          toolTipText="Indicates clients with unlimited bandwidth and nearly no latency."
+          [control]="form.controls.localClients"
+        ></app-aswg-chip-form-input>
+      </div>
+    </section>
+    <hr>
+    <section>
+      <h1>Gameplay options</h1>
+      <div class="section-fields">
+        <mat-form-field>
+          <mat-label>Persistent</mat-label>
+          <mat-select
+            formControlName="persistent"
+            name="persistent"
+            matTooltip="If yes then mission keeps running even when all players disconnect"
+          >
+            <mat-option [value]="true">Yes</mat-option>
+            <mat-option [value]="false">No</mat-option>
+          </mat-select>
+          @if (form.controls.persistent.hasError('required')) {
+            <mat-error>This field is required!</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Drawing in map</mat-label>
+          <mat-select
+            formControlName="drawingInMap"
+            matTooltip="Enabled the ability to place markers and draw lines on map"
+          >
+            <mat-option [value]="true">Yes</mat-option>
+            <mat-option [value]="false">No</mat-option>
+          </mat-select>
+          @if (form.controls.drawingInMap.hasError('required')) {
+            <mat-error>This field is required!</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Forced difficulty</mat-label>
+          <mat-select
+            formControlName="forcedDifficulty"
+            matTooltip="Enforces the selected difficulty on the server. Set to 'Empty' to make mission settings decide about the difficulty."
+          >
+            <mat-option [value]="null">Empty</mat-option>
+            <mat-option [value]="'RECRUIT'">Recruit</mat-option>
+            <mat-option [value]="'REGULAR'">Regular</mat-option>
+            <mat-option [value]="'VETERAN'">Veteran</mat-option>
+            <mat-option [value]="'CUSTOM'">Custom</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </section>
+    <hr>
+    <section class="motd-section">
+      <h1>Messages of the day</h1>
+      <app-motd-list [motdControl]="form.controls.motd"
+                     [motdIntervalControl]="form.controls.motdInterval"></app-motd-list>
+    </section>
+    <hr>
     <section class="command-line-params-section">
-      <mat-label>Current command-line parameters</mat-label>
+      <h4>Current command-line parameters</h4>
       <div class="command-line-params-wrapper">
-        <textarea class="command-line-params" disabled [textContent]="formatCommandLineParams(commandLineParams())" style="resize: none;"></textarea>
+        <textarea class="command-line-params" disabled
+                  [textContent]="formatCommandLineParams(commandLineParams())"></textarea>
         @if (form.controls.canOverwriteCommandLineParams.value && hasOverwriteCommandLineParamsPermission()) {
           <button mat-flat-button color="primary" (click)="overrideCommandLineParams()">Overwrite</button>
         }

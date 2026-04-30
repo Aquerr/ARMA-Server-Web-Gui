@@ -26,7 +26,7 @@
           <button mat-button routerLink="/mods-settings">Mod settings</button>
           <app-mod-presets
             [enabledMods]="enabledMods()"
-            (modPresetSelected)="onModPresetSelected()"
+            (modPresetSelected)="onModPresetSelected($event)"
           ></app-mod-presets>
         </div>
       </div>

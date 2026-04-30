@@ -6,9 +6,10 @@
   --aswg-primary-text-color: #adbac7;
   --aswg-bg-primary-bg-color: #22272e;
   --aswg-input-bg-color: #2d333b;
-  --aswg-chip-bg-color: #fefefe;
+  --aswg-chip-bg-color: #adbac7;
+  --aswg-icon-color: #adbac7;
   --aswg-border-color: #444c56 !important;
-  --mat-icon-color: var(--aswg-primary-color) !important;
+  --mat-icon-color: var(--aswg-icon-color) !important;
   --mat-stepper-header-edit-state-icon-background-color: var(--aswg-primary-color) !important;
   --mat-stepper-header-done-state-icon-background-color: var(--aswg-primary-color) !important;
   --mat-stepper-header-selected-state-icon-background-color: var(--aswg-primary-color) !important;
@@ -94,8 +95,8 @@ a {
 }
 
 .mat-primary
-  .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled)
-  .mdc-list-item__primary-text {
+.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled)
+.mdc-list-item__primary-text {
   color: var(--aswg-primary-color) !important;
 }
 
@@ -104,9 +105,9 @@ a {
 }
 
 .mat-mdc-checkbox
-  .mdc-checkbox
-  .mdc-checkbox__native-control:enabled:checked
-  ~ .mdc-checkbox__background {
+.mdc-checkbox
+.mdc-checkbox__native-control:enabled:checked
+~ .mdc-checkbox__background {
   border-color: var(--aswg-primary-color) !important;
   background-color: var(--aswg-primary-color) !important;
 }
@@ -198,10 +199,10 @@ input::placeholder {
 }
 
 .mdc-checkbox
-  .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not(
+.mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not(
     [data-indeterminate="true"]
   )
-  ~ .mdc-checkbox__background {
+~ .mdc-checkbox__background {
   border-color: #444c56 !important;
 }
 
@@ -286,6 +287,16 @@ body {
 
 .mat-nack-bar-container {
   width: 40rem !important;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row > * {
+  width: 100%;
+  max-width: 100%;
 }
 
 .col {
@@ -395,6 +406,7 @@ hr {
   text-decoration: none;
   white-space: nowrap;
   display: flex;
+
   img {
     height: var(--navbar-brand-image-size);
   }
@@ -411,10 +423,9 @@ hr {
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 4px;
-  box-shadow:
-    0 5px 5px -3px rgba(0, 0, 0, 0.2),
-    0 8px 10px 1px rgba(0, 0, 0, 0.14),
-    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  0 8px 10px 1px rgba(0, 0, 0, 0.14),
+  0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
 .cdk-drag-placeholder {

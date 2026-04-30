@@ -37,8 +37,9 @@ export class ThemeService {
         document.documentElement.style.setProperty("--aswg-primary-text-color", "#000000");
         document.documentElement.style.setProperty("--aswg-primary-color-hover", "#37288f");
         document.documentElement.style.setProperty("--aswg-bg-primary-bg-color", "#ffffff");
-        document.documentElement.style.setProperty("--aswg-input-bg-color", "whitesmoke");
+        document.documentElement.style.setProperty("--aswg-input-bg-color", "#efefef");
         document.documentElement.style.setProperty("--aswg-chip-bg-color", "#acacac");
+        document.documentElement.style.setProperty("--aswg-icon-color", "#4634b7");
         break;
       case "dark":
         document.documentElement.style.setProperty("--aswg-primary-color", "#46954a");
@@ -46,7 +47,8 @@ export class ThemeService {
         document.documentElement.style.setProperty("--aswg-primary-color-hover", "#3b803e");
         document.documentElement.style.setProperty("--aswg-bg-primary-bg-color", "#22272e");
         document.documentElement.style.setProperty("--aswg-input-bg-color", "#2d333b");
-        document.documentElement.style.setProperty("--aswg-chip-bg-color", "#fefefe");
+        document.documentElement.style.setProperty("--aswg-chip-bg-color", "#ccc");
+        document.documentElement.style.setProperty("--aswg-icon-color", "#46954a");
         break;
     }
   }

@@ -28,7 +28,8 @@ import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { DialogService } from "../../../service/dialog.service";
 import {
   ModPresetImportConfirmationDialogComponent,
-  ModPresetImportDialogData, ModToImport
+  ModPresetImportDialogData,
+  ModToImport
 } from "./mod-preset-import-confirmation-dialog/mod-preset-import-confirmation-dialog.component";
 import { WorkshopService } from "../../../service/workshop.service";
 import { map } from "rxjs";
@@ -174,12 +175,7 @@ export class ModPresetsComponent {
   }
 
   onPresetSelect(presetName: string) {
-    this.maskService.show();
-    this.modsService.selectPreset({ name: presetName }).subscribe(() => {
-      this.modPresetSelected.emit(presetName);
-      this.maskService.hide();
-      this.notificationService.successNotification("Mod preset loaded!");
-    });
+    this.modPresetSelected.emit(presetName);
   }
 
   onPresetDelete(presetName: string) {
@@ -193,7 +189,10 @@ export class ModPresetsComponent {
   }
 
   private showModalNewPreset() {
-    this.dialogService.open(ModPresetAddDialogComponent, (dialogResult: { create: boolean | undefined; modPresetName: string }) => {
+    this.dialogService.open(ModPresetAddDialogComponent, (dialogResult: {
+      create: boolean | undefined;
+      modPresetName: string;
+    }) => {
       if (dialogResult.create) {
         this.modsService
           .savePreset({ name: dialogResult.modPresetName, modNames: [] })
