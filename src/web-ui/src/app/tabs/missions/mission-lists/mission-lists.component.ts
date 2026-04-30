@@ -1,19 +1,23 @@
-import { Component, inject, input, QueryList, signal, ViewChildren, OnInit, OnDestroy, effect } from "@angular/core";
+import { Component, effect, inject, input, OnDestroy, OnInit, QueryList, signal, ViewChildren } from "@angular/core";
 import { CdkDragDrop, CdkDropListGroup, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
-import { MissionListComponent } from "../mission-list/mission-list.component";
 import { Mission } from "../../../model/mission.model";
 import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../../service/notification.service";
 import { SaveEnabledMissionsRequest, ServerMissionsService } from "../../../service/server-missions.service";
 import { Subject, Subscription } from "rxjs";
 import { moveItemBetweenSignalLists } from "../../../util/signal/signal-utils";
+import { MissionListItemComponent } from "../mission-list-item/mission-list-item.component";
+import {
+  AswgDragAndDropListComponent
+} from "../../../common-ui/aswg-drag-and-drop-list/aswg-drag-and-drop-list.component";
 
 @Component({
   selector: "app-mission-lists",
   templateUrl: "./mission-lists.component.html",
   imports: [
     CdkDropListGroup,
-    MissionListComponent
+    MissionListItemComponent,
+    AswgDragAndDropListComponent
   ],
   styleUrls: ["./mission-lists.component.scss"]
 })
@@ -27,10 +31,14 @@ export class MissionListsComponent implements OnInit, OnDestroy {
   disabledMissions = signal<Mission[]>([]);
   enabledMissions = signal<Mission[]>([]);
 
+  protected missionFilterFunction(mission: Mission, searchPhrase: string): boolean {
+    return mission.name.toLowerCase().includes(searchPhrase.toLowerCase());
+  }
+
   reloadMissionsDataSubject!: Subject<void>;
   reloadMissionsDataSubscription!: Subscription;
 
-  @ViewChildren(MissionListComponent) missionListComponents!: QueryList<MissionListComponent>;
+  @ViewChildren(AswgDragAndDropListComponent) listComponents!: QueryList<AswgDragAndDropListComponent<Mission>>;
 
   constructor() {
     this.reloadMissionsDataSubject = new Subject();
@@ -40,7 +48,7 @@ export class MissionListsComponent implements OnInit, OnDestroy {
 
     effect(() => {
       const searchPhrase = this.searchPhrase();
-      this.missionListComponents?.forEach((component) => component.filterMissions(searchPhrase));
+      this.listComponents?.forEach((component) => component.filterItems(searchPhrase));
     });
   }
 
@@ -57,7 +65,7 @@ export class MissionListsComponent implements OnInit, OnDestroy {
     this.missionsService.getInstalledMissions().subscribe((response) => {
       this.enabledMissions.set(response.enabledMissions);
       this.disabledMissions.set(response.disabledMissions);
-      this.missionListComponents.forEach((component) => component.reload());
+      this.listComponents.forEach((component) => component.reload());
       this.maskService.hide();
     });
   }
@@ -77,11 +85,11 @@ export class MissionListsComponent implements OnInit, OnDestroy {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      const movedMod = event.previousContainer.data[event.previousIndex];
+      const movedMission = event.previousContainer.data[event.previousIndex];
       if (event.previousContainer.id == "Enabled") {
-        moveItemBetweenSignalLists(this.enabledMissions, this.disabledMissions, movedMod);
+        moveItemBetweenSignalLists(this.enabledMissions, this.disabledMissions, movedMission);
       } else {
-        moveItemBetweenSignalLists(this.disabledMissions, this.enabledMissions, movedMod);
+        moveItemBetweenSignalLists(this.disabledMissions, this.enabledMissions, movedMission);
       }
 
       // Update view drag drop list
@@ -94,9 +102,12 @@ export class MissionListsComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected onMissionDelete() {
-    this.notificationService.successNotification("Mission has been deleted!");
-    this.reloadMissionsDataSubject.next();
+  protected onMissionDelete(mission: Mission) {
+    this.missionsService.deleteMission(mission.template).subscribe(() => {
+      this.maskService.hide();
+      this.notificationService.successNotification("Mission has been deleted!");
+      this.reloadMissionsDataSubject.next();
+    });
   }
 
   protected disableAllMissions() {

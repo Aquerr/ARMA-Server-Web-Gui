@@ -6,30 +6,41 @@
     <span>Difficulty: {{ mission().difficulty }}</span>
     <span style="filter: brightness(50%)">Template: {{ mission().template }}</span>
   </div>
-  <div style="flex: 14%; white-space: nowrap; filter: brightness(50%)">
-    {{ mission().sizeBytes | filesize }}
-  </div>
-  <div class="text-center" style="flex: 14%">
-    <button
-      mat-icon-button
-      matTooltip="Configure parameters"
-      (click)="showMissionModifyDialog()"
-    >
-      <mat-icon>settings</mat-icon>
-    </button>
-  </div>
-  <div class="text-center" style="flex: 14%">
-    <button mat-icon-button matTooltip="Download" (click)="downloadMission()">
-      <mat-icon>download</mat-icon>
-    </button>
-  </div>
-  <div class="text-center" style="flex: 14%">
-    <button
-      mat-icon-button
-      matTooltip="Delete the mission"
-      (click)="showMissionDeleteConfirmationDialog()"
-    >
-      <mat-icon>delete</mat-icon>
-    </button>
+  <div class="additional-info">
+    <div class="additional-info-text">
+      <div>
+        @if (mission().parameters.length) {
+          ({{ mission().parameters.length }} parameters)
+        }
+      </div>
+      <div>
+        {{ mission().sizeBytes | filesize }}
+      </div>
+    </div>
+    <div class="additional-info-buttons">
+      <div>
+        <button
+          mat-icon-button
+          matTooltip="Configure parameters"
+          (click)="showMissionModifyDialog()"
+        >
+          <mat-icon>settings</mat-icon>
+        </button>
+      </div>
+      <div>
+        <button mat-icon-button matTooltip="Download" (click)="downloadMission()">
+          <mat-icon>download</mat-icon>
+        </button>
+      </div>
+      <div>
+        <button
+          mat-icon-button
+          matTooltip="Delete the mission"
+          (click)="showMissionDeleteConfirmationDialog()"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
   </div>
 </div>

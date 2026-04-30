@@ -1,0 +1,53 @@
+<h2 class="list-header">
+  {{ listHeader() }} <span class="brightness-50">({{ items().length }})</span>
+</h2>
+<div class="list-buttons">
+  <button mat-button (click)="moveAllItems()">
+    {{ moveAllButtonName() }}
+    <mat-icon aria-hidden="false" aria-label="Move all icon" [fontIcon]="moveAllButtonIcon()"></mat-icon>
+  </button>
+  @if (sortEnabled()) {
+    <mat-form-field class="sort-button">
+      <mat-label>Sort by</mat-label>
+      <mat-select [(value)]="selectedSortingOption" (selectionChange)="sortItems()"
+                  [hideSingleSelectionIndicator]="true">
+        <mat-select-trigger>
+          @if (selectedSortingOption) {
+            <div class="sort-select-label">
+              @if (selectedSortingOption.icon) {
+                <mat-icon class="sort-select-label-icon" [fontIcon]="selectedSortingOption.icon"></mat-icon>
+              }
+              {{ selectedSortingOption.label }}
+            </div>
+          }
+        </mat-select-trigger>
+
+        @for (sortOption of sortingOptions(); track sortOption.value) {
+          <mat-option [value]="sortOption">
+            {{ sortOption.label }}
+            @if (sortOption.icon) {
+              <mat-icon [fontIcon]="sortOption.icon"></mat-icon>
+            }
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
+</div>
+<div class="list-wrapper">
+  <div
+    [id]="listId()"
+    cdkDropList
+    class="list"
+    [cdkDropListData]="filteredItems()"
+    (cdkDropListDropped)="onItemDragDrop($event)"
+  >
+    @for (item of filteredItems(); track item) {
+      <div class="drag-item" cdkDrag>
+        <ng-container [ngTemplateOutlet]="listItemTemplate()" [ngTemplateOutletContext]="{ $implicit: item}">
+        </ng-container>
+
+      </div>
+    }
+  </div>
+</div>

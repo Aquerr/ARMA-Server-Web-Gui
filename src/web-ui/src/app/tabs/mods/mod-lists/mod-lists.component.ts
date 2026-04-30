@@ -17,13 +17,18 @@ import { NotificationService } from "../../../service/notification.service";
 import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
 import { NotManagedModsComponent } from "../not-managed-mods/not-managed-mods.component";
 import { Subject, Subscription } from "rxjs";
-import { ModListComponent } from "../mod-list/mod-list.component";
 import { moveItemBetweenSignalLists } from "../../../util/signal/signal-utils";
+import { ModListItemComponent } from "../mod-list-item/mod-list-item.component";
+import {
+  AswgDragAndDropListComponent,
+  SortOption
+} from "../../../common-ui/aswg-drag-and-drop-list/aswg-drag-and-drop-list.component";
 
 @Component({
   selector: "app-mod-lists",
-  imports: [CdkDropListGroup, NotManagedModsComponent, ModListComponent],
+  imports: [CdkDropListGroup, NotManagedModsComponent, ModListItemComponent, AswgDragAndDropListComponent],
   templateUrl: "./mod-lists.component.html",
+
   styleUrl: "./mod-lists.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -32,16 +37,43 @@ export class ModListsComponent implements OnInit, OnDestroy {
   private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly modService: ServerModsService = inject(ServerModsService);
 
-  searchPhrase = input<string>("");
+  public readonly searchPhrase = input<string>("");
 
-  notManagedMods = signal<Mod[]>([]);
-  disabledMods = signal<Mod[]>([]);
-  enabledMods = signal<Mod[]>([]);
+  public readonly notManagedMods = signal<Mod[]>([]);
+  public readonly disabledMods = signal<Mod[]>([]);
+  public readonly enabledMods = signal<Mod[]>([]);
 
-  reloadModsDataSubject!: Subject<void>;
-  reloadModsDataSubscription!: Subscription;
+  public sortingOptions: SortOption<Mod>[] = [
+    {
+      value: "Name_Asc",
+      label: "Name",
+      icon: "arrow_downward_alt",
+      sortFunction: (a, b) => a.name.localeCompare(b.name)
+    },
+    {
+      value: "Name_Desc",
+      label: "Name",
+      icon: "arrow_upward_alt",
+      sortFunction: (a, b) => b.name.localeCompare(a.name)
+    },
+    {
+      value: "Size_Asc",
+      label: "Size",
+      icon: "arrow_downward_alt",
+      sortFunction: (a, b) => a.sizeBytes - b.sizeBytes
+    },
+    {
+      value: "Size_Desc",
+      label: "Size",
+      icon: "arrow_upward_alt",
+      sortFunction: (a, b) => b.sizeBytes - a.sizeBytes
+    }
+  ];
 
-  @ViewChildren(ModListComponent) modListComponents!: QueryList<ModListComponent>;
+  private reloadModsDataSubject!: Subject<void>;
+  private reloadModsDataSubscription!: Subscription;
+
+  @ViewChildren(AswgDragAndDropListComponent<Mod>) modListComponents!: QueryList<AswgDragAndDropListComponent<Mod>>;
 
   constructor() {
     this.reloadModsDataSubject = new Subject();
@@ -51,8 +83,12 @@ export class ModListsComponent implements OnInit, OnDestroy {
 
     effect(() => {
       const searchPhrase = this.searchPhrase();
-      this.modListComponents?.forEach((component) => component.filterMods(searchPhrase));
+      this.modListComponents?.forEach((component) => component.filterItems(searchPhrase));
     });
+  }
+
+  protected modFilterFunction(mod: Mod, searchPhrase: string): boolean {
+    return mod.name.toLowerCase().includes(searchPhrase.toLowerCase());
   }
 
   ngOnInit() {
@@ -72,7 +108,7 @@ export class ModListsComponent implements OnInit, OnDestroy {
       this.modListComponents.forEach((component) => component.reload());
 
       this.maskService.hide();
-      if (this.notManagedMods.length > 0) {
+      if (this.notManagedMods().length > 0) {
         this.notificationService.infoNotification(
           "ASWG detected some new mods. Scroll to the bottom to see them."
         );
@@ -98,13 +134,16 @@ export class ModListsComponent implements OnInit, OnDestroy {
         event.previousIndex,
         event.currentIndex
       );
-      this.modListComponents.forEach((component) => component.sortModList());
+      this.modListComponents.forEach((component) => component.sortItems());
     }
   }
 
-  onModDelete() {
-    this.notificationService.successNotification("Mod has been deleted!");
-    this.reloadModsDataSubject.next();
+  onModDelete(mod: Mod) {
+    this.modService.deleteMod(mod.name).subscribe(() => {
+      this.notificationService.successNotification("Mod has been deleted!");
+      this.reloadModsDataSubject.next();
+      this.maskService.hide();
+    });
   }
 
   enableAllMods() {

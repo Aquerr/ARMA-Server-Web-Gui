@@ -1,17 +1,30 @@
-<div class="mission-list-group" cdkDropListGroup>
-  <app-mission-list [missions]="disabledMissions()"
-                [listHeader]="'Disabled'"
-                (moveAll)="enableAllMissions()"
-                (missionItemDragDrop)="onMissionItemDragDrop($event)"
-                (missionDelete)="onMissionDelete()"
-                [moveAllMissionsButtonName]="'Enable all'"
-                [moveAllMissionsButtonIcon]="'arrow_forward'"></app-mission-list>
+<ng-template #missionListItemTemplate let-item>
+  <app-mission-list-item
+    [mission]="item"
+    (missionDeleted)="onMissionDelete($event)"
+  ></app-mission-list-item>
+</ng-template>
 
-  <app-mission-list [missions]="enabledMissions()"
-                [listHeader]="'Enabled'"
-                (moveAll)="disableAllMissions()"
-                (missionItemDragDrop)="onMissionItemDragDrop($event)"
-                (missionDelete)="onMissionDelete()"
-                [moveAllMissionsButtonName]="'Disable all'"
-                [moveAllMissionsButtonIcon]="'arrow_backward'"></app-mission-list>
+<div class="mission-list-group" cdkDropListGroup>
+  <app-aswg-drag-and-drop-list
+    listId="Disabled"
+    [items]="disabledMissions()"
+    [listItemTemplate]="missionListItemTemplate"
+    listHeader="Disabled"
+    (moveAll)="enableAllMissions()"
+    (itemDragDrop)="onMissionItemDragDrop($event)"
+    [moveAllButtonName]="'Enable all'"
+    [moveAllButtonIcon]="'arrow_forward'"
+    [filterFunction]="missionFilterFunction"></app-aswg-drag-and-drop-list>
+
+  <app-aswg-drag-and-drop-list
+    listId="Enabled"
+    [items]="enabledMissions()"
+    [listItemTemplate]="missionListItemTemplate"
+    listHeader="Enabled"
+    (moveAll)="disableAllMissions()"
+    (itemDragDrop)="onMissionItemDragDrop($event)"
+    [moveAllButtonName]="'Disable all'"
+    [moveAllButtonIcon]="'arrow_backward'"
+    [filterFunction]="missionFilterFunction"></app-aswg-drag-and-drop-list>
 </div>

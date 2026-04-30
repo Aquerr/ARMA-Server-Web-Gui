@@ -3,8 +3,9 @@ import { Mod, ModStatus } from "../../../model/mod.model";
 import { ModDeleteConfirmDialogComponent } from "../mod-delete-confirm-dialog/mod-delete-confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
-import { ServerModsService } from "../../../service/server-mods.service";
-import { ModForceUpdateConfirmDialogComponent } from "../mod-force-update-confirm-dialog/mod-force-update-confirm-dialog.component";
+import {
+  ModForceUpdateConfirmDialogComponent
+} from "../mod-force-update-confirm-dialog/mod-force-update-confirm-dialog.component";
 import { WorkshopService } from "../../../service/workshop.service";
 import { NotificationService } from "../../../service/notification.service";
 import {
@@ -51,12 +52,12 @@ export class ModListItemComponent {
   constructor(
     private matDialog: MatDialog,
     private maskService: LoadingSpinnerMaskService,
-    private modService: ServerModsService,
     private workshopService: WorkshopService,
     private notificationService: NotificationService
-  ) {}
+  ) {
+  }
 
-  showModDeleteConfirmationDialog(modName: string) {
+  showModDeleteConfirmationDialog() {
     const dialogRef = this.matDialog.open(ModDeleteConfirmDialogComponent, {
       width: "250px",
       enterAnimationDuration: "200ms",
@@ -65,17 +66,13 @@ export class ModListItemComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.deleteMod(modName);
+        this.deleteMod();
       }
     });
   }
 
-  deleteMod(modName: string) {
-    this.maskService.show();
-    this.modService.deleteMod(modName).subscribe(() => {
-      this.maskService.hide();
-      this.modDeleted.next(this.mod);
-    });
+  deleteMod() {
+    this.modDeleted.next(this.mod);
   }
 
   showForceUpdateConfirmationDialog(fileId: number, modName: string) {

@@ -1,19 +1,36 @@
-<div class="mod-list-group" cdkDropListGroup>
-  <app-mod-list [mods]="disabledMods()"
-                [listHeader]="'Disabled'"
-                (moveAll)="enableAllMods()"
-                (modItemDragDrop)="onModItemDragDrop($event)"
-                (modDelete)="onModDelete()"
-                [moveAllModsButtonName]="'Enable all'"
-                [moveAllModsButtonIcon]="'arrow_forward'"></app-mod-list>
+<ng-template #modListItemTemplate let-item>
+  <app-mod-list-item
+    [mod]="item"
+    (modDeleted)="onModDelete($event)"
+  ></app-mod-list-item>
+</ng-template>
 
-  <app-mod-list [mods]="enabledMods()"
-                [listHeader]="'Enabled'"
-                (moveAll)="disableAllMods()"
-                (modItemDragDrop)="onModItemDragDrop($event)"
-                (modDelete)="onModDelete()"
-                [moveAllModsButtonName]="'Disable all'"
-                [moveAllModsButtonIcon]="'arrow_backward'"></app-mod-list>
+<div class="mod-list-group" cdkDropListGroup>
+  <app-aswg-drag-and-drop-list
+    listId="Disabled"
+    [items]="disabledMods()"
+    [listItemTemplate]="modListItemTemplate"
+    listHeader="Disabled"
+    (moveAll)="enableAllMods()"
+    (itemDragDrop)="onModItemDragDrop($event)"
+    [moveAllButtonName]="'Enable all'"
+    [moveAllButtonIcon]="'arrow_forward'"
+    [sortEnabled]="true"
+    [sortingOptions]="sortingOptions"
+    [filterFunction]="modFilterFunction"></app-aswg-drag-and-drop-list>
+
+  <app-aswg-drag-and-drop-list
+    listId="Enabled"
+    [items]="enabledMods()"
+    [listItemTemplate]="modListItemTemplate"
+    listHeader="Enabled"
+    [sortEnabled]="true"
+    [sortingOptions]="sortingOptions"
+    (moveAll)="disableAllMods()"
+    (itemDragDrop)="onModItemDragDrop($event)"
+    [moveAllButtonName]="'Disable all'"
+    [moveAllButtonIcon]="'arrow_backward'"
+    [filterFunction]="modFilterFunction"></app-aswg-drag-and-drop-list>
 </div>
 
 @if (notManagedMods().length > 0) {

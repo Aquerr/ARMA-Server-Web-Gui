@@ -1,11 +1,12 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   inject,
   OnDestroy,
   OnInit,
-  signal, ViewChild, AfterViewInit
+  signal,
+  ViewChild
 } from "@angular/core";
 import { Subject, Subscription } from "rxjs";
 import { ServerMissionsService } from "../../service/server-missions.service";
@@ -126,7 +127,11 @@ export class MissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   addNewMission() {
-    this.dialogService.open(NewMissionDialogComponent, (result: { file: File; template: string | undefined; name: string }) => {
+    this.dialogService.open(NewMissionDialogComponent, (result: {
+      file: File;
+      template: string | undefined;
+      name: string;
+    }) => {
       if (result.file) {
         this.onFileDropped(result.file);
       } else if (result.template) {

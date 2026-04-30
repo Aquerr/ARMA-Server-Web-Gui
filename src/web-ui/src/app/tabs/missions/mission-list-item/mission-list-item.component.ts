@@ -60,7 +60,7 @@ export class MissionListItemComponent {
   showMissionDeleteConfirmationDialog(): void {
     this.dialogService.open(MissionDeleteConfirmDialogComponent, (result) => {
       if (result) {
-        this.deleteMission(this.mission().template);
+        this.deleteMission();
       }
     }, {}, {
       width: "250px",
@@ -69,12 +69,9 @@ export class MissionListItemComponent {
     });
   }
 
-  deleteMission(missionTemplate: string) {
+  deleteMission() {
     this.maskService.show();
-    this.missionsService.deleteMission(missionTemplate).subscribe(() => {
-      this.maskService.hide();
-      this.missionDeleted.emit(this.mission());
-    });
+    this.missionDeleted.emit(this.mission());
   }
 
   private updateMission(mission: Mission) {
