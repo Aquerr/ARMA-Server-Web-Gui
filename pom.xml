@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.3</version>
+        <version>4.0.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pl.bartlomiejstepien</groupId>
@@ -20,10 +20,10 @@
         <developerConnection>scm:git:https://github.com/Aquerr/ARMA-Server-Web-Gui.git</developerConnection>
         <url>https://github.com/Aquerr/ARMA-Server-Web-Gui</url>
     </scm>
-    
+
     <properties>
         <java.version>25</java.version>
-        <logbook.version>4.0.2</logbook.version>
+        <logbook.version>4.0.4</logbook.version>
         <steam-condenser.version>1.3.9</steam-condenser.version>
         <jjwt.version>0.13.0</jjwt.version>
         <zip4j.version>2.11.6</zip4j.version>
@@ -34,20 +34,20 @@
         <!--maven plugins -->
         <maven-frontend-plugin.version>2.0.0</maven-frontend-plugin.version>
         <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
-        <maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
+        <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
         <maven-antrun-plugin.version>3.2.0</maven-antrun-plugin.version>
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
         <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
 
-        <checkstyle.version>13.3.0</checkstyle.version>
+        <checkstyle.version>13.4.1</checkstyle.version>
 
         <!-- Tests -->
-        <wiremock-spring-boot.version>4.2.0</wiremock-spring-boot.version>
+        <wiremock-spring-boot.version>4.2.1</wiremock-spring-boot.version>
 
         <!-- Front -->
-        <node.version>v24.8.0</node.version>
+        <node.version>v24.15.0</node.version>
     </properties>
 
     <repositories>

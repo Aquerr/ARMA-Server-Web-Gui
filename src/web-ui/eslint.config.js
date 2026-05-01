@@ -2,9 +2,9 @@
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
 const stylistic = require("@stylistic/eslint-plugin");
-const { defineConfig } = require("eslint/config");
+const {defineConfig} = require("eslint/config");
 
-module.exports = defineConfig([
+export default defineConfig([
   {
     files: ["**/*.ts"],
     extends: [
