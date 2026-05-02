@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.application.scheduling;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.model.JobExecutionStatus;
+import pl.bartlomiejstepien.armaserverwebgui.domain.job.AswgJobName;
 
 import java.time.OffsetDateTime;
 
@@ -15,7 +16,7 @@ public abstract class AswgJob implements Runnable
         this.jobExecutionInfoService = jobExecutionInfoService;
     }
 
-    public abstract String getName();
+    public abstract AswgJobName getName();
 
     protected abstract void runJob();
 

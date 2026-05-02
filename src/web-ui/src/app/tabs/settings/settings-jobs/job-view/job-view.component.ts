@@ -48,6 +48,7 @@ export class JobViewComponent implements OnInit {
   private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   public jobName: string = "";
+  public jobDescription: string = "";
 
   ngOnInit(): void {
     this.jobName = this.activatedRoute.snapshot.params["name"] as string;
@@ -57,6 +58,7 @@ export class JobViewComponent implements OnInit {
     this.maskService.show();
     this.jobSettingsService.getJobSettings(this.jobName).subscribe((response) => {
       this.formService.setForm(this.form, response);
+      this.jobDescription = response.description;
       this.maskService.hide();
       this.changeDetectorRef.markForCheck();
     });

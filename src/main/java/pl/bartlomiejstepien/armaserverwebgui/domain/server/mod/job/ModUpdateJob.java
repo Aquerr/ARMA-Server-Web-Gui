@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.AswgJob;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.JobExecutionInfoService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.job.AswgJobNames;
+import pl.bartlomiejstepien.armaserverwebgui.domain.job.AswgJobName;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
@@ -71,8 +71,8 @@ public class ModUpdateJob extends AswgJob
     }
 
     @Override
-    public String getName()
+    public AswgJobName getName()
     {
-        return AswgJobNames.MOD_UPDATE;
+        return AswgJobName.MOD_UPDATE;
     }
 }

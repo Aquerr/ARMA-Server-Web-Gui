@@ -11,6 +11,7 @@ import java.util.Map;
 public class JobSettings
 {
     String name;
+    String description;
     boolean enabled;
     String cron;
 

@@ -1,4 +1,6 @@
 export interface JobSettings {
+  name: string;
+  description: string;
   enabled: boolean;
   cron: string;
   parameters: [{ name: string; description: string; value: string }];

@@ -35,7 +35,7 @@ public class AswgTaskScheduler
     public void schedule(AswgJob job, String cron)
     {
         // There can be only one active job with a given name
-        cancel(job.getName());
+        cancel(job.getName().getCode());
 
         log.info("Starting job '{}' with cron: '{}'", job.getName(), cron);
         Trigger trigger = new CronTrigger(cron);
@@ -45,7 +45,7 @@ public class AswgTaskScheduler
             log.warn("Task with name: {} won't be scheduled. Cron: {}", job.getName(), cron);
             return;
         }
-        SCHEDULED_TASKS.put(job.getName(), new ScheduledJob(scheduledFuture, trigger) );
+        SCHEDULED_TASKS.put(job.getName().getCode(), new ScheduledJob(scheduledFuture, trigger) );
     }
 
     public void cancel(String taskName)

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class JobConfig
 {
     @Bean
-    public Map<String, AswgJob> aswgJobsMap(List<AswgJob> aswgJobs)
+    public Map<AswgJobName, AswgJob> aswgJobsMap(List<AswgJob> aswgJobs)
     {
         return aswgJobs.stream()
                 .collect(Collectors.toMap(AswgJob::getName, aswgJob -> aswgJob));

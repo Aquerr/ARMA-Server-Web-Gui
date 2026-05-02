@@ -1,5 +1,8 @@
 <div class="container">
-  <h1>Job {{ jobName }}</h1>
+  <h1>{{ jobName }}</h1>
+
+  <div style="margin-bottom: 1rem">Description: {{ jobDescription }}</div>
+
   <div>
     <form [formGroup]="form" class="fields">
 

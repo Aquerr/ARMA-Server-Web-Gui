@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.AswgJob;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.JobExecutionInfoService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.job.AswgJobNames;
+import pl.bartlomiejstepien.armaserverwebgui.domain.job.AswgJobName;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.MissionService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.model.MissionEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mission.MissionFileStorage;
@@ -35,9 +35,9 @@ public class MissionScannerJob extends AswgJob
     }
 
     @Override
-    public String getName()
+    public AswgJobName getName()
     {
-        return AswgJobNames.MISSIONS_SCANNER;
+        return AswgJobName.MISSIONS_SCANNER;
     }
 
     @Override

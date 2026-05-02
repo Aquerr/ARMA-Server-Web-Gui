@@ -8,7 +8,7 @@ import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.AswgJob;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.JobExecutionInfoService;
 import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
-import pl.bartlomiejstepien.armaserverwebgui.domain.job.AswgJobNames;
+import pl.bartlomiejstepien.armaserverwebgui.domain.job.AswgJobName;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModSettingsStorage;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModSettingsEntity;
 
@@ -42,9 +42,9 @@ public class ModSettingsScanJob extends AswgJob
     }
 
     @Override
-    public String getName()
+    public AswgJobName getName()
     {
-        return AswgJobNames.MOD_SETTINGS_SCAN;
+        return AswgJobName.MOD_SETTINGS_SCAN;
     }
 
     @Override

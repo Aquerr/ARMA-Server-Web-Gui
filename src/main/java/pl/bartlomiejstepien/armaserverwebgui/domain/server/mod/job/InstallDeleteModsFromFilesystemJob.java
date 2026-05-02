@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.AswgJob;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.JobExecutionInfoService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.job.AswgJobNames;
+import pl.bartlomiejstepien.armaserverwebgui.domain.job.AswgJobName;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
@@ -105,8 +105,8 @@ public class InstallDeleteModsFromFilesystemJob extends AswgJob
     }
 
     @Override
-    public String getName()
+    public AswgJobName getName()
     {
-        return AswgJobNames.INSTALL_DELETE_MODS;
+        return AswgJobName.INSTALL_DELETE_MODS;
     }
 }

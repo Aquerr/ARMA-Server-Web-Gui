@@ -31,8 +31,7 @@ public class JobsSettingsRestController
 
     @GetMapping()
     public List<String> getJobsNames(
-            @RequestParam(value = "names-only", required = false, defaultValue = "true")
-            boolean namesOnly)
+            @RequestParam(value = "names-only", required = false, defaultValue = "true") boolean namesOnly)
     {
         // For now, ignore namesOnly param.
         return jobService.getJobsNames().stream().toList();
@@ -76,18 +75,19 @@ public class JobsSettingsRestController
     }
 
     private JobSettingsResponse mapToResponse(JobSettings jobSettings,
-                                              Optional<JobExecution> jobExecution,
+                                              Optional<JobExecution> lastJobExecution,
                                               OffsetDateTime nextExecutionDate)
     {
         return new JobSettingsResponse(
                 jobSettings.getName(),
+                jobSettings.getDescription(),
                 jobSettings.isEnabled(),
                 jobSettings.getCron(),
                 jobSettings.getParameters().values().stream().toList(),
-                jobExecution.map(JobExecution::getStartDate).orElse(null),
-                jobExecution.map(JobExecution::getFinishDate).orElse(null),
-                jobExecution.map(JobExecution::getMessage).orElse(null),
-                jobExecution.map(JobExecution::getStatus).map(JobExecutionStatus::getCode).orElse(null),
+                lastJobExecution.map(JobExecution::getStartDate).orElse(null),
+                lastJobExecution.map(JobExecution::getFinishDate).orElse(null),
+                lastJobExecution.map(JobExecution::getMessage).orElse(null),
+                lastJobExecution.map(JobExecution::getStatus).map(JobExecutionStatus::getCode).orElse(null),
                 nextExecutionDate
         );
     }

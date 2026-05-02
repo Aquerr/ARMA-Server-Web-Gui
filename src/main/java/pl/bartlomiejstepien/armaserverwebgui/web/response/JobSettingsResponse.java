@@ -17,6 +17,7 @@ import java.util.List;
 public class JobSettingsResponse
 {
     private String name;
+    private String description;
     private boolean enabled;
     private String cron;
     private List<JobSettings.JobParameter> parameters = new ArrayList<>();

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.dto.JobExecution;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.model.JobExecutionEntity;
 import pl.bartlomiejstepien.armaserverwebgui.application.scheduling.model.JobExecutionStatus;
+import pl.bartlomiejstepien.armaserverwebgui.domain.job.AswgJobName;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -19,15 +20,15 @@ public class JobExecutionInfoService
     private final JobExecutionRepository jobExecutionRepository;
 
     @Transactional
-    public void saveJobExecutionStart(String name)
+    public void saveJobExecutionStart(AswgJobName jobName)
     {
-        log.info("Saving job execution start for job '{}' at: {}", name, OffsetDateTime.now());
-        JobExecutionEntity jobExecutionEntity = jobExecutionRepository.findFirstByJobName(name).orElse(null);
+        log.info("Saving job execution start for job '{}' at: {}", jobName.getCode(), OffsetDateTime.now());
+        JobExecutionEntity jobExecutionEntity = jobExecutionRepository.findFirstByJobName(jobName.getCode()).orElse(null);
         if (jobExecutionEntity == null)
         {
             jobExecutionEntity = new JobExecutionEntity();
         }
-        jobExecutionEntity.setJobName(name);
+        jobExecutionEntity.setJobName(jobName.getCode());
         jobExecutionEntity.setStatus(JobExecutionStatus.STARTED.getCode());
         jobExecutionEntity.setStartDate(OffsetDateTime.now());
         jobExecutionEntity.setFinishDate(null);
@@ -36,19 +37,19 @@ public class JobExecutionInfoService
     }
 
     @Transactional
-    public void saveJobExecutionFinish(String name,
+    public void saveJobExecutionFinish(AswgJobName jobName,
                                        OffsetDateTime finishDate,
                                        JobExecutionStatus status,
                                        String message)
     {
-        log.info("Saving execution finished date for job '{}' at: {}, status: {}, message: {}", name, finishDate, status, message);
-        JobExecutionEntity jobExecutionEntity = jobExecutionRepository.findFirstByJobName(name)
+        log.info("Saving execution finished date for job '{}' at: {}, status: {}, message: {}", jobName.getCode(), finishDate, status, message);
+        JobExecutionEntity jobExecutionEntity = jobExecutionRepository.findFirstByJobName(jobName.getCode())
                 .orElse(null);
 
         if (jobExecutionEntity == null)
         {
             jobExecutionEntity = new JobExecutionEntity();
-            jobExecutionEntity.setJobName(name);
+            jobExecutionEntity.setJobName(jobName.getCode());
         }
         jobExecutionEntity.setFinishDate(finishDate);
         jobExecutionEntity.setStatus(status.getCode());
