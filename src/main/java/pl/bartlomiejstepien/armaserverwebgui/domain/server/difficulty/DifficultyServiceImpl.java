@@ -272,6 +272,8 @@ public class DifficultyServiceImpl implements DifficultyService
                 .name(entity.getName())
                 .active(entity.isActive())
                 .options(DifficultyProfile.Options.builder()
+                        .precisionAI(config.getDifficultyPresets().getCustomAiLevel().getPrecisionAI())
+                        .skillAI(config.getDifficultyPresets().getCustomAiLevel().getSkillAI())
                         .aiLevelPreset(customDifficulty.getAiLevelPreset())
                         .reducedDamage(options.getReducedDamage() == 1)
                         .groupIndicators(options.getGroupIndicators())
