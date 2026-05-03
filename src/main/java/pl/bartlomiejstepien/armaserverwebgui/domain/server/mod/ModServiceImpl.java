@@ -2,6 +2,7 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.mod;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -141,10 +142,7 @@ public class ModServiceImpl implements ModService
     {
         List<InstalledModEntity> installedModEntities = installedModRepository.findAll();
         Set<InstalledModEntity> modsToActivate = enabledMods.stream()
-                .map(modView -> installedModEntities.stream()
-                        .filter(mod -> mod.getWorkshopFileId() == (modView.getWorkshopFileId()))
-                        .findFirst()
-                        .orElse(null))
+                .map(modView -> mapToEntity(modView, installedModEntities))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
@@ -152,10 +150,11 @@ public class ModServiceImpl implements ModService
         installedModRepository.enableMods(modsToActivate.stream()
                 .map(InstalledModEntity::getWorkshopFileId)
                 .toList());
-        installedModRepository.setServerMods(modsToActivate.stream()
+        List<Long> serverModIds = modsToActivate.stream()
                 .filter(InstalledModEntity::isServerMod)
                 .map(InstalledModEntity::getWorkshopFileId)
-                .toList());
+                .toList();
+        installedModRepository.setServerMods(serverModIds);
         modKeyService.clearServerKeys();
 
         modsToActivate.stream()
@@ -163,6 +162,22 @@ public class ModServiceImpl implements ModService
                 .map(Paths::get)
                 .map(ModDirectory::from)
                 .forEach(modKeyService::copyKeysForMod);
+    }
+
+    @Nullable
+    private static InstalledModEntity mapToEntity(EnabledMod modView,
+                                                  List<InstalledModEntity> installedModEntities)
+    {
+        InstalledModEntity entity = installedModEntities.stream()
+                .filter(mod -> mod.getWorkshopFileId() == (modView.getWorkshopFileId()))
+                .findFirst()
+                .orElse(null);
+
+        if (entity != null)
+        {
+            entity.setServerMod(Boolean.TRUE.equals(modView.getServerMod()));
+        }
+        return entity;
     }
 
     @Override
