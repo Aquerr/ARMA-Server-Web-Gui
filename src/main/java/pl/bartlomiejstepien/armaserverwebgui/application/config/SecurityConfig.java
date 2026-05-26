@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -66,7 +67,7 @@ public class SecurityConfig
                     .anonymous(AbstractHttpConfigurer::disable)
                     .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .logout(AbstractHttpConfigurer::disable)
-                    .addFilterAfter(new JwtFilter(authenticationManager, jwtAuthenticationConverter), LogoutFilter.class)
+                    .addFilterBefore(new JwtFilter(authenticationManager, jwtAuthenticationConverter), UsernamePasswordAuthenticationFilter.class)
                     .formLogin((AbstractHttpConfigurer::disable))
                     .httpBasic(AbstractHttpConfigurer::disable)
                     .exceptionHandling(exceptionHandlingSpec ->
@@ -86,7 +87,7 @@ public class SecurityConfig
         }
 
         @Bean
-        public CorsConfigurationSource corsConfigurationSource()
+        public CorsConfigurationSource corsConfigurationSource(ASWGConfig aswgConfig)
         {
             CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
             corsConfiguration.setAllowedMethods(List.of(
@@ -96,7 +97,7 @@ public class SecurityConfig
                     HttpMethod.DELETE.name(),
                     HttpMethod.PUT.name())
             );
-            corsConfiguration.setAllowedOrigins(List.of("*"));
+            corsConfiguration.setAllowedOrigins(aswgConfig.getSecurityCorsAllowedOrigins());
 
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             source.registerCorsConfiguration("/**", corsConfiguration);
@@ -128,7 +129,7 @@ public class SecurityConfig
         }
 
         @Bean
-        public CorsConfigurationSource corsConfigurationSource()
+        public CorsConfigurationSource corsConfigurationSource(ASWGConfig aswgConfig)
         {
             CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
             corsConfiguration.setAllowedMethods(List.of(
@@ -138,7 +139,7 @@ public class SecurityConfig
                     HttpMethod.DELETE.name(),
                     HttpMethod.PUT.name())
             );
-            corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
+            corsConfiguration.setAllowedOrigins(aswgConfig.getSecurityCorsAllowedOrigins());
 
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             source.registerCorsConfiguration("/**", corsConfiguration);

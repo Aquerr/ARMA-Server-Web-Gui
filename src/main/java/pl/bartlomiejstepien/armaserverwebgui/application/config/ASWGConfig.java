@@ -15,7 +15,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 @Component
 @Setter
@@ -29,6 +33,8 @@ public class ASWGConfig
     private static final String USERNAME_PROPERTY = "aswg.default-user.username";
     private static final String PASSWORD_PROPERTY = "aswg.default-user.password";
     private static final String RESET_DEFAULT_USER = "aswg.default-user.reset";
+
+    private static final String SECURITY_CORS_ALLOWED_ORIGINS_PROPERTY = "aswg.security.cors.allowed-origins";
 
     private static final String STEAMCMD_WORKSHOP_CONTENT_PATH = "aswg.steamcmd.workshop.content.path";
     private static final String STEAMCMD_PATH_PROPERTY = "aswg.steamcmd.path";
@@ -84,6 +90,9 @@ public class ASWGConfig
     @Value("${" + MODS_DIRECTORY_PATH_PROPERTY + ":}")
     private String modsDirectoryPath;
 
+    @Value("${" + SECURITY_CORS_ALLOWED_ORIGINS_PROPERTY + ":*}")
+    private String securityCorsAllowedOriginsString;
+
     @Value("${" + STEAMCMD_WORKSHOP_CONTENT_PATH + ":}")
     private String steamCmdWorkshopContentPath;
     @Value("${" + STEAMCMD_PATH_PROPERTY + ":}")
@@ -106,6 +115,13 @@ public class ASWGConfig
     private final JobsProperties jobsProperties;
     private final DiscordProperties discordProperties;
     private final UnsafeProperties unsafeProperties;
+
+    public List<String> getSecurityCorsAllowedOrigins()
+    {
+        return Optional.ofNullable(this.securityCorsAllowedOriginsString).map(text -> text.split(","))
+                .map(t -> Arrays.stream(t).toList())
+                .orElse(List.of());
+    }
 
     public void setServerBranch(SteamArmaBranch steamArmaBranch)
     {
@@ -158,6 +174,8 @@ public class ASWGConfig
         configurationProperties.setProperty(PASSWORD_PROPERTY, this.password);
         configurationProperties.setProperty(RESET_DEFAULT_USER, String.valueOf(this.resetDefaultUser));
         configurationProperties.setProperty(SERVER_PORT_PROPERTY, String.valueOf(this.serverPort));
+
+        configurationProperties.setProperty(SECURITY_CORS_ALLOWED_ORIGINS_PROPERTY, this.securityCorsAllowedOriginsString);
 
         configurationProperties.setProperty(STEAMCMD_PATH_PROPERTY, this.steamCmdPath);
         configurationProperties.setProperty(STEAMCMD_WORKSHOP_CONTENT_PATH, this.steamCmdWorkshopContentPath);

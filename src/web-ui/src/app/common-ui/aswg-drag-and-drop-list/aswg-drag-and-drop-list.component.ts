@@ -91,6 +91,7 @@ export class AswgDragAndDropListComponent<T> implements OnInit, OnChanges {
 
   public filterItems(searchPhrase: string) {
     this.filteredItems.set(this.items().filter((item) => this.filterFunction()(item, searchPhrase)));
+    this.sortItems();
   }
 
   public sortItems(): void {

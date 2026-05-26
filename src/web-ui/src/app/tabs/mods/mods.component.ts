@@ -1,5 +1,12 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal, ViewChild } from "@angular/core";
-import { Subject, Subscription } from "rxjs";
+import {
+  ChangeDetectionStrategy,
+  Component, computed, DestroyRef,
+  OnDestroy,
+  OnInit, Signal,
+  signal,
+  ViewChild
+} from "@angular/core";
+import {debounceTime, finalize, Subject, Subscription} from "rxjs";
 import { LoadingSpinnerMaskService } from "src/app/service/loading-spinner-mask.service";
 import { ServerModsService } from "src/app/service/server-mods.service";
 import { NotificationService } from "../../service/notification.service";
@@ -19,6 +26,7 @@ import { MatButton } from "@angular/material/button";
 import { RouterLink } from "@angular/router";
 import { ModPresetsComponent } from "./mod-presets/mod-presets.component";
 import { ModUploadButtonComponent } from "./mod-upload-button/mod-upload-button.component";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "app-mods",
@@ -41,7 +49,8 @@ import { ModUploadButtonComponent } from "./mod-upload-button/mod-upload-button.
   styleUrls: ["./mods.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ModsComponent implements OnInit, OnDestroy {
+
   reloadModsDataSubject: Subject<void>;
   reloadModsDataSubscription!: Subscription;
   modUploadSubscription!: Subscription;
@@ -50,22 +59,23 @@ export class ModsComponent implements OnInit, OnDestroy, AfterViewInit {
   searchPhrase = signal<string>("");
   isFileDragged: boolean = false;
 
-  enabledMods = signal<Mod[]>([]);
+  enabledMods: Signal<Mod[]>;
 
   @ViewChild(ModListsComponent) modListsComponent!: ModListsComponent;
 
   constructor(
-    private modsService: ServerModsService,
-    private maskService: LoadingSpinnerMaskService,
-    private notificationService: NotificationService,
-    private modUploadService: ModUploadService,
-    private dialogService: DialogService,
-    private permissionService: PermissionService
+    private readonly modsService: ServerModsService,
+    private readonly maskService: LoadingSpinnerMaskService,
+    private readonly notificationService: NotificationService,
+    private readonly modUploadService: ModUploadService,
+    private readonly dialogService: DialogService,
+    private readonly permissionService: PermissionService,
+    private readonly destroyRef: DestroyRef
   ) {
+    this.enabledMods = computed(() => this.modListsComponent?.enabledMods() ?? []);
     this.reloadModsDataSubject = new Subject();
     this.reloadModsDataSubscription = this.reloadModsDataSubject.subscribe(() => {
       this.modListsComponent.reloadMods();
-      this.enabledMods = this.modListsComponent.enabledMods;
     });
     this.modUploadSubscription = this.modUploadService.fileUploadedSubject.subscribe((file) => {
       if (file) {
@@ -76,13 +86,9 @@ export class ModsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.searchBoxControl = new FormControl("");
-    this.searchBoxControl.valueChanges.subscribe((value) => {
-      this.searchPhrase.set(value as string);
+    this.searchBoxControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef), debounceTime(500)).subscribe((value) => {
+      this.searchPhrase.set(value ?? '');
     });
-  }
-
-  ngAfterViewInit() {
-    this.enabledMods = this.modListsComponent.enabledMods;
   }
 
   ngOnDestroy(): void {
@@ -92,8 +98,7 @@ export class ModsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onFileDropped(file: File) {
     this.maskService.show();
-    this.modsService.checkModFilesExists(file.name).subscribe((response) => {
-      this.maskService.hide();
+    this.modsService.checkModFilesExists(file.name).pipe(finalize(() => this.maskService.hide())).subscribe((response) => {
       if (response.exists) {
         const onCloseCallback = (result: boolean) => {
           if (!result) return;
@@ -117,16 +122,15 @@ export class ModsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.enabledMods = this.modListsComponent.enabledMods;
     this.modsService
       .saveEnabledMods({ mods: this.modListsComponent.enabledMods() })
+      .pipe(finalize(() => this.maskService.hide()))
       .subscribe(() => {
-        this.maskService.hide();
         this.notificationService.successNotification("Active mods list saved!", "Success");
       });
   }
 
   onModPresetSelected(presetName: string) {
     this.maskService.show();
-    this.modsService.selectPreset({ name: presetName }).subscribe(() => {
-      this.maskService.hide();
+    this.modsService.selectPreset({ name: presetName }).pipe(finalize(() => this.maskService.hide())).subscribe(() => {
       this.notificationService.successNotification("Mod preset loaded!");
       this.reloadModsDataSubject.next();
     });

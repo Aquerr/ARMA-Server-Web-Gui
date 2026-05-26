@@ -1,14 +1,13 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
-  Component,
+  Component, computed, DestroyRef,
   inject,
   OnDestroy,
-  OnInit,
+  OnInit, Signal,
   signal,
   ViewChild
 } from "@angular/core";
-import { Subject, Subscription } from "rxjs";
+import {debounceTime, Subject, Subscription} from "rxjs";
 import { ServerMissionsService } from "../../service/server-missions.service";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
@@ -24,6 +23,7 @@ import { MatButton } from "@angular/material/button";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MissionUploadButtonComponent } from "./upload-mission/mission-upload-button.component";
 import { MissionListsComponent } from "./mission-lists/mission-lists.component";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "app-missions",
@@ -44,9 +44,9 @@ import { MissionListsComponent } from "./mission-lists/mission-lists.component";
   styleUrls: ["./missions.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MissionsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MissionsComponent implements OnInit, OnDestroy {
   public searchPhrase = signal<string>("");
-  public enabledMissions = signal<Mission[]>([]);
+  public readonly enabledMissions: Signal<Mission[]>;
 
   @ViewChild(MissionListsComponent) missionListsComponent!: MissionListsComponent;
 
@@ -55,6 +55,7 @@ export class MissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly maskService = inject(LoadingSpinnerMaskService);
   private readonly notificationService = inject(NotificationService);
   private readonly dialogService = inject(DialogService);
+  private readonly destroyRef = inject(DestroyRef);
 
   reloadMissionsDataSubject: Subject<void>;
   reloadMissionDataSubscription!: Subscription;
@@ -63,10 +64,10 @@ export class MissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   isFileDragged: boolean = false;
 
   constructor() {
+    this.enabledMissions = computed(() => this.missionListsComponent?.enabledMissions() ?? []);
     this.reloadMissionsDataSubject = new Subject();
     this.reloadMissionDataSubscription = this.reloadMissionsDataSubject.subscribe(() => {
       this.missionListsComponent.reloadMissions();
-      this.enabledMissions = this.missionListsComponent.enabledMissions;
     });
     this.missionUploadSubscription = this.missionUploadService.fileUploadedSubject.subscribe(
       (file) => {
@@ -79,13 +80,9 @@ export class MissionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.searchBoxControl = new FormControl("");
-    this.searchBoxControl.valueChanges.subscribe((value) => {
+    this.searchBoxControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef), debounceTime(500)).subscribe((value) => {
       this.searchPhrase.set(value as string);
     });
-  }
-
-  ngAfterViewInit() {
-    this.enabledMissions = this.missionListsComponent.enabledMissions;
   }
 
   ngOnDestroy(): void {
@@ -117,7 +114,6 @@ export class MissionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   save() {
     this.maskService.show();
-    this.enabledMissions = this.missionListsComponent.enabledMissions;
     this.missionsService
       .saveEnabledMissions({ missionTemplates: this.enabledMissions().map((mission) => mission.template) })
       .subscribe(() => {
