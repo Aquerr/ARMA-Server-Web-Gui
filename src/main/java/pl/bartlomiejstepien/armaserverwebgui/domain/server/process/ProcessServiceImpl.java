@@ -31,6 +31,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Service
@@ -92,10 +95,8 @@ public class ProcessServiceImpl implements ProcessService
         if (this.getProcessStatus() != ServerProcessStatus.NOT_RUNNING)
             throw new ServerIsAlreadyRunningException("Server is already running!");
 
-        if (serverStartUpLock.isLocked())
+        if (!serverStartUpLock.tryLock())
             throw new ServerIsAlreadyRunningException("Server is starting!");
-
-        serverStartUpLock.lock();
 
         try
         {
@@ -109,14 +110,16 @@ public class ProcessServiceImpl implements ProcessService
 
             sendDiscordMessage(MessageKind.SERVER_STARTED);
             startServerProcess();
-            serverStartUpLock.unlock();
             //TODO: Start server healthcheck (status monitoring) here.
         }
         catch (Exception exception)
         {
             updateStatus(ServerProcessStatus.NOT_RUNNING);
-            serverStartUpLock.unlock();
             throw exception;
+        }
+        finally
+        {
+            serverStartUpLock.unlock();
         }
     }
 
@@ -162,6 +165,8 @@ public class ProcessServiceImpl implements ProcessService
 
                 long pid = process.pid();
                 log.info("Process started: {}", pid);
+
+                process.onExit().thenAccept(this::onServerProcessStop);
 
                 saveServerPid(pid);
                 handleProcessInputOutput(process);
@@ -218,6 +223,27 @@ public class ProcessServiceImpl implements ProcessService
         }
     }
 
+    private void onServerProcessStop(Process process)
+    {
+        log.info("Server process stopped for pid={}", process.pid());
+        if (this.ioServerThread != null)
+        {
+            this.ioServerThread.interrupt();
+            this.ioServerThread = null;
+        }
+        if (this.ioServerErrorThread != null)
+        {
+            this.ioServerErrorThread.interrupt();
+            this.ioServerErrorThread = null;
+        }
+        if (this.serverThread != null)
+        {
+            this.serverThread.interrupt();
+            this.serverThread = null;
+        }
+        updateStatus(ServerProcessStatus.NOT_RUNNING);
+    }
+
     @Override
     public void stopServer()
     {
@@ -236,27 +262,14 @@ public class ProcessServiceImpl implements ProcessService
         ProcessHandle.of(pid).ifPresent(processHandle ->
         {
             processHandle.destroy();
-            processHandle.onExit().thenAccept(processHandle1 ->
+            try
             {
-                log.info("Server process stopped for pid={}", processHandle1.pid());
-            });
-
-            if (this.ioServerThread != null)
-            {
-                this.ioServerThread.interrupt();
-                this.ioServerThread = null;
+                processHandle.onExit().get(60, TimeUnit.SECONDS);
             }
-            if (this.ioServerErrorThread != null)
+            catch (InterruptedException | ExecutionException | TimeoutException e)
             {
-                this.ioServerErrorThread.interrupt();
-                this.ioServerErrorThread = null;
+                processHandle.destroyForcibly();
             }
-            if (this.serverThread != null)
-            {
-                this.serverThread.interrupt();
-                this.serverThread = null;
-            }
-            updateStatus(ServerProcessStatus.NOT_RUNNING);
         });
 
         try
@@ -306,7 +319,6 @@ public class ProcessServiceImpl implements ProcessService
             }
             catch (final Exception e)
             {
-                e.printStackTrace();
                 log.error("Error", e);
             }
         });
