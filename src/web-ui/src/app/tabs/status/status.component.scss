@@ -1,14 +1,33 @@
-::ng-deep #perform-update > div > div.mdc-checkbox {
-  padding: 0px !important;
+.server-toggle-wrapper {
+  margin-top: 5px;
+  display: flex;
+}
+
+.server-toggle {
+  display: flex;
+  flex-direction: column
+}
+
+.server-toggle-update-checkbox {
+  display: inline;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.server-toggle-update-checkbox-text {
+  margin-left: 0.5rem;
+}
+
+::ng-deep #perform-update-checkbox > div > div.mdc-checkbox {
+  padding: 0 !important;
 }
 
 ::ng-deep
-#perform-update
+#perform-update-checkbox
 > div
 > div.mdc-checkbox
 > .mat-mdc-checkbox-touch-target,
 ::ng-deep
-#perform-update
+#perform-update-checkbox
 > div
 > div.mdc-checkbox
 > .mdc-checkbox__native-control {
@@ -17,16 +36,12 @@
 }
 
 ::ng-deep
-#perform-update
+#perform-update-checkbox
 > div
 > div.mdc-checkbox
 > .mdc-checkbox__background {
   top: 0px !important;
   left: 0px !important;
-}
-
-#perform-update {
-  margin: 0.5rem 0 1rem 0;
 }
 
 @media (max-width: 800px) {

@@ -4,27 +4,23 @@
     Status: <span
     [ngStyle]="isServerOffline() ? { color: 'red' } : { color: 'green' }">{{ serverStatus().statusText }}</span>
   </div>
-  <div style="margin-top: 5px">
-    <div style="display: flex">
-      @if (canToggleServer()) {
-        <div>
-          @if (isServerOffline()) {
-            <div style="display: flex; flex-direction: column">
-              <div style="display: inline;">
-                <mat-checkbox id="perform-update" [(ngModel)]="performUpdate"></mat-checkbox>
-                <span style="margin-left: 0.5rem;">Perform Arma update during start?</span>
-              </div>
-              <button mat-flat-button color="primary" (click)="toggleServer()">{{ "START" }}</button>
+  @if (canToggleServer()) {
+    <div class="server-toggle-wrapper">
+        @if (isServerOffline()) {
+          <div class="server-toggle">
+            <div class="server-toggle-update-checkbox">
+              <mat-checkbox id="perform-update-checkbox" [(ngModel)]="performUpdate"></mat-checkbox>
+              <span class="server-toggle-update-checkbox-text">Perform Arma update during start?</span>
             </div>
-          } @else {
-            <div>
-              <button mat-flat-button color="primary" (click)="toggleServer()">{{ "STOP" }}</button>
-            </div>
-          }
-        </div>
-      }
+            <button mat-flat-button color="primary" (click)="toggleServer()">{{ "START" }}</button>
+          </div>
+        } @else {
+          <div>
+            <button mat-flat-button color="primary" (click)="toggleServer()">{{ "STOP" }}</button>
+          </div>
+        }
     </div>
-  </div>
+  }
   <app-server-console></app-server-console>
   <app-player-list [playerList]="playerList()"></app-player-list>
 </div>

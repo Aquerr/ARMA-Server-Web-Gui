@@ -18,6 +18,7 @@ import { ApiErrorCode, ApiErrorResponse } from "../../api/api-error.model";
 import { DialogService } from "../../service/dialog.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import {
+  finalize,
   interval,
   Subscription,
   switchMap
@@ -60,20 +61,19 @@ export class StatusComponent implements OnInit {
   performUpdate: boolean = false;
 
   constructor(
-    private maskService: LoadingSpinnerMaskService,
-    private notificationService: NotificationService,
-    private serverStatusService: ServerStatusService,
-    private dialogService: DialogService,
-    private destroyRef: DestroyRef
+    private readonly maskService: LoadingSpinnerMaskService,
+    private readonly notificationService: NotificationService,
+    private readonly serverStatusService: ServerStatusService,
+    private readonly dialogService: DialogService,
+    private readonly destroyRef: DestroyRef
   ) {
   }
 
   ngOnInit(): void {
     this.maskService.show();
-    this.serverStatusService.getStatus().subscribe((response) => {
+    this.serverStatusService.getStatus().pipe(finalize(() => this.maskService.hide())).subscribe((response) => {
       this.serverStatus.set(response.status);
       this.playerList.set(response.playerList);
-      this.maskService.hide();
     });
     this.refreshServerStatus();
 
