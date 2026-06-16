@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.6</version>
+        <version>4.1.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pl.bartlomiejstepien</groupId>
@@ -32,16 +32,16 @@
         <logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
 
         <!--maven plugins -->
-        <maven-frontend-plugin.version>2.0.0</maven-frontend-plugin.version>
+        <maven-frontend-plugin.version>2.0.1</maven-frontend-plugin.version>
         <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
         <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
         <maven-antrun-plugin.version>3.2.0</maven-antrun-plugin.version>
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
-        <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+        <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
+        <maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
 
-        <checkstyle.version>13.4.1</checkstyle.version>
+        <checkstyle.version>13.5.0</checkstyle.version>
 
         <!-- Tests -->
         <wiremock-spring-boot.version>4.2.1</wiremock-spring-boot.version>
