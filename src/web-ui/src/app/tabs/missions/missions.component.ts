@@ -1,29 +1,32 @@
 import {
   ChangeDetectionStrategy,
-  Component, computed, DestroyRef,
+  Component,
+  computed,
+  DestroyRef,
   inject,
   OnDestroy,
-  OnInit, Signal,
+  OnInit,
+  Signal,
   signal,
   ViewChild
 } from "@angular/core";
-import {debounceTime, Subject, Subscription} from "rxjs";
-import { ServerMissionsService } from "../../service/server-missions.service";
-import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
-import { NotificationService } from "../../service/notification.service";
-import { Mission } from "../../model/mission.model";
+import { debounceTime, Subject, Subscription } from "rxjs";
+import { ServerMissionsService } from "@service/server-missions.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { NotificationService } from "@service/notification.service";
+import { Mission } from "@model/mission.model";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MissionUploadService } from "./service/mission-upload.service";
 import { NewMissionDialogComponent } from "./new-mission-dialog/new-mission-dialog.component";
-import { DialogService } from "../../service/dialog.service";
-import { DragAndDropFileDirective } from "../../common-ui/directive/drag-and-drop-file.directive";
-import { DragDropOverlay } from "../../common-ui/drag-and-drop-overlay/drag-and-drop-overlay.component";
+import { DialogService } from "@service/dialog.service";
+import { DragAndDropFileDirective } from "@common-ui/directive/drag-and-drop-file.directive";
+import { DragDropOverlay } from "@common-ui/drag-and-drop-overlay/drag-and-drop-overlay.component";
 import { NgClass, NgTemplateOutlet } from "@angular/common";
 import { MatButton } from "@angular/material/button";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MissionUploadButtonComponent } from "./upload-mission/mission-upload-button.component";
 import { MissionListsComponent } from "./mission-lists/mission-lists.component";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "app-missions",
@@ -115,10 +118,10 @@ export class MissionsComponent implements OnInit, OnDestroy {
   save() {
     this.maskService.show();
     this.missionsService
-      .saveEnabledMissions({ missionTemplates: this.enabledMissions().map((mission) => mission.template) })
+      .saveEnabledMissions({missionTemplates: this.enabledMissions().map((mission) => mission.template)})
       .subscribe(() => {
         this.maskService.hide();
-        this.notificationService.successNotification("Active mission list saved!", "Success");
+        this.notificationService.successNotification("Active mission list saved!");
       });
   }
 

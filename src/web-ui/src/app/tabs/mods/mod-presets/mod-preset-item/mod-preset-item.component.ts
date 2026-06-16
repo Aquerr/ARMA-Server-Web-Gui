@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from "@angular/core";
 import { MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 
@@ -9,6 +9,7 @@ import { MatIcon } from "@angular/material/icon";
     MatIconButton,
     MatIcon
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./mod-preset-item.component.scss"]
 })
 export class ModPresetItemComponent {

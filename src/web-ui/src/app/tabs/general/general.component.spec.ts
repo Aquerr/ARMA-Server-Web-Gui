@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { GeneralComponent } from "./general.component";
-import { provideToastr } from "ngx-toastr";
-import { ServerGeneralService } from "../../service/server-general.service";
+import { ServerGeneralService } from "@service/server-general.service";
 import { EMPTY } from "rxjs";
 import { ServerGeneralServiceMock } from "../../../../testing/mocks/server-general-service.mock";
 
@@ -16,7 +15,6 @@ describe("GeneralComponent", () => {
     await TestBed.configureTestingModule({
       imports: [GeneralComponent],
       providers: [
-        provideToastr(),
         {
           provide: ServerGeneralService, useValue: serverGeneralServiceMock
         }

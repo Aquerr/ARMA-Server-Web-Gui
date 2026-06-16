@@ -1,25 +1,28 @@
-import { AfterViewInit, ChangeDetectorRef, Component, signal } from "@angular/core";
-import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
-import { ServerGeneralService } from "../../service/server-general.service";
-import { NotificationService } from "../../service/notification.service";
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, signal } from "@angular/core";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { ServerGeneralService } from "@service/server-general.service";
+import { NotificationService } from "@service/notification.service";
 import { MotdListComponent } from "./motd-list/motd-list.component";
-import { UnsafeService } from "../../service/unsafe.service";
-import { OverwriteCommandlineParamsModalComponent } from "./unsafe/overwrite-commandline-params-modal/overwrite-commandline-params-modal.component";
-import { DialogService } from "../../service/dialog.service";
-import { PermissionService } from "../../service/permission.service";
-import { AswgAuthority } from "../../model/authority.model";
+import { UnsafeService } from "@service/unsafe.service";
+import {
+  OverwriteCommandlineParamsModalComponent
+} from "./unsafe/overwrite-commandline-params-modal/overwrite-commandline-params-modal.component";
+import { DialogService } from "@service/dialog.service";
+import { PermissionService } from "@service/permission.service";
+import { AswgAuthority } from "@model/authority.model";
 import { MatError, MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { MatButton } from "@angular/material/button";
 import { GeneralFormGroup, GeneralFormService } from "./general-form.service";
-import { AswgChipFormInputComponent } from "../../common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
+import { AswgChipFormInputComponent } from "@common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
 
 @Component({
   selector: "app-general",
   templateUrl: "./general.component.html",
   styleUrls: ["./general.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatFormField, MatLabel, FormsModule, MatInput, MatTooltip, MatSelect, MatOption, MotdListComponent, MatButton, ReactiveFormsModule, AswgChipFormInputComponent, MatError]
 })
 export class GeneralComponent implements AfterViewInit {
@@ -56,8 +59,7 @@ export class GeneralComponent implements AfterViewInit {
     this.serverGeneralService.saveGeneralProperties(generalProperties).subscribe(() => {
       this.maskService.hide();
       this.notificationService.successNotification(
-        "General settings have been updated!",
-        "Success"
+        "General settings have been updated!"
       );
     });
   }

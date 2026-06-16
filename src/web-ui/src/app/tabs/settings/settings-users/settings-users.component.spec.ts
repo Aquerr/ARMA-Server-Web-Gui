@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SettingsUsersComponent } from "./settings-users.component";
-import { provideToastr } from "ngx-toastr";
 import { UsersServiceMock } from "../../../../../testing/mocks/users-service.mock";
-import { UsersService } from "../../../service/users.service";
+import { UsersService } from "@service/users.service";
 import { EMPTY } from "rxjs";
 
 describe("SettingsUsersComponent", () => {
@@ -15,7 +14,7 @@ describe("SettingsUsersComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SettingsUsersComponent],
-      providers: [provideToastr(), {
+      providers: [{
         provide: UsersService, useValue: usersServiceMock
       }]
     }).compileComponents();

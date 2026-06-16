@@ -1,15 +1,24 @@
-import { Component, effect, inject, input, OnDestroy, OnInit, QueryList, signal, ViewChildren } from "@angular/core";
-import { CdkDragDrop, CdkDropListGroup, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
-import { Mission } from "../../../model/mission.model";
-import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
-import { NotificationService } from "../../../service/notification.service";
-import { SaveEnabledMissionsRequest, ServerMissionsService } from "../../../service/server-missions.service";
-import { Subject, Subscription } from "rxjs";
-import { moveItemBetweenSignalLists } from "../../../util/signal/signal-utils";
-import { MissionListItemComponent } from "../mission-list-item/mission-list-item.component";
 import {
-  AswgDragAndDropListComponent
-} from "../../../common-ui/aswg-drag-and-drop-list/aswg-drag-and-drop-list.component";
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  signal,
+  ViewChildren
+} from "@angular/core";
+import { CdkDragDrop, CdkDropListGroup, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
+import { Mission } from "@model/mission.model";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { NotificationService } from "@service/notification.service";
+import { SaveEnabledMissionsRequest, ServerMissionsService } from "@service/server-missions.service";
+import { Subject, Subscription } from "rxjs";
+import { moveItemBetweenSignalLists } from "@app/util/signal/signal-utils";
+import { MissionListItemComponent } from "../mission-list-item/mission-list-item.component";
+import { AswgDragAndDropListComponent } from "@common-ui/aswg-drag-and-drop-list/aswg-drag-and-drop-list.component";
 
 @Component({
   selector: "app-mission-lists",
@@ -19,6 +28,7 @@ import {
     MissionListItemComponent,
     AswgDragAndDropListComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./mission-lists.component.scss"]
 })
 export class MissionListsComponent implements OnInit, OnDestroy {
@@ -73,11 +83,11 @@ export class MissionListsComponent implements OnInit, OnDestroy {
   protected enableAllMissions() {
     this.maskService.show();
     this.missionsService
-      .saveEnabledMissions({ missionTemplates: this.enabledMissions().concat(this.disabledMissions()).map((mission) => mission.template) })
+      .saveEnabledMissions({missionTemplates: this.enabledMissions().concat(this.disabledMissions()).map((mission) => mission.template)})
       .subscribe(() => {
         this.maskService.hide();
         this.reloadMissions();
-        this.notificationService.successNotification("Missions list has been updated!", "Success");
+        this.notificationService.successNotification("Missions list has been updated!");
       });
   }
 
@@ -113,11 +123,11 @@ export class MissionListsComponent implements OnInit, OnDestroy {
   protected disableAllMissions() {
     this.maskService.show();
     this.missionsService
-      .saveEnabledMissions({ missionTemplates: [] } as SaveEnabledMissionsRequest)
+      .saveEnabledMissions({missionTemplates: []} as SaveEnabledMissionsRequest)
       .subscribe(() => {
         this.maskService.hide();
         this.reloadMissions();
-        this.notificationService.successNotification("Missions list updated!", "Success");
+        this.notificationService.successNotification("Missions list updated!");
       });
   }
 }

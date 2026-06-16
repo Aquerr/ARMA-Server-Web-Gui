@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { WorkshopService } from "../service/workshop.service";
-import { AuthService } from "../service/auth.service";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { WorkshopService } from "@service/workshop.service";
+import { AuthService } from "@service/auth.service";
 import { Router } from "@angular/router";
-import { NotificationService } from "../service/notification.service";
+import { NotificationService } from "@service/notification.service";
 import { map, Observable, of, switchMap, take, tap } from "rxjs";
-import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 import { fromPromise } from "rxjs/internal/observable/innerFrom";
 import { MatDivider, MatListItem, MatNavList } from "@angular/material/list";
 import { MatIcon } from "@angular/material/icon";
@@ -22,6 +22,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     NgClass,
     MatTooltip
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./side-menu.component.scss"]
 })
 export class SideMenuComponent {
@@ -105,8 +106,7 @@ export class SideMenuComponent {
         next: (value) => {
           if (!value) {
             this.notificationService.warningNotification(
-              "Steam not installed on the server.",
-              "Warning"
+              "Steam not installed on the server."
             );
           }
         }

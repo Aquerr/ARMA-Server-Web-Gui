@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from "@angular/core";
 import { WorkshopMod } from "../../../model/workshop.model";
 import { ModDependencyStatus, WorkshopService } from "../../../service/workshop.service";
 import { ServerModsService } from "../../../service/server-mods.service";
@@ -15,6 +15,7 @@ import {
   imports: [
     MatButton
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./workshop-item.component.scss"]
 })
 export class WorkshopItemComponent implements OnInit {

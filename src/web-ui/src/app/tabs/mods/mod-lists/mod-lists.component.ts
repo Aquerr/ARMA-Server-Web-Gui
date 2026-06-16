@@ -11,18 +11,18 @@ import {
   ViewChildren
 } from "@angular/core";
 import { CdkDragDrop, CdkDropListGroup, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
-import { Mod } from "../../../model/mod.model";
-import { SaveEnabledModsRequest, ServerModsService } from "../../../service/server-mods.service";
-import { NotificationService } from "../../../service/notification.service";
-import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
+import { Mod } from "@model/mod.model";
+import { SaveEnabledModsRequest, ServerModsService } from "@service/server-mods.service";
+import { NotificationService } from "@service/notification.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 import { NotManagedModsComponent } from "../not-managed-mods/not-managed-mods.component";
 import { Subject, Subscription } from "rxjs";
-import { moveItemBetweenSignalLists } from "../../../util/signal/signal-utils";
+import { moveItemBetweenSignalLists } from "@app/util/signal/signal-utils";
 import { ModListItemComponent } from "../mod-list-item/mod-list-item.component";
 import {
   AswgDragAndDropListComponent,
   SortOption
-} from "../../../common-ui/aswg-drag-and-drop-list/aswg-drag-and-drop-list.component";
+} from "@common-ui/aswg-drag-and-drop-list/aswg-drag-and-drop-list.component";
 
 @Component({
   selector: "app-mod-lists",
@@ -149,22 +149,22 @@ export class ModListsComponent implements OnInit, OnDestroy {
   enableAllMods() {
     this.maskService.show();
     this.modService
-      .saveEnabledMods({ mods: this.enabledMods().concat(this.disabledMods()) })
+      .saveEnabledMods({mods: this.enabledMods().concat(this.disabledMods())})
       .subscribe(() => {
         this.maskService.hide();
         this.reloadMods();
-        this.notificationService.successNotification("Mods list updated!", "Success");
+        this.notificationService.successNotification("Mods list updated!");
       });
   }
 
   disableAllMods() {
     this.maskService.show();
     this.modService
-      .saveEnabledMods({ mods: [] } as SaveEnabledModsRequest)
+      .saveEnabledMods({mods: []} as SaveEnabledModsRequest)
       .subscribe(() => {
         this.maskService.hide();
         this.reloadMods();
-        this.notificationService.successNotification("Mods list updated!", "Success");
+        this.notificationService.successNotification("Mods list updated!");
       });
   }
 }

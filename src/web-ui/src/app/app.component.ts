@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from "@angular/core";
+import { Component, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
 import { ThemeService } from "./service/util/theme.service";
 import { ApplicationService } from "./service/application.service";
 import { IconRegistrarService } from "./service/icon-registrar.service";
@@ -35,6 +35,7 @@ import { NgTemplateOutlet } from "@angular/common";
   host: {
     "(window:resize)": "isMobileView()"
   },
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatListModule,
     MatRippleModule,

@@ -14,24 +14,24 @@ import {
   ModPresetModParam,
   ModPresetSaveRequest,
   ServerModsService
-} from "../../../service/server-mods.service";
-import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
-import { NotificationService } from "../../../service/notification.service";
+} from "@service/server-mods.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { NotificationService } from "@service/notification.service";
 import { ModPresetAddDialogComponent } from "./mod-preset-add-dialog/mod-preset-add-dialog.component";
-import { Mod, ModStatus } from "../../../model/mod.model";
+import { Mod, ModStatus } from "@model/mod.model";
 import { ModPresetParserService } from "./service/mod-preset-parser.service";
 import { MatButton } from "@angular/material/button";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { MatDivider } from "@angular/material/list";
 import { ModPresetItemComponent } from "./mod-preset-item/mod-preset-item.component";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
-import { DialogService } from "../../../service/dialog.service";
+import { DialogService } from "@service/dialog.service";
 import {
   ModPresetImportConfirmationDialogComponent,
   ModPresetImportDialogData,
   ModToImport
 } from "./mod-preset-import-confirmation-dialog/mod-preset-import-confirmation-dialog.component";
-import { WorkshopService } from "../../../service/workshop.service";
+import { WorkshopService } from "@service/workshop.service";
 import { map } from "rxjs";
 
 @Component({
@@ -89,8 +89,7 @@ export class ModPresetsComponent {
 
         if (modPreset == null) {
           this.notificationService.errorNotification(
-            "Could not parse mod preset! Check console for more info.",
-            "Preset parse error"
+            "Could not parse mod preset! Check console for more info."
           );
           return;
         }
@@ -130,7 +129,7 @@ export class ModPresetsComponent {
         const modPresetImportRequest = {
           name: modPresetName ?? this.removeFileExtension(file.name),
           modParams: modsToImport.map(
-            (entry) => ({ id: entry.id, title: entry.name }) as ModPresetModParam
+            (entry) => ({id: entry.id, title: entry.name}) as ModPresetModParam
           )
         } as ModPresetImportRequest;
 
@@ -140,7 +139,6 @@ export class ModPresetsComponent {
           this.reloadModPresets();
           this.notificationService.successNotification(
             "Mod preset has been imported!",
-            "Preset Imported!"
           );
         });
       }
@@ -195,7 +193,7 @@ export class ModPresetsComponent {
     }) => {
       if (dialogResult.create) {
         this.modsService
-          .savePreset({ name: dialogResult.modPresetName, modNames: [] })
+          .savePreset({name: dialogResult.modPresetName, modNames: []})
           .subscribe(() => {
             this.reloadModPresets();
             this.notificationService.successNotification("Mod preset created!");

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { AllowedFilePatching, ServerSecurityService } from "../../service/server-security.service";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
@@ -27,6 +27,7 @@ import { MatButton } from "@angular/material/button";
     VoteCmdsListComponent,
     MatButton
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./security.component.scss"]
 })
 export class SecurityComponent implements OnInit {

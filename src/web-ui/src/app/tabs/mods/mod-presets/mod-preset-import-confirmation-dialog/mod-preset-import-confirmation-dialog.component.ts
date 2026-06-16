@@ -1,4 +1,4 @@
-import { Component, Inject, signal } from "@angular/core";
+import { Component, Inject, signal, ChangeDetectionStrategy } from "@angular/core";
 import { MatButton } from "@angular/material/button";
 import {
   MAT_DIALOG_DATA,
@@ -29,6 +29,7 @@ import { PresetModStatusToIconPipe } from "../preset-mod-status-to-icon.pipe";
     PresetModStatusToIconPipe
   ],
   templateUrl: "./mod-preset-import-confirmation-dialog.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./mod-preset-import-confirmation-dialog.component.scss"
 })
 export class ModPresetImportConfirmationDialogComponent {

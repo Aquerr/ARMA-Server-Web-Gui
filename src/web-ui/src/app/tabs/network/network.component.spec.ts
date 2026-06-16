@@ -1,12 +1,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { NetworkComponent } from "./network.component";
-import { provideToastr } from "ngx-toastr";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ServerNetworkService } from "../../service/server-network.service";
-import {
-  ServerNetworkServiceMock
-} from "../../../../testing/mocks/server-network-service.mock";
+import { ServerNetworkService } from "@service/server-network.service";
+import { ServerNetworkServiceMock } from "../../../../testing/mocks/server-network-service.mock";
 import { EMPTY } from "rxjs";
 
 describe("NetworkComponent", () => {
@@ -18,7 +15,7 @@ describe("NetworkComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NetworkComponent],
-      providers: [provideToastr(), provideHttpClientTesting(), {
+      providers: [provideHttpClientTesting(), {
         provide: ServerNetworkService, useValue: serverNetworkServiceMock
       }]
     }).compileComponents();

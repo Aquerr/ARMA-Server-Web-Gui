@@ -17,12 +17,7 @@ import { PlayerListComponent } from "./player-list/player-list.component";
 import { ApiErrorCode, ApiErrorResponse } from "../../api/api-error.model";
 import { DialogService } from "../../service/dialog.service";
 import { HttpErrorResponse } from "@angular/common/http";
-import {
-  finalize,
-  interval,
-  Subscription,
-  switchMap
-} from "rxjs";
+import { finalize, interval, Subscription, switchMap } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ServerConsoleComponent } from "./server-console/server-console.component";
 import { NgStyle } from "@angular/common";
@@ -116,7 +111,7 @@ export class StatusComponent implements OnInit {
       })
       .subscribe({
         next: () => {
-          this.notificationService.infoNotification("Server is starting...", "Information");
+          this.notificationService.infoNotification("Server is starting...");
         },
         error: (err: HttpErrorResponse) => {
           const apiErrorResponse = err?.error as ApiErrorResponse;
@@ -125,8 +120,7 @@ export class StatusComponent implements OnInit {
               if (!result) return;
 
               this.notificationService.infoNotification(
-                "Installing server files...",
-                "Information"
+                "Installing server files..."
               );
               this.maskService.show();
               this.serverStatusService
@@ -160,7 +154,7 @@ ASWG can try to install it, but it is recommended to do it manually. <br>Should 
         performUpdate: false
       })
       .subscribe(() => {
-        this.notificationService.infoNotification("Server is stopping...", "Information");
+        this.notificationService.infoNotification("Server is stopping...");
       });
   }
 

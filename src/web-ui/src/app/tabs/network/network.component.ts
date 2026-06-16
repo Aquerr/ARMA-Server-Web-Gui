@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ServerNetworkService } from "../../service/server-network.service";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
@@ -23,6 +23,7 @@ import { MatButton } from "@angular/material/button";
     MatInput,
     MatButton
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./network.component.scss"]
 })
 export class NetworkComponent implements OnInit {
@@ -54,15 +55,13 @@ export class NetworkComponent implements OnInit {
         next: () => {
           this.maskService.hide();
           this.notificationService.successNotification(
-            "Network settings have been updated!",
-            "Success"
+            "Network settings have been updated!"
           );
         },
         error: () => {
           this.maskService.hide();
           this.notificationService.errorNotification(
-            "Network settings have not been updated!",
-            "Error"
+            "Network settings have not been updated!"
           );
         }
       });

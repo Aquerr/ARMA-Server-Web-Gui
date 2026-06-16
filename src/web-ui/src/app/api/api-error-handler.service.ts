@@ -1,9 +1,9 @@
 import { inject, Injectable } from "@angular/core";
 import { ApiErrorCode, ApiErrorResponse } from "./api-error.model";
-import { AuthService } from "../service/auth.service";
+import { AuthService } from "@service/auth.service";
 import { Router } from "@angular/router";
-import { NotificationService } from "../service/notification.service";
-import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.service";
+import { NotificationService } from "@service/notification.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 
 @Injectable({
   providedIn: "root"
@@ -32,14 +32,14 @@ export class ApiErrorHandlerService {
 
     if (apiErrorResponse.status === 401) {
       const errorMessage = apiErrorResponse.message || "You are not authorized.";
-      this.notificationService.warningNotification(errorMessage, "Unauthorized");
+      this.notificationService.warningNotification("Unauthorized: " + errorMessage);
     } else if (apiErrorResponse.status === 404) {
       const errorMessage = apiErrorResponse.message || "Resource has not been found.";
-      this.notificationService.errorNotification(errorMessage, "Not found");
+      this.notificationService.errorNotification("Not found: " + errorMessage);
       void this.router.navigate([""]);
     } else {
       const errorMessage = apiErrorResponse.message || "An error occurred on the server.";
-      this.notificationService.errorNotification(errorMessage, "Server error");
+      this.notificationService.errorNotification("Server error: " + errorMessage);
     }
   }
 

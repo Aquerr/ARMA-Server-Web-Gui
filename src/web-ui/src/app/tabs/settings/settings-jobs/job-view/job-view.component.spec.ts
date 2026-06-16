@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { JobViewComponent } from "./job-view.component";
-import { provideToastr } from "ngx-toastr";
 import { provideRouter } from "@angular/router";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { JobSetttingsServiceMock } from "../../../../../../testing/mocks/job-setttings-service.mock";
-import { JobSettingsService } from "../../../../service/job-settings.service";
+import { JobSettingsService } from "@service/job-settings.service";
 import { EMPTY } from "rxjs";
 
 describe("JobViewComponent", () => {
@@ -17,7 +16,7 @@ describe("JobViewComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [JobViewComponent],
-      providers: [provideToastr(), provideRouter([]), provideHttpClientTesting(),
+      providers: [provideRouter([]), provideHttpClientTesting(),
         {
           provide: JobSettingsService, useValue: jobSettingsServiceMock
         }]

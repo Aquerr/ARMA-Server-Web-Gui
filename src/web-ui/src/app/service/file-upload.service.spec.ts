@@ -5,7 +5,6 @@ import { Observable, of } from "rxjs";
 import { HttpEvent } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { NotificationService } from "./notification.service";
-import { provideToastr } from "ngx-toastr";
 
 @Injectable()
 class MockFileUploadService extends FileUploadService {
@@ -24,7 +23,6 @@ describe("FileUploadService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideToastr(),
         {
           provide: FileUploadService,
           useClass: MockFileUploadService

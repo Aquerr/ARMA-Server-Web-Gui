@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ToastrService } from "ngx-toastr";
+import { HotToastService, ToastOptions } from "@ngxpert/hot-toast";
 
 @Injectable({
   providedIn: "root"
@@ -7,33 +7,32 @@ import { ToastrService } from "ngx-toastr";
 export class NotificationService {
   private notificationDurationInSeconds = 5;
 
-  constructor(private toastrService: ToastrService) {}
-
-  successNotification(message?: string, title: string = "Success") {
-    this.toastrService.success(message, title, {
-      timeOut: this.notificationDurationInSeconds * 1000,
-      positionClass: "toast-top-right"
-    });
+  constructor(private toastService: HotToastService) {
   }
 
-  errorNotification(message?: string, title: string = "Error") {
-    this.toastrService.error(message, title, {
-      timeOut: this.notificationDurationInSeconds * 1000,
-      positionClass: "toast-top-right"
-    });
+  successNotification(message?: string) {
+    this.toastService.success(message, this.getDefaultToastConfig());
   }
 
-  warningNotification(message?: string, title: string = "Warning") {
-    this.toastrService.warning(message, title, {
-      timeOut: this.notificationDurationInSeconds * 1000,
-      positionClass: "toast-top-right"
-    });
+  errorNotification(message?: string) {
+    this.toastService.error(message, this.getDefaultToastConfig());
   }
 
-  infoNotification(message?: string, title: string = "Information") {
-    this.toastrService.info(message, title, {
-      timeOut: this.notificationDurationInSeconds * 1000,
-      positionClass: "toast-top-right"
-    });
+  warningNotification(message?: string) {
+    this.toastService.warning(message, this.getDefaultToastConfig());
+  }
+
+  infoNotification(message?: string) {
+    this.toastService.info(message, this.getDefaultToastConfig());
+  }
+
+  private getDefaultToastConfig(): ToastOptions<any> {
+    return {
+      duration: this.getDefaultToastDurationTime(),
+    }
+  }
+
+  private getDefaultToastDurationTime() {
+    return this.notificationDurationInSeconds * 1000;
   }
 }

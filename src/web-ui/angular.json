@@ -23,11 +23,13 @@
             },
             "index": "src/index.html",
             "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
             "styles": [
               "node_modules/highlight.js/styles/vs2015.css",
               "node_modules/codejar-linenumbers/es/codejar-linenumbers.css",
-              "node_modules/ngx-toastr/toastr.css",
               "src/custom-theme.scss",
               "src/styles.scss"
             ],
@@ -96,7 +98,10 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
@@ -132,6 +137,8 @@
   "cli": {
     "packageManager": "npm",
     "analytics": false,
-    "schematicCollections": ["angular-eslint"]
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output, ChangeDetectionStrategy } from "@angular/core";
 import { CommandListItem } from "./vote-cmd-list-item.model";
 import { MatCard, MatCardContent } from "@angular/material/card";
 import { MatTooltip } from "@angular/material/tooltip";
@@ -25,6 +25,7 @@ import { MatIconButton } from "@angular/material/button";
     MatIconButton,
     ReactiveFormsModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./vote-cmd-list-item.component.scss"
 })
 export class VoteCmdListItemComponent implements OnInit {

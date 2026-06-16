@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
 import { VoteCmd } from "../../../model/vote-cmd.model";
 import { CommandListItem } from "./vote-cmd-list-item/vote-cmd-list-item.model";
 import { FormControl } from "@angular/forms";
@@ -14,6 +14,7 @@ import { MatIcon } from "@angular/material/icon";
     VoteCmdListItemComponent,
     MatIcon
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./vote-cmds-list.component.scss"
 })
 export class VoteCmdsListComponent {

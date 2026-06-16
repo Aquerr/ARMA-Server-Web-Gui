@@ -36,6 +36,12 @@
 //  height: 100%;
 //}
 
+/* Importing @ngxpert/hot-toast base styles. */
+@use '@ngxpert/hot-toast/styles';
+
+/* Importing @ngxpert/hot-toast material theme. */
+@use '@ngxpert/hot-toast/themes/material';
+
 // TODO: REMOVE below Material 2 theming ////////////
 
 @use "@angular/material" as mat;

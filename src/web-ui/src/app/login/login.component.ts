@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { AuthService } from "../service/auth.service";
 import { Router } from "@angular/router";
@@ -17,6 +17,7 @@ import { MatButton } from "@angular/material/button";
     MatInput,
     MatButton
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./login.component.scss"]
 })
 export class LoginComponent {

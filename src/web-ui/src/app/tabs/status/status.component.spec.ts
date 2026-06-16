@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { StatusComponent } from "./status.component";
-import { provideToastr } from "ngx-toastr";
 import { ServerStatusServiceMock } from "../../../../testing/mocks/server-status-service.mock";
-import { ServerStatusService } from "../../service/server-status.service";
+import { ServerStatusService } from "@service/server-status.service";
 import { EMPTY } from "rxjs";
 
 describe("StatusComponent", () => {
@@ -15,7 +14,7 @@ describe("StatusComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [StatusComponent],
-      providers: [provideToastr(), {
+      providers: [{
         provide: ServerStatusService, useValue: serverStatusServiceMock
       }]
     }).compileComponents();

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from "@angular/core";
 import { MissionParam } from "../../../../model/mission.model";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatIcon } from "@angular/material/icon";
@@ -16,6 +16,7 @@ import { FormsModule } from "@angular/forms";
     MatIconButton,
     FormsModule
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./mission-parameter.component.scss"]
 })
 export class MissionParameterComponent {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import {
   MatChipEditedEvent,
@@ -23,6 +23,7 @@ import { MatTooltip } from "@angular/material/tooltip";
   templateUrl: "./aswg-chip-form-input.component.html",
   styleUrl: "./aswg-chip-form-input.component.scss",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormField,
     MatChipGrid,

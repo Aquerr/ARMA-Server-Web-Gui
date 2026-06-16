@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { DifficultyPanelComponent } from "./difficulty-panel.component";
-import { provideToastr } from "ngx-toastr";
-import { DifficultyProfile } from "../../../model/difficulty-profile.model";
+import { DifficultyProfile } from "@model/difficulty-profile.model";
 import { inputBinding } from "@angular/core";
 
 describe("DifficultyPanelComponent", () => {
@@ -12,7 +11,7 @@ describe("DifficultyPanelComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DifficultyPanelComponent],
-      providers: [provideToastr()]
+      providers: []
     }).compileComponents();
 
     fixture = TestBed.createComponent(DifficultyPanelComponent, {

@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { CdlcComponent } from "./cdlc.component";
-import { provideToastr } from "ngx-toastr";
 import { CdlcServiceMock } from "../../../../testing/mocks/cdlc-service.mock";
-import { CdlcService } from "../../service/cdlc.service";
+import { CdlcService } from "@service/cdlc.service";
 import { EMPTY } from "rxjs";
 
 describe("CdlcComponent", () => {
@@ -15,7 +14,7 @@ describe("CdlcComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CdlcComponent],
-      providers: [provideToastr(), {
+      providers: [{
         provide: CdlcService, useValue: cdlcServiceMock
       }]
     })

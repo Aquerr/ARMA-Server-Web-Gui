@@ -1,4 +1,4 @@
-import { Component, Inject, signal, WritableSignal } from "@angular/core";
+import { Component, Inject, signal, WritableSignal, ChangeDetectionStrategy } from "@angular/core";
 import { MatButton } from "@angular/material/button";
 import {
   MAT_DIALOG_DATA,
@@ -19,6 +19,7 @@ import { ModDependency } from "../../../service/workshop.service";
     MatDialogContent,
     MatDialogTitle
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./workshop-install-dependencies-dialog.component.css"]
 })
 export class WorkshopInstallDependenciesDialogComponent {

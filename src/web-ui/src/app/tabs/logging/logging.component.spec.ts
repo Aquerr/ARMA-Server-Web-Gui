@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { LoggingComponent } from "./logging.component";
-import { provideToastr } from "ngx-toastr";
 import { ServerLoggingServiceMock } from "../../../../testing/mocks/server-logging-service.mock";
-import { ServerLoggingService } from "../../service/server-logging.service";
+import { ServerLoggingService } from "@service/server-logging.service";
 import { EMPTY } from "rxjs";
 
 describe("LoggingComponent", () => {
@@ -15,7 +14,7 @@ describe("LoggingComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LoggingComponent],
-      providers: [provideToastr(), {
+      providers: [{
         provide: ServerLoggingService, useValue: serverLoggingServiceMock
       }]
     }).compileComponents();

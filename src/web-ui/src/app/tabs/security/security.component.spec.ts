@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SecurityComponent } from "./security.component";
-import { provideToastr } from "ngx-toastr";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ServerSecurityServiceMock } from "../../../../testing/mocks/server-security-service.mock";
-import { ServerSecurityService } from "../../service/server-security.service";
+import { ServerSecurityService } from "@service/server-security.service";
 import { EMPTY } from "rxjs";
 
 describe("SecurityComponent", () => {
@@ -16,7 +15,7 @@ describe("SecurityComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SecurityComponent],
-      providers: [provideToastr(), provideHttpClientTesting(), {
+      providers: [provideHttpClientTesting(), {
         provide: ServerSecurityService, useValue: serverSecurityServiceMock
       }]
     }).compileComponents();

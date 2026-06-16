@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SettingsDiscordComponent } from "./settings-discord.component";
-import { provideToastr } from "ngx-toastr";
 import { DiscordSettingsServiceMock } from "../../../../../testing/mocks/discord-settings-service.mock";
-import { DiscordSettingsService } from "../../../service/discord-settings.service";
+import { DiscordSettingsService } from "@service/discord-settings.service";
 import { EMPTY } from "rxjs";
 
 describe("SettingsDiscordComponent", () => {
@@ -15,7 +14,7 @@ describe("SettingsDiscordComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SettingsDiscordComponent],
-      providers: [provideToastr(), {
+      providers: [{
         provide: DiscordSettingsService, useValue: discordSettingsServiceMock
       }]
     }).compileComponents();

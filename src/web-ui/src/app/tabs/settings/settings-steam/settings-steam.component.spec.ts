@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SettingsSteamComponent } from "./settings-steam.component";
-import { provideToastr } from "ngx-toastr";
-import { SteamSettingsService } from "../../../service/steam-settings.service";
+import { SteamSettingsService } from "@service/steam-settings.service";
 import { SteamServiceMock } from "../../../../../testing/mocks/steam-service.mock";
 import { EMPTY } from "rxjs";
 
@@ -15,7 +14,7 @@ describe("SettingsSteamComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SettingsSteamComponent],
-      providers: [provideToastr(),
+      providers: [
         {
           provide: SteamSettingsService, useValue: steamSettingsServiceMock
         }]

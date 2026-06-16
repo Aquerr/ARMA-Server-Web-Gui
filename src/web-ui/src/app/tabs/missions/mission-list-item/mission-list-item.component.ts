@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, computed, inject, input, output } from "@angular/core";
+import { ChangeDetectorRef, Component, computed, inject, input, output, ChangeDetectionStrategy } from "@angular/core";
 import { MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
@@ -25,6 +25,7 @@ import { AswgAuthority } from "../../../model/authority.model";
     MatTooltip,
     FilesizePipe
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./mission-list-item.component.scss"]
 })
 export class MissionListItemComponent {

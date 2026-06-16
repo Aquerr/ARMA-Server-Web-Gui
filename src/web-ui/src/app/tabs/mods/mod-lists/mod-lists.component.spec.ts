@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ModListsComponent } from "./mod-lists.component";
-import { provideToastr } from "ngx-toastr";
-import { ServerModsService } from "../../../service/server-mods.service";
+import { ServerModsService } from "@service/server-mods.service";
 import { ServerModsServiceMock } from "../../../../../testing/mocks/server-mods-service.mock";
 import { EMPTY } from "rxjs";
 
@@ -15,7 +14,7 @@ describe("ModListsComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ModListsComponent],
-      providers: [provideToastr(), {
+      providers: [{
         provide: ServerModsService, useValue: serverModsServiceMock
       }]
     })

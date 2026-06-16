@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
-import { SteamSettings } from "src/app/model/steam-settings.model";
+import { SteamSettings } from "../../../model/steam-settings.model";
 
 @Injectable({
   providedIn: "root"

@@ -1,4 +1,4 @@
-import { Component, QueryList, signal, ViewChildren } from "@angular/core";
+import { Component, QueryList, signal, ViewChildren, ChangeDetectionStrategy } from "@angular/core";
 import { ModSettings } from "../../model/mod-settings.model";
 import { ModSettingsService } from "../../service/mod-settings.service";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
@@ -13,6 +13,7 @@ import { MatButton } from "@angular/material/button";
   templateUrl: "./mods-settings.component.html",
   styleUrl: "./mods-settings.component.scss",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatIcon, ModSettingsPanelComponent, MatButton]
 })
 export class ModsSettingsComponent {

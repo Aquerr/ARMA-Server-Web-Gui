@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from "@angular/material/dialog";
 import { MatButton } from "@angular/material/button";
 
@@ -12,6 +12,7 @@ import { MatButton } from "@angular/material/button";
     MatButton,
     MatDialogClose
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./mod-force-update-confirm-dialog.component.scss"]
 })
 export class ModForceUpdateConfirmDialogComponent {}

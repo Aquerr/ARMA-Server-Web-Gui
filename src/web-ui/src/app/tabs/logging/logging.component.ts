@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 import { NotificationService } from "../../service/notification.service";
 import { ServerLoggingService } from "../../service/server-logging.service";
@@ -16,6 +16,7 @@ import { MatButton } from "@angular/material/button";
     MatButton,
     MatInput
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./logging.component.scss"]
 })
 export class LoggingComponent implements OnInit {

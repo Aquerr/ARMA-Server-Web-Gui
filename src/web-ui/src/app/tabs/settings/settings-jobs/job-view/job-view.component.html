@@ -45,8 +45,8 @@
           @for (parameter of parameters.controls; track parameter; let i = $index) {
             <div [formGroupName]="i">
               <mat-form-field>
-                <mat-label [matTooltip]="parameter.get('description')?.value">{{ parameter.get('name')?.value }}</mat-label>
-                <input matInput type="text" formControlName="value" [value]="parameter.get('value')?.value">
+                <mat-label [matTooltip]="$safeNavigationMigration(parameter.get('description')?.value)">{{ parameter.get('name')?.value }}</mat-label>
+                <input matInput type="text" formControlName="value" [value]="$safeNavigationMigration(parameter.get('value')?.value)">
               </mat-form-field>
             </div>
           }

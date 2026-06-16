@@ -1,14 +1,13 @@
 import { TestBed } from "@angular/core/testing";
 
 import { FileUploadMonitorService } from "./file-upload-monitor.service";
-import { provideToastr } from "ngx-toastr";
 
 describe("FileUploadMonitorService", () => {
   let service: FileUploadMonitorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideToastr()]
+      providers: []
     });
     service = TestBed.inject(FileUploadMonitorService);
   });

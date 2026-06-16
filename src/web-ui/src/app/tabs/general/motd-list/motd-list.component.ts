@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core";
+import { Component, input, ChangeDetectionStrategy } from "@angular/core";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatIcon } from "@angular/material/icon";
@@ -23,6 +23,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     MatError,
     MatTooltip
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./motd-list.component.scss"]
 })
 export class MotdListComponent {

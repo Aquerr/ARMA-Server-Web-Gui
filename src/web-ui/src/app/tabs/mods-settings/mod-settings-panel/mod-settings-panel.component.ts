@@ -6,7 +6,8 @@ import {
   Input,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { ModSettings } from "../../../model/mod-settings.model";
 import { ModSettingsService } from "../../../service/mod-settings.service";
@@ -34,6 +35,7 @@ import { withLineNumbers } from "codejar-linenumbers";
   templateUrl: "./mod-settings-panel.component.html",
   styleUrl: "./mod-settings-panel.component.scss",
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormFieldModule,
     MatAccordion,

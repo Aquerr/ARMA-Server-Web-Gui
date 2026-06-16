@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, Inject, OnDestroy } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, Inject, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from "@angular/material/snack-bar";
 import { UploadingFile } from "../../service/file-upload.service";
 import { MatProgressBar } from "@angular/material/progress-bar";
@@ -13,6 +13,7 @@ import { FileUploadMonitorService } from "../../service/file-upload-monitor.serv
   selector: "app-file-upload-snack-bar",
   templateUrl: "./file-upload-snack-bar.component.html",
   imports: [MatLabel, MatIcon, MatProgressBar, FilesizePipe, MatTooltip],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./file-upload-snack-bar.component.scss"]
 })
 export class FileUploadSnackBarComponent implements OnDestroy {

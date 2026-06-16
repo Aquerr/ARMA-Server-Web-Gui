@@ -1,8 +1,8 @@
 import { HttpClient, HttpEvent } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { API_BASE_URL } from "src/environments/environment";
-import { Mod } from "../model/mod.model";
+import { Mod } from "@model/mod.model";
+import { API_BASE_URL } from "@environments/environment";
 
 @Injectable({
   providedIn: "root"
@@ -12,11 +12,12 @@ export class ServerModsService {
   private readonly MODS_PRESETS_URL = `${API_BASE_URL}/mods-presets`;
   private readonly MODS_FILES_URL = `${API_BASE_URL}/mods-files`;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {
+  }
 
   uploadMod(formData: FormData): Observable<HttpEvent<object>> {
     return this.httpClient.post(this.MODS_FILES_URL, formData, {
-      reportProgress: true,
+      reportUploadProgress: true,
       observe: "events"
     });
   }
@@ -32,7 +33,7 @@ export class ServerModsService {
   }
 
   deleteMod(modName: string): Observable<void> {
-    return this.httpClient.delete<void>(`${this.MODS_URL}`, { body: { name: modName } });
+    return this.httpClient.delete<void>(`${this.MODS_URL}`, {body: {name: modName}});
   }
 
   saveEnabledMods(saveEnabledModsRequest: SaveEnabledModsRequest) {
@@ -40,7 +41,7 @@ export class ServerModsService {
   }
 
   manageMod(name: string) {
-    return this.httpClient.post(`${this.MODS_URL}/manage`, { name: name });
+    return this.httpClient.post(`${this.MODS_URL}/manage`, {name: name});
   }
 
   getModPresetsNames(): Observable<ModPresetNamesResponse> {
@@ -69,7 +70,7 @@ export class ServerModsService {
   }
 
   deleteNotManagedMod(directoryName: string) {
-    return this.httpClient.delete(`${this.MODS_URL}/not-managed`, { body: { directoryName: directoryName } });
+    return this.httpClient.delete(`${this.MODS_URL}/not-managed`, {body: {directoryName: directoryName}});
   }
 }
 

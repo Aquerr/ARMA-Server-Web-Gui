@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ModsSettingsComponent } from "./mods-settings.component";
-import { provideToastr } from "ngx-toastr";
 import { ModSettingsServiceMock } from "../../../../testing/mocks/mod-settings-service.mock";
-import { ModSettingsService } from "../../service/mod-settings.service";
+import { ModSettingsService } from "@service/mod-settings.service";
 import { EMPTY } from "rxjs";
 
 describe("ModsSettingsComponent", () => {
@@ -15,7 +14,7 @@ describe("ModsSettingsComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ModsSettingsComponent],
-      providers: [provideToastr(), {
+      providers: [{
         provide: ModSettingsService, useValue: modSettingsServiceMock
       }]
     }).compileComponents();

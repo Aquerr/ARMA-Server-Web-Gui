@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { MatChipEditedEvent, MatChipGrid, MatChipInput, MatChipInputEvent, MatChipRow } from "@angular/material/chips";
 import { MatFormField, MatLabel } from "@angular/material/input";
@@ -17,6 +17,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     MatChipInput,
     MatTooltip
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./aswg-chip-input.component.scss"
 })
 export class AswgChipInputComponent {

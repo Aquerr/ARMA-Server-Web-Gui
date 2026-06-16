@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   MatDialogActions,
   MatDialogClose,
@@ -25,6 +25,7 @@ import { MatButton } from "@angular/material/button";
     MatButton,
     MatDialogClose
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./mod-preset-add-dialog.component.scss"]
 })
 export class ModPresetAddDialogComponent {

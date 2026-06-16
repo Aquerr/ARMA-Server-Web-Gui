@@ -8,7 +8,8 @@ import {
   output,
   signal,
   TemplateRef,
-  WritableSignal
+  WritableSignal,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 import { CdkDrag, CdkDragDrop, CdkDropList } from "@angular/cdk/drag-drop";
@@ -40,6 +41,7 @@ export interface SortOption<T> {
     MatSelect,
     MatSelectTrigger
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: "./aswg-drag-and-drop-list.component.scss"
 })
 export class AswgDragAndDropListComponent<T> implements OnInit, OnChanges {

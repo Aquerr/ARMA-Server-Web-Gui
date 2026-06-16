@@ -1,7 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 
 import { ServerLoggingService } from "./server-logging.service";
-import { provideToastr } from "ngx-toastr";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 
 describe("ServerLoggingService", () => {
@@ -9,7 +8,7 @@ describe("ServerLoggingService", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideToastr(), provideHttpClientTesting()]
+      providers: [provideHttpClientTesting()]
     });
     service = TestBed.inject(ServerLoggingService);
   });

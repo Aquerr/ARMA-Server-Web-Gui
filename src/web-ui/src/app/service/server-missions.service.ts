@@ -11,7 +11,8 @@ export class ServerMissionsService {
   private readonly MISSIONS_URL = `${API_BASE_URL}/missions`;
   private readonly MISSIONS_FILES_URL = `${API_BASE_URL}/missions-files`;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {
+  }
 
   addTemplateMission(name: string, template: string): Observable<object> {
     return this.httpClient.post(`${this.MISSIONS_URL}/template`, {
@@ -22,7 +23,7 @@ export class ServerMissionsService {
 
   uploadMission(formData: FormData): Observable<HttpEvent<object>> {
     return this.httpClient.post(`${this.MISSIONS_FILES_URL}`, formData, {
-      reportProgress: true,
+      reportUploadProgress: true,
       observe: "events"
     });
   }
@@ -39,7 +40,7 @@ export class ServerMissionsService {
 
   deleteMission(template: string): Observable<object> {
     return this.httpClient.delete(`${this.MISSIONS_URL}/template`, {
-      body: { template: template }
+      body: {template: template}
     });
   }
 

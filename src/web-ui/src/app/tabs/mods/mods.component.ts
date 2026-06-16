@@ -1,32 +1,35 @@
 import {
   ChangeDetectionStrategy,
-  Component, computed, DestroyRef,
+  Component,
+  computed,
+  DestroyRef,
   OnDestroy,
-  OnInit, Signal,
+  OnInit,
+  Signal,
   signal,
   ViewChild
 } from "@angular/core";
-import {debounceTime, finalize, Subject, Subscription} from "rxjs";
-import { LoadingSpinnerMaskService } from "src/app/service/loading-spinner-mask.service";
-import { ServerModsService } from "src/app/service/server-mods.service";
-import { NotificationService } from "../../service/notification.service";
-import { Mod } from "../../model/mod.model";
+import { debounceTime, finalize, Subject, Subscription } from "rxjs";
+import { NotificationService } from "@service/notification.service";
+import { Mod } from "@model/mod.model";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { ModUploadService } from "./service/mod-upload.service";
-import { DialogService } from "../../service/dialog.service";
+import { DialogService } from "@service/dialog.service";
 import { ModListsComponent } from "./mod-lists/mod-lists.component";
 import { ModDownloadQueueDialogComponent } from "./mod-download-queue-dialog/mod-download-queue-dialog.component";
-import { PermissionService } from "../../service/permission.service";
-import { AswgAuthority } from "../../model/authority.model";
-import { DragAndDropFileDirective } from "../../common-ui/directive/drag-and-drop-file.directive";
-import { DragDropOverlay } from "../../common-ui/drag-and-drop-overlay/drag-and-drop-overlay.component";
+import { PermissionService } from "@service/permission.service";
+import { AswgAuthority } from "@model/authority.model";
+import { DragAndDropFileDirective } from "@common-ui/directive/drag-and-drop-file.directive";
+import { DragDropOverlay } from "@common-ui/drag-and-drop-overlay/drag-and-drop-overlay.component";
 import { NgClass, NgTemplateOutlet } from "@angular/common";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatButton } from "@angular/material/button";
 import { RouterLink } from "@angular/router";
 import { ModPresetsComponent } from "./mod-presets/mod-presets.component";
 import { ModUploadButtonComponent } from "./mod-upload-button/mod-upload-button.component";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { ServerModsService } from "@service/server-mods.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 
 @Component({
   selector: "app-mods",
@@ -121,16 +124,16 @@ export class ModsComponent implements OnInit, OnDestroy {
     this.maskService.show();
     this.enabledMods = this.modListsComponent.enabledMods;
     this.modsService
-      .saveEnabledMods({ mods: this.modListsComponent.enabledMods() })
+      .saveEnabledMods({mods: this.modListsComponent.enabledMods()})
       .pipe(finalize(() => this.maskService.hide()))
       .subscribe(() => {
-        this.notificationService.successNotification("Active mods list saved!", "Success");
+        this.notificationService.successNotification("Active mods list saved!");
       });
   }
 
   onModPresetSelected(presetName: string) {
     this.maskService.show();
-    this.modsService.selectPreset({ name: presetName }).pipe(finalize(() => this.maskService.hide())).subscribe(() => {
+    this.modsService.selectPreset({name: presetName}).pipe(finalize(() => this.maskService.hide())).subscribe(() => {
       this.notificationService.successNotification("Mod preset loaded!");
       this.reloadModsDataSubject.next();
     });

@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { MissionsComponent } from "./missions.component";
-import { provideToastr } from "ngx-toastr";
 import { ServerMissionsServiceMock } from "../../../../testing/mocks/server-missions-service.mock";
-import { ServerMissionsService } from "../../service/server-missions.service";
+import { ServerMissionsService } from "@service/server-missions.service";
 import { EMPTY } from "rxjs";
 
 describe("MissionsComponent", () => {
@@ -16,7 +15,6 @@ describe("MissionsComponent", () => {
     await TestBed.configureTestingModule({
       imports: [MissionsComponent],
       providers: [
-        provideToastr(),
         {
           provide: ServerMissionsService, useValue: serverMissionsServiceMock
         }

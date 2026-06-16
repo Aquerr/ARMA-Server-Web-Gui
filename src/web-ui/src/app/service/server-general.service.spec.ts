@@ -1,7 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 
 import { ServerGeneralService } from "./server-general.service";
-import { provideToastr } from "ngx-toastr";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 
 describe("ServerGeneralService", () => {
@@ -9,7 +8,7 @@ describe("ServerGeneralService", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideToastr(), provideHttpClientTesting()]
+      providers: [provideHttpClientTesting()]
     });
     service = TestBed.inject(ServerGeneralService);
   });

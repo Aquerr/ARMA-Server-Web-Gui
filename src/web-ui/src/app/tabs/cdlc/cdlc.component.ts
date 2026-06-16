@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from "@angular/core";
-import { CdlcService } from "../../service/cdlc.service";
-import { Cdlc } from "../../model/cdlc.model";
-import { NotificationService } from "src/app/service/notification.service";
-import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
+import { CdlcService } from "@service/cdlc.service";
+import { Cdlc } from "@model/cdlc.model";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 import { MatButton } from "@angular/material/button";
 import { MatTooltip } from "@angular/material/tooltip";
+import { NotificationService } from "@service/notification.service";
 
 @Component({
   selector: "app-cdlc",

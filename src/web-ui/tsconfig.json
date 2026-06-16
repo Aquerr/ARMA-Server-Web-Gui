@@ -2,7 +2,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
@@ -18,7 +17,25 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "preserve",
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "isolatedModules": true,
+    "paths": {
+      "@app/*": [
+        "./src/app/*"
+      ],
+      "@environments/*": [
+        "./src/environments/*"
+      ],
+      "@common-ui/*": [
+        "./src/app/common-ui/*"
+      ],
+      "@model/*": [
+        "./src/app/model/*"
+      ],
+      "@service/*": [
+        "./src/app/service/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

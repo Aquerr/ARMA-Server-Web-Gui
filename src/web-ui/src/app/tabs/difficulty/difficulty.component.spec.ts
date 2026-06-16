@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { DifficultyComponent } from "./difficulty.component";
-import { provideToastr } from "ngx-toastr";
 import { ServerDifficultyServiceMock } from "../../../../testing/mocks/server-difficulty-service.mock";
-import { ServerDifficultyService } from "../../service/server-difficulty.service";
+import { ServerDifficultyService } from "@service/server-difficulty.service";
 import { EMPTY } from "rxjs";
 
 describe("DifficultyComponent", () => {
@@ -15,7 +14,7 @@ describe("DifficultyComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DifficultyComponent],
-      providers: [provideToastr(), {
+      providers: [{
         provide: ServerDifficultyService, useValue: serverDifficultyServiceMock
       }]
     }).compileComponents();

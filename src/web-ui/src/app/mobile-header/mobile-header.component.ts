@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from "@angular/core";
 import { AuthService } from "../service/auth.service";
 import { MatIcon } from "@angular/material/icon";
 import { SideMenuComponent } from "../side-menu/side-menu.component";
@@ -12,6 +12,7 @@ import { RouterLink } from "@angular/router";
     SideMenuComponent,
     RouterLink
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./mobile-header.component.scss"]
 })
 export class MobileHeaderComponent {

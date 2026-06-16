@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, EventEmitter, Output, ChangeDetectionStrategy } from "@angular/core";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatIcon } from "@angular/material/icon";
 import { MatMiniFabButton } from "@angular/material/button";
@@ -11,6 +11,7 @@ import { MatMiniFabButton } from "@angular/material/button";
     MatIcon,
     MatMiniFabButton
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./mod-upload-button.component.scss"]
 })
 export class ModUploadButtonComponent {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from "@angular/core";
 import { AuthService } from "../service/auth.service";
 import { Router, RouterLink } from "@angular/router";
 import { take, tap } from "rxjs";
@@ -15,6 +15,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     MatIcon,
     MatTooltip
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./desktop-header.component.scss"]
 })
 export class DesktopHeaderComponent {
