@@ -26,10 +26,10 @@ export class NotificationService {
     this.toastService.info(message, this.getDefaultToastConfig());
   }
 
-  private getDefaultToastConfig(): ToastOptions<any> {
+  private getDefaultToastConfig(): ToastOptions<object> {
     return {
-      duration: this.getDefaultToastDurationTime(),
-    }
+      duration: this.getDefaultToastDurationTime()
+    };
   }
 
   private getDefaultToastDurationTime() {

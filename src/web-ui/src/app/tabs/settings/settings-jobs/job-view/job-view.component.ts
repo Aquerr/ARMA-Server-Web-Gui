@@ -3,17 +3,17 @@ import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { JobSettingsFormService } from "./job-settings-form.service";
 import { MatHint, MatLabel, MatOption, MatSelect } from "@angular/material/select";
 import { MatFormField } from "@angular/material/form-field";
-import { JobSettingsService, UpdateJobSettingsRequest } from "../../../../service/job-settings.service";
+import { JobSettingsService } from "@service/job-settings.service";
 import { MatButton } from "@angular/material/button";
-import { LoadingSpinnerMaskService } from "../../../../service/loading-spinner-mask.service";
-import { NotificationService } from "../../../../service/notification.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { NotificationService } from "@service/notification.service";
 import { ActivatedRoute } from "@angular/router";
 import { MatInput } from "@angular/material/input";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatIcon } from "@angular/material/icon";
 import { DatePipe, NgClass } from "@angular/common";
-import { JobStatus } from "../../../../model/job-settings.model";
-import { DialogService } from "../../../../service/dialog.service";
+import { JobStatus } from "@model/job-settings.model";
+import { DialogService } from "@service/dialog.service";
 
 @Component({
   selector: "app-job-view",
@@ -80,7 +80,7 @@ export class JobViewComponent implements OnInit {
       enabled: this.formService.getEnabledControl(this.form).value,
       cron: this.formService.getCronControl(this.form).value,
       parameters: parameters
-    } as UpdateJobSettingsRequest;
+    };
 
     this.jobSettingsService.saveJobSettings(this.jobName, request).subscribe((response) => {
       this.formService.setForm(this.form, response);

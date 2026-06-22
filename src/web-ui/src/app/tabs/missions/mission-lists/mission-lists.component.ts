@@ -14,7 +14,7 @@ import { CdkDragDrop, CdkDropListGroup, moveItemInArray, transferArrayItem } fro
 import { Mission } from "@model/mission.model";
 import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 import { NotificationService } from "@service/notification.service";
-import { SaveEnabledMissionsRequest, ServerMissionsService } from "@service/server-missions.service";
+import { ServerMissionsService } from "@service/server-missions.service";
 import { Subject, Subscription } from "rxjs";
 import { moveItemBetweenSignalLists } from "@app/util/signal/signal-utils";
 import { MissionListItemComponent } from "../mission-list-item/mission-list-item.component";
@@ -83,7 +83,7 @@ export class MissionListsComponent implements OnInit, OnDestroy {
   protected enableAllMissions() {
     this.maskService.show();
     this.missionsService
-      .saveEnabledMissions({missionTemplates: this.enabledMissions().concat(this.disabledMissions()).map((mission) => mission.template)})
+      .saveEnabledMissions({ missionTemplates: this.enabledMissions().concat(this.disabledMissions()).map((mission) => mission.template) })
       .subscribe(() => {
         this.maskService.hide();
         this.reloadMissions();
@@ -123,7 +123,7 @@ export class MissionListsComponent implements OnInit, OnDestroy {
   protected disableAllMissions() {
     this.maskService.show();
     this.missionsService
-      .saveEnabledMissions({missionTemplates: []} as SaveEnabledMissionsRequest)
+      .saveEnabledMissions({ missionTemplates: [] })
       .subscribe(() => {
         this.maskService.hide();
         this.reloadMissions();

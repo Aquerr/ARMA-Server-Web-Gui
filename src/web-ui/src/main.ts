@@ -6,7 +6,7 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr }
 import { AswgHttpInterceptor } from "./app/interceptors/aswg-http.interceptor";
 import { LoadingSpinnerMaskService } from "./app/service/loading-spinner-mask.service";
 import { AppRoutingModule } from "./app/app-routing.module";
-import { provideHotToastConfig } from '@ngxpert/hot-toast';
+import { provideHotToastConfig } from "@ngxpert/hot-toast";
 
 if (environment.production) {
   enableProdMode();
@@ -16,7 +16,7 @@ bootstrapApplication(AppComponent, {
   providers: [
     provideZonelessChangeDetection(),
     importProvidersFrom(AppRoutingModule),
-    {provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true},
+    { provide: HTTP_INTERCEPTORS, useClass: AswgHttpInterceptor, multi: true },
     provideHttpClient(withXhr(), withInterceptorsFromDi()),
     LoadingSpinnerMaskService,
     provideHotToastConfig({

@@ -35,7 +35,7 @@ export class ModSettingsService {
   saveModSettingsContent(id: number, content: string): Observable<unknown> {
     return this.httpClient.put<unknown>(`${this.MOD_SETTINGS_ROOT_URL}/${id}/content`, {
       content: content
-    } as ModSettingsContent);
+    });
   }
 
   createNewModSettings(modSettings: ModSettings) {

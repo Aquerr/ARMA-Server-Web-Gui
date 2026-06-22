@@ -42,14 +42,14 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Port</mat-label>
-          <input name="port" formControlName="port" matInput type="number" min="0" />
+          <input name="port" formControlName="port" matInput type="text" inputmode="numeric" pattern="[0-9]+" min="0" (keyup)="allowDigits(form.controls.port)" />
           @if (form.controls.port.hasError('required')) {
             <mat-error>This field is required!</mat-error>
           }
         </mat-form-field>
         <mat-form-field class="max-players-field">
           <mat-label>Max players</mat-label>
-          <input name="max-players" formControlName="maxPlayers" matInput type="number" min="0" />
+          <input name="max-players" formControlName="maxPlayers" matInput type="number" min="0" (keydown)="onKeyDownDigitsOnly($event, form.controls.maxPlayers)" />
           @if (form.controls.maxPlayers.hasError('required')) {
             <mat-error>This field is required!</mat-error>
           }

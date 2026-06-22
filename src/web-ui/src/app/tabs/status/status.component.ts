@@ -115,7 +115,7 @@ export class StatusComponent implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           const apiErrorResponse = err?.error as ApiErrorResponse;
-          if (apiErrorResponse && apiErrorResponse.code === ApiErrorCode.SERVER_NOT_INSTALLED) {
+          if (apiErrorResponse?.code === ApiErrorCode.SERVER_NOT_INSTALLED) {
             const onCloseCallback = (result: boolean) => {
               if (!result) return;
 

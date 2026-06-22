@@ -1,6 +1,30 @@
 import { Injectable } from "@angular/core";
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { ServerNetworkProperties } from "../../service/server-network.service";
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { ServerNetworkProperties } from "@service/server-network.service";
+
+export interface NetworkFormGroupControls {
+  upnp: FormControl<boolean>;
+  maxPing: FormControl<number>;
+  loopback: FormControl<boolean>;
+  disconnectTimeout: FormControl<number>;
+  maxDesync: FormControl<number>;
+  maxPacketLoss: FormControl<number>;
+  enablePlayerDiag: FormControl<boolean>;
+  steamProtocolMaxDataSize: FormControl<number>;
+  minBandwidth: FormControl<number>;
+  maxBandwidth: FormControl<number>;
+  maxMsgSend: FormControl<number>;
+  maxSizeGuaranteed: FormControl<number>;
+  maxSizeNonGuaranteed: FormControl<number>;
+  minErrorToSend: FormControl<string>;
+  minErrorToSendNear: FormControl<string>;
+  maxCustomFileSize: FormControl<number>;
+  maxPacketSize: FormControl<number>;
+  manualKickTimeout: FormControl<number>;
+  connectivityKickTimeout: FormControl<number>;
+  battlEyeKickTimeout: FormControl<number>;
+  harmlessKickTimeout: FormControl<number>;
+}
 
 @Injectable({
   providedIn: "root"
@@ -11,41 +35,41 @@ export class NetworkFormService {
 
   constructor(private readonly fb: FormBuilder) {}
 
-  getForm(): FormGroup {
-    return this.fb.group({
-      upnp: [false, [Validators.required]],
-      maxPing: [500, [Validators.required, Validators.pattern(this.digitsRegex)]],
-      loopback: [false, [Validators.required]],
-      disconnectTimeout: [5, [Validators.required, Validators.min(1)]],
-      maxDesync: [150, [Validators.required, Validators.pattern(this.digitsRegex)]],
-      maxPacketLoss: [150, [Validators.required, Validators.pattern(this.digitsRegex)]],
-      enablePlayerDiag: [false, [Validators.required]],
-      steamProtocolMaxDataSize: [1024, [Validators.required, Validators.pattern(this.digitsRegex)]],
-      minBandwidth: [131072, [Validators.required, Validators.pattern(this.digitsRegex)]],
-      maxBandwidth: [10000000000, [Validators.required, Validators.pattern(this.digitsRegex)]],
-      maxMsgSend: [128, [Validators.required, Validators.pattern(this.digitsRegex)]],
-      maxSizeGuaranteed: [512, [Validators.required, Validators.pattern(this.digitsRegex)]],
-      maxSizeNonGuaranteed: [256, [Validators.required, Validators.pattern(this.digitsRegex)]],
-      minErrorToSend: ["0.001", [Validators.required, Validators.pattern(this.decimalRegex)]],
-      minErrorToSendNear: ["0.01", [Validators.required, Validators.pattern(this.decimalRegex)]],
-      maxCustomFileSize: [0, [Validators.required, Validators.pattern(this.digitsRegex)]],
-      maxPacketSize: [1400, [Validators.required, Validators.pattern(this.digitsRegex)]],
-      manualKickTimeout: [
+  getForm(): FormGroup<NetworkFormGroupControls> {
+    return this.fb.group<NetworkFormGroupControls>({
+      upnp: this.fb.nonNullable.control(false, [Validators.required]),
+      maxPing: this.fb.nonNullable.control(500, [Validators.required, Validators.pattern(this.digitsRegex)]),
+      loopback: this.fb.nonNullable.control(false, [Validators.required]),
+      disconnectTimeout: this.fb.nonNullable.control(5, [Validators.required, Validators.min(1)]),
+      maxDesync: this.fb.nonNullable.control(150, [Validators.required, Validators.pattern(this.digitsRegex)]),
+      maxPacketLoss: this.fb.nonNullable.control(150, [Validators.required, Validators.pattern(this.digitsRegex)]),
+      enablePlayerDiag: this.fb.nonNullable.control(false, [Validators.required]),
+      steamProtocolMaxDataSize: this.fb.nonNullable.control(1024, [Validators.required, Validators.pattern(this.digitsRegex)]),
+      minBandwidth: this.fb.nonNullable.control(131072, [Validators.required, Validators.pattern(this.digitsRegex)]),
+      maxBandwidth: this.fb.nonNullable.control(10000000000, [Validators.required, Validators.pattern(this.digitsRegex)]),
+      maxMsgSend: this.fb.nonNullable.control(128, [Validators.required, Validators.pattern(this.digitsRegex)]),
+      maxSizeGuaranteed: this.fb.nonNullable.control(512, [Validators.required, Validators.pattern(this.digitsRegex)]),
+      maxSizeNonGuaranteed: this.fb.nonNullable.control(256, [Validators.required, Validators.pattern(this.digitsRegex)]),
+      minErrorToSend: this.fb.nonNullable.control("0.001", [Validators.required, Validators.pattern(this.decimalRegex)]),
+      minErrorToSendNear: this.fb.nonNullable.control("0.01", [Validators.required, Validators.pattern(this.decimalRegex)]),
+      maxCustomFileSize: this.fb.nonNullable.control(0, [Validators.required, Validators.pattern(this.digitsRegex)]),
+      maxPacketSize: this.fb.nonNullable.control(1400, [Validators.required, Validators.pattern(this.digitsRegex)]),
+      manualKickTimeout: this.fb.nonNullable.control(
         60,
         [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]
-      ],
-      connectivityKickTimeout: [
+      ),
+      connectivityKickTimeout: this.fb.nonNullable.control(
         60,
         [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]
-      ],
-      battlEyeKickTimeout: [
+      ),
+      battlEyeKickTimeout: this.fb.nonNullable.control(
         60,
         [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]
-      ],
-      harmlessKickTimeout: [
+      ),
+      harmlessKickTimeout: this.fb.nonNullable.control(
         60,
         [Validators.required, Validators.min(-2), Validators.pattern(this.digitsRegex)]
-      ]
+      )
     });
   }
 
@@ -100,7 +124,7 @@ export class NetworkFormService {
         battlEyeKickTimeoutSeconds: this.getBattlEyeKickTimeout(form).value,
         harmlessKickTimeoutSeconds: this.getHarmlessKickTimeout(form).value
       }
-    } as ServerNetworkProperties;
+    };
   }
 
   getUpnpControl(form: FormGroup) {

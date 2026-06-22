@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { MissionDifficulty } from "../../model/mission.model";
-import { GeneralProperties } from "../../service/server-general.service";
+import { MissionDifficulty } from "@model/mission.model";
+import { GeneralProperties } from "@service/server-general.service";
 
 export class MotdItem {
   message: string = "";
@@ -91,6 +91,6 @@ export class GeneralFormService {
       localClients: form.localClients.value,
       forcedDifficulty: form.forcedDifficulty.value,
       branch: form.branch.value
-    } as GeneralProperties;
+    };
   }
 }

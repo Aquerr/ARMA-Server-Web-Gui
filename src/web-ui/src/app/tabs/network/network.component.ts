@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { ServerNetworkService } from "../../service/server-network.service";
-import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
-import { NotificationService } from "../../service/notification.service";
-import { NetworkFormService } from "./network-form.service";
-import { FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { ServerNetworkService } from "@service/server-network.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { NotificationService } from "@service/notification.service";
+import { NetworkFormGroupControls, NetworkFormService } from "./network-form.service";
+import { AbstractControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatError, MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { MatButton } from "@angular/material/button";
+import { stripToDecimals, stripToDigits } from "@app/util/form/form.utils";
 
 @Component({
   selector: "app-network",
@@ -27,7 +28,7 @@ import { MatButton } from "@angular/material/button";
   styleUrls: ["./network.component.scss"]
 })
 export class NetworkComponent implements OnInit {
-  form: FormGroup;
+  form: FormGroup<NetworkFormGroupControls>;
 
   constructor(
     private readonly maskService: LoadingSpinnerMaskService,
@@ -72,15 +73,11 @@ export class NetworkComponent implements OnInit {
     return this.form.get(controlName)?.hasError(errorName);
   }
 
-  allowDecimals(event: KeyboardEvent) {
-    const target = event.target as HTMLInputElement;
-    target.value = target.value.replace(/[^.\d]/, "");
-    this.form.markAllAsTouched();
+  allowDecimals(control: AbstractControl<string>) {
+    stripToDecimals(control);
   }
 
-  allowDigits(event: KeyboardEvent) {
-    const target = event.target as HTMLInputElement;
-    target.value = target.value.replace(/\D+/, "");
-    this.form.markAllAsTouched();
+  allowDigits(control: AbstractControl<string | number>) {
+    stripToDigits(control);
   }
 }

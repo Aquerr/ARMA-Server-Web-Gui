@@ -36,7 +36,7 @@ export class DiscordSettingsFormService {
       serverStartMessage: this.getServerStartMessageControl(form).value,
       serverStopMessage: this.getServerStopMessageControl(form).value,
       serverUpdateMessage: this.getServerUpdateMessageControl(form).value
-    } as DiscordIntegrationSettings;
+    };
   }
 
   getEnabledControl(form: FormGroup) {

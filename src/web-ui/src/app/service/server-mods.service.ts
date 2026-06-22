@@ -33,7 +33,7 @@ export class ServerModsService {
   }
 
   deleteMod(modName: string): Observable<void> {
-    return this.httpClient.delete<void>(`${this.MODS_URL}`, {body: {name: modName}});
+    return this.httpClient.delete<void>(`${this.MODS_URL}`, { body: { name: modName } });
   }
 
   saveEnabledMods(saveEnabledModsRequest: SaveEnabledModsRequest) {
@@ -41,7 +41,7 @@ export class ServerModsService {
   }
 
   manageMod(name: string) {
-    return this.httpClient.post(`${this.MODS_URL}/manage`, {name: name});
+    return this.httpClient.post(`${this.MODS_URL}/manage`, { name: name });
   }
 
   getModPresetsNames(): Observable<ModPresetNamesResponse> {
@@ -70,7 +70,7 @@ export class ServerModsService {
   }
 
   deleteNotManagedMod(directoryName: string) {
-    return this.httpClient.delete(`${this.MODS_URL}/not-managed`, {body: {directoryName: directoryName}});
+    return this.httpClient.delete(`${this.MODS_URL}/not-managed`, { body: { directoryName: directoryName } });
   }
 }
 

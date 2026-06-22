@@ -40,7 +40,7 @@ export class ServerMissionsService {
 
   deleteMission(template: string): Observable<object> {
     return this.httpClient.delete(`${this.MISSIONS_URL}/template`, {
-      body: {template: template}
+      body: { template: template }
     });
   }
 

@@ -10,9 +10,6 @@ import {
   ViewChild
 } from "@angular/core";
 import {
-  ModPresetImportRequest,
-  ModPresetModParam,
-  ModPresetSaveRequest,
   ServerModsService
 } from "@service/server-mods.service";
 import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
@@ -28,7 +25,6 @@ import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { DialogService } from "@service/dialog.service";
 import {
   ModPresetImportConfirmationDialogComponent,
-  ModPresetImportDialogData,
   ModToImport
 } from "./mod-preset-import-confirmation-dialog/mod-preset-import-confirmation-dialog.component";
 import { WorkshopService } from "@service/workshop.service";
@@ -129,23 +125,23 @@ export class ModPresetsComponent {
         const modPresetImportRequest = {
           name: modPresetName ?? this.removeFileExtension(file.name),
           modParams: modsToImport.map(
-            (entry) => ({id: entry.id, title: entry.name}) as ModPresetModParam
+            (entry) => ({ id: entry.id, title: entry.name })
           )
-        } as ModPresetImportRequest;
+        };
 
         this.maskService.show();
         this.modsService.importPreset(modPresetImportRequest).subscribe(() => {
           this.maskService.hide();
           this.reloadModPresets();
           this.notificationService.successNotification(
-            "Mod preset has been imported!",
+            "Mod preset has been imported!"
           );
         });
       }
     }, {
       modPresetName: modPresetName ?? this.removeFileExtension(file.name),
       modEntries: modsToImport
-    } as ModPresetImportDialogData, {
+    }, {
       width: "600px"
     });
   }
@@ -193,7 +189,7 @@ export class ModPresetsComponent {
     }) => {
       if (dialogResult.create) {
         this.modsService
-          .savePreset({name: dialogResult.modPresetName, modNames: []})
+          .savePreset({ name: dialogResult.modPresetName, modNames: [] })
           .subscribe(() => {
             this.reloadModPresets();
             this.notificationService.successNotification("Mod preset created!");
@@ -222,7 +218,7 @@ export class ModPresetsComponent {
           .savePreset({
             name: presetName,
             modNames: this.enabledMods().map((mod) => mod.name)
-          } as ModPresetSaveRequest)
+          })
           .subscribe(() => {
             this.reloadModPresets();
             this.notificationService.successNotification("Mod preset saved!");

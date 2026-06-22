@@ -30,7 +30,7 @@ export class EditModsSettingsFormService {
       name: this.getNameControl(form).value,
       active: this.getActiveControl(form).value,
       content: this.getContentControl(form).value
-    } as ModSettings;
+    };
   }
 
   setContentControl(form: FormGroup, content: string | undefined) {

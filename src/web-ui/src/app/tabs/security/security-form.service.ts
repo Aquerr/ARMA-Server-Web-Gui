@@ -2,9 +2,8 @@ import { Injectable } from "@angular/core";
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import {
   AllowedFilePatching,
-  GetServerSecurityResponse,
-  SaveServerSecurityRequest
-} from "../../service/server-security.service";
+  GetServerSecurityResponse
+} from "@service/server-security.service";
 import { CommandListItem } from "./vote-cmds-list/vote-cmd-list-item/vote-cmd-list-item.model";
 
 export interface SecurityFormControls {
@@ -86,7 +85,7 @@ export class SecurityFormService {
       kickDuplicate: this.getKickDuplicateControl(form).value,
       voteThreshold: this.getVoteThresholdControl(form).value,
       voteMissionPlayers: this.getVoteMissionPlayersControl(form).value
-    } as SaveServerSecurityRequest;
+    };
   }
 
   getServerPasswordControl(form: FormGroup) {

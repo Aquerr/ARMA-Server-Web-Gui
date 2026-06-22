@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { MissionParameterComponent } from "./mission-parameter.component";
-import { MissionParam } from "../../../../model/mission.model";
 
 describe("MissionParameterComponent", () => {
   let component: MissionParameterComponent;
@@ -17,7 +16,7 @@ describe("MissionParameterComponent", () => {
     component.parameter = {
       name: "test",
       value: "test-value"
-    } as MissionParam;
+    };
     fixture.detectChanges();
   });
 

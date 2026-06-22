@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { DifficultyPanelComponent } from "./difficulty-panel.component";
-import { DifficultyProfile } from "@model/difficulty-profile.model";
 import { inputBinding } from "@angular/core";
 
 describe("DifficultyPanelComponent", () => {
@@ -22,7 +21,7 @@ describe("DifficultyPanelComponent", () => {
             name: "test",
             active: true,
             options: {}
-          } as DifficultyProfile;
+          };
         })
       ]
     });

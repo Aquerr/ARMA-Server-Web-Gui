@@ -1,14 +1,13 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { API_BASE_URL } from "../../environments/environment";
+import { API_BASE_URL } from "@environments/environment";
 import {
   DownloadingMod,
   InstalledWorkshopItemsResponse,
-  WorkShopModInstallRequest,
   WorkShopModInstallResponse,
   WorkshopQueryRequest,
   WorkshopQueryResponse
-} from "../model/workshop.model";
+} from "@model/workshop.model";
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -40,7 +39,7 @@ export class WorkshopService {
   }
 
   installMod(fileId: number, modName: string, installDependencies: boolean = false): Observable<WorkShopModInstallResponse> {
-    const request = { fileId: fileId, modName: modName, installDependencies: installDependencies } as WorkShopModInstallRequest;
+    const request = { fileId: fileId, modName: modName, installDependencies: installDependencies };
     return this.httpClient.post<WorkShopModInstallResponse>(this.API_INSTALL_MOD, request);
   }
 

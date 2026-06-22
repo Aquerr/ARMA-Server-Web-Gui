@@ -53,7 +53,6 @@ import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModsComponent implements OnInit, OnDestroy {
-
   reloadModsDataSubject: Subject<void>;
   reloadModsDataSubscription!: Subscription;
   modUploadSubscription!: Subscription;
@@ -89,9 +88,10 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.searchBoxControl = new FormControl("");
-    this.searchBoxControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef), debounceTime(500)).subscribe((value) => {
-      this.searchPhrase.set(value ?? '');
-    });
+    this.searchBoxControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef), debounceTime(500)).subscribe(
+      (value: string) => {
+        this.searchPhrase.set(value ?? "");
+      });
   }
 
   ngOnDestroy(): void {
@@ -124,7 +124,7 @@ export class ModsComponent implements OnInit, OnDestroy {
     this.maskService.show();
     this.enabledMods = this.modListsComponent.enabledMods;
     this.modsService
-      .saveEnabledMods({mods: this.modListsComponent.enabledMods()})
+      .saveEnabledMods({ mods: this.modListsComponent.enabledMods() })
       .pipe(finalize(() => this.maskService.hide()))
       .subscribe(() => {
         this.notificationService.successNotification("Active mods list saved!");
@@ -133,7 +133,7 @@ export class ModsComponent implements OnInit, OnDestroy {
 
   onModPresetSelected(presetName: string) {
     this.maskService.show();
-    this.modsService.selectPreset({name: presetName}).pipe(finalize(() => this.maskService.hide())).subscribe(() => {
+    this.modsService.selectPreset({ name: presetName }).pipe(finalize(() => this.maskService.hide())).subscribe(() => {
       this.notificationService.successNotification("Mod preset loaded!");
       this.reloadModsDataSubject.next();
     });

@@ -33,7 +33,7 @@ export class SteamSettingsFormService {
       steamCmdPassword: this.getSteamCmdPasswordControl(form).value,
       steamCmdWorkshopContentPath: this.getSteamCmdWorkshopContentPathControl(form).value,
       steamWebApiToken: this.getSteamWebApiTokenControl(form).value
-    } as SteamSettings;
+    };
   }
 
   getSteamCmdPathControl(form: FormGroup): AbstractControl<string> {

@@ -12,7 +12,7 @@ import {
 } from "@angular/core";
 import { CdkDragDrop, CdkDropListGroup, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
 import { Mod } from "@model/mod.model";
-import { SaveEnabledModsRequest, ServerModsService } from "@service/server-mods.service";
+import { ServerModsService } from "@service/server-mods.service";
 import { NotificationService } from "@service/notification.service";
 import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 import { NotManagedModsComponent } from "../not-managed-mods/not-managed-mods.component";
@@ -149,7 +149,7 @@ export class ModListsComponent implements OnInit, OnDestroy {
   enableAllMods() {
     this.maskService.show();
     this.modService
-      .saveEnabledMods({mods: this.enabledMods().concat(this.disabledMods())})
+      .saveEnabledMods({ mods: this.enabledMods().concat(this.disabledMods()) })
       .subscribe(() => {
         this.maskService.hide();
         this.reloadMods();
@@ -160,7 +160,7 @@ export class ModListsComponent implements OnInit, OnDestroy {
   disableAllMods() {
     this.maskService.show();
     this.modService
-      .saveEnabledMods({mods: []} as SaveEnabledModsRequest)
+      .saveEnabledMods({ mods: [] })
       .subscribe(() => {
         this.maskService.hide();
         this.reloadMods();

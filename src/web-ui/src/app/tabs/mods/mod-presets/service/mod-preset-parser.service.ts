@@ -41,7 +41,7 @@ export class ModPresetParserService {
   private getModIdFromRow(row: HTMLTableRowElement): number | null {
     for (const cell of row.cells) {
       const linkElement = cell.firstElementChild;
-      if (linkElement != null && linkElement.getAttribute("data-type") == "Link") {
+      if (linkElement?.getAttribute("data-type") == "Link") {
         const href = linkElement.getAttribute("href");
         if (href == null) return null;
         const id = href.substring(href.lastIndexOf("?id=") + 4, href.length);

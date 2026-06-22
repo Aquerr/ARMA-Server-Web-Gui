@@ -4,7 +4,7 @@ const angular = require("angular-eslint");
 const stylistic = require("@stylistic/eslint-plugin");
 const {defineConfig} = require("eslint/config");
 
-export default defineConfig([
+module.exports = defineConfig([
   {
     files: ["**/*.ts"],
     extends: [
@@ -29,6 +29,7 @@ export default defineConfig([
     ],
     processor: angular.processInlineTemplates,
     rules: {
+      "@angular-eslint/prefer-on-push-component-change-detection": ["off"], // Temporary
       "@angular-eslint/prefer-inject": ["off"],
       "@typescript-eslint/no-inferrable-types": ["off"],
       "@angular-eslint/prefer-standalone": ["warn"],

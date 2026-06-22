@@ -11,12 +11,13 @@ import { DialogService } from "@service/dialog.service";
 import { PermissionService } from "@service/permission.service";
 import { AswgAuthority } from "@model/authority.model";
 import { MatError, MatFormField, MatInput, MatLabel } from "@angular/material/input";
-import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { AbstractControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { MatButton } from "@angular/material/button";
 import { GeneralFormGroup, GeneralFormService } from "./general-form.service";
 import { AswgChipFormInputComponent } from "@common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
+import { digitsOnly, stripToDigits } from "@app/util/form/form.utils";
 
 @Component({
   selector: "app-general",
@@ -113,5 +114,15 @@ export class GeneralComponent implements AfterViewInit {
       [AswgAuthority.UNSAFE_OVERWRITE_STARTUP_PARAMS],
       false
     );
+  }
+
+  protected allowDigits(control: AbstractControl<string | number>) {
+    stripToDigits(control);
+  }
+
+  protected onKeyDownDigitsOnly(event: KeyboardEvent, control: AbstractControl<string | number>): void {
+    let value = (event.target as HTMLInputElement).value;
+    value = digitsOnly(value);
+    control.setValue(value);
   }
 }

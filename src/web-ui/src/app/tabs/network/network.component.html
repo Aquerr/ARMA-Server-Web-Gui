@@ -35,7 +35,7 @@
         >
           <mat-label>Max Ping</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.maxPing)"
             formControlName="maxPing"
             matInput
             min="0"
@@ -48,7 +48,7 @@
         <mat-form-field>
           <mat-label>Disconnect Timeout</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.disconnectTimeout)"
             formControlName="disconnectTimeout"
             matInput
             min="5"
@@ -67,7 +67,7 @@
         >
           <mat-label>Max Desync</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.maxDesync)"
             formControlName="maxDesync"
             matInput
             min="0"
@@ -83,7 +83,7 @@
         >
           <mat-label>Max Packet Loss</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.maxPacketLoss)"
             formControlName="maxPacketLoss"
             matInput
             min="0"
@@ -112,7 +112,7 @@
         >
           <mat-label>Steam Protocol Max Data Size</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.steamProtocolMaxDataSize)"
             formControlName="steamProtocolMaxDataSize"
             matInput
             min="0"
@@ -135,7 +135,7 @@
         >
           <mat-label>Min Bandwidth</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.minBandwidth)"
             formControlName="minBandwidth"
             matInput
             min="0"
@@ -154,7 +154,7 @@
         >
           <mat-label>Max Bandwidth</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.maxBandwidth)"
             formControlName="maxBandwidth"
             matInput
             min="0"
@@ -170,7 +170,7 @@
         <mat-form-field>
           <mat-label>Max Msg Send</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.maxMsgSend)"
             formControlName="maxMsgSend"
             matInput
             min="0"
@@ -189,7 +189,7 @@
         >
           <mat-label>Max Size Guaranteed</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.maxSizeGuaranteed)"
             formControlName="maxSizeGuaranteed"
             matInput
             min="0"
@@ -208,7 +208,7 @@
         >
           <mat-label>Max Size Non Guaranteed</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.maxSizeNonGuaranteed)"
             formControlName="maxSizeNonGuaranteed"
             matInput
             min="0"
@@ -227,7 +227,7 @@
         >
           <mat-label>Min Error To Send</mat-label>
           <input
-            (keyup)="allowDecimals($event)"
+            (keyup)="allowDecimals(form.controls.minErrorToSend)"
             formControlName="minErrorToSend"
             matInput
             name="minErrorToSend"
@@ -246,7 +246,7 @@
         >
           <mat-label>Min Error To Send Near</mat-label>
           <input
-            (keyup)="allowDecimals($event)"
+            (keyup)="allowDecimals(form.controls.minErrorToSendNear)"
             formControlName="minErrorToSendNear"
             matInput
             name="minErrorToSendNear"
@@ -265,7 +265,7 @@
         >
           <mat-label>Max Custom File Size</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.maxCustomFileSize)"
             formControlName="maxCustomFileSize"
             matInput
             name="maxCustomFileSize"
@@ -283,7 +283,7 @@
         >
           <mat-label>Max Packet Size</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.maxPacketSize)"
             formControlName="maxPacketSize"
             matInput
             name="maxPacketSize"
@@ -308,7 +308,7 @@
         >
           <mat-label>Manual kick timeout</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.manualKickTimeout)"
             formControlName="manualKickTimeout"
             matInput
             min="-2"
@@ -329,7 +329,7 @@
         >
           <mat-label>Connectivity kick timeout</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.connectivityKickTimeout)"
             formControlName="connectivityKickTimeout"
             matInput
             min="-2"
@@ -350,7 +350,7 @@
         >
           <mat-label>BattlEye kick timeout</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.battlEyeKickTimeout)"
             formControlName="battlEyeKickTimeout"
             matInput
             min="-2"
@@ -371,7 +371,7 @@
         >
           <mat-label>Harmless kick timeout</mat-label>
           <input
-            (keyup)="allowDigits($event)"
+            (keyup)="allowDigits(form.controls.harmlessKickTimeout)"
             formControlName="harmlessKickTimeout"
             matInput
             min="-2"
