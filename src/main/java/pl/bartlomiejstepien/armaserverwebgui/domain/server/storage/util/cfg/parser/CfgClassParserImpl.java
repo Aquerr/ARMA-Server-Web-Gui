@@ -122,7 +122,7 @@ public class CfgClassParserImpl implements CfgClassParser
                     continue;
                 }
 
-                if (stringBuilder.toString().equals("};"))
+                if (stringBuilder.toString().trim().equals("};"))
                 {
                     break;
                 }

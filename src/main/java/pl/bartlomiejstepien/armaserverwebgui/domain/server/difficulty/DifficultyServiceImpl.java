@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileSystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.exception.CouldNotReadDifficultyProfileException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.DifficultyProfile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.DifficultyProfileEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.DifficultyConfig;
@@ -200,6 +201,7 @@ public class DifficultyServiceImpl implements DifficultyService
 
     private DifficultyConfig readDifficultyFile(String difficultyName)
     {
+        log.info("Reading difficulty profile {}", difficultyName);
         File file = resolveDifficultyPath(difficultyName).toFile();
         try
         {
@@ -207,7 +209,7 @@ public class DifficultyServiceImpl implements DifficultyService
         }
         catch (Exception exception)
         {
-            throw new RuntimeException(exception);
+            throw new CouldNotReadDifficultyProfileException("Could not read difficulty profile: " + difficultyName, exception);
         }
     }
 
