@@ -20,6 +20,8 @@ RUN groupadd --gid 1001 aswg \
     && mkdir /aswg/data \
     && mkdir /aswg/arma-server/ \
     && mkdir /aswg/arma-server/mods \
+    && mkdir "/home/aswg/.local/share/Arma 3 - Other Profiles" \
+    && chown aswg:aswg -R /home/aswg \
     && chown aswg:aswg -R /aswg \
     && chown aswg:aswg -R /steamcmd
 
@@ -43,7 +45,7 @@ ENV LC_ALL="en_US.UTF-8"
 HEALTHCHECK --interval=2m --timeout=5s --retries=3 \
   CMD curl -f http://localhost:8085/api/v1/actuator/health || exit 1
 
-VOLUME ["/aswg/arma-server", "/aswg/data", "/aswg/config"]
+VOLUME ["/aswg/arma-server", "/aswg/data", "/aswg/config", "/home/aswg/.local/share/Arma 3 - Other Profiles"]
 
 EXPOSE 8085/tcp
 EXPOSE 2302-2306/udp

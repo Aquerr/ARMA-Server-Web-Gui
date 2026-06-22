@@ -11,5 +11,6 @@ services:
       - arma-server:/aswg/arma-server
       - ./aswg_docker/data:/aswg/data
       - ./aswg_docker/config:/aswg/config
+      - ./aswg_docker/arma_profiles:/home/aswg/.local/share/Arma 3 - Other Profiles
 volumes:
   arma-server:
