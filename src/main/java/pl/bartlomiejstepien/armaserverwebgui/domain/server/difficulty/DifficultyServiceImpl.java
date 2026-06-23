@@ -1,24 +1,22 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.util.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileSystemUtils;
-import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.exception.CouldNotReadDifficultyProfileException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.DifficultyProfile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.DifficultyProfileEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.DifficultyConfig;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
 import pl.bartlomiejstepien.armaserverwebgui.repository.DifficultyProfileRepository;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,27 +30,18 @@ public class DifficultyServiceImpl implements DifficultyService
     private static final String DEFAULT_PROFILE_NAME = "Player";
 
     private final DifficultyProfileRepository difficultyProfileRepository;
-    private final Lazy<Path> profilesDirectory;
     private final CfgFileHandler cfgFileHandler;
 
-    public DifficultyServiceImpl(ASWGConfig aswgConfig,
-                                 CfgFileHandler cfgFileHandler,
-                                 DifficultyProfileRepository difficultyProfileRepository)
+    @Qualifier("profilesDirectory")
+    private final Lazy<Path> profilesDirectory;
+
+    public DifficultyServiceImpl(CfgFileHandler cfgFileHandler,
+                                 DifficultyProfileRepository difficultyProfileRepository,
+                                 @Qualifier("profilesDirectory") Lazy<Path> profilesDirectory)
     {
         this.cfgFileHandler = cfgFileHandler;
         this.difficultyProfileRepository = difficultyProfileRepository;
-
-        if (SystemUtils.isWindows())
-        {
-            this.profilesDirectory = Lazy.of(() -> Paths.get(aswgConfig.getServerDirectoryPath()).resolve("aswg_profiles"));
-        }
-        else
-        {
-            this.profilesDirectory = Lazy.of(() -> Paths.get(System.getProperty("user.home"))
-                    .resolve(".local")
-                    .resolve("share")
-                    .resolve("Arma 3 - Other Profiles"));
-        }
+        this.profilesDirectory = profilesDirectory;
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -90,6 +79,14 @@ public class DifficultyServiceImpl implements DifficultyService
                 .toList();
     }
 
+    @Override
+    public DifficultyProfile getDifficultyProfile(String name)
+    {
+        return this.difficultyProfileRepository.findByName(name)
+                .map(this::mapToDifficultyProfile)
+                .orElse(null);
+    }
+
     private DifficultyProfile mapToDifficultyProfile(DifficultyProfileEntity difficultyProfileEntity)
     {
         DifficultyConfig difficultyConfig = readDifficultyFile(difficultyProfileEntity.getName());
@@ -98,7 +95,7 @@ public class DifficultyServiceImpl implements DifficultyService
 
     @Override
     @Transactional
-    public DifficultyProfileEntity saveDifficultyProfile(DifficultyProfile difficultyProfile)
+    public void saveDifficultyProfile(DifficultyProfile difficultyProfile)
     {
         DifficultyProfileEntity entity = Optional.ofNullable(difficultyProfile.getId())
                 .flatMap(difficultyProfileRepository::findById)
@@ -130,7 +127,7 @@ public class DifficultyServiceImpl implements DifficultyService
         entity.setActive(difficultyProfile.isActive());
 
         saveToFile(difficultyProfile);
-        return difficultyProfileRepository.save(entity);
+        difficultyProfileRepository.saveAndFlush(entity);
     }
 
     @Override
@@ -162,6 +159,13 @@ public class DifficultyServiceImpl implements DifficultyService
     {
         DifficultyConfig difficultyConfig = readDifficultyFile(profileName);
         DifficultyProfileEntity difficultyProfileEntity = new DifficultyProfileEntity(null, profileName, false);
+        DifficultyProfileEntity existingProfile = this.difficultyProfileRepository.findByName(profileName).orElse(null);
+        if (existingProfile != null)
+        {
+            difficultyProfileEntity.setId(existingProfile.getId());
+            difficultyProfileEntity.setActive(existingProfile.isActive());
+        }
+
         this.difficultyProfileRepository.save(difficultyProfileEntity);
         saveToFile(map(difficultyConfig, difficultyProfileEntity));
     }

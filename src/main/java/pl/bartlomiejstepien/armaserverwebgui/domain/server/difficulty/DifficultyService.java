@@ -1,7 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty;
 
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.DifficultyProfile;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.difficulty.model.DifficultyProfileEntity;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -14,7 +13,9 @@ public interface DifficultyService
 
     List<DifficultyProfile> getDifficultyProfiles();
 
-    DifficultyProfileEntity saveDifficultyProfile(DifficultyProfile difficultyProfile);
+    DifficultyProfile getDifficultyProfile(String name);
+
+    void saveDifficultyProfile(DifficultyProfile difficultyProfile);
 
     void deleteDifficultyProfile(int id);
 

@@ -248,7 +248,7 @@ public class CfgClassParserImpl implements CfgClassParser
         return fieldValue;
     }
 
-    private static <T> void parseClassProperty(T instance, String classPropertyName, CfgReadContext context)
+    private static <T> void parseClassProperty(T instance, String classPropertyName, CfgReadContext context) throws ParsingException
     {
         try
         {
@@ -298,10 +298,11 @@ public class CfgClassParserImpl implements CfgClassParser
         catch (Exception exception)
         {
             log.error("Could not parse class property: '{}', {}", classPropertyName, context.prepareErrorMessage(), exception);
+            throw new ParsingException(exception);
         }
     }
 
-    private static <T> void parseProperty(CfgReadContext context, T instance, String property)
+    private static <T> void parseProperty(CfgReadContext context, T instance, String property) throws ParsingException
     {
         try
         {
@@ -331,6 +332,7 @@ public class CfgClassParserImpl implements CfgClassParser
         catch (Exception exception)
         {
             log.error("Could not parse property: '{}', {}", property, context.prepareErrorMessage(), exception);
+            throw new ParsingException(exception);
         }
     }
 
