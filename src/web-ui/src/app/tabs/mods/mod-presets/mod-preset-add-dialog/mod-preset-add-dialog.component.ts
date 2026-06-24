@@ -6,9 +6,13 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatError, MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatButton } from "@angular/material/button";
+
+export interface ModPresetFormControls {
+  modPresetName: FormControl<string>;
+}
 
 @Component({
   selector: "app-mod-preset-add-dialog",
@@ -25,18 +29,18 @@ import { MatButton } from "@angular/material/button";
     MatButton,
     MatDialogClose
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./mod-preset-add-dialog.component.scss"]
 })
 export class ModPresetAddDialogComponent {
-  form: FormGroup;
+  form: FormGroup<ModPresetFormControls>;
 
   constructor(
     private dialogRef: MatDialogRef<ModPresetAddDialogComponent>,
     formBuilder: FormBuilder
   ) {
-    this.form = formBuilder.group({
-      modPresetName: ["", [Validators.required]]
+    this.form = formBuilder.group<ModPresetFormControls>({
+      modPresetName: formBuilder.nonNullable.control("", [Validators.required])
     });
   }
 
@@ -47,7 +51,7 @@ export class ModPresetAddDialogComponent {
   }
 
   prepareDialogResult() {
-    return { create: true, modPresetName: this.form.get("modPresetName")?.value as string };
+    return { create: true, modPresetName: this.form.controls.modPresetName.value };
   }
 
   closeDialog() {
@@ -55,9 +59,5 @@ export class ModPresetAddDialogComponent {
     if (this.form.valid) {
       this.dialogRef.close(this.prepareDialogResult());
     }
-  }
-
-  hasFormError(formControlName: string, errorType: string) {
-    return this.form.get(formControlName)?.hasError(errorType);
   }
 }

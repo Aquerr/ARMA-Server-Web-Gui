@@ -12,7 +12,7 @@ import { MatButton } from "@angular/material/button";
     MatButton,
     MatDialogClose
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./mod-force-update-confirm-dialog.component.scss"]
 })
 export class ModForceUpdateConfirmDialogComponent {}

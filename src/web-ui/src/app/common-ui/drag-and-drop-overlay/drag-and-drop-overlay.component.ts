@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy } from "@angular/core";
   selector: "app-drag-and-drop-overlay",
   templateUrl: "./drag-and-drop-overlay.component.html",
   styleUrls: ["./drag-and-drop-overlay.component.scss"],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true
 })
 export class DragDropOverlay {}

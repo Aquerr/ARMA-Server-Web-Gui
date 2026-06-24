@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
-import { ThemeService } from "./service/util/theme.service";
-import { ApplicationService } from "./service/application.service";
-import { IconRegistrarService } from "./service/icon-registrar.service";
+import { ThemeService } from "@service/util/theme.service";
+import { ApplicationService } from "@service/application.service";
+import { IconRegistrarService } from "@service/icon-registrar.service";
 import { RouterOutlet } from "@angular/router";
 import { MatListModule } from "@angular/material/list";
 import { MatRippleModule } from "@angular/material/core";
@@ -35,7 +35,7 @@ import { NgTemplateOutlet } from "@angular/common";
   host: {
     "(window:resize)": "isMobileView()"
   },
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatListModule,
     MatRippleModule,

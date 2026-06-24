@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ChangeDetectionStrategy } from "@angular/core";
+import { Component, ChangeDetectionStrategy, output } from "@angular/core";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatIcon } from "@angular/material/icon";
 import { MatMiniFabButton } from "@angular/material/button";
@@ -11,11 +11,11 @@ import { MatMiniFabButton } from "@angular/material/button";
     MatIcon,
     MatMiniFabButton
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./mod-upload-button.component.scss"]
 })
 export class ModUploadButtonComponent {
-  @Output() fileSelected: EventEmitter<File> = new EventEmitter<File>();
+  public readonly fileSelected = output<File>();
 
   onFileSelected(event: Event) {
     const target = event.target as HTMLInputElement;

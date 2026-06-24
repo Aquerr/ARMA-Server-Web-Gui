@@ -23,7 +23,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     MatError,
     MatTooltip
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./motd-list.component.scss"]
 })
 export class MotdListComponent {

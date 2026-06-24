@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
-import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
-import { NotificationService } from "../../service/notification.service";
-import { ServerLoggingService } from "../../service/server-logging.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { NotificationService } from "@service/notification.service";
+import { ServerLoggingService } from "@service/server-logging.service";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { FormsModule } from "@angular/forms";
 import { MatButton } from "@angular/material/button";
@@ -16,7 +16,7 @@ import { MatButton } from "@angular/material/button";
     MatButton,
     MatInput
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./logging.component.scss"]
 })
 export class LoggingComponent implements OnInit {

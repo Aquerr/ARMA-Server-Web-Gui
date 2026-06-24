@@ -1,12 +1,12 @@
-import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output, ChangeDetectionStrategy } from "@angular/core";
-import { CommandListItem } from "./vote-cmd-list-item.model";
+import { Component, OnInit, ChangeDetectionStrategy, input, output } from "@angular/core";
 import { MatCard, MatCardContent } from "@angular/material/card";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
+import { VoteCmdFormGroupWrapperControls } from "@app/tabs/security/security-form.service";
 
 @Component({
   selector: "app-vote-cmd-list-item",
@@ -25,45 +25,18 @@ import { MatIconButton } from "@angular/material/button";
     MatIconButton,
     ReactiveFormsModule
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: "./vote-cmd-list-item.component.scss"
 })
 export class VoteCmdListItemComponent implements OnInit {
-  @Input() item!: CommandListItem;
-  @Output() deleted: EventEmitter<void> = new EventEmitter<void>();
-
-  private changeDetectorRef = inject(ChangeDetectorRef);
-
-  form: FormGroup<{
-    command: FormGroup<{
-      name: FormControl<string>;
-      allowedPreMission: FormControl<boolean>;
-      allowedPostMission: FormControl<boolean>;
-      votingThreshold: FormControl<number>;
-      percentageSideVotingThreshold: FormControl<number>;
-    }>;
-    editing: FormControl<boolean>;
-  }>;
-
-  constructor(private fb: FormBuilder) {
-    this.form = this.fb.nonNullable.group({
-      command: this.fb.nonNullable.group({
-        name: this.fb.nonNullable.control("undefined"),
-        allowedPreMission: this.fb.nonNullable.control<boolean>(false),
-        allowedPostMission: this.fb.nonNullable.control<boolean>(false),
-        votingThreshold: this.fb.nonNullable.control<number>(0),
-        percentageSideVotingThreshold: this.fb.nonNullable.control<number>(0)
-      }),
-      editing: this.fb.nonNullable.control<boolean>(false)
-    });
-  }
+  public readonly voteCmdFormGroup = input.required<FormGroup<VoteCmdFormGroupWrapperControls>>();
+  public readonly deleted = output<void>();
 
   ngOnInit() {
-    this.form.patchValue(this.item);
-    if (this.item.editing) {
-      this.form.controls.command.enable();
+    if (this.voteCmdFormGroup().value.editing) {
+      this.voteCmdFormGroup().controls.command.enable();
     } else {
-      this.form.controls.command.disable();
+      this.voteCmdFormGroup().controls.command.disable();
     }
   }
 
@@ -72,17 +45,18 @@ export class VoteCmdListItemComponent implements OnInit {
   }
 
   doubleClick() {
-    this.form.controls.editing.patchValue(!this.form.controls.editing.value);
+    this.voteCmdFormGroup().controls.editing.patchValue(!this.voteCmdFormGroup().controls.editing.value);
 
-    if (this.form.controls.editing.value) {
-      this.form.controls.command.enable();
+    if (this.voteCmdFormGroup().controls.editing.value) {
+      this.voteCmdFormGroup().controls.command.enable();
     } else {
-      this.form.controls.command.disable();
+      this.voteCmdFormGroup().controls.command.disable();
     }
   }
 
   onEnter() {
-    if (this.form.controls.editing.value) {
+    console.log(this.voteCmdFormGroup().value);
+    if (this.voteCmdFormGroup().controls.editing.value) {
       this.doubleClick();
     }
   }

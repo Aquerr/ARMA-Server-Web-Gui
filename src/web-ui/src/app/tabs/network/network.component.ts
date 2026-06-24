@@ -24,7 +24,7 @@ import { stripToDecimals, stripToDigits } from "@app/util/form/form.utils";
     MatInput,
     MatButton
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./network.component.scss"]
 })
 export class NetworkComponent implements OnInit {

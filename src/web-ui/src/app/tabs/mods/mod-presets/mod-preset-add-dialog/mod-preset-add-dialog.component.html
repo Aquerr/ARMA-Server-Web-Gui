@@ -9,11 +9,9 @@
         type="text"
         (keydown)="onEnterClick($event)"
         />
-      @if (hasFormError('modPresetName', 'required')) {
-        <mat-error
-          >This field is required</mat-error
-          >
-        }
+      @if (form.controls.modPresetName.errors?.['required']) {
+        <mat-error>This field is required</mat-error>
+      }
       </mat-form-field>
     </form>
   </div>

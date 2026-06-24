@@ -1,7 +1,7 @@
 <mat-card (dblclick)="doubleClick()" class="vote-cmd-list-item">
-  <mat-card-content [formGroup]="form">
+  <mat-card-content [formGroup]="voteCmdFormGroup()">
     <div class="">
-      <form [formGroup]="form.controls.command" [matTooltip]="form.controls.editing.value ? 'Double-click to lock' : 'Double-click to edit'">
+      <form [formGroup]="voteCmdFormGroup().controls.command" [matTooltip]="voteCmdFormGroup().controls.editing.value ? 'Double-click to lock' : 'Double-click to edit'">
         <mat-form-field>
           <mat-label>Name</mat-label>
           <input (keydown.enter)="onEnter()" formControlName="name" matInput />
@@ -29,7 +29,7 @@
           <input (keydown.enter)="onEnter()" formControlName="percentageSideVotingThreshold" matInput />
         </mat-form-field>
       </form>
-      @if (form.controls.editing.value) {
+      @if (voteCmdFormGroup().controls.editing.value) {
         <div class="text-center">
           <button mat-icon-button (click)="deleteClick()">
             <mat-icon>delete</mat-icon>

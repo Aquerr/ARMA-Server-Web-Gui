@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { AuthService } from "../service/auth.service";
+import { AuthService } from "@service/auth.service";
 import { Router } from "@angular/router";
-import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatButton } from "@angular/material/button";
@@ -17,7 +17,7 @@ import { MatButton } from "@angular/material/button";
     MatInput,
     MatButton
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./login.component.scss"]
 })
 export class LoginComponent {

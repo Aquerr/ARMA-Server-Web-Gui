@@ -27,7 +27,7 @@ export interface SaveServerSecurityRequest {
   serverCommandPassword: string;
   battleEye: boolean;
   verifySignatures: boolean;
-  allowedFilePatching: number;
+  allowedFilePatching: AllowedFilePatching;
   filePatchingIgnoredClients: string[];
   allowedLoadFileExtensions: string[];
   allowedPreprocessFileExtensions: string[];

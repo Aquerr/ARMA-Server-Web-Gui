@@ -17,13 +17,15 @@ import {
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
+import { toObservable, toSignal } from "@angular/core/rxjs-interop";
+import { startWith, switchMap } from "rxjs";
 
 @Component({
   selector: "app-aswg-chip-form-input",
   templateUrl: "./aswg-chip-form-input.component.html",
   styleUrl: "./aswg-chip-form-input.component.scss",
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatAutocompleteTrigger,
     MatAutocomplete,
@@ -49,6 +51,15 @@ export class AswgChipFormInputComponent {
   public readonly sort: InputSignal<(a: string, b: string) => number> = input((a, b) => a?.localeCompare(b));
   public readonly availableOptions: InputSignal<string[]> = input<string[]>([]);
 
+  protected readonly entries = toSignal(
+    toObservable(this.control).pipe(
+      switchMap((control) => control.valueChanges.pipe(
+        startWith(control.value)
+      ))
+    ),
+    { initialValue: [] as string[] }
+  );
+
   protected currentValue = model("");
   protected availableOptionsFiltered = computed(() => {
     const unusedOptions = this.availableOptions().filter((item) => {
@@ -62,7 +73,7 @@ export class AswgChipFormInputComponent {
   });
 
   getEntries(): string[] {
-    return this.control().value?.sort(this.sort());
+    return this.entries()?.sort(this.sort());
   }
 
   addEntry(event: MatChipInputEvent) {

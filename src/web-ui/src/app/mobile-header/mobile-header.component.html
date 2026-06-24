@@ -21,7 +21,7 @@
     <div class="mobile-side-menu">
       <app-side-menu
         [isMobile]="true"
-        [darkMode]="darkMode"
+        [darkMode]="darkMode()"
         (routerLinkClickEmitter)="closeSideMenu()"
         (changeThemeEmit)="changeTheme()"
       ></app-side-menu>

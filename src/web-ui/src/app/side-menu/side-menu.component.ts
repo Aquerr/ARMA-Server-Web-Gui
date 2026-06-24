@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
 import { WorkshopService } from "@service/workshop.service";
 import { AuthService } from "@service/auth.service";
 import { Router } from "@angular/router";
@@ -22,24 +22,17 @@ import { MatTooltip } from "@angular/material/tooltip";
     NgClass,
     MatTooltip
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./side-menu.component.scss"]
 })
 export class SideMenuComponent {
-  @Input()
-  isMobile = false;
+  public readonly isMobile = input<boolean>(false);
+  public readonly darkMode = input<boolean>(true);
+  public readonly routerLinkClickEmitter = output<string>();
+  public readonly changeThemeEmit = output<void>();
 
-  @Input()
-  darkMode: boolean = true;
-
-  @Output()
-  routerLinkClickEmitter = new EventEmitter<string>();
-
-  @Output()
-  changeThemeEmit = new EventEmitter<void>();
-
-  isWorkshopActive: boolean = false;
-  routePreCheck = new Map<string, (routerLink: string) => Observable<boolean>>();
+  protected isWorkshopActive: boolean = false;
+  protected routePreCheck = new Map<string, (routerLink: string) => Observable<boolean>>();
 
   constructor(
     private router: Router,

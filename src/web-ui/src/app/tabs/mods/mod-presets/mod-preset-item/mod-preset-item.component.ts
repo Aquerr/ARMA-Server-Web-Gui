@@ -9,7 +9,7 @@ import { MatIcon } from "@angular/material/icon";
     MatIconButton,
     MatIcon
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./mod-preset-item.component.scss"]
 })
 export class ModPresetItemComponent {

@@ -1,10 +1,23 @@
 import { Injectable } from "@angular/core";
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import {
   AllowedFilePatching,
   GetServerSecurityResponse
 } from "@service/server-security.service";
-import { CommandListItem } from "./vote-cmds-list/vote-cmd-list-item/vote-cmd-list-item.model";
+import { VoteCmd } from "@model/vote-cmd.model";
+
+export interface VoteCmdFormGroupControls {
+  name: FormControl<string>;
+  allowedPreMission: FormControl<boolean>;
+  allowedPostMission: FormControl<boolean>;
+  votingThreshold: FormControl<number>;
+  percentageSideVotingThreshold: FormControl<number>;
+}
+
+export interface VoteCmdFormGroupWrapperControls {
+  command: FormGroup<VoteCmdFormGroupControls>;
+  editing: FormControl<boolean>;
+}
 
 export interface SecurityFormControls {
   serverPassword: FormControl<string>;
@@ -18,7 +31,7 @@ export interface SecurityFormControls {
   allowedPreprocessFileExtensions: FormControl<string[]>;
   allowedHTMLLoadExtensions: FormControl<string[]>;
   adminUUIDs: FormControl<string[]>;
-  allowedVoteCmds: FormControl<CommandListItem[]>;
+  allowedVoteCmds: FormArray<FormGroup<VoteCmdFormGroupWrapperControls>>;
   kickDuplicate: FormControl<boolean>;
   voteThreshold: FormControl<string>;
   voteMissionPlayers: FormControl<number>;
@@ -43,7 +56,7 @@ export class SecurityFormService {
       allowedPreprocessFileExtensions: this.fb.nonNullable.control<string[]>([]),
       allowedHTMLLoadExtensions: this.fb.nonNullable.control<string[]>([]),
       adminUUIDs: this.fb.nonNullable.control<string[]>([]),
-      allowedVoteCmds: this.fb.nonNullable.control<CommandListItem[]>([]),
+      allowedVoteCmds: this.fb.nonNullable.array<FormGroup<VoteCmdFormGroupWrapperControls>>([]),
       kickDuplicate: [false, [Validators.required]],
       voteThreshold: ["0.5", [Validators.required]],
       voteMissionPlayers: [1, [Validators.required]]
@@ -51,92 +64,74 @@ export class SecurityFormService {
   }
 
   setForm(form: FormGroup<SecurityFormControls>, data: GetServerSecurityResponse) {
-    form.controls.serverPassword.patchValue(data.serverPassword);
-    form.controls.serverAdminPassword.patchValue(data.serverAdminPassword);
-    form.controls.serverCommandPassword.patchValue(data.serverCommandPassword);
-    form.controls.battleEye.patchValue(data.battleEye);
-    form.controls.verifySignatures.patchValue(data.verifySignatures);
-    form.controls.allowedFilePatching.patchValue(data.allowedFilePatching);
-    form.controls.filePatchingIgnoredClients.patchValue(data.filePatchingIgnoredClients);
-    form.controls.allowedLoadFileExtensions.patchValue(data.allowedLoadFileExtensions);
-    form.controls.allowedPreprocessFileExtensions.patchValue(data.allowedPreprocessFileExtensions);
-    form.controls.allowedHTMLLoadExtensions.patchValue(data.allowedHTMLLoadExtensions);
-    form.controls.adminUUIDs.patchValue(data.adminUUIDs);
-    form.controls.allowedVoteCmds.patchValue(data.allowedVoteCmds.map((voteCmd) => new CommandListItem(voteCmd)));
-    form.controls.kickDuplicate.patchValue(data.kickDuplicate);
-    form.controls.voteThreshold.patchValue(data.voteThreshold);
-    form.controls.voteMissionPlayers.patchValue(data.voteMissionPlayers);
+    form.patchValue({
+      serverPassword: data.serverPassword,
+      serverAdminPassword: data.serverAdminPassword,
+      serverCommandPassword: data.serverCommandPassword,
+      battleEye: data.battleEye,
+      verifySignatures: data.verifySignatures,
+      allowedFilePatching: data.allowedFilePatching,
+      filePatchingIgnoredClients: data.filePatchingIgnoredClients,
+      allowedLoadFileExtensions: data.allowedLoadFileExtensions,
+      allowedPreprocessFileExtensions: data.allowedPreprocessFileExtensions,
+      allowedHTMLLoadExtensions: data.allowedHTMLLoadExtensions,
+      adminUUIDs: data.adminUUIDs,
+      kickDuplicate: data.kickDuplicate,
+      voteThreshold: data.voteThreshold,
+      voteMissionPlayers: data.voteMissionPlayers
+    });
+
+    form.controls.allowedVoteCmds.clear();
+    data.allowedVoteCmds.map((voteCmd) => {
+      return {
+        command: voteCmd,
+        editing: false
+      };
+    }).forEach((voteCmd) => {
+      const formGroup = this.fb.group<VoteCmdFormGroupWrapperControls>({
+        command: this.fb.nonNullable.group({
+          name: this.fb.nonNullable.control("undefined"),
+          allowedPreMission: this.fb.nonNullable.control<boolean>(false),
+          allowedPostMission: this.fb.nonNullable.control<boolean>(false),
+          votingThreshold: this.fb.nonNullable.control<number>(0),
+          percentageSideVotingThreshold: this.fb.nonNullable.control<number>(0)
+        }),
+        editing: this.fb.nonNullable.control(false)
+      });
+      formGroup.setValue(voteCmd);
+      form.controls.allowedVoteCmds.push(formGroup);
+    });
+
+    form.updateValueAndValidity();
   }
 
   get(form: FormGroup<SecurityFormControls>) {
+    const formValue = form.getRawValue();
+
     return {
-      serverPassword: this.getServerPasswordControl(form).value,
-      serverAdminPassword: this.getServerAdminPasswordControl(form).value,
-      serverCommandPassword: this.getServerCommandPasswordControl(form).value,
-      battleEye: this.getBattleEyeControl(form).value,
-      verifySignatures: this.getVerifySignaturesControl(form).value,
-      allowedFilePatching: this.getAllowedFilePatchingControl(form).value,
-      filePatchingIgnoredClients: this.getFilePatchingIgnoredClientsControl(form).value,
-      allowedLoadFileExtensions: this.getAllowedLoadFileExtensionsControl(form).value,
-      allowedPreprocessFileExtensions: form.controls.allowedPreprocessFileExtensions.value,
-      allowedHTMLLoadExtensions: form.controls.allowedHTMLLoadExtensions.value,
-      adminUUIDs: this.getAdminUUIDsControl(form).value,
-      allowedVoteCmds: form.controls.allowedVoteCmds.value.map((commandListItem) => commandListItem.command),
-      kickDuplicate: this.getKickDuplicateControl(form).value,
-      voteThreshold: this.getVoteThresholdControl(form).value,
-      voteMissionPlayers: this.getVoteMissionPlayersControl(form).value
+      serverPassword: formValue.serverPassword,
+      serverAdminPassword: formValue.serverAdminPassword,
+      serverCommandPassword: formValue.serverCommandPassword,
+      battleEye: formValue.battleEye,
+      verifySignatures: formValue.verifySignatures,
+      allowedFilePatching: formValue.allowedFilePatching,
+      filePatchingIgnoredClients: formValue.filePatchingIgnoredClients,
+      allowedLoadFileExtensions: formValue.allowedLoadFileExtensions,
+      allowedPreprocessFileExtensions: formValue.allowedPreprocessFileExtensions,
+      allowedHTMLLoadExtensions: formValue.allowedHTMLLoadExtensions,
+      adminUUIDs: formValue.adminUUIDs,
+      allowedVoteCmds: formValue.allowedVoteCmds.map((item) => item.command).map((command) => {
+        return {
+          name: command.name,
+          allowedPreMission: command.allowedPreMission,
+          allowedPostMission: command.allowedPostMission,
+          votingThreshold: command.votingThreshold,
+          percentageSideVotingThreshold: command.percentageSideVotingThreshold
+        } satisfies VoteCmd;
+      }),
+      kickDuplicate: formValue.kickDuplicate,
+      voteThreshold: formValue.voteThreshold,
+      voteMissionPlayers: formValue.voteMissionPlayers
     };
-  }
-
-  getServerPasswordControl(form: FormGroup) {
-    return this.getControl(form, "serverPassword") as AbstractControl<string>;
-  }
-
-  getServerAdminPasswordControl(form: FormGroup) {
-    return this.getControl(form, "serverAdminPassword") as AbstractControl<string>;
-  }
-
-  getServerCommandPasswordControl(form: FormGroup) {
-    return this.getControl(form, "serverCommandPassword") as AbstractControl<string>;
-  }
-
-  getBattleEyeControl(form: FormGroup) {
-    return this.getControl(form, "battleEye") as AbstractControl<boolean>;
-  }
-
-  getVerifySignaturesControl(form: FormGroup) {
-    return this.getControl(form, "verifySignatures") as AbstractControl<boolean>;
-  }
-
-  getAllowedFilePatchingControl(form: FormGroup) {
-    return this.getControl(form, "allowedFilePatching") as AbstractControl<number>;
-  }
-
-  getFilePatchingIgnoredClientsControl(form: FormGroup) {
-    return this.getControl(form, "filePatchingIgnoredClients") as AbstractControl<string[]>;
-  }
-
-  getAllowedLoadFileExtensionsControl(form: FormGroup) {
-    return this.getControl(form, "allowedLoadFileExtensions") as AbstractControl<string[]>;
-  }
-
-  getAdminUUIDsControl(form: FormGroup) {
-    return this.getControl(form, "adminUUIDs") as AbstractControl<string[]>;
-  }
-
-  getKickDuplicateControl(form: FormGroup) {
-    return this.getControl(form, "kickDuplicate") as AbstractControl<boolean>;
-  }
-
-  getVoteThresholdControl(form: FormGroup) {
-    return this.getControl(form, "voteThreshold") as AbstractControl<string>;
-  }
-
-  getVoteMissionPlayersControl(form: FormGroup) {
-    return this.getControl(form, "voteMissionPlayers") as AbstractControl<number>;
-  }
-
-  private getControl(form: FormGroup, controlName: string) {
-    return form.get(controlName)!;
   }
 }

@@ -7,7 +7,7 @@ import {
   MatDialogContent,
   MatDialogTitle
 } from "@angular/material/dialog";
-import { ModDependency } from "../../../service/workshop.service";
+import { ModDependency } from "@service/workshop.service";
 
 @Component({
   selector: "app-workshop-install-dependencies-dialog",
@@ -19,7 +19,7 @@ import { ModDependency } from "../../../service/workshop.service";
     MatDialogContent,
     MatDialogTitle
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./workshop-install-dependencies-dialog.component.css"]
 })
 export class WorkshopInstallDependenciesDialogComponent {

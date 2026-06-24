@@ -1,8 +1,8 @@
 <mat-accordion>
   <mat-expansion-panel class="mod-settings-panel" (opened)="onOpen()">
-    <mat-expansion-panel-header [ngClass]="getActive() ? 'mod-settings-active' : ''">
+    <mat-expansion-panel-header [ngClass]="form.controls.active.value ? 'mod-settings-active' : ''">
       <mat-panel-title>
-        {{ getName() }}
+        {{ form.controls.name.value }}
       </mat-panel-title>
       <div class="text-center">
         <button mat-icon-button (click)="deleteClick($event)">
@@ -11,7 +11,7 @@
       </div>
       <mat-panel-description>
         <button mat-stroked-button class="active-button" (click)="toggleActive($event)">
-          Active: {{ getActive() }}
+          Active: {{ form.controls.active.value }}
         </button>
       </mat-panel-description>
     </mat-expansion-panel-header>
@@ -22,7 +22,7 @@
           <mat-form-field>
             <mat-label>Name</mat-label>
             <input matInput formControlName="name" type="text" />
-            @if (this.form.get('name')?.hasError("required")) {
+            @if (this.form.controls.name.hasError("required")) {
               <mat-error>Name is required</mat-error>
             }
           </mat-form-field>

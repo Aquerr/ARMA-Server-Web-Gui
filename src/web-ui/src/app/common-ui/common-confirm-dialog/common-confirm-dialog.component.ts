@@ -18,7 +18,7 @@ import { MatButton } from "@angular/material/button";
     MatButton,
     MatDialogClose
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: "./common-confirm-dialog.component.scss"
 })
 export class CommonConfirmDialogComponent {

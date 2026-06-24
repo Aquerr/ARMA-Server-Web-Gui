@@ -5,16 +5,16 @@ import { MatTooltip } from "@angular/material/tooltip";
 import {
   MissionDeleteConfirmDialogComponent
 } from "../mission-delete-confirm-dialog/mission-delete-confirm-dialog.component";
-import { Mission } from "../../../model/mission.model";
+import { Mission } from "@model/mission.model";
 import { MissionModifyDialogComponent } from "../mission-modify-dialog/mission-modify-dialog.component";
-import { DialogService } from "../../../service/dialog.service";
-import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
-import { NotificationService } from "../../../service/notification.service";
-import { ServerMissionsService } from "../../../service/server-missions.service";
-import { FilesizePipe } from "../../../util/pipe/filesize.pipe";
+import { DialogService } from "@service/dialog.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { NotificationService } from "@service/notification.service";
+import { ServerMissionsService } from "@service/server-missions.service";
+import { FilesizePipe } from "@app/util/pipe/filesize.pipe";
 import { HttpResponse } from "@angular/common/http";
-import { PermissionService } from "../../../service/permission.service";
-import { AswgAuthority } from "../../../model/authority.model";
+import { PermissionService } from "@service/permission.service";
+import { AswgAuthority } from "@model/authority.model";
 
 @Component({
   selector: "app-mission-list-item",
@@ -25,7 +25,7 @@ import { AswgAuthority } from "../../../model/authority.model";
     MatTooltip,
     FilesizePipe
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./mission-list-item.component.scss"]
 })
 export class MissionListItemComponent {

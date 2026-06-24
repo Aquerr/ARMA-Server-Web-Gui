@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from "@angular/core";
-import { AuthService } from "../service/auth.service";
+import { Component, ChangeDetectionStrategy, input, output, inject } from "@angular/core";
+import { AuthService } from "@service/auth.service";
 import { MatIcon } from "@angular/material/icon";
 import { SideMenuComponent } from "../side-menu/side-menu.component";
 import { RouterLink } from "@angular/router";
@@ -12,19 +12,16 @@ import { RouterLink } from "@angular/router";
     SideMenuComponent,
     RouterLink
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./mobile-header.component.scss"]
 })
 export class MobileHeaderComponent {
-  @Input()
-  darkMode: boolean = true;
+  public readonly darkMode = input<boolean>(true);
+  public readonly changeThemeEmit = output<void>();
 
-  @Output()
-  changeThemeEmit = new EventEmitter<void>();
+  protected sideMenuExpanded = false;
 
-  sideMenuExpanded = false;
-
-  constructor(private authService: AuthService) {}
+  private authService = inject(AuthService);
 
   toggleSideMenu() {
     this.sideMenuExpanded = !this.sideMenuExpanded;

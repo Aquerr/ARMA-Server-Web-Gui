@@ -29,7 +29,6 @@ module.exports = defineConfig([
     ],
     processor: angular.processInlineTemplates,
     rules: {
-      "@angular-eslint/prefer-on-push-component-change-detection": ["off"], // Temporary
       "@angular-eslint/prefer-inject": ["off"],
       "@typescript-eslint/no-inferrable-types": ["off"],
       "@angular-eslint/prefer-standalone": ["warn"],

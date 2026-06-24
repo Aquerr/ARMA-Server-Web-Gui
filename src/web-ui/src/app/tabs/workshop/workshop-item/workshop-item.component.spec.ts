@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { WorkshopItemComponent } from "./workshop-item.component";
-import { WorkshopMod } from "../../../model/workshop.model";
+import { inputBinding } from "@angular/core";
 
 describe("WorkshopItemComponent", () => {
   let component: WorkshopItemComponent;
@@ -12,9 +12,14 @@ describe("WorkshopItemComponent", () => {
       imports: [WorkshopItemComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(WorkshopItemComponent);
+    fixture = TestBed.createComponent(WorkshopItemComponent, {
+      bindings: [
+        inputBinding("workshopMod", () => {
+          return {};
+        })
+      ]
+    });
     component = fixture.componentInstance;
-    component.workshopMod = {} as WorkshopMod;
     fixture.detectChanges();
   });
 

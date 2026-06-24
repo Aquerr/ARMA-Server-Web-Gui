@@ -1,12 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
-import { AllowedFilePatching, ServerSecurityService } from "../../service/server-security.service";
-import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
-import { NotificationService } from "../../service/notification.service";
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, inject } from "@angular/core";
+import { AllowedFilePatching, ServerSecurityService } from "@service/server-security.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { NotificationService } from "@service/notification.service";
 import { SecurityFormControls, SecurityFormService } from "./security-form.service";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatError, MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatTooltip } from "@angular/material/tooltip";
-import { AswgChipFormInputComponent } from "../../common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
+import { AswgChipFormInputComponent } from "@common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { VoteCmdsListComponent } from "./vote-cmds-list/vote-cmds-list.component";
 import { MatButton } from "@angular/material/button";
@@ -27,7 +27,7 @@ import { MatButton } from "@angular/material/button";
     VoteCmdsListComponent,
     MatButton
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./security.component.scss"]
 })
 export class SecurityComponent implements OnInit {
@@ -57,6 +57,7 @@ export class SecurityComponent implements OnInit {
     if (this.form.valid) {
       this.maskService.show();
       const request = this.formService.get(this.form);
+      console.log(request);
       this.serverSecurityService.saveServerSecurity(request).subscribe({
         next: () => {
           this.maskService.hide();

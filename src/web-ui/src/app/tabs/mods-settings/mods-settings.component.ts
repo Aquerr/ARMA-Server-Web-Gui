@@ -1,9 +1,9 @@
 import { Component, QueryList, signal, ViewChildren, ChangeDetectionStrategy } from "@angular/core";
-import { ModSettings } from "../../model/mod-settings.model";
-import { ModSettingsService } from "../../service/mod-settings.service";
-import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
-import { NotificationService } from "../../service/notification.service";
-import { DialogService } from "../../service/dialog.service";
+import { ModSettings } from "@model/mod-settings.model";
+import { ModSettingsService } from "@service/mod-settings.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { NotificationService } from "@service/notification.service";
+import { DialogService } from "@service/dialog.service";
 import { ModSettingsPanelComponent } from "./mod-settings-panel/mod-settings-panel.component";
 import { MatIcon } from "@angular/material/icon";
 import { MatButton } from "@angular/material/button";
@@ -13,7 +13,7 @@ import { MatButton } from "@angular/material/button";
   templateUrl: "./mods-settings.component.html",
   styleUrl: "./mods-settings.component.scss",
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatIcon, ModSettingsPanelComponent, MatButton]
 })
 export class ModsSettingsComponent {
@@ -75,8 +75,8 @@ export class ModsSettingsComponent {
   onModSettingsActivate(modSettings: ModSettings) {
     if (modSettings.active) {
       this.modSettingPanels.forEach((panel) => {
-        if (panel.getName() != modSettings.name) {
-          panel.formService.getActiveControl(panel.form).setValue(false);
+        if (panel.form.controls.name.value != modSettings.name) {
+          panel.form.controls.active.setValue(false);
         }
       });
     }

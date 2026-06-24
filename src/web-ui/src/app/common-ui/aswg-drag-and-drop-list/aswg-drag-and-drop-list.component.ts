@@ -41,7 +41,7 @@ export interface SortOption<T> {
     MatSelect,
     MatSelectTrigger
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: "./aswg-drag-and-drop-list.component.scss"
 })
 export class AswgDragAndDropListComponent<T> implements OnInit, OnChanges {

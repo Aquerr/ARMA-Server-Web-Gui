@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ModSettingsPanelComponent } from "./mod-settings-panel.component";
-import { ModSettings } from "@model/mod-settings.model";
+import { inputBinding } from "@angular/core";
 
 describe("ModSettingsPanelComponent", () => {
   let component: ModSettingsPanelComponent;
@@ -13,9 +13,14 @@ describe("ModSettingsPanelComponent", () => {
       providers: []
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ModSettingsPanelComponent);
+    fixture = TestBed.createComponent(ModSettingsPanelComponent, {
+      bindings: [
+        inputBinding("modSettings", () => {
+          return {};
+        })
+      ]
+    });
     component = fixture.componentInstance;
-    component.modSettings = {} as ModSettings;
     fixture.detectChanges();
   });
 

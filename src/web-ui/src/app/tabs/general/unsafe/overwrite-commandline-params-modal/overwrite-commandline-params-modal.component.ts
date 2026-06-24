@@ -26,7 +26,7 @@ import { MatInput } from "@angular/material/input";
     ReactiveFormsModule
   ],
   templateUrl: "./overwrite-commandline-params-modal.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: "./overwrite-commandline-params-modal.component.scss"
 })
 export class OverwriteCommandlineParamsModalComponent {

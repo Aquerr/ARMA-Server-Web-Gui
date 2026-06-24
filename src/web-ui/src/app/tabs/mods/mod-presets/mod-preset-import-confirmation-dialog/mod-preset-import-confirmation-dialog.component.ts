@@ -8,7 +8,7 @@ import {
   MatDialogTitle
 } from "@angular/material/dialog";
 import { ReactiveFormsModule } from "@angular/forms";
-import { ModStatus } from "../../../../model/mod.model";
+import { ModStatus } from "@model/mod.model";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
 import { NgClass } from "@angular/common";
@@ -29,7 +29,7 @@ import { PresetModStatusToIconPipe } from "../preset-mod-status-to-icon.pipe";
     PresetModStatusToIconPipe
   ],
   templateUrl: "./mod-preset-import-confirmation-dialog.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: "./mod-preset-import-confirmation-dialog.component.scss"
 })
 export class ModPresetImportConfirmationDialogComponent {

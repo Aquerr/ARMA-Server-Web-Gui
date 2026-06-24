@@ -9,7 +9,7 @@ import { RouterLink } from "@angular/router";
     MatIcon,
     RouterLink
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./settings.component.scss"]
 })
 export class SettingsComponent {}

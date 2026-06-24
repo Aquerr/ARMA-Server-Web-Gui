@@ -1,6 +1,6 @@
 <div class="vote-cmd-list">
-  @for (item of control?.value; track item.command.name; let index = $index) {
-    <app-vote-cmd-list-item [item]="item" (deleted)="deleteItem(index)"></app-vote-cmd-list-item>
+  @for (item of control().controls; track item; let index = $index) {
+    <app-vote-cmd-list-item [voteCmdFormGroup]="item" (deleted)="deleteItem(index)"></app-vote-cmd-list-item>
   }
   <div class="vote-cmd-add-new">
     <button mat-icon-button color="primary" (click)="addNewCommand()">

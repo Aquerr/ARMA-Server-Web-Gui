@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from "@angular/core";
-import { MissionParam } from "../../../../model/mission.model";
+import { MissionParam } from "@model/mission.model";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
@@ -16,7 +16,7 @@ import { FormsModule } from "@angular/forms";
     MatIconButton,
     FormsModule
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./mission-parameter.component.scss"]
 })
 export class MissionParameterComponent {

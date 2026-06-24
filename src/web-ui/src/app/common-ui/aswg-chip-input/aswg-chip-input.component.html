@@ -1,7 +1,7 @@
-<mat-form-field style="width: 100%" [matTooltip]="toolTipText" matTooltipPosition="right">
-  <mat-label>{{ labelText }}</mat-label>
+<mat-form-field style="width: 100%" [matTooltip]="toolTipText()" matTooltipPosition="right">
+  <mat-label>{{ labelText() }}</mat-label>
   <mat-chip-grid #chipGrid>
-    @for (item of list; track item) {
+    @for (item of list(); track item) {
       <mat-chip-row
         [editable]="true"
         (edited)="editEntry(item, $event)"

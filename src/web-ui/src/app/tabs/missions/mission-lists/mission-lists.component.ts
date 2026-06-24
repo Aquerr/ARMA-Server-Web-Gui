@@ -28,7 +28,7 @@ import { AswgDragAndDropListComponent } from "@common-ui/aswg-drag-and-drop-list
     MissionListItemComponent,
     AswgDragAndDropListComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./mission-lists.component.scss"]
 })
 export class MissionListsComponent implements OnInit, OnDestroy {

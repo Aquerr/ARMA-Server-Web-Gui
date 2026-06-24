@@ -12,7 +12,7 @@ import { MatIcon } from "@angular/material/icon";
     MatMiniFabButton,
     MatIcon
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./mission-upload-button.component.scss"]
 })
 export class MissionUploadButtonComponent {

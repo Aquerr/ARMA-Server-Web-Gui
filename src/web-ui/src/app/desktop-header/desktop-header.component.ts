@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from "@angular/core";
-import { AuthService } from "../service/auth.service";
+import { Component, ChangeDetectionStrategy, input, output, inject } from "@angular/core";
+import { AuthService } from "@service/auth.service";
 import { Router, RouterLink } from "@angular/router";
 import { take, tap } from "rxjs";
 import { MatIconButton } from "@angular/material/button";
@@ -15,23 +15,16 @@ import { MatTooltip } from "@angular/material/tooltip";
     MatIcon,
     MatTooltip
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./desktop-header.component.scss"]
 })
 export class DesktopHeaderComponent {
-  @Input()
-  darkMode: boolean = true;
+  public readonly darkMode = input<boolean>(true);
+  public readonly changeThemeEmit = output<void>();
+  public readonly routerLinkClickEmitter = output<string>();
 
-  @Output()
-  changeThemeEmit = new EventEmitter<void>();
-
-  @Output()
-  routerLinkClickEmitter = new EventEmitter<string>();
-
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   logout() {
     this.authService

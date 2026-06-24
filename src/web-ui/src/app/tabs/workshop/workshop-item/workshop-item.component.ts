@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from "@angular/core";
-import { WorkshopMod } from "../../../model/workshop.model";
-import { ModDependencyStatus, WorkshopService } from "../../../service/workshop.service";
-import { ServerModsService } from "../../../service/server-mods.service";
-import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
+import { Component, OnInit, ChangeDetectionStrategy, input, output } from "@angular/core";
+import { WorkshopMod } from "@model/workshop.model";
+import { ModDependencyStatus, WorkshopService } from "@service/workshop.service";
+import { ServerModsService } from "@service/server-mods.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 import { MatButton } from "@angular/material/button";
-import { DialogService } from "../../../service/dialog.service";
+import { DialogService } from "@service/dialog.service";
 import {
   WorkshopInstallDependenciesDialogComponent
 } from "../workshop-install-dependencies-dialog/workshop-install-dependencies-dialog.component";
@@ -15,13 +15,13 @@ import {
   imports: [
     MatButton
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./workshop-item.component.scss"]
 })
 export class WorkshopItemComponent implements OnInit {
-  @Input() workshopMod!: WorkshopMod;
-  @Input() canInstall: boolean = false;
-  @Output() modInstallDelete = new EventEmitter<void>();
+  public readonly workshopMod = input.required<WorkshopMod>();
+  public readonly canInstall = input<boolean>(false);
+  public readonly modInstallDelete = output<void>();
 
   spinnerColor: string = "";
 

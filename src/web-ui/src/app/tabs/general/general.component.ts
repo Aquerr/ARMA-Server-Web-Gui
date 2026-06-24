@@ -23,7 +23,7 @@ import { digitsOnly, stripToDigits } from "@app/util/form/form.utils";
   selector: "app-general",
   templateUrl: "./general.component.html",
   styleUrls: ["./general.component.scss"],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatFormField, MatLabel, FormsModule, MatInput, MatTooltip, MatSelect, MatOption, MotdListComponent, MatButton, ReactiveFormsModule, AswgChipFormInputComponent, MatError]
 })
 export class GeneralComponent implements AfterViewInit {

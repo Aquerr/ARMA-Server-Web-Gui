@@ -45,18 +45,13 @@
       <mat-icon [fontIcon]="'description'"></mat-icon>
     </mat-list-item>
     <mat-divider></mat-divider>
-    @if (isMobile) {
+    @if (isMobile()) {
       <mat-list-item class="aswg-list-item" (click)="changeTheme()">
         <span>Change theme</span>
-        @if (!darkMode) {
-          <mat-icon class="theme-icon" matTooltip="Change theme"
-          >nightlight
-          </mat-icon>
-        }
-        @if (darkMode) {
-          <mat-icon class="theme-icon" matTooltip="Change theme"
-          >light_mode
-          </mat-icon>
+        @if (!darkMode()) {
+          <mat-icon class="theme-icon" matTooltip="Change theme">nightlight</mat-icon>
+        } @else if (darkMode()) {
+          <mat-icon class="theme-icon" matTooltip="Change theme">light_mode</mat-icon>
         }
       </mat-list-item>
     }
@@ -64,7 +59,7 @@
       <span>Settings</span>
       <mat-icon [fontIcon]="'settings'"></mat-icon>
     </mat-list-item>
-    @if (isMobile) {
+    @if (isMobile()) {
       <mat-divider></mat-divider>
       @if (isAuthenticated()) {
         <mat-list-item class="aswg-list-item" (click)="logout()">
