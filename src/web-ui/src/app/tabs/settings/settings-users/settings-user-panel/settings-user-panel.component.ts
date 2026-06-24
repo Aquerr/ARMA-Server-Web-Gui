@@ -1,12 +1,20 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
-import { AswgUser } from "../../../../service/users.service";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  InputSignal,
+  OnInit,
+  output
+} from "@angular/core";
+import { AswgUser } from "@service/users.service";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { EditUserFormService } from "./edit-user-form.service";
-import { AswgAuthority } from "../../../../model/authority.model";
-import { DialogService } from "../../../../service/dialog.service";
+import { EditUserFormService, UserEditFormControls } from "./edit-user-form.service";
+import { AswgAuthority } from "@model/authority.model";
+import { DialogService } from "@service/dialog.service";
 import {
   PasswordChangeDialogComponent
-} from "../../../../common-ui/password-change-dialog/password-change-dialog.component";
+} from "@common-ui/password-change-dialog/password-change-dialog.component";
 import {
   MatAccordion,
   MatExpansionPanel,
@@ -16,7 +24,7 @@ import {
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatIcon } from "@angular/material/icon";
 import { MatOption, MatSelect } from "@angular/material/select";
-import { AswgChipFormInputComponent } from "../../../../common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
+import { AswgChipFormInputComponent } from "@common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
 import { MatInput } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { DatePipe } from "@angular/common";
@@ -49,26 +57,20 @@ export class SettingsUserPanelComponent implements OnInit {
   formService: EditUserFormService = inject(EditUserFormService);
   dialogService: DialogService = inject(DialogService);
 
-  @Input({ required: true })
-  user!: AswgUser;
+  public user: InputSignal<AswgUser> = input.required();
 
-  @Output()
-  deleted = new EventEmitter<number | null>();
+  public deleted = output<number | null>();
+  public saved = output<AswgUser>();
+  public passwordSaved = output<{ userId: number; password: string }>();
 
-  @Output()
-  saved = new EventEmitter<AswgUser>();
-
-  @Output()
-  passwordSaved = new EventEmitter<{ userId: number; password: string }>();
-
-  public form!: FormGroup;
+  public form: FormGroup<UserEditFormControls>;
 
   constructor() {
     this.form = this.formService.getForm();
   }
 
   ngOnInit(): void {
-    this.formService.setForm(this.form, this.user);
+    this.formService.setForm(this.form, this.user());
   }
 
   save(): void {
@@ -79,7 +81,7 @@ export class SettingsUserPanelComponent implements OnInit {
   }
 
   delete() {
-    this.deleted.emit(this.user.id);
+    this.deleted.emit(this.user().id);
   }
 
   prepareAuthorities() {
@@ -89,7 +91,7 @@ export class SettingsUserPanelComponent implements OnInit {
   showEditPasswordModal() {
     this.dialogService.open(PasswordChangeDialogComponent, (newPassword: string) => {
       if (newPassword) {
-        this.passwordSaved.emit({ userId: this.user.id ?? 0, password: newPassword });
+        this.passwordSaved.emit({ userId: this.user().id ?? 0, password: newPassword });
       }
     });
   }

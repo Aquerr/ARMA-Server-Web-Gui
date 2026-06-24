@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { AswgChipFormInputComponent } from "./aswg-chip-form-input.component";
 import { FormControl } from "@angular/forms";
+import { inputBinding } from "@angular/core";
 
 describe("AswgChipFormInputComponent", () => {
   let component: AswgChipFormInputComponent;
@@ -12,9 +13,13 @@ describe("AswgChipFormInputComponent", () => {
       imports: [AswgChipFormInputComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AswgChipFormInputComponent);
+    fixture = TestBed.createComponent(AswgChipFormInputComponent, {
+      bindings: [
+        inputBinding("control", () => new FormControl()),
+        inputBinding("labelText", () => "Test")
+      ]
+    });
     component = fixture.componentInstance;
-    component.control = new FormControl();
     fixture.detectChanges();
   });
 

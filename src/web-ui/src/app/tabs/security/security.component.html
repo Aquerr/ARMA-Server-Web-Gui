@@ -48,8 +48,7 @@
         style="width: 100%"
         labelText="Admins (steamID64)"
         toolTipText="Only these user ids can authenticate via #login command"
-        [control]="formService.getAdminUUIDsControl(form)"
-        [parent]="form"
+        [control]="form.controls.adminUUIDs"
       ></app-aswg-chip-form-input>
       <mat-form-field
         matTooltip="Enables/Disable BattlEye anti-cheat engine. Requires installed BattlEye on server and clients."
@@ -120,29 +119,25 @@
         style="width: 100%"
         labelText="Allowed Load File Extensions"
         toolTipText="Only allow files with listed extensions to be loaded via loadFile command. Not listing any extension means everything is allowed. Defining the setting as empty arrays means nothing is allowed."
-        [control]="formService.getAllowedLoadFileExtensionsControl(form)"
-        [parent]="form"
+        [control]="form.controls.allowedLoadFileExtensions"
       ></app-aswg-chip-form-input>
       <app-aswg-chip-form-input
         style="width: 100%"
         labelText="File Patching Ignored Clients (steamID64)"
         toolTipText="Whitelisted clients ignore the rules defined by allowedFilePatching and verifySignatures, allowing them to join the server with any mods of their choice. Signature errors are still logged by the server upon connection."
-        [control]="formService.getFilePatchingIgnoredClientsControl(form)"
-        [parent]="form"
+        [control]="form.controls.filePatchingIgnoredClients"
       ></app-aswg-chip-form-input>
       <app-aswg-chip-form-input
         style="width: 100%"
         labelText="Allowed Preprocess File Extensions"
         toolTipText="Only allow files with listed extensions to be loaded via preprocessFile / preprocessFileLineNumbers commands. Not listing any extension means everything is allowed. Defining the setting as empty arrays means nothing is allowed."
         [control]="form.controls.allowedPreprocessFileExtensions"
-        [parent]="form"
       ></app-aswg-chip-form-input>
       <app-aswg-chip-form-input
         style="width: 100%"
         labelText="Allowed HTML Load Extensions"
         toolTipText="Only allow files and URLs with listed extensions to be loaded via htmlLoad command. Not listing any extension means everything is allowed. Defining the setting as empty arrays means nothing is allowed."
         [control]="form.controls.allowedHTMLLoadExtensions"
-        [parent]="form"
       ></app-aswg-chip-form-input>
       <mat-form-field
         matTooltip="Percentage of votes needed to confirm a vote. 0.3 = 30%"

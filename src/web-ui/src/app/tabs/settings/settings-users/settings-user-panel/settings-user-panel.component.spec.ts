@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SettingsUserPanelComponent } from "./settings-user-panel.component";
+import { inputBinding } from "@angular/core";
 
 describe("SettingsUserPanelComponent", () => {
   let component: SettingsUserPanelComponent;
@@ -11,16 +12,21 @@ describe("SettingsUserPanelComponent", () => {
       imports: [SettingsUserPanelComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SettingsUserPanelComponent);
+    fixture = TestBed.createComponent(SettingsUserPanelComponent, {
+      bindings: [
+        inputBinding("user", () => {
+          return {
+            id: 1,
+            username: "user",
+            password: "test",
+            authorities: [],
+            locked: false,
+            lastLoginDate: new Date().toDateString()
+          };
+        })
+      ]
+    });
     component = fixture.componentInstance;
-    component.user = {
-      id: 1,
-      username: "user",
-      password: "test",
-      authorities: [],
-      locked: false,
-      lastLoginDate: new Date().toDateString()
-    };
     fixture.detectChanges();
   });
 

@@ -1,6 +1,14 @@
 import { inject, Injectable } from "@angular/core";
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { AswgUser } from "../../../../service/users.service";
+
+export interface UserEditFormControls {
+  id: FormControl<number | null>;
+  username: FormControl<string>;
+  password: FormControl<string | null>;
+  locked: FormControl<boolean>;
+  authorities: FormControl<string[]>;
+}
 
 @Injectable({
   providedIn: "root"
@@ -8,51 +16,34 @@ import { AswgUser } from "../../../../service/users.service";
 export class EditUserFormService {
   private readonly formBuilder: FormBuilder = inject(FormBuilder);
 
-  getForm(): FormGroup {
+  getForm(): FormGroup<UserEditFormControls> {
     return this.formBuilder.group({
-      id: [null],
-      username: ["", Validators.required],
-      password: [""],
-      locked: [false, Validators.required],
-      authorities: [[]]
+      id: this.formBuilder.control<number | null>(null),
+      username: this.formBuilder.nonNullable.control("", [Validators.required]),
+      password: this.formBuilder.control<string | null>(""),
+      locked: this.formBuilder.nonNullable.control(false, [Validators.required]),
+      authorities: this.formBuilder.nonNullable.control<string[]>([])
     });
   }
 
-  setForm(form: FormGroup, aswgUser: AswgUser) {
-    this.getIdControl(form).setValue(aswgUser.id);
-    this.getUsernameControl(form).setValue(aswgUser.username);
-    this.getPasswordControl(form).setValue(aswgUser.password);
-    this.getLockedControl(form).setValue(aswgUser.locked);
-    this.getAuthoritiesControl(form).setValue(aswgUser.authorities);
+  setForm(form: FormGroup<UserEditFormControls>, aswgUser: AswgUser) {
+    form.setValue({
+      id: aswgUser.id,
+      username: aswgUser.username,
+      password: aswgUser.password,
+      locked: aswgUser.locked,
+      authorities: aswgUser.authorities
+    });
   }
 
-  asAswgUser(form: FormGroup): AswgUser {
+  asAswgUser(form: FormGroup<UserEditFormControls>): AswgUser {
+    const formValue = form.value;
     return {
-      id: this.getIdControl(form).value,
-      username: this.getUsernameControl(form).value,
-      password: this.getPasswordControl(form).value,
-      locked: this.getLockedControl(form).value,
-      authorities: this.getAuthoritiesControl(form).value
+      id: formValue.id,
+      username: formValue.username,
+      password: formValue.password,
+      locked: formValue.locked,
+      authorities: formValue.authorities
     } as AswgUser;
-  }
-
-  getIdControl(form: FormGroup): AbstractControl<number | null> {
-    return form.get("id") as AbstractControl<number | null>;
-  }
-
-  getUsernameControl(form: FormGroup): AbstractControl<string> {
-    return form.get("username") as AbstractControl<string>;
-  }
-
-  getPasswordControl(form: FormGroup): AbstractControl<string> {
-    return form.get("password") as AbstractControl<string>;
-  }
-
-  getLockedControl(form: FormGroup): AbstractControl<boolean> {
-    return form.get("locked") as AbstractControl<boolean>;
-  }
-
-  getAuthoritiesControl(form: FormGroup): AbstractControl<string[]> {
-    return form.get("authorities") as AbstractControl<string[]>;
   }
 }

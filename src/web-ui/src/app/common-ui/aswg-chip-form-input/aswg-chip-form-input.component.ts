@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, ChangeDetectionStrategy, InputSignal, input, model, computed } from "@angular/core";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import {
   MatChipEditedEvent,
@@ -7,7 +7,7 @@ import {
   MatChipInputEvent, MatChipRemove,
   MatChipRow
 } from "@angular/material/chips";
-import { AbstractControl, FormGroup } from "@angular/forms";
+import { AbstractControl, FormsModule } from "@angular/forms";
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
@@ -25,76 +25,75 @@ import { MatTooltip } from "@angular/material/tooltip";
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
+    MatAutocompleteTrigger,
+    MatAutocomplete,
     MatFormField,
     MatChipGrid,
     MatChipRow,
     MatIcon,
     MatChipInput,
-    MatAutocompleteTrigger,
-    MatAutocomplete,
     MatOption,
     MatLabel,
     MatTooltip,
-    MatChipRemove
+    MatChipRemove,
+    FormsModule
   ]
 })
-export class AswgChipFormInputComponent implements OnInit {
+export class AswgChipFormInputComponent {
   protected readonly ENTER = ENTER;
   protected readonly COMMA = COMMA;
 
-  @Input()
-  control!: AbstractControl<string[]>;
+  public readonly control: InputSignal<AbstractControl<string[]>> = input.required();
+  public readonly labelText: InputSignal<string> = input.required();
+  public readonly toolTipText: InputSignal<string> = input("");
+  public readonly sort: InputSignal<(a: string, b: string) => number> = input((a, b) => a?.localeCompare(b));
+  public readonly availableOptions: InputSignal<string[]> = input<string[]>([]);
 
-  @Input()
-  parent!: FormGroup;
+  protected currentValue = model("");
+  protected availableOptionsFiltered = computed(() => {
+    const unusedOptions = this.availableOptions().filter((item) => {
+      return !this.control().value.includes(item);
+    });
 
-  @Input()
-  labelText!: string;
-
-  @Input()
-  toolTipText: string = "";
-
-  @Input()
-  sort: (a: string, b: string) => number = (a, b) => a?.localeCompare(b);
-
-  @Input()
-  autocompleteList: string[] = [];
-
-  autocompleteFilteredList: string[] = [];
-
-  ngOnInit(): void {
-    this.filterAutocompleteList();
-  }
+    const value = this.currentValue().toLowerCase();
+    return this.currentValue()
+      ? unusedOptions.filter((option) => option.toLowerCase().includes(value))
+      : unusedOptions.slice();
+  });
 
   getEntries(): string[] {
-    return this.control.value?.sort(this.sort);
+    return this.control().value?.sort(this.sort());
   }
 
   addEntry(event: MatChipInputEvent) {
     const value = (event.value || "").trim();
 
     if (value) {
-      this.addValue(value);
+      if (!this.hasOptions()) {
+        this.addValue(value);
+      } else {
+        const option = this.availableOptions().find((option) => option.toLowerCase().includes(value.toLowerCase()));
+        if (option) {
+          this.addValue(option);
+        }
+      }
     }
     event.chipInput.clear();
   }
 
   addValue(value: string) {
-    this.control.updateValueAndValidity();
-    this.control.value.push(value);
-    this.filterAutocompleteList();
+    this.control().value.push(value);
+    this.control().updateValueAndValidity();
   }
 
   removeValue(value: string) {
-    const index = this.control.value.indexOf(value);
+    const index = this.control().value.indexOf(value);
     if (index >= 0) {
-      const list = this.control.value;
+      const list = this.control().value;
       list.splice(index, 1);
-      this.control.setValue(list);
-      this.control.updateValueAndValidity();
-      this.filterAutocompleteList();
+      this.control().setValue(list);
+      this.control().updateValueAndValidity();
     }
-    this.filterAutocompleteList();
   }
 
   editEntry(oldValue: string, event: MatChipEditedEvent) {
@@ -105,12 +104,13 @@ export class AswgChipFormInputComponent implements OnInit {
       return;
     }
 
-    const index = this.control.value.indexOf(oldValue);
-    if (index >= 0) {
-      const list = this.control.value;
-      list[index] = value;
-      this.control.setValue(list);
-      this.filterAutocompleteList();
+    if (!this.hasOptions() || this.availableOptions().some((option) => option.toLowerCase().includes(value.toLowerCase()))) {
+      const index = this.control().value.indexOf(oldValue);
+      if (index >= 0) {
+        const list = this.control().value;
+        list[index] = value;
+        this.control().setValue(list);
+      }
     }
   }
 
@@ -123,9 +123,7 @@ export class AswgChipFormInputComponent implements OnInit {
     event.option.deselect();
   }
 
-  private filterAutocompleteList() {
-    this.autocompleteFilteredList = this.autocompleteList.filter((item) => {
-      return !this.control.value.includes(item);
-    });
+  private hasOptions(): boolean {
+    return this.availableOptions().length > 0;
   }
 }

@@ -1,5 +1,5 @@
-<mat-form-field style="width: 100%" [matTooltip]="toolTipText" matTooltipPosition="right">
-  <mat-label>{{ labelText }}</mat-label>
+<mat-form-field style="width: 100%" [matTooltip]="toolTipText()" matTooltipPosition="right">
+  <mat-label>{{ labelText() }}</mat-label>
   <mat-chip-grid #chipGrid>
     @for (item of getEntries(); track item) {
       <mat-chip-row
@@ -17,6 +17,7 @@
   </mat-chip-grid>
   <input
     placeholder="New entry..."
+    [(ngModel)]="currentValue"
     [matChipInputFor]="chipGrid"
     [matChipInputSeparatorKeyCodes]="[ENTER, COMMA]"
     [matChipInputAddOnBlur]="true"
@@ -24,7 +25,7 @@
     (matChipInputTokenEnd)="addEntry($event)"
     />
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    @for (text of autocompleteFilteredList; track text) {
+    @for (text of availableOptionsFiltered(); track text) {
       <mat-option [value]="text">{{ text }}</mat-option>
     }
   </mat-autocomplete>
