@@ -31,7 +31,7 @@ class DifficultyServiceImplTest
     @Autowired
     private CfgFileHandler cfgFileHandler;
 
-    private DifficultyService difficultyService;
+    private DifficultyServiceImpl difficultyService;
 
     @BeforeEach
     void setUp(@TempDir Path tempDir) throws IOException
@@ -55,6 +55,34 @@ class DifficultyServiceImplTest
         DifficultyProfile difficultyProfile = this.difficultyService.getDifficultyProfile("correct");
 
         assertThat(difficultyProfile).isNotNull();
+        assertThat(difficultyProfile.getName()).isEqualTo("correct");
+        assertThat(difficultyProfile.getOptions()).satisfies(options -> {
+            assertThat(options.isReducedDamage()).isFalse();
+            assertThat(options.getGroupIndicators()).isEqualTo(1);
+            assertThat(options.getEnemyTags()).isEqualTo(1);
+            assertThat(options.getCommands()).isEqualTo(1);
+            assertThat(options.getDetectedMines()).isEqualTo(1);
+            assertThat(options.getWaypoints()).isEqualTo(1);
+            assertThat(options.getTacticalPing()).isEqualTo(1);
+            assertThat(options.getWeaponInfo()).isEqualTo(1);
+            assertThat(options.getStanceIndicator()).isEqualTo(1);
+            assertThat(options.isStaminaBar()).isTrue();
+            assertThat(options.isWeaponCrosshair()).isTrue();
+            assertThat(options.isVisionAid()).isTrue();
+            assertThat(options.getThirdPersonView()).isEqualTo(1);
+            assertThat(options.isCameraShake()).isTrue();
+            assertThat(options.isScoreTable()).isTrue();
+            assertThat(options.isDeathMessages()).isTrue();
+            assertThat(options.isVonId()).isTrue();
+            assertThat(options.isMapContentFriendly()).isTrue();
+            assertThat(options.isMapContentEnemy()).isTrue();
+            assertThat(options.isMapContentMines()).isTrue();
+            assertThat(options.isAutoReport()).isTrue();
+            assertThat(options.isMultipleSaves()).isTrue();
+        });
+        assertThat(difficultyProfile.getOptions().getAiLevelPreset()).isEqualTo(3);
+        assertThat(difficultyProfile.getOptions().getSkillAI()).isEqualTo("0.2");
+        assertThat(difficultyProfile.getOptions().getPrecisionAI()).isEqualTo("0.3");
     }
 
     @Test
@@ -75,6 +103,40 @@ class DifficultyServiceImplTest
         // when
         // then
         assertThrows(CouldNotReadDifficultyProfileException.class, () -> this.difficultyService.importDifficultyProfileFromFile("missing-semicolon"));
+    }
+
+    @Test
+    void shouldSaveDifficultyProfileSuccessfully()
+    {
+        // given
+        DifficultyProfile difficultyProfile = DifficultyProfile.builder()
+                .name("new-profile")
+                .options(DifficultyProfile.Options.builder()
+                        .reducedDamage(true)
+                        .skillAI("0.1")
+                        .cameraShake(false)
+                        .autoReport(true)
+                        .commands(1)
+                        .enemyTags(0)
+                        .build())
+                .build();
+
+        // when
+        difficultyService.saveDifficultyProfile(difficultyProfile);
+
+        // then
+        DifficultyProfile saved =  this.difficultyService.getDifficultyProfile("new-profile");
+        assertThat(saved).isNotNull();
+        assertThat(saved.getId()).isNotNull();
+        assertThat(saved.getName()).isEqualTo("new-profile");
+        assertThat(saved.getOptions()).satisfies(options -> {
+            assertThat(options.isReducedDamage()).isTrue();
+            assertThat(options.getSkillAI()).isEqualTo("0.1");
+            assertThat(options.isCameraShake()).isFalse();
+            assertThat(options.isAutoReport()).isTrue();
+            assertThat(options.getCommands()).isEqualTo(1);
+            assertThat(options.getEnemyTags()).isEqualTo(0);
+        });
     }
 
     private static void setUpDifficultyProfilesFiles(Path difficultyProfileDir) throws IOException

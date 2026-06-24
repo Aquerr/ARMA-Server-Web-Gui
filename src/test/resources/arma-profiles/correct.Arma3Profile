@@ -28,11 +28,11 @@ class DifficultyPresets
 			autoReport = 1;
 			multipleSaves = 1;
 		};
-		aiLevelPreset = 0;
+		aiLevelPreset = 3;
 	};
 	class CustomAILevel
 	{	
-		skillAI = 0.5;
-		precisionAI = 0.5;
+		skillAI = 0.2;
+		precisionAI = 0.3;
 	};
 };
