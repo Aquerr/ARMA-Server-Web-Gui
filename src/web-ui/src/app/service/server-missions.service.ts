@@ -55,7 +55,8 @@ export class ServerMissionsService {
   downloadMission(id: number) {
     return this.httpClient.get(`${this.MISSIONS_FILES_URL}/${id}/download`, {
       responseType: "blob",
-      observe: "response"
+      observe: "events",
+      reportDownloadProgress: true
     });
   }
 }

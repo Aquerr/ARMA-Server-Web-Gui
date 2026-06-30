@@ -1,0 +1,22 @@
+.snack-bar-header {
+  border-bottom: 1px solid gray;
+  margin-bottom: 15px;
+  font-size: large;
+}
+
+.file-download-snackbar-header-label {
+  color: white;
+}
+
+.snack-bar-close-button {
+  top: 5px;
+  right: 0;
+  position: absolute;
+  cursor: pointer;
+}
+
+.cancel-download-button {
+  position: absolute;
+  right: 0;
+  cursor: pointer
+}

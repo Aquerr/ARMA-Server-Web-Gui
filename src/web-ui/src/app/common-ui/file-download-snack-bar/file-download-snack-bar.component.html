@@ -1,0 +1,33 @@
+<div class="snack-bar-header">
+  <div>
+    <mat-label class="file-download-snackbar-header-label">Downloading</mat-label>
+    <div class="snack-bar-close-button">
+      <mat-icon (click)="snackBarRef.dismissWithAction()" matTooltip="Close">close</mat-icon>
+    </div>
+  </div>
+</div>
+<div>
+  @for (file of getDownloadingFiles(); track file; let i = $index) {
+    <div>
+      <div style="display: flex; flex-direction: column">
+        <mat-icon class="cancel-download-button" (click)="cancelDownload(file)" matTooltip="Cancel download">cancel
+        </mat-icon>
+        <mat-label>{{ file.fileName }}</mat-label>
+        <mat-label style="filter: brightness(75%)">{{
+            (file.downloadedSize | filesize) + "/" + (file.totalSize | filesize)
+          }}
+        </mat-label>
+      </div>
+      <mat-progress-bar
+        class="mt-2"
+        mode="buffer"
+        [value]="file.progress"
+        [bufferValue]="file.totalSize"
+      >
+      </mat-progress-bar>
+      @if (i < getDownloadingFiles().length - 1) {
+        <hr>
+      }
+    </div>
+  }
+</div>

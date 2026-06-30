@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, computed, inject, input, output, ChangeDetectionStrategy } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, input, output } from "@angular/core";
 import { MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
@@ -12,9 +12,9 @@ import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service
 import { NotificationService } from "@service/notification.service";
 import { ServerMissionsService } from "@service/server-missions.service";
 import { FilesizePipe } from "@app/util/pipe/filesize.pipe";
-import { HttpResponse } from "@angular/common/http";
 import { PermissionService } from "@service/permission.service";
 import { AswgAuthority } from "@model/authority.model";
+import { FileDownloadMonitorService } from "@service/file-download-monitor.service";
 
 @Component({
   selector: "app-mission-list-item",
@@ -43,6 +43,7 @@ export class MissionListItemComponent {
   private readonly notificationService = inject(NotificationService);
   private readonly missionsService = inject(ServerMissionsService);
   private readonly permissionService = inject(PermissionService);
+  private readonly downloadMonitorService = inject(FileDownloadMonitorService);
 
   showMissionModifyDialog() {
     this.dialogService.open(MissionModifyDialogComponent, (mission: Mission) => {
@@ -88,31 +89,13 @@ export class MissionListItemComponent {
       return;
     }
 
-    this.maskService.show();
-    this.missionsService.downloadMission(this.mission().id).subscribe({
-      next: (response) => {
-        const url = window.URL.createObjectURL(response.body!);
+    const fileName = this.mission().template + ".pbo";
 
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = MissionListItemComponent.getFileName(response) ?? this.mission().template + ".pbo";
+    if (this.downloadMonitorService.isInQueue(fileName)) {
+      return;
+    }
 
-        a.click();
-
-        window.URL.revokeObjectURL(url);
-      },
-      complete: () => {
-        this.maskService.hide();
-      }
-    });
-  }
-
-  private static getFileName(httpResponse: HttpResponse<Blob>) {
-    const disposition
-      = httpResponse.headers.get("Content-Disposition");
-
-    const match = disposition?.match(/filename="(.+)"/);
-
-    return match?.[1];
+    this.missionsService.downloadMission(this.mission().id)
+      .subscribe(this.downloadMonitorService.monitorFileDownload(fileName));
   }
 }
