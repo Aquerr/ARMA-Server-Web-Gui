@@ -28,7 +28,7 @@
   align-items: center;
   padding: 2px;
   border-radius: 4px;
-  color: inherit;
+  color: var(--aswg-icon-color);
 
   &:hover {
     opacity: 1;
@@ -85,7 +85,7 @@
   align-items: center;
   padding: 2px;
   border-radius: 4px;
-  color: inherit;
+  color: var(--aswg-icon-color);
   flex-shrink: 0;
 
   &:hover {
