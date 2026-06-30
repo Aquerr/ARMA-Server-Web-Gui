@@ -22,10 +22,6 @@
       </div>
       <app-aswg-search-box labelText="Search mission..."
                            [control]="searchBoxControl"></app-aswg-search-box>
-      <mat-form-field>
-        <mat-label>Search mission...</mat-label>
-        <input matInput type="text" [formControl]="searchBoxControl" placeholder="Search mission..." />
-      </mat-form-field>
     </div>
 
     <app-mission-lists [searchPhrase]="searchPhrase()"></app-mission-lists>

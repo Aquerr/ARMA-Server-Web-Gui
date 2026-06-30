@@ -23,7 +23,6 @@ import { DragAndDropFileDirective } from "@common-ui/directive/drag-and-drop-fil
 import { DragDropOverlay } from "@common-ui/drag-and-drop-overlay/drag-and-drop-overlay.component";
 import { NgClass, NgTemplateOutlet } from "@angular/common";
 import { MatButton } from "@angular/material/button";
-import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MissionUploadButtonComponent } from "./upload-mission/mission-upload-button.component";
 import { MissionListsComponent } from "./mission-lists/mission-lists.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
@@ -38,10 +37,7 @@ import { AswgSearchBoxComponent } from "@common-ui/aswg-search-box/aswg-search-b
     NgTemplateOutlet,
     NgClass,
     MatButton,
-    MatFormField,
-    MatLabel,
     ReactiveFormsModule,
-    MatInput,
     MissionUploadButtonComponent,
     MissionListsComponent,
     AswgSearchBoxComponent
