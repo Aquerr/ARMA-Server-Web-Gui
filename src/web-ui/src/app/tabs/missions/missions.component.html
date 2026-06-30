@@ -31,7 +31,7 @@
         <button mat-flat-button color="primary" (click)="save()">Save</button>
       </div>
       <div>
-        <app-upload-mission></app-upload-mission>
+        <app-upload-mission (fileSelected)="onFileDropped($event)"></app-upload-mission>
       </div>
     </div>
   </div>

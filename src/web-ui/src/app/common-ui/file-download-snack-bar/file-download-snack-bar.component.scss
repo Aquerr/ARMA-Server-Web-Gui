@@ -1,22 +1,108 @@
-.snack-bar-header {
-  border-bottom: 1px solid gray;
-  margin-bottom: 15px;
-  font-size: large;
+.download-snackbar {
+  width: 300px;
 }
 
-.file-download-snackbar-header-label {
-  color: white;
+.snackbar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 0;
 }
 
-.snack-bar-close-button {
-  top: 5px;
-  right: 0;
-  position: absolute;
+.snackbar-title {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.6;
+}
+
+.snackbar-close {
+  background: none;
+  border: none;
   cursor: pointer;
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  border-radius: 4px;
+  color: inherit;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 }
 
-.cancel-download-button {
-  position: absolute;
-  right: 0;
-  cursor: pointer
+.file-row {
+  padding: 10px 14px;
+
+  & + .file-row {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+.file-meta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.file-info {
+  flex: 1;
+  min-width: 0; // allows text-overflow: ellipsis to work
+}
+
+.file-name {
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.file-size {
+  font-size: 12px;
+  opacity: 0.55;
+}
+
+.cancel-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.4;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  border-radius: 4px;
+  color: inherit;
+  flex-shrink: 0;
+
+  &:hover {
+    opacity: 1;
+    color: #f44336;
+  }
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.progress-label {
+  font-size: 11px;
+  opacity: 0.45;
+  text-align: right;
+  margin-top: 4px;
 }

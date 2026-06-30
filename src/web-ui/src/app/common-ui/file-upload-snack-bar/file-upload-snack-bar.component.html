@@ -1,32 +1,27 @@
-<div class="snack-bar-header">
-  <div>
-    <mat-label class="file-upload-snackbar-header-label">Uploading</mat-label>
-    <div class="snack-bar-close-button">
-      <mat-icon (click)="snackBarRef.dismissWithAction()" matTooltip="Close">close</mat-icon>
-    </div>
+<div class="upload-snackbar">
+  <div class="snackbar-header">
+    <span class="snackbar-title">Uploading</span>
+    <button class="snackbar-close" (click)="snackBarRef.dismissWithAction()" matTooltip="Close" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
-</div>
-<div>
-  @for (file of getUploadingFiles(); track file; let i = $index) {
-    <div>
-      <div style="display: flex; flex-direction: column">
-        <mat-icon class="cancel-upload-button" (click)="cancelUpload(file)" matTooltip="Cancel upload">cancel</mat-icon>
-        <mat-label>{{ file.fileName }}</mat-label>
-        <mat-label style="filter: brightness(75%)">{{
-            (file.uploadedSize | filesize) + "/" + (file.totalSize | filesize)
-          }}
-        </mat-label>
+
+  @for (file of getUploadingFiles(); track file.fileName; let i = $index) {
+    <div class="file-row">
+      <div class="file-meta">
+        <div class="file-info">
+          <div class="file-name" [title]="file.fileName">{{ file.fileName }}</div>
+          <div class="file-size">{{ file.uploadedSize | filesize }} / {{ file.totalSize | filesize }}</div>
+        </div>
+        <button class="cancel-btn" (click)="cancelUpload(file)" matTooltip="Cancel" aria-label="Cancel upload">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
-      <mat-progress-bar
-        class="mt-2"
-        mode="buffer"
-        [value]="file.progress"
-        [bufferValue]="file.totalSize"
-      >
-      </mat-progress-bar>
-      @if (i < getUploadingFiles().length - 1) {
-        <hr>
-      }
+      <mat-progress-bar mode="determinate"
+                        [value]="file.progress"
+                        [bufferValue]="file.totalSize"
+      />
+      <div class="progress-label">{{ file.progress }}%</div>
     </div>
   }
 </div>

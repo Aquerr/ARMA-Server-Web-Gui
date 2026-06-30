@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, inject, 
 import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from "@angular/material/snack-bar";
 import { MatProgressBar } from "@angular/material/progress-bar";
 import { FilesizePipe } from "@app/util/pipe/filesize.pipe";
-import { MatLabel } from "@angular/material/form-field";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
 import { Subscription } from "rxjs";
@@ -11,7 +10,7 @@ import { DownloadingFile, FileDownloadMonitorService } from "@service/file-downl
 @Component({
   selector: "app-file-download-snack-bar",
   templateUrl: "./file-download-snack-bar.component.html",
-  imports: [MatLabel, MatIcon, MatProgressBar, FilesizePipe, MatTooltip],
+  imports: [MatIcon, MatProgressBar, FilesizePipe, MatTooltip],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./file-download-snack-bar.component.scss"]
 })

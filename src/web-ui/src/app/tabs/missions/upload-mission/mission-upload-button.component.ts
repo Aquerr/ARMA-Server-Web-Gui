@@ -1,5 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
-import { MissionUploadService } from "../service/mission-upload.service";
+import { ChangeDetectionStrategy, Component, output } from "@angular/core";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatMiniFabButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
@@ -16,7 +15,7 @@ import { MatIcon } from "@angular/material/icon";
   styleUrls: ["./mission-upload-button.component.scss"]
 })
 export class MissionUploadButtonComponent {
-  private readonly missionUploadService = inject(MissionUploadService);
+  public fileSelected = output<File>();
 
   onFileSelected(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -25,7 +24,7 @@ export class MissionUploadButtonComponent {
 
     const file: File = target.files[0];
     if (file) {
-      this.missionUploadService.uploadMission(file);
+      this.fileSelected.emit(file);
     }
   }
 }
