@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { AllowedFilePatching, ServerSecurityService } from "@service/server-security.service";
 import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 import { NotificationService } from "@service/notification.service";
@@ -10,6 +10,7 @@ import { AswgChipFormInputComponent } from "@common-ui/aswg-chip-form-input/aswg
 import { MatOption, MatSelect } from "@angular/material/select";
 import { VoteCmdsListComponent } from "./vote-cmds-list/vote-cmds-list.component";
 import { MatButton } from "@angular/material/button";
+import { AswgPasswordFieldComponent } from "@common-ui/aswg-password-field/aswg-password-field.component";
 
 @Component({
   selector: "app-security",
@@ -25,7 +26,8 @@ import { MatButton } from "@angular/material/button";
     MatSelect,
     MatOption,
     VoteCmdsListComponent,
-    MatButton
+    MatButton,
+    AswgPasswordFieldComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./security.component.scss"]

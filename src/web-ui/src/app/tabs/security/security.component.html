@@ -2,48 +2,15 @@
   <h1>Security</h1>
   <div>
     <div class="security-fields">
-      <mat-form-field
-        class="server-password"
-        matTooltip="Password required to connect to server"
-        matTooltipPosition="right"
-      >
-        <mat-label>Password</mat-label>
-        <input formControlName="serverPassword" matInput type="text" />
-        @if (hasFormError('serverPassword', 'required')) {
-          <mat-error
-          >This field is required
-          </mat-error
-          >
-        }
-      </mat-form-field>
-      <mat-form-field
-        class="server-admin-password"
-        matTooltip="Password for admin login access"
-        matTooltipPosition="right"
-      >
-        <mat-label>Admin Password</mat-label>
-        <input formControlName="serverAdminPassword" matInput type="text" />
-        @if (hasFormError('serverAdminPassword', 'required')) {
-          <mat-error
-          >This field is required
-          </mat-error
-          >
-        }
-      </mat-form-field>
-      <mat-form-field
-        class="server-command-password"
-        matTooltip="Password for server-side scripting through 'serverCommand'"
-        matTooltipPosition="right"
-      >
-        <mat-label>Command Password</mat-label>
-        <input formControlName="serverCommandPassword" matInput type="text" />
-        @if (hasFormError('serverCommandPassword', 'required')) {
-          <mat-error
-          >This field is required
-          </mat-error
-          >
-        }
-      </mat-form-field>
+      <app-aswg-password-field controlName="serverPassword" labelText="Password"
+                               tooltip="Password required to connect to server">
+      </app-aswg-password-field>
+      <app-aswg-password-field controlName="serverAdminPassword" labelText="Admin Password"
+                               tooltip="Password for admin login access">
+      </app-aswg-password-field>
+      <app-aswg-password-field controlName="serverCommandPassword" labelText="Command Password"
+                               tooltip="Password for server-side scripting through 'serverCommand'">
+      </app-aswg-password-field>
       <app-aswg-chip-form-input
         style="width: 100%"
         labelText="Admins (steamID64)"

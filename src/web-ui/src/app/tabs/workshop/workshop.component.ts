@@ -1,16 +1,25 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, signal } from "@angular/core";
-import { WorkshopMod, WorkshopSortingType } from "../../model/workshop.model";
-import { WorkshopService } from "../../service/workshop.service";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal
+} from "@angular/core";
+import { WorkshopMod, WorkshopSortingType } from "@model/workshop.model";
+import { WorkshopService } from "@service/workshop.service";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { ModInstallWebsocketService } from "./mod-install-websocket/mod-install-websocket.service";
-import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
-import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import { MatFormField, MatLabel } from "@angular/material/input";
 import { MatButton } from "@angular/material/button";
 import { WorkshopItemComponent } from "./workshop-item/workshop-item.component";
 import { MatCheckbox } from "@angular/material/checkbox";
 import { MatOption, MatSelect } from "@angular/material/select";
-import { SelectOption } from "../../model/control.model";
+import { SelectOption } from "@model/control.model";
+import { AswgSearchBoxComponent } from "@common-ui/aswg-search-box/aswg-search-box.component";
 
 @Component({
   selector: "app-workshop",
@@ -21,11 +30,11 @@ import { SelectOption } from "../../model/control.model";
     ReactiveFormsModule,
     MatButton,
     MatPaginator,
-    MatInput,
     WorkshopItemComponent,
     MatCheckbox,
     MatSelect,
-    MatOption
+    MatOption,
+    AswgSearchBoxComponent
   ],
   styleUrls: ["./workshop.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush

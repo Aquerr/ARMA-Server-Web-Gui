@@ -22,7 +22,6 @@ import { AswgAuthority } from "@model/authority.model";
 import { DragAndDropFileDirective } from "@common-ui/directive/drag-and-drop-file.directive";
 import { DragDropOverlay } from "@common-ui/drag-and-drop-overlay/drag-and-drop-overlay.component";
 import { NgClass, NgTemplateOutlet } from "@angular/common";
-import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatButton } from "@angular/material/button";
 import { RouterLink } from "@angular/router";
 import { ModPresetsComponent } from "./mod-presets/mod-presets.component";
@@ -30,6 +29,7 @@ import { ModUploadButtonComponent } from "./mod-upload-button/mod-upload-button.
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ServerModsService } from "@service/server-mods.service";
 import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { AswgSearchBoxComponent } from "@common-ui/aswg-search-box/aswg-search-box.component";
 
 @Component({
   selector: "app-mods",
@@ -39,15 +39,13 @@ import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service
     DragDropOverlay,
     NgTemplateOutlet,
     NgClass,
-    MatFormField,
-    MatLabel,
-    MatInput,
     ReactiveFormsModule,
     MatButton,
     RouterLink,
     ModPresetsComponent,
     ModListsComponent,
-    ModUploadButtonComponent
+    ModUploadButtonComponent,
+    AswgSearchBoxComponent
   ],
   styleUrls: ["./mods.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush

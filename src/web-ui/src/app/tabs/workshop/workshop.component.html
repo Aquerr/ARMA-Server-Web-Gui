@@ -2,10 +2,9 @@
   <h1>Workshop</h1>
   <div class="search-bar-wrapper">
     <div style="display: flex; flex-direction: row">
-      <mat-form-field>
-        <mat-label>Search workshop</mat-label>
-        <input matInput [formControl]="searchBoxControl" (keydown)="onSearchBoxKeyDown($event)" />
-      </mat-form-field>
+      <app-aswg-search-box labelText="Search workshop..."
+                           [control]="searchBoxControl"
+                           (keyDownEvent)="onSearchBoxKeyDown($event)"></app-aswg-search-box>
       <div class="search-by-mod-checkbox">
         <mat-checkbox [formControl]="searchByModIdControl">Search by mod id</mat-checkbox>
       </div>

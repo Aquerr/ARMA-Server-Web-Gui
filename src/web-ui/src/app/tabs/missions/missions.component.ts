@@ -27,6 +27,7 @@ import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MissionUploadButtonComponent } from "./upload-mission/mission-upload-button.component";
 import { MissionListsComponent } from "./mission-lists/mission-lists.component";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { AswgSearchBoxComponent } from "@common-ui/aswg-search-box/aswg-search-box.component";
 
 @Component({
   selector: "app-missions",
@@ -42,13 +43,15 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     ReactiveFormsModule,
     MatInput,
     MissionUploadButtonComponent,
-    MissionListsComponent
+    MissionListsComponent,
+    AswgSearchBoxComponent
   ],
   styleUrls: ["./missions.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MissionsComponent implements OnInit, OnDestroy {
   public searchPhrase = signal<string>("");
+
   public readonly enabledMissions: Signal<Mission[]>;
 
   @ViewChild(MissionListsComponent) missionListsComponent!: MissionListsComponent;
