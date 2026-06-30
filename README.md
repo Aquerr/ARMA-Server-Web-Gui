@@ -81,7 +81,6 @@ ASWG can be installed directly on a system or via Docker.
   ASWG after making changes.
 - When running on **Linux**, it is recommended to run ASWG as a **separate user**. Also, remember to `chown` all
   generated files if needed.
-  by ASWG by the desired user.
 - Open `http://localhost:8085` to enter ASWG.
 - Extra: If you would like to update your game or download Steam workshop mods, configure SteamCMD properties either
   through settings page or ASWG config file.
