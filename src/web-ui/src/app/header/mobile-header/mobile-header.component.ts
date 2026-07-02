@@ -23,20 +23,15 @@ export class MobileHeaderComponent {
 
   private readonly authService = inject(AuthService);
 
+  protected readonly isAuthenticated = this.authService.isAuthenticated;
+  protected readonly username = this.authService.username;
+
   toggleSideMenu() {
     this.sideMenuExpanded = !this.sideMenuExpanded;
   }
 
   closeSideMenu() {
     this.sideMenuExpanded = false;
-  }
-
-  isAuthenticated(): boolean {
-    return this.authService.isAuthenticated();
-  }
-
-  getUsername() {
-    return this.authService.getUsername();
   }
 
   changeTheme() {

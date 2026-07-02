@@ -18,7 +18,7 @@
       <div class="username-container">
         <mat-icon [fontIcon]="'person'"></mat-icon>
         @if (isAuthenticated()) {
-          <span class="user-name">{{ getUsername() }}</span>
+          <span class="user-name">{{ username() }}</span>
         }
       </div>
       @if (isAuthenticated()) {

@@ -39,7 +39,7 @@ export class AswgDownloadSnackbarDongleComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscription?.unsubscribe();
   }
 
   openSnackBar() {

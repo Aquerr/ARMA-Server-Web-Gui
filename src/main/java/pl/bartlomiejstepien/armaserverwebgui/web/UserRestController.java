@@ -66,6 +66,7 @@ public class UserRestController
     {
         this.userService.updateUser(UserUpdateCommand.builder()
                 .userId(userId)
+                .username(updateUserRequest.getUsername())
                 .locked(updateUserRequest.isLocked())
                 .authorities(updateUserRequest.getAuthorities().stream()
                         .map(AswgAuthority::findByCode)
@@ -106,6 +107,7 @@ public class UserRestController
     @Data
     public static class UpdateUserRequest
     {
+        private String username;
         private Set<String> authorities;
         private boolean locked;
     }

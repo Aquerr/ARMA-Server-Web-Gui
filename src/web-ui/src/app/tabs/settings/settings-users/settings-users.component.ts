@@ -7,10 +7,10 @@ import {
   signal,
   WritableSignal
 } from "@angular/core";
-import { AswgUser, UsersService } from "../../../service/users.service";
-import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
-import { NotificationService } from "../../../service/notification.service";
-import { DialogService } from "../../../service/dialog.service";
+import { AswgUser, UsersService } from "@service/users.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { NotificationService } from "@service/notification.service";
+import { DialogService } from "@service/dialog.service";
 import { MatIcon } from "@angular/material/icon";
 import { SettingsUserPanelComponent } from "./settings-user-panel/settings-user-panel.component";
 import { MatButtonModule } from "@angular/material/button";
