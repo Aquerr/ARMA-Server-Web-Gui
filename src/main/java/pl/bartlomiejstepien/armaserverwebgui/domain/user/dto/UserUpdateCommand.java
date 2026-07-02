@@ -11,6 +11,7 @@ import java.util.Set;
 public class UserUpdateCommand
 {
     Integer userId;
+    String username;
     boolean locked;
     Set<AswgAuthority> authorities;
 }

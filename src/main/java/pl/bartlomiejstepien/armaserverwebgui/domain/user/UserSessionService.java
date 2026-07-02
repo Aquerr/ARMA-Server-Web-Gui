@@ -1,6 +1,5 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.user;
 
-import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.springframework.stereotype.Service;
@@ -23,11 +22,11 @@ public class UserSessionService
                 .expireAfterWrite(Duration.of(30, ChronoUnit.MINUTES))
                 .maximumSize(50)
                 .build((username) -> Optional.ofNullable(this.userLoaderService.getUser(username))
-                .map(user -> AswgUserDetails.builder()
-                        .username(user.getUsername())
-                        .authorities(user.getAuthorities())
-                        .build())
-                .orElse(null));
+                        .map(user -> AswgUserDetails.builder()
+                                .username(user.getUsername())
+                                .authorities(user.getAuthorities())
+                                .build())
+                        .orElse(null));
     }
 
     public Optional<AswgUserDetails> getUserSession(String username)

@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { CanActivateFn, Router } from "@angular/router";
 import { AuthService } from "./auth.service";
-import { AswgAuthority } from "../model/authority.model";
+import { AswgAuthority } from "@model/authority.model";
 import { NotificationService } from "./notification.service";
 
 @Injectable({
@@ -19,7 +19,7 @@ export class PermissionService {
       return false;
     }
 
-    const userAuthorities = this.authService.getAuthorities();
+    const userAuthorities = this.authService.authorities();
     let hasRequiredAuthorities = true;
 
     for (const requiredAuthority of requiredAuthorities) {
@@ -42,7 +42,7 @@ export class PermissionService {
       return false;
     }
 
-    const userAuthorities = this.authService.getAuthorities();
+    const userAuthorities = this.authService.authorities();
     let hasRequiredAuthority = false;
     for (const requiredAuthority of requiredAuthorities) {
       if (userAuthorities.includes(requiredAuthority)) {

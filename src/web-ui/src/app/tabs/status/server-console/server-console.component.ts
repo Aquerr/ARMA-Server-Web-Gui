@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, signal, ViewChild } from "@angular/core";
-import { ServerLoggingService } from "../../../service/server-logging.service";
-import { API_BASE_URL } from "../../../../environments/environment";
+import { ServerLoggingService } from "@service/server-logging.service";
+import { API_BASE_URL } from "@environments/environment";
 import FetchEventSource from "fetch-event-source";
-import { AuthService } from "../../../service/auth.service";
+import { AuthService } from "@service/auth.service";
 import { Observable } from "rxjs";
 
 @Component({
@@ -21,7 +21,8 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
   constructor(
     private serverLoggingService: ServerLoggingService,
     private authService: AuthService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.initWithLatestLogs();
@@ -38,7 +39,7 @@ export class ServerConsoleComponent implements OnInit, OnDestroy {
     if (!this.authService.isAuthenticated()) return;
 
     const headers = new Headers();
-    headers.set("Authorization", "Bearer " + this.authService.getAuthToken() || "");
+    headers.set("Authorization", "Bearer " + this.authService.authToken() || "");
     this.eventSource = new FetchEventSource(`${API_BASE_URL}/logging/logs-sse`, {
       withCredentials: true,
       headers: headers

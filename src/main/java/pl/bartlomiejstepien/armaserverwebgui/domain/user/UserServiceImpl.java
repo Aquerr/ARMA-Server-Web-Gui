@@ -107,6 +107,7 @@ public class UserServiceImpl implements UserService
         this.userRepository.findById(updateCommand.getUserId())
                 .map(entity ->
                 {
+                    entity.setUsername(updateCommand.getUsername());
                     entity.setLocked(updateCommand.isLocked());
                     return entity;
                 })
