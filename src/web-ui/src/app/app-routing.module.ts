@@ -5,7 +5,7 @@ import { NetworkComponent } from "./tabs/network/network.component";
 import { MissionsComponent } from "./tabs/missions/missions.component";
 import { ModsComponent } from "./tabs/mods/mods.component";
 import { LoggingComponent } from "./tabs/logging/logging.component";
-import { LoginComponent } from "./login/login.component";
+import { LoginComponent } from "./tabs/login/login.component";
 import { SecurityComponent } from "./tabs/security/security.component";
 import { StatusComponent } from "./tabs/status/status.component";
 import { WorkshopComponent } from "./tabs/workshop/workshop.component";
@@ -81,4 +81,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(settingsRoutes)],
   providers: [provideRouter(routes)]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

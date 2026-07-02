@@ -1,11 +1,11 @@
-import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { AuthService } from "@service/auth.service";
 import { Router } from "@angular/router";
-import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { MatButton } from "@angular/material/button";
+import { AuthService } from "@service/auth.service";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 
 @Component({
   selector: "app-login",
@@ -26,10 +26,10 @@ export class LoginComponent {
   errorMessage?: string;
 
   constructor(
-    private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private maskService: LoadingSpinnerMaskService,
-    private router: Router
+    private readonly formBuilder: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly maskService: LoadingSpinnerMaskService,
+    private readonly router: Router
   ) {
     this.form = this.formBuilder.nonNullable.group({
       username: ["", Validators.required],

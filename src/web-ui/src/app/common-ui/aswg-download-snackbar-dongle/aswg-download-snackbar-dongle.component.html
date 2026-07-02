@@ -1,0 +1,14 @@
+@if (isVisible()) {
+  <div
+    aria-hidden="true"
+    class="download-dongle"
+    (click)="openSnackBar()"
+    [matTooltip]="tooltip()"
+    matTooltipPosition="above"
+  >
+    <div class="dongle-inner">
+      <mat-spinner class="dongle-spinner" [diameter]="18" />
+      <span class="dongle-label">Downloading {{ count() }} file{{ count() > 1 ? 's' : '' }}</span>
+    </div>
+  </div>
+}

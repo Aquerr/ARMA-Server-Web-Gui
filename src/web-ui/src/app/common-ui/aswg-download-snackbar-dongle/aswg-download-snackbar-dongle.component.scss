@@ -1,0 +1,70 @@
+.download-dongle {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  cursor: pointer;
+  animation: dongle-in 0.2s ease;
+
+  &:hover .dongle-inner {
+    animation: dongle-wobble 0.4s ease;
+    filter: brightness(1.15);
+  }
+}
+
+.dongle-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 10px;
+  border-radius: 20px;
+  background: var(--mdc-snackbar-container-color, #2d2d2d);
+  color: var(--aswg-icon-color);
+}
+
+.dongle-spinner {
+  flex-shrink: 0;
+
+  circle {
+    stroke: var(--aswg-icon-color) !important;
+  }
+}
+
+.dongle-label {
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+@keyframes dongle-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+@keyframes dongle-wobble {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

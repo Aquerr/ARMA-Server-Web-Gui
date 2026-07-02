@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from "@angular/core";
-import { LoadingSpinnerMaskService } from "../service/loading-spinner-mask.service";
+import { LoadingSpinnerMaskService } from "../../service/loading-spinner-mask.service";
 
 @Component({
   selector: "app-aswg-spinner",

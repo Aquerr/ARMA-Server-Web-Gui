@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, ChangeDetectionStrategy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, signal } from "@angular/core";
 import { ThemeService } from "@service/util/theme.service";
 import { ApplicationService } from "@service/application.service";
 import { IconRegistrarService } from "@service/icon-registrar.service";
@@ -22,11 +22,14 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatCardModule } from "@angular/material/card";
-import { AswgSpinnerComponent } from "./aswg-spinner/aswg-spinner.component";
+import { AswgSpinnerComponent } from "./common-ui/aswg-spinner/aswg-spinner.component";
 import { SideMenuComponent } from "./side-menu/side-menu.component";
-import { MobileHeaderComponent } from "./mobile-header/mobile-header.component";
-import { DesktopHeaderComponent } from "./desktop-header/desktop-header.component";
+import { MobileHeaderComponent } from "./header/mobile-header/mobile-header.component";
+import { DesktopHeaderComponent } from "./header/desktop-header/desktop-header.component";
 import { NgTemplateOutlet } from "@angular/common";
+import {
+  AswgDownloadSnackbarDongleComponent
+} from "@common-ui/aswg-download-snackbar-dongle/aswg-download-snackbar-dongle.component";
 
 @Component({
   selector: "app-root",
@@ -62,7 +65,8 @@ import { NgTemplateOutlet } from "@angular/common";
     MobileHeaderComponent,
     DesktopHeaderComponent,
     NgTemplateOutlet,
-    RouterOutlet
+    RouterOutlet,
+    AswgDownloadSnackbarDongleComponent
   ]
 })
 export class AppComponent implements OnInit {

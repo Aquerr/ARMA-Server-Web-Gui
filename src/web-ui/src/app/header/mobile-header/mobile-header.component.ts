@@ -1,8 +1,8 @@
-import { Component, ChangeDetectionStrategy, input, output, inject } from "@angular/core";
-import { AuthService } from "@service/auth.service";
+import { ChangeDetectionStrategy, Component, inject, input, output } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
-import { SideMenuComponent } from "../side-menu/side-menu.component";
 import { RouterLink } from "@angular/router";
+import { AuthService } from "@service/auth.service";
+import { SideMenuComponent } from "@app/side-menu/side-menu.component";
 
 @Component({
   selector: "app-mobile-header",
@@ -21,7 +21,7 @@ export class MobileHeaderComponent {
 
   protected sideMenuExpanded = false;
 
-  private authService = inject(AuthService);
+  private readonly authService = inject(AuthService);
 
   toggleSideMenu() {
     this.sideMenuExpanded = !this.sideMenuExpanded;

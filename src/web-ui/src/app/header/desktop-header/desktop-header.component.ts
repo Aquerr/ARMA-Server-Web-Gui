@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy, input, output, inject } from "@angular/core";
-import { AuthService } from "@service/auth.service";
+import { ChangeDetectionStrategy, Component, inject, input, output } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { take, tap } from "rxjs";
 import { MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
+import { AuthService } from "@service/auth.service";
 
 @Component({
   selector: "app-desktop-header",

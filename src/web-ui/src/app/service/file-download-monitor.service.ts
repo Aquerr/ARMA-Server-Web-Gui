@@ -1,5 +1,5 @@
 import { inject, Service } from "@angular/core";
-import { interval, Observer, Subject, Subscription } from "rxjs";
+import { Observer, Subject, Subscription } from "rxjs";
 import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { NotificationService } from "@service/notification.service";
 import {
@@ -40,13 +40,9 @@ export class FileDownloadMonitorService {
       }
     });
 
-    this.canDisplayFileDownloadSubscription = interval(2000)
-      .pipe()
-      .subscribe(() => {
-        if (this.downloadingFiles.length > 0 && this.fileDownloadSnackBarRef == null) {
-          this.showDownloadProgressSnackBar();
-        }
-      });
+    if (this.downloadingFiles.length > 0 && this.fileDownloadSnackBarRef == null) {
+      this.showDownloadProgressSnackBar();
+    }
   }
 
   getDownloadingFiles() {
@@ -128,6 +124,10 @@ export class FileDownloadMonitorService {
     return match ? decodeURIComponent(match[1]) : null;
   }
 
+  public isSnackBarOpen(): boolean {
+    return this.fileDownloadSnackBarRef != null;
+  }
+
   showDownloadProgressSnackBar() {
     if (!this.fileDownloadSnackBarRef) {
       this.fileDownloadSnackBarRef = this.matSnackBar.openFromComponent(FileDownloadSnackBarComponent, {
@@ -135,6 +135,7 @@ export class FileDownloadMonitorService {
       });
       this.fileDownloadSnackBarRef.afterDismissed().subscribe(() => {
         this.fileDownloadSnackBarRef = null;
+        this.downloadingFilesChanged.next();
       });
     }
   }
