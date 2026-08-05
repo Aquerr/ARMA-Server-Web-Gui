@@ -2,7 +2,8 @@ package pl.bartlomiejstepien.armaserverwebgui.web;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,6 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.exception.Mis
 import pl.bartlomiejstepien.armaserverwebgui.web.validator.MissionFileValidator;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +37,7 @@ public class MissionFilesRestController
     @HasPermissionMissionUpload
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public ResponseEntity<?> uploadMissionFile(@RequestPart("file") List<MultipartFile> multipartFiles,
-                                           @RequestPart(value = "overwrite", required = false) String overwrite)
+                                               @RequestPart(value = "overwrite", required = false) String overwrite)
     {
         boolean overwriteBoolean = Optional.ofNullable(overwrite)
                 .map(Boolean::parseBoolean)
@@ -63,25 +62,19 @@ public class MissionFilesRestController
 
     @HasPermissionMissionDownload
     @GetMapping(value = "/{missionId}/download", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public ResponseEntity<InputStreamResource> downloadMissionFile(@PathVariable("missionId") long missionId)
+    public ResponseEntity<Resource> downloadMissionFile(@PathVariable("missionId") long missionId)
     {
         File file = this.missionService.getMissionFile(missionId);
-        if (file == null)
+        if (file == null || !file.exists())
             throw new MissionNotFoundException(missionId);
 
-        try
-        {
-            InputStreamResource inputStreamResource = new InputStreamResource(new FileInputStream(file));
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-                    .contentLength(file.length())
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(inputStreamResource);
-        }
-        catch (FileNotFoundException e)
-        {
-            throw new MissionNotFoundException(missionId);
-        }
+        FileSystemResource fileSystemResource = new FileSystemResource(file);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                .contentLength(file.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(fileSystemResource);
     }
 
     public record MissionExistenceCheckResponse(boolean exists)
