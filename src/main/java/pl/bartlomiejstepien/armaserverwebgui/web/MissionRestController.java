@@ -17,7 +17,6 @@ import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.anno
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionUpdate;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionMissionView;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.MissionService;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Mission;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mission.dto.Missions;
 import pl.bartlomiejstepien.armaserverwebgui.web.converter.MissionApiModelConverter;
 import pl.bartlomiejstepien.armaserverwebgui.web.model.MissionApiModel;
