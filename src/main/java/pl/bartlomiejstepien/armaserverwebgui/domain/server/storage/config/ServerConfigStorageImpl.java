@@ -11,6 +11,9 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgF
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.function.Supplier;
 
 @Repository
@@ -34,7 +37,20 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
     {
         try
         {
-            return cfgFileHandler.readConfig(new File(serverConfigFilePath.get()), ArmaServerConfig.class);
+            return cfgFileHandler.readConfig(getServerConfigFile(), ArmaServerConfig.class);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String getRawServerConfigFileContent()
+    {
+        try
+        {
+            return Files.readString(getServerConfigFile().toPath(), StandardCharsets.UTF_8);
         }
         catch (IOException e)
         {
@@ -47,11 +63,28 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
     {
         try
         {
-            cfgFileHandler.saveConfig(new File(serverConfigFilePath.get()), armaServerConfig);
+            cfgFileHandler.saveConfig(getServerConfigFile(), armaServerConfig);
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void saveServerConfigFileContent(String content)
+    {
+        try
+        {
+            // Using temp file, check if new content parses properly.
+            File file = File.createTempFile("arma3-server-config", ".cfg");
+            Files.writeString(file.toPath(), content);
+            cfgFileHandler.readConfig(file, ArmaServerConfig.class);
+            Files.writeString(getServerConfigFile().toPath(), content, StandardOpenOption.CREATE);
+        }
+        catch (Exception exception)
+        {
+            throw new RuntimeException(exception);
         }
     }
 
@@ -60,7 +93,7 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
     {
         try
         {
-            return cfgFileHandler.readConfig(new File(serverNetworkConfigFilePath.get()), NetworkConfig.class);
+            return cfgFileHandler.readConfig(getBasicNetworkConfigFile(), NetworkConfig.class);
         }
         catch (IOException e)
         {
@@ -69,15 +102,55 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
     }
 
     @Override
-    public void saveNetworkConfig(NetworkConfig networkConfig)
+    public String getRawNetworkConfigFileContent()
     {
         try
         {
-            cfgFileHandler.saveConfig(new File(serverNetworkConfigFilePath.get()), networkConfig);
+            return Files.readString(getBasicNetworkConfigFile().toPath(), StandardCharsets.UTF_8);
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void saveBasicNetworkConfigFileContent(String content)
+    {
+        try
+        {
+            // Using temp file, check if new content parses properly.
+            File file = File.createTempFile("arma3-network", ".cfg");
+            Files.writeString(file.toPath(), content);
+            cfgFileHandler.readConfig(file, NetworkConfig.class);
+            Files.writeString(getBasicNetworkConfigFile().toPath(), content, StandardOpenOption.CREATE);
+        }
+        catch (Exception exception)
+        {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    @Override
+    public void saveNetworkConfig(NetworkConfig networkConfig)
+    {
+        try
+        {
+            cfgFileHandler.saveConfig(getBasicNetworkConfigFile(), networkConfig);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private File getServerConfigFile()
+    {
+        return new File(serverConfigFilePath.get());
+    }
+
+    private File getBasicNetworkConfigFile()
+    {
+        return new File(serverNetworkConfigFilePath.get());
     }
 }
