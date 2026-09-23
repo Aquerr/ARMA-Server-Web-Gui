@@ -1,7 +1,7 @@
 import { Routes } from "@angular/router";
 import { SettingsComponent } from "./settings.component";
-import { hasAllAuthorities, isAuthenticated } from "../../service/permission.service";
-import { AswgAuthority } from "../../model/authority.model";
+import { hasAllAuthorities, isAuthenticated } from "@service/permission.service";
+import { AswgAuthority } from "@model/authority.model";
 
 export const settingsRoutes: Routes = [
   {

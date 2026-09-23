@@ -1,8 +1,11 @@
 <form [formGroup]="form" class="container">
   <div class="network-properties-wrapper">
     <div class="network-properties">
-      <h1>Network</h1>
-      <div class="properties-flex">
+      <div class="header-with-edit">
+        <h1>Network</h1>
+        <a mat-button [routerLink]="'/editor/'+ editorFileType.NETWORK_CONFIG">Edit basic.cfg</a>
+      </div>
+      <div class="properties-list">
         <mat-form-field
           matTooltip="Adding this option will force server into LAN mode."
           matTooltipPosition="right"
@@ -128,7 +131,7 @@
     <div class="network-properties">
       <hr>
       <h1>Network Performance</h1>
-      <div class="properties-flex">
+      <div class="properties-list">
         <mat-form-field
           matTooltip="Bandwidth the server is guaranteed to have (in bps). This value helps server to estimate bandwidth available. Increasing it to too optimistic values can increase lag and CPU load, as too many messages will be sent but discarded."
           matTooltipPosition="right"
@@ -302,7 +305,7 @@
       <h1 matTooltip="Determines how long until kicked player can return to game in seconds">
         Kick Timeouts
       </h1>
-      <div class="properties-flex">
+      <div class="properties-list">
         <mat-form-field
           matTooltip="For vote kick, admin kick, bruteforce detection etc. -1 = unitl mission end, -2 = unitl server restart"
         >

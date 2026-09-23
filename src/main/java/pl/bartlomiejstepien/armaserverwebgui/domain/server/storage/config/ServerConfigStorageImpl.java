@@ -8,12 +8,15 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.NetworkConfig;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.config.model.ServerFiles;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.CfgFileHandler;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.function.Supplier;
 
 @Repository
@@ -39,7 +42,7 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
         {
             return cfgFileHandler.readConfig(getServerConfigFile(), ArmaServerConfig.class);
         }
-        catch (IOException e)
+        catch (IOException | ParsingException e)
         {
             throw new RuntimeException(e);
         }
@@ -72,15 +75,21 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
     }
 
     @Override
-    public void saveServerConfigFileContent(String content)
+    public void saveServerConfigFileContent(String content, boolean validate) throws ParsingException
     {
         try
         {
             // Using temp file, check if new content parses properly.
-            File file = File.createTempFile("arma3-server-config", ".cfg");
-            Files.writeString(file.toPath(), content);
-            cfgFileHandler.readConfig(file, ArmaServerConfig.class);
+            if (validate) {
+                File file = File.createTempFile("arma3-server-config-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss")), ".cfg");
+                Files.writeString(file.toPath(), content);
+                cfgFileHandler.readConfig(file, ArmaServerConfig.class);
+            }
             Files.writeString(getServerConfigFile().toPath(), content, StandardOpenOption.CREATE);
+        }
+        catch (ParsingException exception)
+        {
+            throw exception;
         }
         catch (Exception exception)
         {
@@ -95,7 +104,7 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
         {
             return cfgFileHandler.readConfig(getBasicNetworkConfigFile(), NetworkConfig.class);
         }
-        catch (IOException e)
+        catch (IOException | ParsingException e)
         {
             throw new RuntimeException(e);
         }
@@ -115,15 +124,21 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
     }
 
     @Override
-    public void saveBasicNetworkConfigFileContent(String content)
+    public void saveBasicNetworkConfigFileContent(String content, boolean validate) throws ParsingException
     {
         try
         {
-            // Using temp file, check if new content parses properly.
-            File file = File.createTempFile("arma3-network", ".cfg");
-            Files.writeString(file.toPath(), content);
-            cfgFileHandler.readConfig(file, NetworkConfig.class);
+            if (validate) {
+                // Using temp file, check if new content parses properly.
+                File file = File.createTempFile("arma3-network-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss")), ".cfg");
+                Files.writeString(file.toPath(), content);
+                cfgFileHandler.readConfig(file, NetworkConfig.class);
+            }
             Files.writeString(getBasicNetworkConfigFile().toPath(), content, StandardOpenOption.CREATE);
+        }
+        catch (ParsingException exception)
+        {
+            throw exception;
         }
         catch (Exception exception)
         {

@@ -29,3 +29,5 @@ databaseChangeLog:
       path: db/changelog/014-mod-dependencies/
   - includeAll:
       path: db/changelog/015-missions-download-permission/
+  - includeAll:
+      path: db/changelog/016-editor/

@@ -1,0 +1,14 @@
+<div class="editor-page-container">
+  <h1>File editor</h1>
+  <h3>{{ fileNameFriendly() }}</h3>
+  <div class="file-editor">
+    <div class="code-wrapper">
+      <div #code class="code hljs"></div>
+    </div>
+  </div>
+  <div class="buttons-section-bottom">
+    <div>
+      <button mat-flat-button color="primary" (click)="save()">Save</button>
+    </div>
+  </div>
+</div>

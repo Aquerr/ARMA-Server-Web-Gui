@@ -13,10 +13,10 @@ import java.io.IOException;
 @Slf4j
 public class DefaultCfgConfigReader implements CfgConfigReader
 {
-    public static final DefaultCfgConfigReader INSTNACE = new DefaultCfgConfigReader();
+    public static final DefaultCfgConfigReader INSTANCE = new DefaultCfgConfigReader();
 
     @Override
-    public <T> T readConfig(File file, Class<T> clazz) throws IOException
+    public <T> T readConfig(File file, Class<T> clazz) throws IOException, ParsingException
     {
         try
         {
@@ -28,6 +28,10 @@ public class DefaultCfgConfigReader implements CfgConfigReader
             {
                 return parse(new CfgReadContext(new StringBuilder(), bufferedReader, clazz), clazz);
             }
+        }
+        catch (ParsingException parsingException)
+        {
+            throw parsingException;
         }
         catch (Exception exception)
         {

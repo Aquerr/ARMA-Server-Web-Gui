@@ -18,16 +18,20 @@ import { MatButton } from "@angular/material/button";
 import { GeneralFormGroup, GeneralFormService } from "./general-form.service";
 import { AswgChipFormInputComponent } from "@common-ui/aswg-chip-form-input/aswg-chip-form-input.component";
 import { digitsOnly, stripToDigits } from "@app/util/form/form.utils";
+import { RouterLink } from "@angular/router";
+import { EditorFileType } from "@service/editor.service";
 
 @Component({
   selector: "app-general",
   templateUrl: "./general.component.html",
   styleUrls: ["./general.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatFormField, MatLabel, FormsModule, MatInput, MatTooltip, MatSelect, MatOption, MotdListComponent, MatButton, ReactiveFormsModule, AswgChipFormInputComponent, MatError]
+  imports: [MatFormField, MatLabel, FormsModule, MatInput, MatTooltip, MatSelect, MatOption, MotdListComponent, MatButton, ReactiveFormsModule, AswgChipFormInputComponent, MatError, RouterLink]
 })
 export class GeneralComponent implements AfterViewInit {
   form: FormGroup<GeneralFormGroup>;
+
+  public readonly editorFileType = EditorFileType;
 
   commandLineParams = signal<string>("");
 

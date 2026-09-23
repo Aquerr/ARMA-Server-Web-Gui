@@ -1,5 +1,8 @@
 <div class="container">
-  <h1>General</h1>
+  <div class="header-with-edit">
+    <h1>General</h1>
+    <a mat-button [routerLink]="'/editor/'+ editorFileType.SERVER_CONFIG">Edit server.cfg</a>
+  </div>
   <div class="general-properties" [formGroup]="form">
     <section class="section-fields">
       <mat-form-field style="width: 440px;">

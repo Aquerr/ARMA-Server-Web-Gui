@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
-import { API_BASE_URL } from "../../environments/environment";
+import { API_BASE_URL } from "@environments/environment";
 import { HttpClient } from "@angular/common/http";
-import { DiscordIntegrationSettings } from "../model/discord-settings.model";
+import { DiscordIntegrationSettings } from "@model/discord-settings.model";
 import { Observable } from "rxjs";
 
 @Injectable({

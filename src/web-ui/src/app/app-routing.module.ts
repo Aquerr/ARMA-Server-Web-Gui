@@ -9,12 +9,13 @@ import { LoginComponent } from "./tabs/login/login.component";
 import { SecurityComponent } from "./tabs/security/security.component";
 import { StatusComponent } from "./tabs/status/status.component";
 import { WorkshopComponent } from "./tabs/workshop/workshop.component";
-import { WorkshopService } from "./service/workshop.service";
+import { WorkshopService } from "@service/workshop.service";
 import { map } from "rxjs";
 import { DifficultyComponent } from "./tabs/difficulty/difficulty.component";
-import { hasAllAuthorities, isAuthenticated } from "./service/permission.service";
-import { AswgAuthority } from "./model/authority.model";
+import { hasAllAuthorities, isAuthenticated } from "@service/permission.service";
+import { AswgAuthority } from "@model/authority.model";
 import { settingsRoutes } from "./tabs/settings/settings.routes";
+import { EditorComponent } from "@app/tabs/editor/editor.component";
 
 const routes: Routes = [
   { path: "status", component: StatusComponent, canActivate: [isAuthenticated()] },
@@ -70,6 +71,10 @@ const routes: Routes = [
           .canUseWorkshop()
           .pipe(map((response) => response.active))
     ]
+  },
+  {
+    path: "editor/:file",
+    component: EditorComponent
   },
   { path: "login", component: LoginComponent },
   { path: "", redirectTo: "/status", pathMatch: "full" },

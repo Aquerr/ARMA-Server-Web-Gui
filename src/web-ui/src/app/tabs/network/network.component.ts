@@ -9,6 +9,8 @@ import { MatTooltip } from "@angular/material/tooltip";
 import { MatOption, MatSelect } from "@angular/material/select";
 import { MatButton } from "@angular/material/button";
 import { stripToDecimals, stripToDigits } from "@app/util/form/form.utils";
+import { EditorFileType } from "@service/editor.service";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: "app-network",
@@ -22,12 +24,15 @@ import { stripToDecimals, stripToDigits } from "@app/util/form/form.utils";
     MatOption,
     MatError,
     MatInput,
-    MatButton
+    MatButton,
+    RouterLink
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./network.component.scss"]
 })
 export class NetworkComponent implements OnInit {
+  protected readonly editorFileType = EditorFileType;
+
   form: FormGroup<NetworkFormGroupControls>;
 
   constructor(

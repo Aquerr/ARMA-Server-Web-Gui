@@ -12,6 +12,6 @@ public class CfgHandlerConfig
     @Bean
     public CfgFileHandler cfgFileHandler()
     {
-        return new CfgFileHandler(DefaultCfgConfigReader.INSTNACE, DefaultCfgConfigWriter.INSTANCE);
+        return new CfgFileHandler(DefaultCfgConfigReader.INSTANCE, DefaultCfgConfigWriter.INSTANCE);
     }
 }
