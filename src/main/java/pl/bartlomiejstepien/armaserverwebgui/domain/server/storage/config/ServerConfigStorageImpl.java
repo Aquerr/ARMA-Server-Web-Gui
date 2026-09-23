@@ -80,12 +80,17 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
         try
         {
             // Using temp file, check if new content parses properly.
-            if (validate) {
-                File file = File.createTempFile("arma3-server-config-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss")), ".cfg");
+            if (validate)
+            {
+                File file = File.createTempFile("arma3-server-config", ".cfg");
                 Files.writeString(file.toPath(), content);
                 cfgFileHandler.readConfig(file, ArmaServerConfig.class);
+                Files.deleteIfExists(file.toPath());
             }
-            Files.writeString(getServerConfigFile().toPath(), content, StandardOpenOption.CREATE);
+            Files.writeString(getServerConfigFile().toPath(), content,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
         }
         catch (ParsingException exception)
         {
@@ -128,13 +133,18 @@ public class ServerConfigStorageImpl implements ServerConfigStorage
     {
         try
         {
-            if (validate) {
+            if (validate)
+            {
                 // Using temp file, check if new content parses properly.
-                File file = File.createTempFile("arma3-network-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss")), ".cfg");
+                File file = File.createTempFile("arma3-network", ".cfg");
                 Files.writeString(file.toPath(), content);
                 cfgFileHandler.readConfig(file, NetworkConfig.class);
+                Files.deleteIfExists(file.toPath());
             }
-            Files.writeString(getBasicNetworkConfigFile().toPath(), content, StandardOpenOption.CREATE);
+            Files.writeString(getBasicNetworkConfigFile().toPath(), content,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
         }
         catch (ParsingException exception)
         {

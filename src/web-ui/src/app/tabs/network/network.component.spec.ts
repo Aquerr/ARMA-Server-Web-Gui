@@ -5,6 +5,7 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ServerNetworkService } from "@service/server-network.service";
 import { ServerNetworkServiceMock } from "../../../../testing/mocks/server-network-service.mock";
 import { EMPTY } from "rxjs";
+import { provideRouter } from "@angular/router";
 
 describe("NetworkComponent", () => {
   let component: NetworkComponent;
@@ -15,7 +16,7 @@ describe("NetworkComponent", () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NetworkComponent],
-      providers: [provideHttpClientTesting(), {
+      providers: [provideHttpClientTesting(), provideRouter([{ path: "network", component: NetworkComponent }]), {
         provide: ServerNetworkService, useValue: serverNetworkServiceMock
       }]
     }).compileComponents();

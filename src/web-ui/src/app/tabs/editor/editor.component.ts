@@ -63,7 +63,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.editorService.loadFileContent(this.fileType()!)
       .pipe(finalize(() => this.loadingSpinnerMaskService.hide()))
       .subscribe((response) => {
-        this.codeEditorElement()?.setCode(response.content);
+        this.codeEditorElement().setCode(response.content);
       });
   }
 

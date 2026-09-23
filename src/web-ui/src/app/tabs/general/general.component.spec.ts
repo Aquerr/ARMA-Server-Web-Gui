@@ -4,6 +4,7 @@ import { GeneralComponent } from "./general.component";
 import { ServerGeneralService } from "@service/server-general.service";
 import { EMPTY } from "rxjs";
 import { ServerGeneralServiceMock } from "../../../../testing/mocks/server-general-service.mock";
+import { provideRouter } from "@angular/router";
 
 describe("GeneralComponent", () => {
   let component: GeneralComponent;
@@ -15,6 +16,7 @@ describe("GeneralComponent", () => {
     await TestBed.configureTestingModule({
       imports: [GeneralComponent],
       providers: [
+        provideRouter([{ path: "general", component: GeneralComponent }]),
         {
           provide: ServerGeneralService, useValue: serverGeneralServiceMock
         }
