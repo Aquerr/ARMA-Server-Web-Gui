@@ -1,0 +1,28 @@
+.buttons-section-bottom {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.buttons-section-bottom .button-icon {
+  color: white !important;
+}
+
+.code-wrapper {
+  width: 100%;
+}
+
+@media (max-width: 800px) {
+  .editor-page-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .buttons-section-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

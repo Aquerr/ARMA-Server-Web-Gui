@@ -1,19 +1,15 @@
 import {
-  AfterViewInit,
   Component,
-  ElementRef,
   OnInit,
-  ViewChild,
   ChangeDetectionStrategy,
   output,
-  model
+  model, viewChild
 } from "@angular/core";
 import { ModSettings } from "@model/mod-settings.model";
 import { ModSettingsService } from "@service/mod-settings.service";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { EditModSettingsFormControls, EditModsSettingsFormService } from "./edit-mods-settings-form.service";
 import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
-import hljs from "highlight.js";
 import { NotificationService } from "@service/notification.service";
 import {
   MatAccordion,
@@ -26,8 +22,7 @@ import { MatOption, MatSelect } from "@angular/material/select";
 import { NgClass } from "@angular/common";
 import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatInput } from "@angular/material/input";
-import { CodeJar } from "codejar";
-import { withLineNumbers } from "codejar-linenumbers";
+import { AswgSqfEditorComponent } from "@common-ui/aswg-sqf-editor/aswg-sqf-editor.component";
 
 @Component({
   selector: "app-mod-settings-panel",
@@ -48,19 +43,18 @@ import { withLineNumbers } from "codejar-linenumbers";
     NgClass,
     MatIconButton,
     MatInput,
-    MatButton
+    MatButton,
+    AswgSqfEditorComponent
   ]
 })
-export class ModSettingsPanelComponent implements OnInit, AfterViewInit {
+export class ModSettingsPanelComponent implements OnInit {
   public readonly modSettings = model.required<ModSettings>();
   public readonly modSettingsDeleted = output<number>();
   public readonly modSettingsActivated = output<ModSettings>();
 
-  @ViewChild("code") codeElement!: ElementRef<HTMLDivElement>;
+  codeElement = viewChild.required<AswgSqfEditorComponent>("codeEditor");
 
   public form: FormGroup<EditModSettingsFormControls>;
-
-  private jar!: CodeJar;
 
   constructor(
     private readonly modSettingsService: ModSettingsService,
@@ -71,10 +65,6 @@ export class ModSettingsPanelComponent implements OnInit, AfterViewInit {
     this.form = this.formService.getForm();
   }
 
-  ngAfterViewInit(): void {
-    this.prepareCodeJar();
-  }
-
   ngOnInit() {
     this.formService.setForm(this.form, this.modSettings(), undefined);
   }
@@ -83,7 +73,7 @@ export class ModSettingsPanelComponent implements OnInit, AfterViewInit {
     if (!this.form.controls.content.value && this.modSettings().id) {
       this.maskService.show();
       this.modSettingsService.getModSettingsContent(this.modSettings().id!).subscribe((response) => {
-        this.jar.updateCode(response.content);
+        this.codeElement().setCode(response.content);
         this.maskService.hide();
       });
     }
@@ -130,20 +120,7 @@ export class ModSettingsPanelComponent implements OnInit, AfterViewInit {
     this.modSettingsActivated.emit(this.formService.asModSettings(this.form));
   }
 
-  static highlightMethod(editor: HTMLElement) {
-    if (editor.textContent !== null && editor.textContent !== undefined) {
-      editor.innerHTML = hljs.highlight(editor.textContent, {
-        language: "sql"
-      }).value;
-    }
-  }
-
-  private prepareCodeJar() {
-    this.jar = CodeJar(this.codeElement.nativeElement, withLineNumbers(ModSettingsPanelComponent.highlightMethod), {
-      tab: "\t"
-    });
-    this.jar.onUpdate((code) => {
-      this.form.controls.content.setValue(code);
-    });
+  protected onCodeChanged(code: string) {
+    this.form.controls.content.setValue(code);
   }
 }

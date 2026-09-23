@@ -2,6 +2,12 @@
   width: 35%;
 }
 
+.header-with-edit {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
 .section-fields {
   width: 100%;
   display: flex;
@@ -70,5 +76,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .header-with-edit {
+    text-align: center;
+    flex-direction: column;
+    margin-bottom: 1rem;
   }
 }

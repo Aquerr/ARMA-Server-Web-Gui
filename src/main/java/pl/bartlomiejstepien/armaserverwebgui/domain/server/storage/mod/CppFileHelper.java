@@ -3,7 +3,6 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod;
 import lombok.extern.slf4j.Slf4j;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.DefaultCfgConfigReader;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 
@@ -27,9 +26,9 @@ public final class CppFileHelper
 
         try
         {
-            return (T) DefaultCfgConfigReader.INSTNACE.readConfig(filePath.toFile(), clazz);
+            return (T) DefaultCfgConfigReader.INSTANCE.readConfig(filePath.toFile(), clazz);
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             log.warn("Could not read mod file: {}", filePath, e);
         }

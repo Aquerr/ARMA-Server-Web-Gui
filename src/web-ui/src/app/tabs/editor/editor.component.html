@@ -1,0 +1,13 @@
+<div class="editor-page-container">
+  <h1>File editor</h1>
+  <h3>{{ fileNameFriendly() }}</h3>
+  <div class="file-editor">
+    <div class="code-wrapper">
+      <app-aswg-sqf-editor #codeEditor></app-aswg-sqf-editor>
+    </div>
+  </div>
+  <div class="buttons-section-bottom">
+    <button mat-flat-button color="accent" (click)="reload()"><mat-icon class="button-icon">refresh</mat-icon>Reload</button>
+    <button mat-flat-button color="primary" (click)="save()"><mat-icon class="button-icon">save</mat-icon>Save</button>
+  </div>
+</div>

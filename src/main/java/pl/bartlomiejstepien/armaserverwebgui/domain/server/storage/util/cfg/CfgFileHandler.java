@@ -1,6 +1,7 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg;
 
 import lombok.AllArgsConstructor;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.exception.ParsingException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgArrayClassFieldValuesParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgClassListParser;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.cfg.parser.CfgClassParserImpl;
@@ -35,7 +36,7 @@ public class CfgFileHandler
     private final CfgConfigWriter cfgConfigWriter;
 
 
-    public <T> T readConfig(File file, Class<T> clazz) throws IOException
+    public <T> T readConfig(File file, Class<T> clazz) throws IOException, ParsingException
     {
         return cfgConfigReader.readConfig(file, clazz);
     }
