@@ -1,31 +1,16 @@
 .buttons-section-bottom {
+  display: flex;
+  gap: 1rem;
   margin-top: 1rem;
 }
 
-.code {
-  width: 100%;
-  height: 500px;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 14px;
-  background: #1e1e1e;
-  color: #d4d4d4;
-  padding: 10px;
-  border-radius: 4px;
-  box-sizing: border-box;
-  border: 1px solid #333;
-  overflow: auto;
+.buttons-section-bottom .button-icon {
+  color: white !important;
 }
 
 .code-wrapper {
   width: 100%;
 }
-
-.sqf-keyword { color: #569cd6; font-weight: bold; }
-.sqf-command { color: #4ec9b0; }
-.sqf-variable { color: #9cdcfe; }
-.sqf-string   { color: #ce9178 !important; }
-.sqf-number   { color: #b5cea8; }
-.sqf-comment  { color: #6a9955; font-style: italic; }
 
 @media (max-width: 800px) {
   .editor-page-container {

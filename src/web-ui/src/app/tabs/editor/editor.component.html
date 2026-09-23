@@ -3,12 +3,11 @@
   <h3>{{ fileNameFriendly() }}</h3>
   <div class="file-editor">
     <div class="code-wrapper">
-      <div #code class="code hljs"></div>
+      <app-aswg-sqf-editor #codeEditor></app-aswg-sqf-editor>
     </div>
   </div>
   <div class="buttons-section-bottom">
-    <div>
-      <button mat-flat-button color="primary" (click)="save()">Save</button>
-    </div>
+    <button mat-flat-button color="accent" (click)="reload()"><mat-icon class="button-icon">refresh</mat-icon>Reload</button>
+    <button mat-flat-button color="primary" (click)="save()"><mat-icon class="button-icon">save</mat-icon>Save</button>
   </div>
 </div>
