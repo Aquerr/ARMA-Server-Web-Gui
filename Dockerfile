@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25-jre AS runner
+FROM docker.io/eclipse-temurin:25-jre AS runner
 
 USER root
 
