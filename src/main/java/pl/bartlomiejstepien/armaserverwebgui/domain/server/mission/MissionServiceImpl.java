@@ -142,6 +142,22 @@ public class MissionServiceImpl implements MissionService
         return this.missionFileStorage.getMissionFile(missionEntity.getTemplate());
     }
 
+    @Override
+    @Transactional
+    public void deleteAllMissions(boolean deleteFiles)
+    {
+        log.info("Deleting all missions. deleteFiles: {}", deleteFiles);
+        List<MissionEntity> missionEntities = this.missionRepository.findAll();
+        if (deleteFiles)
+        {
+            for (MissionEntity missionEntity : missionEntities)
+            {
+                this.missionFileStorage.deleteMission(missionEntity.getTemplate());
+            }
+        }
+        this.missionRepository.deleteAll();
+    }
+
     private void syncConfigMissions()
     {
         List<Mission> missions = this.missionRepository.findAll().stream()

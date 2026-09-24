@@ -31,3 +31,5 @@ databaseChangeLog:
       path: db/changelog/015-missions-download-permission/
   - includeAll:
       path: db/changelog/016-editor/
+  - includeAll:
+      path: db/changelog/017-pruge-permissions/

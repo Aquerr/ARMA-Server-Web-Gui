@@ -189,6 +189,14 @@ public class ModPresetServiceImpl implements ModPresetService
         this.modPresetRepository.delete(modPresetEntity);
     }
 
+    @Override
+    public void deleteAllPresets()
+    {
+        log.info("Deleting all mod presets.");
+        this.modPresetEntryRepository.deleteAll();
+        this.modPresetRepository.deleteAll();
+    }
+
     private Set<EnabledMod> convertToModViews(List<ModPreset.Entry> entries)
     {
         return entries.stream()

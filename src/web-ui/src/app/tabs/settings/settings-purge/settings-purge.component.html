@@ -1,0 +1,25 @@
+<form class="container">
+  <h1>Purge data</h1>
+  <div class="purge-list">
+    <div class="nav-list">
+      <button class="nav-list-item" (click)="purgeMissions()">
+        <div class="nav-list-icon-container">
+          <mat-icon fontIcon="map"></mat-icon>
+        </div>
+        <span>Missions</span>
+      </button>
+      <button class="nav-list-item" (click)="purgeMods()">
+        <div class="nav-list-icon-container">
+          <mat-icon fontIcon="folder"></mat-icon>
+        </div>
+        <span>Mods</span>
+      </button>
+      <button class="nav-list-item" (click)="purgeModPresets()">
+        <div class="nav-list-icon-container">
+          <mat-icon fontIcon="folder"></mat-icon>
+        </div>
+        <span>Mod Presets</span>
+      </button>
+    </div>
+  </div>
+</form>

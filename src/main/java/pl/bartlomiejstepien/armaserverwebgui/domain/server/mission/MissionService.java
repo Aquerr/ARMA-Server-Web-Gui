@@ -24,4 +24,6 @@ public interface MissionService
     void updateMission(long id, Mission mission);
 
     File getMissionFile(long missionId);
+
+    void deleteAllMissions(boolean deleteFiles);
 }

@@ -23,4 +23,6 @@ public interface ModPresetService
     void selectPreset(String name);
 
     void deletePreset(String presetName);
+
+    void deleteAllPresets();
 }

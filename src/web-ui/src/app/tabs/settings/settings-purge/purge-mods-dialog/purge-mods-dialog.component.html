@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Confirmation</h1>
+<mat-dialog-content>
+  <div>
+    <p>All mods stored in ASWG's database will be deleted.</p>
+    <p>Do you really want to continue?</p>
+  </div>
+  <div>
+    <mat-checkbox [(ngModel)]="deleteFiles">Delete mods files too?</mat-checkbox>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="purge()">Purge</button>
+  <button mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
+</mat-dialog-actions>

@@ -137,6 +137,17 @@ public class ModServiceImpl implements ModService
     }
 
     @Override
+    public void deleteAllMods(boolean deleteFiles)
+    {
+        List<InstalledModEntity> installedModEntities = this.installedModRepository.findAll();
+
+        for (InstalledModEntity installedModEntity : installedModEntities)
+        {
+            this.modFileStorage.deleteMod(installedModEntity);
+        }
+    }
+
+    @Override
     @Transactional
     public void saveEnabledModList(Set<EnabledMod> enabledMods)
     {

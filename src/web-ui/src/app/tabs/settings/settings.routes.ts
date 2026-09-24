@@ -1,6 +1,6 @@
 import { Routes } from "@angular/router";
 import { SettingsComponent } from "./settings.component";
-import { hasAllAuthorities, isAuthenticated } from "@service/permission.service";
+import { hasAllAuthorities, hasAnyAuthority, isAuthenticated } from "@service/permission.service";
 import { AswgAuthority } from "@model/authority.model";
 
 export const settingsRoutes: Routes = [
@@ -51,6 +51,16 @@ export const settingsRoutes: Routes = [
             path: ":name",
             loadComponent: () => import("./settings-jobs/job-view/job-view.component").then((c) => c.JobViewComponent),
             canActivate: [hasAllAuthorities([AswgAuthority.JOBS_SETTINGS_UPDATE])]
+          }
+        ]
+      },
+      {
+        path: "purge",
+        children: [
+          {
+            path: "",
+            loadComponent: () => import("./settings-purge/settings-purge.component").then((c) => c.SettingsPurgeComponent),
+            canActivate: [hasAnyAuthority([AswgAuthority.MISSIONS_PURGE, AswgAuthority.MODS_PURGE, AswgAuthority.MOD_PRESETS_PURGE])]
           }
         ]
       }

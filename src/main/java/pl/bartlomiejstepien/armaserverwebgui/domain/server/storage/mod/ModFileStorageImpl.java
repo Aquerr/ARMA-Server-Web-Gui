@@ -131,6 +131,7 @@ public class ModFileStorageImpl implements ModFileStorage
     @Override
     public void deleteMod(InstalledModEntity installedModEntity)
     {
+        //TODO: Those two actions should be performed by something like ModStorageManager. File storage should rather not use db repository.
         deleteModDirectory(installedModEntity.getModDirectoryName(), installedModEntity.getDirectoryPath());
         this.installedModRepository.delete(installedModEntity);
     }
