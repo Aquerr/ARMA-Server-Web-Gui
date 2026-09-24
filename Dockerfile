@@ -12,7 +12,7 @@ RUN apt-get -y update \
     && cd /steamcmd \
     && curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
 
-# Arma libs (should already be installed but we'll install them anyway just if they were absent)
+# Arma libs (should already be installed but we'll install them anyway, just if they were absent)
 RUN apt-get -y install libavahi-common3 libavahi-client3
 
 # Intall ASWG
