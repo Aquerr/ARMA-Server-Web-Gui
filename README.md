@@ -44,7 +44,7 @@ through my [Discord Server](https://discord.gg/Zg3rWta).
 * Linux support (currently tested on Ubuntu)
 * [Docker support](https://hub.docker.com/r/aquerr/arma-server-web-gui)
 * Server Console + Player list
-* Edit server configuration (server.cfg and basic.cfg)
+* Edit server configuration (`server.cfg` and `basic.cfg`)
 * Difficulty management
 * Mods management
 * Missions management
@@ -61,6 +61,10 @@ through my [Discord Server](https://discord.gg/Zg3rWta).
 ![Configuration](https://i.imgur.com/6CqEexJ.png)
 
 # Setup
+
+ASWG can be installed in two different ways:
+- [Manual (Self-run JAR file)](#manual-setup)
+- [Docker](#docker-setup)
 
 ASWG can be installed directly on a system or via Docker.
 
@@ -87,7 +91,7 @@ ASWG can be installed directly on a system or via Docker.
 
 ### SteamCMD
 
-ASWG has a support for SteamCMD that can be used to install/update Arma 3 game server and download mods from the Steam
+ASWG integrates with SteamCMD that can be used to install/update Arma 3 game server and download mods from the Steam
 workshop.
 
 If you are using 2FA on Steam then you will need to disable it as ASWG does not work well with Steam 2FA.
@@ -96,8 +100,7 @@ Because of that, it is advised to use a separate Steam account just for your Arm
 **For how to install SteamCMD installation check the official**
 [SteamCMD wiki](https://developer.valvesoftware.com/wiki/SteamCMD).
 
-**NOTE: When using ASWG docker image, SteamCMD is already installed inside it so the only thing you need to do is to
-configure it.**
+**NOTE: ASWG Docker images come with preinstalled SteamCMD so the only thing you need to do is to configure it.**
 
 ## Docker setup
 
