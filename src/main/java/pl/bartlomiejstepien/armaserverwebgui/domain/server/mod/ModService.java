@@ -23,7 +23,7 @@ public interface ModService
 
     List<WorkshopModInstallationRequest> getWorkShopModInstallRequests();
 
-    void deleteFromDB(long id);
+    void deleteFromDBOnly(long id);
 
     List<FileSystemMod> getInstalledModsFromFileSystem();
 

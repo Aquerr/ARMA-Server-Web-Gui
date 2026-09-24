@@ -13,7 +13,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMo
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationStatus;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.MetaCppFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModFileStorage;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorageManager;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.FileUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.SystemUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.dotnet.DotnetDateTimeUtils;
@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 
@@ -38,7 +39,7 @@ public class SteamCmdModInstallHelper
 {
     private final ASWGConfig aswgConfig;
     private final ModFolderNameHelper modFolderNameHelper;
-    private final ModFileStorage modFileStorage;
+    private final ModStorageManager modStorageManager;
     private final InstalledModRepository installedModRepository;
     private final WorkshopModInstallProgressWebsocketHandler workshopModInstallProgressWebsocketHandler;
 
@@ -52,7 +53,7 @@ public class SteamCmdModInstallHelper
 
         if (SystemUtils.isWindows())
         {
-            this.modFileStorage.copyModFolderFromSteamCmd(steamCmdModFolderPath, modDirectory);
+            this.modStorageManager.copyModFolderFromSteamCmd(steamCmdModFolderPath, modDirectory);
         }
         else
         {
@@ -62,11 +63,13 @@ public class SteamCmdModInstallHelper
                 FileUtils.deleteFilesRecursively(modDirectory.getPath().toAbsolutePath(), false);
             }
 
-            this.modFileStorage.linkModFolderToSteamCmdModFolder(steamCmdModFolderPath, modDirectory);
+            this.modStorageManager.linkModFolderToSteamCmdModFolder(steamCmdModFolderPath, modDirectory);
         }
         publishMessage(new WorkshopModInstallationStatus(modData.getFileId(), 75));
 
-        saveModInDatabase(modData.getFileId(), modDirectory.getModName(), modDirectory, modData.getWorkshopMod());
+        saveModInDatabase(modData.getFileId(), Optional.ofNullable(modData.getWorkshopMod())
+                .map(WorkshopMod::getTitle)
+                .orElseGet(modDirectory::getDirectoryName), modDirectory, modData.getWorkshopMod());
         publishMessage(new WorkshopModInstallationStatus(modData.getFileId(), 100));
     }
 

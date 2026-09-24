@@ -2,18 +2,16 @@ package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod;
 
 import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.ZipFile;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pl.bartlomiejstepien.armaserverwebgui.application.config.ASWGConfig;
 import pl.bartlomiejstepien.armaserverwebgui.application.util.AswgFileNameNormalizer;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModFolderNameHelper;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.util.FileUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotInstallWorkshopModException;
-import pl.bartlomiejstepien.armaserverwebgui.repository.InstalledModRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,19 +36,16 @@ import static java.lang.String.format;
 @Repository
 public class ModFileStorageImpl implements ModFileStorage
 {
-    private final Supplier<Path> modDirectory;
-    private final InstalledModRepository installedModRepository;
+    private final Supplier<Path> modsDirectory;
 
     private final ModFolderNameHelper modFolderNameHelper;
     private final AswgFileNameNormalizer fileNameNormalizer;
 
     public ModFileStorageImpl(ASWGConfig aswgConfig,
-                              InstalledModRepository installedModRepository,
                               ModFolderNameHelper modFolderNameHelper,
                               AswgFileNameNormalizer fileNameNormalizer)
     {
-        this.modDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath()).resolve(aswgConfig.getModsDirectoryPath());
-        this.installedModRepository = installedModRepository;
+        this.modsDirectory = () -> Paths.get(aswgConfig.getServerDirectoryPath()).resolve(aswgConfig.getModsDirectoryPath());
         this.modFolderNameHelper = modFolderNameHelper;
         this.fileNameNormalizer = fileNameNormalizer;
     }
@@ -58,8 +53,8 @@ public class ModFileStorageImpl implements ModFileStorage
     @Override
     public Path save(MultipartFile multipartFile) throws IOException
     {
-        Path filePath = modDirectory.get().resolve(modFolderNameHelper.buildFor(multipartFile));
-        Files.createDirectories(modDirectory.get());
+        Path filePath = modsDirectory.get().resolve(modFolderNameHelper.buildFor(multipartFile));
+        Files.createDirectories(modsDirectory.get());
         saveFileAtPath(multipartFile, filePath);
         Path modFolderPath = unpackZipFile(filePath);
         try
@@ -74,21 +69,15 @@ public class ModFileStorageImpl implements ModFileStorage
     }
 
     @Override
-    public boolean doesModFileExists(MultipartFile filename)
-    {
-        return doesModFileExists(filename.getOriginalFilename());
-    }
-
-    @Override
     public boolean doesModFileExists(String fileNameWithExtension)
     {
-        return Files.exists(modDirectory.get().resolve(modFolderNameHelper.buildForWithoutExtension(fileNameWithExtension)));
+        return Files.exists(modsDirectory.get().resolve(modFolderNameHelper.buildForWithoutExtension(fileNameWithExtension)));
     }
 
     @Override
     public List<FileSystemMod> getModsFromFileSystem()
     {
-        return Optional.ofNullable(modDirectory.get().toFile().listFiles())
+        return Optional.ofNullable(modsDirectory.get().toFile().listFiles())
                 .map(files -> Stream.of(files)
                         .filter(ModDirectory::isModDirectory)
                         .map(this::getFileSystemModFromDirectory)
@@ -112,7 +101,7 @@ public class ModFileStorageImpl implements ModFileStorage
     @Override
     public void deleteFileSystemMod(String directoryName)
     {
-        final File[] files = this.modDirectory.get().toFile().listFiles();
+        final File[] files = this.modsDirectory.get().toFile().listFiles();
         if (files != null)
         {
             for (final File file : files)
@@ -127,36 +116,31 @@ public class ModFileStorageImpl implements ModFileStorage
         }
     }
 
-    @Transactional
     @Override
-    public void deleteMod(InstalledModEntity installedModEntity)
+    public void deleteMod(ModDirectory modDirectory)
     {
-        //TODO: Those two actions should be performed by something like ModStorageManager. File storage should rather not use db repository.
-        deleteModDirectory(installedModEntity.getModDirectoryName(), installedModEntity.getDirectoryPath());
-        this.installedModRepository.delete(installedModEntity);
+        deleteModDirectory(modDirectory.getPath().toString());
     }
 
-    private void deleteModDirectory(String directoryName, String directoryPath)
+    private void deleteModDirectory(String modDirectoryPath)
     {
-        final File[] files = this.modDirectory.get().toFile().listFiles();
+        if (StringUtils.isBlank(modDirectoryPath))
+            return;
+
+        String directoryName = Paths.get(modDirectoryPath).getFileName().toString();
+        final File[] files = this.modsDirectory.get().toFile().listFiles();
         if (files != null)
         {
             for (final File file : files)
             {
                 if (file.getName().equals(directoryName))
                 {
-                    log.info("Deleting mod directory {}", directoryPath);
+                    log.info("Deleting mod directory {}", modDirectoryPath);
                     FileUtils.deleteFilesRecursively(file.toPath(), true);
                     break;
                 }
             }
         }
-    }
-
-    @Override
-    public InstalledModEntity getInstalledMod(String modName)
-    {
-        return this.installedModRepository.findFirstByName(modName).orElse(null);
     }
 
     @Override
@@ -239,7 +223,7 @@ public class ModFileStorageImpl implements ModFileStorage
         // Clear old directory
         if (!modFolder.getName().equals(newModFolderPath.getFileName().toString()))
         {
-            deleteModDirectory(modFolder.getName(), modFolder.getPath());
+            deleteModDirectory(modFolder.getAbsolutePath());
         }
 
         return newModFolderPath;

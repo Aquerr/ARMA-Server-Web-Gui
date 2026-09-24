@@ -1,7 +1,6 @@
 package pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod;
 
 import org.springframework.web.multipart.MultipartFile;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.exception.CouldNotReadModMetaFile;
 
 import java.io.IOException;
@@ -13,8 +12,6 @@ public interface ModFileStorage
 
     Path save(MultipartFile multipartFile) throws IOException;
 
-    boolean doesModFileExists(MultipartFile multipartFile);
-
     boolean doesModFileExists(String modName);
 
     List<FileSystemMod> getModsFromFileSystem();
@@ -25,9 +22,7 @@ public interface ModFileStorage
 
     void deleteFileSystemMod(String modName);
 
-    void deleteMod(InstalledModEntity installedModEntity);
-
-    InstalledModEntity getInstalledMod(String modName);
+    void deleteMod(ModDirectory modDirectory);
 
     Path copyModFolderFromSteamCmd(Path steamCmdModFolderPath, ModDirectory modDirectory);
 

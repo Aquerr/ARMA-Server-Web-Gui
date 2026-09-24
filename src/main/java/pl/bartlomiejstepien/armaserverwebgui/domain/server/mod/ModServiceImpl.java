@@ -22,7 +22,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.RelatedMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationRequest;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.FileSystemMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
-import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModFileStorage;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModStorageManager;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopMod;
 import pl.bartlomiejstepien.armaserverwebgui.domain.user.dto.AswgUserDetails;
@@ -46,7 +46,6 @@ import static java.lang.String.format;
 public class ModServiceImpl implements ModService
 {
     private final AuthenticationFacade authenticationFacade;
-    private final ModFileStorage modFileStorage;
     private final InstalledModRepository installedModRepository;
     private final InstalledModConverter installedModConverter;
     private final SteamService steamService;
@@ -54,17 +53,18 @@ public class ModServiceImpl implements ModService
     private final ModWorkshopUrlBuilder modWorkshopUrlBuilder;
     private final InstalledModEntityHelper installedModEntityHelper;
     private final ModDependenciesService modDependenciesService;
+    private final ModStorageManager modStorageManager;
 
     @Override
     @Transactional
     public void saveModFile(MultipartFile multipartFile, boolean overwrite)
     {
-        if (!overwrite && modFileStorage.doesModFileExists(multipartFile))
+        if (!overwrite && modStorageManager.doesModFileExists(multipartFile.getOriginalFilename()))
             throw new ModFileAlreadyExistsException();
 
         try
         {
-            Path savedFilePath = modFileStorage.save(multipartFile);
+            Path savedFilePath = modStorageManager.save(multipartFile);
             saveModInDatabase(savedFilePath);
         }
         catch (IOException e)
@@ -76,7 +76,7 @@ public class ModServiceImpl implements ModService
     @Override
     public boolean checkModFileExists(String modName)
     {
-        return modFileStorage.doesModFileExists(modName);
+        return modStorageManager.doesModFileExists(modName);
     }
 
     @Override
@@ -100,17 +100,16 @@ public class ModServiceImpl implements ModService
         return steamService.getInstallingMods();
     }
 
-    @Transactional
     @Override
-    public void deleteFromDB(long id)
+    public void deleteFromDBOnly(long id)
     {
-        this.installedModRepository.deleteById(id);
+        this.modStorageManager.deleteFromDbOnly(id);
     }
 
     @Override
     public List<FileSystemMod> getInstalledModsFromFileSystem()
     {
-        return this.modFileStorage.getModsFromFileSystem();
+        return this.modStorageManager.getModsFromFileSystem();
     }
 
     @Override
@@ -123,17 +122,17 @@ public class ModServiceImpl implements ModService
     @Transactional
     public void deleteMod(String modName)
     {
-        InstalledModEntity installedModEntity = this.modFileStorage.getInstalledMod(modName);
+        InstalledModEntity installedModEntity = this.modStorageManager.getInstalledMod(modName);
         if (installedModEntity == null)
             throw new RuntimeException(format("Mod [%s] does not exist", modName));
 
-        this.modFileStorage.deleteMod(installedModEntity);
+        this.modStorageManager.deleteMod(installedModEntity);
     }
 
     @Override
     public void deleteNotManagedMod(String directoryName)
     {
-        this.modFileStorage.deleteFileSystemMod(directoryName);
+        this.modStorageManager.deleteFileSystemMod(directoryName);
     }
 
     @Override
@@ -143,7 +142,7 @@ public class ModServiceImpl implements ModService
 
         for (InstalledModEntity installedModEntity : installedModEntities)
         {
-            this.modFileStorage.deleteMod(installedModEntity);
+            this.modStorageManager.deleteMod(installedModEntity);
         }
     }
 
@@ -233,8 +232,8 @@ public class ModServiceImpl implements ModService
         if (this.installedModRepository.findByWorkshopFileId(fileSystemMod.getWorkshopFileId()).isPresent())
             throw new ModIdAlreadyRegisteredException();
 
-        Path normalizedModPath = this.modFileStorage.renameModFolderToLowerCaseWithUnderscores(fileSystemMod.getModDirectory().getPath().toAbsolutePath());
-        this.modFileStorage.normalizeEachFileNameInFolderRecursively(normalizedModPath);
+        Path normalizedModPath = this.modStorageManager.renameModFolderToLowerCaseWithUnderscores(fileSystemMod.getModDirectory().getPath().toAbsolutePath());
+        this.modStorageManager.normalizeEachFileNameInFolderRecursively(normalizedModPath);
 
         this.installedModRepository.save(installedModEntityHelper.toEntity(FileSystemMod.from(normalizedModPath)));
     }

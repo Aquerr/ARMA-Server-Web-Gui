@@ -69,7 +69,7 @@ public class InstallDeleteModsFromFilesystemJob extends AswgJob
         log.info("Mods to delete: {}", Arrays.toString(modsToDeleteInDB.toArray()));
         modsToDeleteInDB.stream()
                 .map(InstalledModEntity::getId)
-                .forEach(modService::deleteFromDB);
+                .forEach(modService::deleteFromDBOnly);
     }
 
     private void installNewMods(List<FileSystemMod> fileSystemMods)
