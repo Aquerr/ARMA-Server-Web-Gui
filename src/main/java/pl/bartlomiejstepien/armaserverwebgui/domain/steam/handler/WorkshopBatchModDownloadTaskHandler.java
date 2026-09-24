@@ -10,6 +10,7 @@ import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledMo
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.storage.mod.ModDirectory;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.SteamWebApiService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotBatchDownloadWorkshopModsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotDownloadWorkshopModException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.SteamCmdPathNotSetException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.helper.SteamCmdModInstallHelper;
@@ -56,7 +57,18 @@ public class WorkshopBatchModDownloadTaskHandler implements SteamTaskHandler
         List<ModData> modsToUpdate = calculateModsToUpdate(task.getFileIdsWithTitles(), task.isForced());
         if (modsToUpdate.isEmpty())
             return;
-        
+
+        // Initial save
+        for (ModData modData : modsToUpdate)
+        {
+            steamCmdModInstallHelper.saveModInDatabase(
+                    modData.getFileId(),
+                    modData.getTitle(),
+                    modData.getModDirectory(),
+                    modData.getWorkshopMod()
+            );
+        }
+
         ModDownloadResult modDownloadResult = downloadModsFromWorkshop(modsToUpdate);
         Map<Long, Path> successDownloadMods = modDownloadResult.getSuccessMods();
         modsToUpdate = modsToUpdate.stream().filter(modData -> successDownloadMods.containsKey(modData.getFileId()))
@@ -71,7 +83,9 @@ public class WorkshopBatchModDownloadTaskHandler implements SteamTaskHandler
         if (!modDownloadResult.getFailedMods().isEmpty())
         {
             // To retry the steam task
-            throw new CouldNotDownloadWorkshopModException(prepareFailedModsLog(modDownloadResult.getFailedMods()));
+            throw new CouldNotBatchDownloadWorkshopModsException(modDownloadResult.getFailedMods().stream()
+                    .map(ModData::getFileId)
+                    .collect(Collectors.toSet()), prepareFailedModsLog(modDownloadResult.getFailedMods()));
         }
     }
 

@@ -7,20 +7,21 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.QueuedSteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopModInstallSteamTask;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.retry.SimpleSteamTaskRetryPolicy;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class SteamTaskRetryPolicyTest
+class SimpleSteamTaskRetryPolicyTest
 {
     private static final int FILE_ID = 1;
     private static final String FILE_TITLE = "FILE_TITLE";
     private static final String ISSUER = "issuer_user";
 
     @InjectMocks
-    private SteamTaskRetryPolicy retryPolicy;
+    private SimpleSteamTaskRetryPolicy retryPolicy;
 
     @ParameterizedTest
     @CsvSource(

@@ -62,6 +62,10 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
             log.info("Mod {} up to date. No download needed.", task.getTitle());
             return;
         }
+
+        // Initial save
+        steamCmdModInstallHelper.saveModInDatabase(task.getFileId(), task.getTitle(), modDirectory, workshopMod);
+
         Path steamCmdModFolderPath = downloadModFromWorkshop(task.getFileId(), task.getTitle());
 
         ModData modData = ModData.builder()
@@ -73,6 +77,7 @@ public class WorkshopModDownloadTaskHandler implements SteamTaskHandler
                 .steamCmdModFolderPath(steamCmdModFolderPath)
                 .build();
 
+        // Final save
         steamCmdModInstallHelper.installDownloadedMod(modData);
     }
 

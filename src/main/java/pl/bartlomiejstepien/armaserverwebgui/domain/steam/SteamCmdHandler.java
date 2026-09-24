@@ -6,12 +6,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.WorkshopModInstallProgressWebsocketHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.WorkshopModInstallationStatus;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.CouldNotBatchDownloadWorkshopModsException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.exception.RetryableException;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.handler.SteamTaskHandler;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.QueuedSteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.SteamTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopBatchModDownloadTask;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.WorkshopModInstallSteamTask;
+import pl.bartlomiejstepien.armaserverwebgui.domain.steam.retry.SteamTaskRetryPolicy;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -20,6 +22,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -82,12 +86,41 @@ public class SteamCmdHandler
         {
             this.currentlyProcessingTask = null;
             log.warn("Exception during handling of steam task.", exception);
-            if (exception instanceof RetryableException && steamTaskRetryPolicy.canRetry(queuedSteamTask))
+            if (exception instanceof RetryableException retryableException)
             {
-                log.info("Requeuing steam task: {}", queuedSteamTask);
-                queueTask(new QueuedSteamTask(queuedSteamTask.getId(), queuedSteamTask.getSteamTask(), queuedSteamTask.getRetryCount() + 1));
+                handleSteamTaskRetry(retryableException, queuedSteamTask);
             }
         }
+    }
+
+    private void handleSteamTaskRetry(RetryableException exception, QueuedSteamTask queuedSteamTask)
+    {
+        if (!steamTaskRetryPolicy.canRetry(queuedSteamTask))
+            return;
+
+        SteamTask steamTask;
+        if (exception instanceof CouldNotBatchDownloadWorkshopModsException couldNotBatchDownloadWorkshopModsException)
+        {
+            // Download only those mods that failed
+            WorkshopBatchModDownloadTask workshopBatchModDownloadTask = (WorkshopBatchModDownloadTask) queuedSteamTask.getSteamTask();
+            Map<Long, String> fileIdsWithTitles = workshopBatchModDownloadTask.getFileIdsWithTitles();
+            steamTask = new WorkshopBatchModDownloadTask(
+                    couldNotBatchDownloadWorkshopModsException.getFailedWorkshopModIds()
+                            .stream()
+                            .collect(Collectors.toMap(Function.identity(), fileIdsWithTitles::get)),
+                    workshopBatchModDownloadTask.isForced(),
+                    workshopBatchModDownloadTask.getIssuer()
+            );
+        }
+        else
+        {
+            steamTask = queuedSteamTask.getSteamTask();
+        }
+
+        QueuedSteamTask taskToRetry = new QueuedSteamTask(queuedSteamTask.getId(), steamTask, queuedSteamTask.getRetryCount() + 1);
+
+        log.info("Requeuing steam task: {}", taskToRetry);
+        queueTask(taskToRetry);
     }
 
     private void queueTask(QueuedSteamTask queuedSteamTask)

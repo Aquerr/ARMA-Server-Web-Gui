@@ -1,10 +1,8 @@
-package pl.bartlomiejstepien.armaserverwebgui.domain.steam;
+package pl.bartlomiejstepien.armaserverwebgui.domain.steam.retry;
 
-import org.springframework.stereotype.Component;
 import pl.bartlomiejstepien.armaserverwebgui.domain.steam.model.QueuedSteamTask;
 
-@Component
-public class SteamTaskRetryPolicy
+public class SimpleSteamTaskRetryPolicy implements SteamTaskRetryPolicy
 {
     /**
      * Allows for max 2 retries (when retryCount starts with 1)
