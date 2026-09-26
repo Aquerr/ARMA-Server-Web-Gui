@@ -1,12 +1,14 @@
 @use '@angular/material' as mat;
+@use './light_theme-colors' as light;
+@use './dark_theme-colors' as dark;
 
 html[data-theme='light'] {
   color-scheme: light;
 
   @include mat.theme((
     color: (
-      primary: mat.$violet-palette,
-      tertiary: mat.$orange-palette,
+      primary: light.$primary-palette,
+      tertiary: light.$tertiary-palette,
       theme-type: light,
     ),
     typography: Roboto,
@@ -19,11 +21,20 @@ html[data-theme='dark'] {
 
   @include mat.theme((
     color: (
-      primary: mat.$green-palette,
-      tertiary: mat.$cyan-palette,
+      primary: dark.$primary-palette,
+      tertiary: dark.$tertiary-palette,
       theme-type: dark,
     ),
     typography: Roboto,
     density: 0,
+  ));
+
+  @include mat.theme-overrides((
+    primary: #46954a,
+    surface: #22272e,
+    surface-container: #2d333b,
+    on-surface: #adbac7,
+    surface-variant: #2d333b,
+    on-surface-variant: #adbac7
   ));
 }
