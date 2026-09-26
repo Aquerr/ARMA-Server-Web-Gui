@@ -1,0 +1,13 @@
+html[data-theme] {
+  --aswg-primary-color: var(--mat-sys-primary);
+  --aswg-primary-color-hover: color-mix(in srgb, var(--mat-sys-primary) 85%, black);
+
+  --aswg-primary-text-color: var(--mat-sys-on-surface);
+
+  --aswg-bg-primary-bg-color: var(--mat-sys-surface);
+  --aswg-input-bg-color: var(--mat-sys-surface-container);
+  --aswg-chip-bg-color: var(--mat-sys-surface-container-highest);
+
+  --aswg-icon-color: var(--mat-sys-primary);
+  --aswg-border-color: var(--mat-sys-outline-variant);
+}

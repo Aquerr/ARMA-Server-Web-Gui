@@ -1,14 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-  --aswg-primary-color: #4634b7;
-  --aswg-primary-color-hover: #37288f;
-  --aswg-primary-text-color: #adbac7;
-  --aswg-bg-primary-bg-color: #22272e;
-  --aswg-input-bg-color: #2d333b;
-  --aswg-chip-bg-color: #adbac7;
-  --aswg-icon-color: #adbac7;
-  --aswg-border-color: #444c56 !important;
   --mat-icon-color: var(--aswg-icon-color) !important;
   --mat-stepper-header-edit-state-icon-background-color: var(--aswg-primary-color) !important;
   --mat-stepper-header-done-state-icon-background-color: var(--aswg-primary-color) !important;
@@ -62,8 +54,8 @@
   --mat-form-field-filled-focus-active-indicator-color: var(--aswg-primary-color) !important;
   --mat-progress-bar-active-indicator-color: var(--aswg-primary-color) !important;
   --mat-option-selected-state-label-text-color: var(--aswg-primary-color) !important;
-  --mat-divider-color: #444c56 !important;
-  --mat-divider-vertical-color: #444c56 !important;
+  --mat-divider-color: var(--mat-sys-outline-variant) !important;
+  --mat-divider-vertical-color: var(--mat-sys-outline-variant) !important;
   --mat-menu-item-label-text-color: var(--aswg-primary-color) !important;
   --mat-menu-container-color: var(--aswg-bg-primary-bg-color) !important;
   --mat-card-elevated-container-color: var(--aswg-input-bg-color) !important;
