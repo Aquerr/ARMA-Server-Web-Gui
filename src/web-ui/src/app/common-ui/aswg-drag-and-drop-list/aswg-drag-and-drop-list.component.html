@@ -2,7 +2,7 @@
   {{ listHeader() }} <span class="brightness-50">({{ items().length }})</span>
 </h2>
 <div class="list-buttons">
-  <button mat-button (click)="moveAllItems()">
+  <button matButton="filled" (click)="moveAllItems()">
     {{ moveAllButtonName() }}
     <mat-icon aria-hidden="false" aria-label="Move all icon" [fontIcon]="moveAllButtonIcon()"></mat-icon>
   </button>

@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{ headerLabel() }}</h1>
 <div mat-dialog-content [innerHTML]="question"></div>
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="true">{{ confirmButtonLabel() }}</button>
-  <button mat-button mat-dialog-close cdkFocusInitial>{{ cancelButtonLabel() }}</button>
+  <button matButton="filled" [mat-dialog-close]="true">{{ confirmButtonLabel() }}</button>
+  <button matButton="filled" mat-dialog-close cdkFocusInitial>{{ cancelButtonLabel() }}</button>
 </div>

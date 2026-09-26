@@ -63,6 +63,12 @@
   border: none;
 }
 
+.button-add-message-of-the-day {
+  width: 100%;
+  border-color:var(--aswg-border-color, inherit)!important;
+  border-radius: 0 0 4px 4px;
+}
+
 @media (max-width: 800px) {
   .motd-interval {
     width: 100%;

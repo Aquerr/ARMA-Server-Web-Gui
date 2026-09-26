@@ -20,8 +20,8 @@
         <app-aswg-search-box labelText="Search mod..."
                              [control]="searchBoxControl"></app-aswg-search-box>
         <div class="mods-top-buttons">
-          <button mat-button (click)="openDownloadQueueModal()">Download queue</button>
-          <button mat-button routerLink="/mods-settings">CBA mod settings</button>
+          <button matButton="filled" (click)="openDownloadQueueModal()">Download queue</button>
+          <button matButton="filled" routerLink="/mods-settings">CBA mod settings</button>
           <app-mod-presets
             [enabledMods]="enabledMods()"
             (modPresetSelected)="onModPresetSelected($event)"
