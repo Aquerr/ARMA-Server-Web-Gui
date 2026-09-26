@@ -81,7 +81,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.themeService.setThemeOnAppInit();
     this.isMobileView();
     this.applicationService.getApplicationInfo().subscribe((response) => {
       this.version.set(response.application.version);
