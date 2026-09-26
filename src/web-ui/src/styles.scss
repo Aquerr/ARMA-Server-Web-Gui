@@ -19,6 +19,26 @@ a {
   color: var(--mat-sys-primary);
 }
 
+h1 {
+  font: 400 24px/32px Roboto, sans-serif;
+}
+
+h2 {
+  font: 500 20px/32px Roboto, sans-serif;
+}
+
+h3 {
+  font: 400 16px/28px Roboto, sans-serif;
+}
+
+h4 {
+  font: 400 16px/24px Roboto, sans-serif;
+}
+
+h5 {
+  font: 400 16px/20px Roboto, sans-serif;
+}
+
 .cdk-global-scrollblock {
   position: static !important;
   width: initial !important;

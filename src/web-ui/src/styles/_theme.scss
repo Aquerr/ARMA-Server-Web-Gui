@@ -2,10 +2,6 @@
 @use './light_theme-colors' as light;
 @use './dark_theme-colors' as dark;
 
-html {
-  --mat-button-filled-container-shape: 4px !important;
-}
-
 html[data-theme='light'] {
   color-scheme: light;
 
@@ -44,7 +40,21 @@ html[data-theme='dark'] {
     error: #c0392b,
     on-error: #fff
   ));
+
+  @include mat.checkbox-overrides((
+    unselected-icon-color: #444c56,
+    unselected-hover-icon-color: #444c56,
+    unselected-focus-icon-color: #444c56,
+  ));
 }
+
+@include mat.button-overrides((
+  filled-container-shape: 4px,
+  outlined-container-shape: 4px,
+  protected-container-shape: 4px,
+  text-container-shape: 4px,
+  tonal-container-shape: 4px,
+));
 
 .btn-danger {
   @include mat.button-overrides((
