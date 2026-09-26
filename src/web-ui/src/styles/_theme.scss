@@ -2,6 +2,10 @@
 @use './light_theme-colors' as light;
 @use './dark_theme-colors' as dark;
 
+html {
+  --mat-button-filled-container-shape: 4px !important;
+}
+
 html[data-theme='light'] {
   color-scheme: light;
 
@@ -33,8 +37,19 @@ html[data-theme='dark'] {
     primary: #46954a,
     surface: #22272e,
     surface-container: #2d333b,
+    on-primary: #fff,
     on-surface: #adbac7,
     surface-variant: #2d333b,
-    on-surface-variant: #adbac7
+    on-surface-variant: #adbac7,
+    error: #c0392b,
+    on-error: #fff
   ));
+}
+
+.btn-danger {
+  @include mat.button-overrides((
+    filled-container-color: var(--mat-sys-error),
+    filled-label-text-color: var(--mat-sys-on-error),
+    filled-ripple-color: var(--mat-sys-on-error)
+  ))
 }
