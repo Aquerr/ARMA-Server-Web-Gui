@@ -1,3 +1,5 @@
+@use "variables" as *;
+
 .security-fields {
   display: flex;
   flex-direction: column;
@@ -8,7 +10,7 @@
   margin-top: 20px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: $aswg-mobile-breakpoint) {
   .container {
     display: flex;
     flex-direction: column;

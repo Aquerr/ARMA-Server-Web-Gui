@@ -15,7 +15,7 @@
         <mat-label>SteamCMD Username</mat-label>
         <input name="steamCmdUsername" formControlName="steamCmdUsername" matInput type="text" />
       </mat-form-field>
-      <button mat-stroked-button style="width: fit-content;" (click)="showEditSteamCmdPasswordModal()">Change SteamCmd password</button>
+      <button matButton="outlined" style="width: fit-content;" (click)="showEditSteamCmdPasswordModal()">Change SteamCmd password</button>
       <mat-form-field>
         <mat-label>Custom SteamCMD Workshop Content Path</mat-label>
         <input
@@ -31,7 +31,7 @@
         <input name="steamWebApiToken" formControlName="steamWebApiToken" matInput type="text" />
       </mat-form-field>
       <div class="button-container">
-        <button mat-flat-button color="primary" (click)="save()">Save</button>
+        <button matButton="filled" (click)="save()">Save</button>
       </div>
     </form>
   </div>

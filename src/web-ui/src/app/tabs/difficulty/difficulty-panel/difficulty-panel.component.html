@@ -22,7 +22,7 @@
         }
       </mat-panel-title>
       <mat-panel-description>
-        <button mat-stroked-button class="active-button" (click)="toggleActive($event)">
+        <button matButton="outlined" class="active-button" (click)="toggleActive($event)">
           Active: {{ difficultyProfile().active }}
         </button>
       </mat-panel-description>
@@ -167,10 +167,10 @@
       </div>
       <hr>
       <div class="difficulty-panel-content-buttons">
-        <button mat-icon-button (click)="saveDifficulty(difficultyProfile())">
+        <button matIconButton (click)="saveDifficulty(difficultyProfile())">
           <mat-icon [fontIcon]="'save'"></mat-icon>
         </button>
-        <button mat-icon-button (click)="deleteDifficulty(difficultyProfile())">
+        <button matIconButton (click)="deleteDifficulty(difficultyProfile())">
           <mat-icon [fontIcon]="'delete'"></mat-icon>
         </button>
       </div>

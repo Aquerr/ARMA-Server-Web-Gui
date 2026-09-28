@@ -1,5 +1,8 @@
+@use "variables" as *;
+
 .difficulty-panel {
   border-radius: 0 !important;
+  background-color: $aswg-expansion-panel-color;
 }
 
 .difficulty-panel-content-options {
@@ -21,16 +24,17 @@
 }
 
 .difficulty-active {
-  background-color: var(--aswg-primary-color);
+  background: var(--aswg-color-brand) !important;
 }
 
-.difficulty-active:not(hover) {
-  background-color: var(--aswg-primary-color) !important;
+.difficulty-active:not(:hover) {
+  background: var(--aswg-color-brand) !important;
 }
 
 .active-button {
-  border: 1px black solid;
-  color: var(--aswg-primary-text-color) !important;
+  border: 1px solid var(--aswg-color-border);
+  color: var(--aswg-color-on-brand) !important;
   width: 8rem;
-  border-radius: var(--mat-button-outlined-container-shape) !important;
+  white-space: nowrap;
+  border-radius: var(--aswg-shape-control);
 }

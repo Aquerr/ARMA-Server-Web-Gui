@@ -19,7 +19,7 @@ import { NgOptimizedImage, NgStyle } from "@angular/common";
 import { MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
-import { FilesizePipe } from "../../../util/pipe/filesize.pipe";
+import { FilesizePipe } from "@app/util/pipe/filesize.pipe";
 import { MatCheckbox } from "@angular/material/checkbox";
 
 @Component({

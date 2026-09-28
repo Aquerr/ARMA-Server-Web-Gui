@@ -1,3 +1,5 @@
+@use "variables" as *;
+
 .width-35 {
   width: 35%;
 }
@@ -39,6 +41,7 @@
 
 .command-line-params {
   display: block;
+  background-color: darkgray;
   color: black;
   width: 100%;
   overflow-y: auto;
@@ -47,7 +50,7 @@
   resize: vertical;
 }
 
-@media (max-width: 800px) {
+@media (max-width: $aswg-mobile-breakpoint) {
   .container {
     display: flex;
     flex-direction: column;
@@ -68,7 +71,7 @@
 
   .server-directory-field,
   .hostname-field,
-  .mat-mdc-form-field {
+  mat-form-field {
     width: 100% !important;
   }
 

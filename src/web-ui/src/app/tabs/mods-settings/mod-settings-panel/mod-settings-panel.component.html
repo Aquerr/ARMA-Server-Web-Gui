@@ -5,12 +5,12 @@
         {{ form.controls.name.value }}
       </mat-panel-title>
       <div class="text-center">
-        <button mat-icon-button (click)="deleteClick($event)">
+        <button matIconButton (click)="deleteClick($event)">
           <mat-icon>delete</mat-icon>
         </button>
       </div>
       <mat-panel-description>
-        <button mat-stroked-button class="active-button" (click)="toggleActive($event)">
+        <button matButton="outlined" class="active-button" (click)="toggleActive($event)">
           Active: {{ form.controls.active.value }}
         </button>
       </mat-panel-description>
@@ -40,7 +40,7 @@
         </form>
       </div>
       <div class="button-container">
-        <button mat-flat-button color="primary" (click)="save()">Save</button>
+        <button matButton="filled" (click)="save()">Save</button>
       </div>
     </div>
   </mat-expansion-panel>

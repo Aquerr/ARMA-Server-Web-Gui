@@ -4,13 +4,13 @@
   z-index: 6;
   width: calc(100% - 380px);
   height: calc(100% - 3rem);
-  border: 4px dashed var(--aswg-border-color);
+  border: 4px dashed var(--aswg-color-border);
   opacity: 0.8;
   font-size: 3em;
 }
 
 .drag-and-drop-overlay-border {
-  background-color: var(--aswg-bg-primary-bg-color);
+  background-color: var(--aswg-color-surface);
   display: table-row;
 }
 

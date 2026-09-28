@@ -3,7 +3,7 @@
     <mat-expansion-panel-header
       [collapsedHeight]="'4rem'"
       class="mod-list-item-expansion-panel-header"
-      [ngStyle]="expanded ? { 'background-color': 'var(--aswg-input-bg-color)' } : null"
+      [ngStyle]="expanded ? { 'background-color': 'var(--aswg-color-surface-container)' } : null"
     >
       <mat-panel-title class="mod-list-item-expansion-panel-title">
         <div>
@@ -24,7 +24,8 @@
         </div>
         @if (mod.status === modStatus.MISSING_FILES) {
         } @else if (mod.status === modStatus.MISSING_DEPENDENCY_MODS) {
-          <mat-icon matTooltip="Missing dependencies" [color]="'warn'" style="margin-left: 10px">warning</mat-icon>
+          <mat-icon matTooltip="Missing dependencies" [color]="'warn'" class="mod-list-item-warning-icon">warning
+          </mat-icon>
         }
       </mat-panel-description>
     </mat-expansion-panel-header>
@@ -47,7 +48,7 @@
         <div class="mod-list-item-inner-panel-buttons">
           <div class="mod-list-item-inner-panel-actions-action">
             <button
-              mat-icon-button
+              matIconButton
               matTooltip="Force update"
               (click)="showForceUpdateConfirmationDialog(mod.workshopFileId, mod.name)"
             >
@@ -56,7 +57,7 @@
           </div>
           <div class="mod-list-item-inner-panel-actions-action">
             <button
-              mat-icon-button
+              matIconButton
               matTooltip="Delete the mod"
               (click)="showModDeleteConfirmationDialog()"
             >

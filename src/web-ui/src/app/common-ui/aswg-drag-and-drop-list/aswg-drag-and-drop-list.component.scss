@@ -1,3 +1,5 @@
+@use "variables" as *;
+
 .list-buttons {
   display: flex;
   justify-content: space-between;
@@ -59,7 +61,7 @@
   border: none;
 }
 
-@media (max-width: 800px) {
+@media (max-width: $aswg-mobile-breakpoint) {
   .list-wrapper {
     width: auto;
     margin-left: 0 !important;

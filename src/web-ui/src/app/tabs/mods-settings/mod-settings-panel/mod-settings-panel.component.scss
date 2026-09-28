@@ -1,13 +1,16 @@
+@use "variables" as *;
+
 .mod-settings-panel {
   border-radius: 0 !important;
+  background-color: $aswg-expansion-panel-color;
 }
 
 .mod-settings-active {
-  background-color: var(--aswg-primary-color);
+  background: var(--aswg-color-brand) !important;
 }
 
-.mod-settings-active:not(hover) {
-  background-color: var(--aswg-primary-color) !important;
+.mod-settings-active:not(:hover) {
+  background: var(--aswg-color-brand) !important;
 }
 
 edit-mod-settings-page-content {
@@ -15,7 +18,7 @@ edit-mod-settings-page-content {
 }
 
 .edit-mod-settings-add-new {
-  border-radius: var(--mat-button-outlined-container-shape);
+  border-radius: var(--aswg-shape-control);
   width: 100%;
 }
 
@@ -26,10 +29,11 @@ edit-mod-settings-page-content {
 }
 
 .active-button {
-  border: 1px black solid;
-  color: var(--aswg-primary-text-color) !important;
+  border: 1px solid var(--aswg-color-border);
+  color: var(--aswg-color-on-brand) !important;
   width: 8rem;
-  border-radius: var(--mat-button-outlined-container-shape) !important;
+  border-radius: var(--aswg-shape-control) !important;
+  white-space: nowrap;
 }
 
 .code {

@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AswgDownloadSnackbarDongleComponent } from './aswg-download-snackbar-dongle.component';
+import { AswgDownloadSnackbarDongleComponent } from "./aswg-download-snackbar-dongle.component";
 
-describe('AswgDownloadSnackbarDongleComponent', () => {
+describe("AswgDownloadSnackbarDongleComponent", () => {
   let component: AswgDownloadSnackbarDongleComponent;
   let fixture: ComponentFixture<AswgDownloadSnackbarDongleComponent>;
 
@@ -10,14 +10,14 @@ describe('AswgDownloadSnackbarDongleComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AswgDownloadSnackbarDongleComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(AswgDownloadSnackbarDongleComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -1,4 +1,7 @@
+@use "variables" as *;
+
 .server-console {
+  font: 400 14px/20px Roboto, sans-serif;
   background-color: #24292e;
   height: 350px;
   width: 100%;
@@ -8,7 +11,7 @@
   overflow: auto;
 }
 
-@media (max-width: 800px) {
+@media (max-width: $aswg-mobile-breakpoint) {
   .container {
     height: 100%;
     display: flex;

@@ -1,5 +1,5 @@
 .aswg-bg-blue {
-  background-color: var(--aswg-primary-color);
+  background-color: var(--aswg-color-brand);
 }
 
 .container-fluid {
@@ -7,7 +7,7 @@
 }
 
 mat-icon {
-  color: white;
+  color: var(--aswg-color-on-brand);
 }
 
 mat-icon:hover {
@@ -49,5 +49,5 @@ mat-icon:hover {
 }
 
 .username-container span {
-  color: white;
+  color: var(--aswg-color-on-brand);
 }

@@ -27,8 +27,7 @@
     <div>
       <button
         class="difficulty-add-new"
-        mat-stroked-button
-        color="primary"
+        matButton="outlined"
         (click)="addNewDifficulty()"
       >
         <mat-icon [fontIcon]="'add_circle'"></mat-icon>
@@ -36,6 +35,6 @@
     </div>
   </div>
   <div class="button-container">
-    <button mat-flat-button color="primary" (click)="saveAll()">Save</button>
+    <button matButton="filled" (click)="saveAll()">Save</button>
   </div>
 </div>

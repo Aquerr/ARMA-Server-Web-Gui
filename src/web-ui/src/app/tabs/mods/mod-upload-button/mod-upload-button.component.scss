@@ -1,9 +1,11 @@
+@use "variables" as *;
+
 mat-icon {
-  color: white;
+  color: var(--aswg-color-on-brand);
 }
 
 .container {
-  border: 1px solid var(--aswg-primary-color);
+  border: 1px solid var(--aswg-color-brand);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -12,7 +14,7 @@ mat-icon {
   cursor: pointer;
 }
 
-@media (max-width: 800px) {
+@media (max-width: $aswg-mobile-breakpoint) {
   .container {
     display: flex;
     flex-direction: column-reverse;

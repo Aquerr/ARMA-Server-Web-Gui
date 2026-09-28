@@ -1,5 +1,8 @@
+@use "variables" as *;
+@use '@angular/material' as mat;
+
 .aswg-list-item {
-  color: var(--aswg-primary-color);
+  color: var(--aswg-color-brand);
   width: 100% !important;
   display: flex;
   flex-direction: row;
@@ -12,21 +15,25 @@
 
 .nav-list {
   width: 100% !important;
+  padding: 0 !important;
 }
 
 .aswg-list-item-inactive {
-  color: #9999a9;
+  color: var(--aswg-color-text-muted);
 }
 
 mat-icon {
-  color: var(--aswg-primary-text-color);
+  color: var(--aswg-color-text);
 }
 
-@media (max-width: 800px) {
-  ::ng-deep .mdc-list-item__primary-text {
-    color: white !important;
+@media (max-width: $aswg-mobile-breakpoint) {
+  .nav-list {
+    @include mat.list-overrides((
+      list-item-label-text-color: var(--aswg-color-on-brand)
+    ));
   }
-  mat-icon {
-    color: white !important;
+
+  .aswg-list-item mat-icon {
+    color: var(--aswg-color-on-brand);
   }
 }

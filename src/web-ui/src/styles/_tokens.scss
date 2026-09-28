@@ -1,0 +1,38 @@
+html[data-theme] {
+  // Brand / interactive colors
+  --aswg-color-brand: var(--mat-sys-primary);
+  --aswg-color-brand-hover: color-mix(
+    in srgb,
+    var(--aswg-color-brand) 85%,
+    black
+  );
+  --aswg-color-on-brand: var(--mat-sys-on-primary);
+
+  // Text
+  --aswg-color-text: var(--mat-sys-on-surface);
+  --aswg-color-text-muted: var(--mat-sys-on-surface-variant);
+
+  // Typography
+  --aswg-type-page-title: var(--mat-sys-headline-small);
+  --aswg-type-section-title: var(--mat-sys-title-large);
+  --aswg-type-subsection-title: var(--mat-sys-title-medium);
+  --aswg-type-body-large: var(--mat-sys-body-large);
+  --aswg-type-body: var(--mat-sys-body-medium);
+  --aswg-type-menu-item: var(--mat-sys-label-large);
+
+  // Surfaces
+  --aswg-color-surface: var(--mat-sys-surface);
+  --aswg-color-surface-container: var(--mat-sys-surface-container);
+  --aswg-color-surface-container-highest: var(--mat-sys-surface-container-highest);
+
+  // Borders
+  --aswg-color-border: var(--mat-sys-outline-variant);
+  --aswg-color-border-strong: var(--mat-sys-outline);
+
+  // Shape
+  --aswg-shape-control: 4px;
+
+  // Other semantic colors
+  --aswg-color-icon: var(--mat-sys-primary);
+  --aswg-color-danger: var(--mat-sys-error);
+}

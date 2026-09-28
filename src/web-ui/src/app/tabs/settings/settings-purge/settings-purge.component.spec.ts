@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { SettingsPurgeComponent } from './settings-purge.component';
+import { SettingsPurgeComponent } from "./settings-purge.component";
 
-describe('SettingsPurgeComponent', () => {
+describe("SettingsPurgeComponent", () => {
   let component: SettingsPurgeComponent;
   let fixture: ComponentFixture<SettingsPurgeComponent>;
 
@@ -10,14 +10,14 @@ describe('SettingsPurgeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [SettingsPurgeComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(SettingsPurgeComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

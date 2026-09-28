@@ -17,7 +17,7 @@
     <div class="">
       <div class="buttons-section-top">
         <div>
-          <button mat-flat-button color="primary" (click)="addNewMission()">Add new mission</button>
+          <button matButton="filled" (click)="addNewMission()">Add new mission</button>
         </div>
       </div>
       <app-aswg-search-box labelText="Search mission..."
@@ -28,7 +28,7 @@
 
     <div class="buttons-section-bottom">
       <div>
-        <button mat-flat-button color="primary" (click)="save()">Save</button>
+        <button matButton="filled" (click)="save()">Save</button>
       </div>
       <div>
         <app-upload-mission (fileSelected)="onFileDropped($event)"></app-upload-mission>

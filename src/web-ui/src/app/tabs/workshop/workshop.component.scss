@@ -1,5 +1,4 @@
-.search-bar-wrapper {
-}
+@use "variables" as *;
 
 .search-by-mod-checkbox {
   margin-top: 10px;
@@ -19,7 +18,7 @@
   margin-bottom: 10px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: $aswg-mobile-breakpoint) {
   .container,
   .workshop-list {
     display: flex;

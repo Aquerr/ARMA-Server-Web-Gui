@@ -1,5 +1,4 @@
-.app-list-missions {
-}
+@use "variables" as *;
 
 .buttons-section-top {
   display: flex;
@@ -20,7 +19,7 @@
   align-items: center;
 }
 
-@media (max-width: 800px) {
+@media (max-width: $aswg-mobile-breakpoint) {
   .app-missions-tab {
     display: flex;
     flex-direction: column;

@@ -1,17 +1,10 @@
 <div class="container" style="height: 100%">
   @if (isMobile) {
-    <app-mobile-header
-      (changeThemeEmit)="changeTheme()"
-      [darkMode]="isDarkMode()"
-    ></app-mobile-header>
+    <app-mobile-header></app-mobile-header>
   } @else {
-    <app-desktop-header
-      class="desktop-header"
-      (changeThemeEmit)="changeTheme()"
-      [darkMode]="isDarkMode()"
-    ></app-desktop-header>
+    <app-desktop-header class="desktop-header"></app-desktop-header>
     <div class="side-menu-wrapper">
-      <app-side-menu [darkMode]="isDarkMode()"></app-side-menu>
+      <app-side-menu></app-side-menu>
       <ng-container [ngTemplateOutlet]="footer"></ng-container>
     </div>
   }

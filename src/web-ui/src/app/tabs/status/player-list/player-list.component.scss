@@ -1,7 +1,6 @@
 .player-list-container {
   border-radius: 5px;
-  box-shadow:
-    0 0 5px 0 #444c56;
+  box-shadow: 0 0 5px 0 var(--aswg-color-border-strong);
 }
 
 .player-list {
@@ -15,5 +14,5 @@
 }
 
 .player-list-item:not(:last-child) {
-  border-bottom: #2d333b solid 2px;
+  border-bottom: var(--aswg-color-surface-container) solid 2px;
 }

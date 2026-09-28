@@ -8,10 +8,10 @@
         </span>
         <span class="cdlc-buttons" [matTooltip]="cdlc.fileExists ? undefined : 'CDLC is not installed'">
           <button
-            mat-flat-button
-            [color]="cdlc.enabled ? 'accent' : 'primary'"
+            matButton="filled"
             (click)="toggleCdlc(cdlc)"
             [disabled]="!cdlc.fileExists"
+            [ngClass]="cdlc.enabled ? 'btn-danger' : ''"
           >{{ cdlc.enabled ? "Disable" : "Enable" }}</button>
         </span>
       </div>

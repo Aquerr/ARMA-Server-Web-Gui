@@ -7,10 +7,10 @@
 .nav-list-item {
   line-height: 2rem;
   width: 100%;
-  color: var(--aswg-primary-text-color);
+  color: var(--aswg-color-text);
   background: none;
-  border: 1px solid #384149;
-  border-radius: var(--mat-button-outlined-container-shape);
+  border: 1px solid var(--aswg-color-border-strong);
+  border-radius: var(--aswg-shape-control);
   display: flex;
   flex-direction: row;
   padding: 1rem;
@@ -30,7 +30,7 @@
   }
 
   mat-icon {
-    color: var(--aswg-primary-text-color);
+    color: var(--aswg-color-text);
   }
 }
 

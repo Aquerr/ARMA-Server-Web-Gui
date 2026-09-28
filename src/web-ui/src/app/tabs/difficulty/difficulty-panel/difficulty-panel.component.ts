@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, model, output } from "@angular/core";
-import { DifficultyProfile } from "../../../model/difficulty-profile.model";
-import { LoadingSpinnerMaskService } from "../../../service/loading-spinner-mask.service";
-import { ServerDifficultyService } from "../../../service/server-difficulty.service";
-import { NotificationService } from "../../../service/notification.service";
+import { DifficultyProfile } from "@model/difficulty-profile.model";
+import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { ServerDifficultyService } from "@service/server-difficulty.service";
+import { NotificationService } from "@service/notification.service";
 import { MatDialog } from "@angular/material/dialog";
 import {
   DifficultyDeleteConfirmDialogComponent
@@ -60,7 +60,8 @@ export class DifficultyPanelComponent {
     private difficultyService: ServerDifficultyService,
     private notificationService: NotificationService,
     private matDialog: MatDialog
-  ) {}
+  ) {
+  }
 
   toggleActive(event: MouseEvent) {
     event.stopPropagation();

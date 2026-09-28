@@ -19,15 +19,15 @@
   gap: 8px;
   padding: 8px 14px 8px 10px;
   border-radius: 20px;
-  background: var(--mdc-snackbar-container-color, #2d2d2d);
-  color: var(--aswg-icon-color);
+  background: var(--aswg-color-surface-container);
+  color: var(--aswg-color-icon);
 }
 
 .dongle-spinner {
   flex-shrink: 0;
 
   circle {
-    stroke: var(--aswg-icon-color) !important;
+    stroke: var(--aswg-color-icon) !important;
   }
 }
 

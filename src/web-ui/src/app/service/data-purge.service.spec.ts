@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { DataPurgeService } from './data-purge.service';
+import { DataPurgeService } from "./data-purge.service";
 
-describe('DataPurgeService', () => {
+describe("DataPurgeService", () => {
   let service: DataPurgeService;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('DataPurgeService', () => {
     service = TestBed.inject(DataPurgeService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });

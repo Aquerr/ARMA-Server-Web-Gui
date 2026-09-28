@@ -1,3 +1,5 @@
+@use "variables" as *;
+
 .buttons-section-bottom {
   display: flex;
   gap: 1rem;
@@ -12,7 +14,7 @@
   width: 100%;
 }
 
-@media (max-width: 800px) {
+@media (max-width: $aswg-mobile-breakpoint) {
   .editor-page-container {
     display: flex;
     align-items: center;

@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 import { AuthService } from "@service/auth.service";
 import { SideMenuComponent } from "@app/side-menu/side-menu.component";
+import { ThemeService } from "@service/util/theme.service";
 
 @Component({
   selector: "app-mobile-header",
@@ -16,12 +17,10 @@ import { SideMenuComponent } from "@app/side-menu/side-menu.component";
   styleUrls: ["./mobile-header.component.scss"]
 })
 export class MobileHeaderComponent {
-  public readonly darkMode = input<boolean>(true);
-  public readonly changeThemeEmit = output<void>();
-
   protected sideMenuExpanded = false;
 
   private readonly authService = inject(AuthService);
+  private readonly themeService = inject(ThemeService);
 
   protected readonly isAuthenticated = this.authService.isAuthenticated;
   protected readonly username = this.authService.username;
@@ -35,6 +34,6 @@ export class MobileHeaderComponent {
   }
 
   changeTheme() {
-    this.changeThemeEmit.emit();
+    this.themeService.changeTheme();
   }
 }

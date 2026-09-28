@@ -48,13 +48,7 @@ export class AswgSqfEditorComponent {
       // Single line and block comments
       .replace(/(\/\/.*|\/\*[\s\S]*?\*\/)/g, "<span class=\"sqf-comment\">\$&</span>")
       // Numbers
-      .replace(/\b\d+(\.\d+)?\b/g, "<span class=\"sqf-number\">\$&</span>")
-      // Core SQF Control structures / keywords
-      .replace(/\b(if|then|else|while|do|for|from|to|step|forEach|switch|case|default|exitWith|try|catch|private)\b/g, "<span class=\"sqf-keyword\">\$&</span>")
-      // Common SQF magical globals / commands
-      .replace(/\b(player|params|hint|format|createVehicle|getPos|setPos|alive|isNull|isNil|this|_this|_x|_exception)\b/g, "<span class=\"sqf-command\">\$&</span>")
-      // Local variables (prefixed with underscore)
-      .replace(/\b_[a-zA-Z0-9_]+\b/g, "<span class=\"sqf-variable\">\$&</span>");
+      .replace(/\b\d+(\.\d+)?\b/g, "<span class=\"sqf-number\">\$&</span>");
 
     editor.innerHTML = code;
   }

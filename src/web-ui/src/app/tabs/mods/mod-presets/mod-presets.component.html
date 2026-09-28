@@ -1,8 +1,7 @@
 <div class="mod-preset-menu-button">
-  <button mat-button [matMenuTriggerFor]="presetMenu">Mod presets</button>
+  <button matButton="filled" [matMenuTriggerFor]="presetMenu">Mod presets</button>
   <mat-menu #presetMenu [class]="'aswg-menu-default'">
-    <button mat-menu-item (click)="newPresetClick()">New preset...</button>
-    <mat-divider></mat-divider>
+    <button mat-menu-item class="mod-preset-menu-button" (click)="newPresetClick()">New preset...</button>
     <input
       style="display: none"
       type="file"
@@ -10,8 +9,7 @@
       (change)="modPresetImport($event)"
       accept="text/html"
     />
-    <button mat-menu-item (click)="presetImportClick()">Import preset...</button>
-    <mat-divider></mat-divider>
+    <button mat-menu-item class="mod-preset-menu-button" (click)="presetImportClick()">Import preset...</button>
     @for (preset of presetsToShow; track preset) {
       <app-mod-preset-item
         [presetName]="preset"

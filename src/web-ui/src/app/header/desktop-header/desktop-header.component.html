@@ -7,7 +7,7 @@
     </div>
     <div class="right-column">
       <div class="theme-container">
-        <button mat-icon-button color="primary" (click)="changeTheme()">
+        <button matIconButton (click)="changeTheme()">
           @if (!darkMode()) {
             <mat-icon matTooltip="Change Theme">nightlight</mat-icon>
           } @else if (darkMode()) {
@@ -22,7 +22,7 @@
         }
       </div>
       @if (isAuthenticated()) {
-        <button mat-icon-button color="primary" (click)="logout()" matTooltip="Logout">
+        <button matIconButton (click)="logout()" matTooltip="Logout">
           <mat-icon [fontIcon]="'logout'"></mat-icon>
         </button>
       }

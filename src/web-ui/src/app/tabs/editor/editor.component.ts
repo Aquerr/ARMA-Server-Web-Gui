@@ -1,9 +1,11 @@
 import {
   AfterViewInit,
-  Component, computed,
+  Component,
+  computed,
   inject,
   OnInit,
-  signal, viewChild,
+  signal,
+  viewChild,
   ViewEncapsulation
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";

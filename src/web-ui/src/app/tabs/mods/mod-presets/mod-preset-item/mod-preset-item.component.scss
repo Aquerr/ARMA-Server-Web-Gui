@@ -1,32 +1,33 @@
 .preset-item {
   display: flex;
   justify-content: space-between;
-  padding-left: 16px;
-  padding-right: 16px;
+  align-items: center;
+  width: 100%;
+  padding-left: var(--mat-menu-item-leading-spacing);
+  padding-right: var(--mat-menu-item-trailing-spacing);
   min-height: 48px;
-  color: var(--aswg-primary-text-color);
-  font-family: var(--mat-menu-item-label-text-font);
-  line-height: var(--mat-menu-item-label-text-line-height);
-  font-size: var(--mat-menu-item-label-text-size);
-  letter-spacing: var(--mat-menu-item-label-text-tracking);
-  font-weight: var(--mat-menu-item-label-text-weight);
+  font: var(--aswg-type-menu-item);
 }
 
 .preset-item-name {
+  margin: 0;
+  padding: 0;
   background: none;
   border: 0;
   cursor: pointer;
   word-break: break-word;
-  color: var(--aswg-primary-text-color);
-  font-family: var(--mat-menu-item-label-text-font);
-  line-height: var(--mat-menu-item-label-text-line-height);
-  font-size: var(--mat-menu-item-label-text-size);
-  letter-spacing: var(--mat-menu-item-label-text-tracking);
-  font-weight: var(--mat-menu-item-label-text-weight);
+  color: var(--aswg-color-text-muted);
+  font: var(--aswg-type-menu-item);
 }
 
 .preset-item-buttons {
   display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.preset-item-buttons button {
+  margin: 0;
 }
 
 .preset-item mat-divider {

@@ -13,7 +13,7 @@
           </mat-form-field>
 
           @if (user().id) {
-            <button mat-stroked-button (click)="showEditPasswordModal()">Change password</button>
+            <button matButton="outlined" (click)="showEditPasswordModal()">Change password</button>
           } @else {
             <mat-form-field>
               <mat-label>Password</mat-label>
@@ -48,8 +48,8 @@
         </form>
       </div>
       <div class="panel-bottom-buttons">
-        <button mat-icon-button (click)="save()"><mat-icon [fontIcon]="'save'"></mat-icon></button>
-        <button mat-icon-button (click)="delete()">
+        <button matIconButton (click)="save()"><mat-icon [fontIcon]="'save'"></mat-icon></button>
+        <button matIconButton (click)="delete()">
           <mat-icon [fontIcon]="'delete'"></mat-icon>
         </button>
       </div>

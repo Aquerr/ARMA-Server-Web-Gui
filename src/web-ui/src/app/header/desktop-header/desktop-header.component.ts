@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, output } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { finalize, take, tap } from "rxjs";
 import { MatIconButton } from "@angular/material/button";
@@ -6,6 +6,7 @@ import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
 import { AuthService } from "@service/auth.service";
 import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
+import { ThemeService } from "@service/util/theme.service";
 
 @Component({
   selector: "app-desktop-header",
@@ -20,16 +21,17 @@ import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service
   styleUrls: ["./desktop-header.component.scss"]
 })
 export class DesktopHeaderComponent {
-  public readonly darkMode = input<boolean>(true);
-  public readonly changeThemeEmit = output<void>();
   public readonly routerLinkClickEmitter = output<string>();
-
   private readonly authService = inject(AuthService);
+
   private readonly loadingSpinnerMaskService = inject(LoadingSpinnerMaskService);
   private readonly router = inject(Router);
-
+  private readonly themeService = inject(ThemeService);
   protected readonly isAuthenticated = this.authService.isAuthenticated;
+
   protected readonly username = this.authService.username;
+
+  public readonly darkMode = this.themeService.darkMode;
 
   logout() {
     this.loadingSpinnerMaskService.show();
@@ -44,6 +46,6 @@ export class DesktopHeaderComponent {
   }
 
   changeTheme() {
-    this.changeThemeEmit.emit();
+    this.themeService.changeTheme();
   }
 }

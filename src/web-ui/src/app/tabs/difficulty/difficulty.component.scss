@@ -3,7 +3,7 @@
 }
 
 .difficulty-add-new {
-  border-radius: var(--mat-button-outlined-container-shape);
+  border-radius: var(--aswg-shape-control);
   width: 100%;
 }
 
@@ -22,5 +22,5 @@
 }
 
 .difficulty-warning-icon {
-  --mat-icon-color: orange;
+  color: orange;
 }

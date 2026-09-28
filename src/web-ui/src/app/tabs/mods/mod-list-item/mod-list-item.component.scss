@@ -21,10 +21,6 @@
   flex-basis: auto !important;
 }
 
-.mat-expansion-panel-header-description {
-  flex-basis: auto !important;
-}
-
 .mod-list-item-inner-panel {
   width: 100%;
   display: flex;
@@ -56,7 +52,7 @@
 }
 
 .mod-list-item-expansion-panel-header {
-  background-color: var(--aswg-bg-primary-bg-color);
+  background-color: var(--aswg-color-surface);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -66,4 +62,10 @@
   justify-content: flex-end;
   align-items: center;
   margin-right: 0;
+  flex-basis: auto !important;
+}
+
+.mod-list-item-warning-icon {
+  color: var(--aswg-color-danger);
+  margin-left: 10px;
 }

@@ -1,7 +1,7 @@
 <div class="container">
   <div class="header-with-edit">
     <h1>General</h1>
-    <a mat-button [routerLink]="'/editor/'+ editorFileType.SERVER_CONFIG">Edit server.cfg</a>
+    <a matButton="filled" [routerLink]="'/editor/'+ editorFileType.SERVER_CONFIG">Edit server.cfg</a>
   </div>
   <div class="general-properties" [formGroup]="form">
     <section class="section-fields">
@@ -145,7 +145,7 @@
         <textarea class="command-line-params" disabled
                   [textContent]="formatCommandLineParams(commandLineParams())"></textarea>
         @if (form.controls.canOverwriteCommandLineParams.value && hasOverwriteCommandLineParamsPermission()) {
-          <button mat-flat-button color="primary" (click)="overrideCommandLineParams()">Overwrite</button>
+          <button matButton="filled" (click)="overrideCommandLineParams()">Overwrite</button>
         }
       </div>
     </section>
@@ -153,7 +153,7 @@
   <hr>
   <div class="buttons-section-bottom">
     <div>
-      <button mat-flat-button color="primary" (click)="save()">Save</button>
+      <button matButton="filled" (click)="save()">Save</button>
     </div>
   </div>
 </div>

@@ -5,10 +5,11 @@ import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service
 import { MatButton } from "@angular/material/button";
 import { MatTooltip } from "@angular/material/tooltip";
 import { NotificationService } from "@service/notification.service";
+import { NgClass } from "@angular/common";
 
 @Component({
   selector: "app-cdlc",
-  imports: [MatButton, MatTooltip],
+  imports: [MatButton, MatTooltip, NgClass],
   templateUrl: "./cdlc.component.html",
   styleUrl: "./cdlc.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush

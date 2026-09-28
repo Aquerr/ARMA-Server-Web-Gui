@@ -1,9 +1,11 @@
+@use "variables" as *;
+
 mat-form-field {
   margin-right: 8px;
   font-size: 16px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: $aswg-mobile-breakpoint) {
   .container {
     display: flex;
     flex-direction: column;

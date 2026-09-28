@@ -1,3 +1,5 @@
+@use "variables" as *;
+
 .network-properties-wrapper {
   display: flex;
   flex-direction: column;
@@ -23,7 +25,7 @@
   justify-content: space-between;
 }
 
-@media (max-width: 800px) {
+@media (max-width: $aswg-mobile-breakpoint) {
   .container {
     display: flex;
     flex-direction: column;

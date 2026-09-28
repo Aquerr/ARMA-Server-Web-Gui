@@ -3,7 +3,7 @@
     <app-vote-cmd-list-item [voteCmdFormGroup]="item" (deleted)="deleteItem(index)"></app-vote-cmd-list-item>
   }
   <div class="vote-cmd-add-new">
-    <button mat-icon-button color="primary" (click)="addNewCommand()">
+    <button matIconButton (click)="addNewCommand()">
       <mat-icon>add_circle</mat-icon>
     </button>
   </div>

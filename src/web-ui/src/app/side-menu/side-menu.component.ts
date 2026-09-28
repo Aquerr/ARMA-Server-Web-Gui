@@ -10,6 +10,7 @@ import { MatDivider, MatListItem, MatNavList } from "@angular/material/list";
 import { MatIcon } from "@angular/material/icon";
 import { NgClass } from "@angular/common";
 import { MatTooltip } from "@angular/material/tooltip";
+import { ThemeService } from "@service/util/theme.service";
 
 @Component({
   selector: "app-side-menu",
@@ -27,19 +28,19 @@ import { MatTooltip } from "@angular/material/tooltip";
 })
 export class SideMenuComponent {
   public readonly isMobile = input<boolean>(false);
-  public readonly darkMode = input<boolean>(true);
   public readonly routerLinkClickEmitter = output<string>();
-  public readonly changeThemeEmit = output<void>();
 
   protected isWorkshopActive: boolean = false;
   protected routePreCheck = new Map<string, (routerLink: string) => Observable<boolean>>();
+  protected readonly darkMode;
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private workshopService: WorkshopService,
     private notificationService: NotificationService,
-    private maskService: LoadingSpinnerMaskService
+    private maskService: LoadingSpinnerMaskService,
+    private themeService: ThemeService
   ) {
     if (this.authService.isAuthenticated()) {
       this.workshopService.canUseWorkshop().subscribe((response) => {
@@ -48,10 +49,11 @@ export class SideMenuComponent {
     }
 
     this.routePreCheck.set("/workshop", () => this.canUseWorkshopRoute());
+    this.darkMode = this.themeService.darkMode;
   }
 
   changeTheme() {
-    this.changeThemeEmit.emit();
+    this.themeService.changeTheme();
   }
 
   isAuthenticated() {

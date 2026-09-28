@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { AswgUser } from "../../../../service/users.service";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { AswgUser } from "@service/users.service";
 
 export interface UserEditFormControls {
   id: FormControl<number | null>;

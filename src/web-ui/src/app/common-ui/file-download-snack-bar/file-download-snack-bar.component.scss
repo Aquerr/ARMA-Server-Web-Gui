@@ -28,7 +28,7 @@
   align-items: center;
   padding: 2px;
   border-radius: 4px;
-  color: var(--aswg-icon-color);
+  color: var(--aswg-color-icon);
 
   &:hover {
     opacity: 1;
@@ -85,12 +85,12 @@
   align-items: center;
   padding: 2px;
   border-radius: 4px;
-  color: var(--aswg-icon-color);
+  color: var(--aswg-color-icon);
   flex-shrink: 0;
 
   &:hover {
     opacity: 1;
-    color: #f44336;
+    color: var(--aswg-color-danger);
   }
 
   mat-icon {

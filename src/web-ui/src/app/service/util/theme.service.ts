@@ -1,59 +1,52 @@
-import { Injectable } from "@angular/core";
+import { DOCUMENT } from "@angular/common";
+import { computed, inject, Injectable, signal } from "@angular/core";
+
+export type Theme = "light" | "dark";
+
+const THEME_STORAGE_KEY = "theme";
+const DEFAULT_THEME: Theme = "dark";
 
 @Injectable({
   providedIn: "root"
 })
 export class ThemeService {
-  WHITE_THEME_COLOR = "#4634b7";
+  private readonly document = inject(DOCUMENT);
 
-  setThemeOnAppInit() {
-    const theme = sessionStorage.getItem("theme");
-    if (theme) {
-      this.setTheme(theme);
-    } else {
-      this.setTheme("dark");
-    }
+  private readonly themeSignal = signal<Theme>(DEFAULT_THEME);
+
+  readonly theme = this.themeSignal.asReadonly();
+  readonly darkMode = computed(() => this.themeSignal() === "dark");
+
+  constructor() {
+    const theme = this.loadTheme();
+
+    this.themeSignal.set(theme);
+    this.applyTheme(theme);
   }
 
-  isDarkMode() {
-    const theme = sessionStorage.getItem("theme");
-    return theme !== null && theme === "dark";
+  setTheme(theme: Theme): void {
+    this.themeSignal.set(theme);
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    this.applyTheme(theme);
   }
 
-  changeTheme() {
-    const mainColorValue = document.documentElement.style.getPropertyValue("--aswg-primary-color");
-    if (this.WHITE_THEME_COLOR === mainColorValue) {
-      this.setTheme("dark");
-    } else {
-      this.setTheme("light");
-    }
+  changeTheme(): void {
+    this.setTheme(this.darkMode() ? "light" : "dark");
   }
 
-  private setTheme(theme: string) {
-    this.saveTheme(theme);
-    switch (theme) {
-      case "light":
-        document.documentElement.style.setProperty("--aswg-primary-color", "#4634b7");
-        document.documentElement.style.setProperty("--aswg-primary-text-color", "#000000");
-        document.documentElement.style.setProperty("--aswg-primary-color-hover", "#37288f");
-        document.documentElement.style.setProperty("--aswg-bg-primary-bg-color", "#ffffff");
-        document.documentElement.style.setProperty("--aswg-input-bg-color", "#efefef");
-        document.documentElement.style.setProperty("--aswg-chip-bg-color", "#acacac");
-        document.documentElement.style.setProperty("--aswg-icon-color", "#4634b7");
-        break;
-      case "dark":
-        document.documentElement.style.setProperty("--aswg-primary-color", "#46954a");
-        document.documentElement.style.setProperty("--aswg-primary-text-color", "#adbac7");
-        document.documentElement.style.setProperty("--aswg-primary-color-hover", "#3b803e");
-        document.documentElement.style.setProperty("--aswg-bg-primary-bg-color", "#22272e");
-        document.documentElement.style.setProperty("--aswg-input-bg-color", "#2d333b");
-        document.documentElement.style.setProperty("--aswg-chip-bg-color", "#ccc");
-        document.documentElement.style.setProperty("--aswg-icon-color", "#46954a");
-        break;
-    }
+  isDarkMode(): boolean {
+    return this.darkMode();
   }
 
-  private saveTheme(theme: string) {
-    sessionStorage.setItem("theme", theme);
+  private loadTheme(): Theme {
+    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+
+    return storedTheme === "light" || storedTheme === "dark"
+      ? storedTheme
+      : DEFAULT_THEME;
+  }
+
+  private applyTheme(theme: Theme): void {
+    this.document.documentElement.dataset["theme"] = theme;
   }
 }

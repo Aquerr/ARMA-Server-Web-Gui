@@ -1,3 +1,5 @@
+@use "variables" as *;
+
 .buttons-section-bottom {
   margin-top: 1rem;
   display: flex;
@@ -22,7 +24,7 @@
   gap: 10px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: $aswg-mobile-breakpoint) {
   .app-mods-tab {
     display: flex;
     align-items: center;

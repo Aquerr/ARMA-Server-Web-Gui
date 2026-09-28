@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from "@angular/core";
-import { ThemeService } from "@service/util/theme.service";
 import { ApplicationService } from "@service/application.service";
 import { IconRegistrarService } from "@service/icon-registrar.service";
 import { RouterOutlet } from "@angular/router";
@@ -74,26 +73,16 @@ export class AppComponent implements OnInit {
   version = signal<string>("");
 
   constructor(
-    private themeService: ThemeService,
     private applicationService: ApplicationService,
     private iconRegistrarService: IconRegistrarService
   ) {
   }
 
   ngOnInit() {
-    this.themeService.setThemeOnAppInit();
     this.isMobileView();
     this.applicationService.getApplicationInfo().subscribe((response) => {
       this.version.set(response.application.version);
     });
-  }
-
-  changeTheme() {
-    this.themeService.changeTheme();
-  }
-
-  isDarkMode() {
-    return this.themeService.isDarkMode();
   }
 
   isMobileView() {

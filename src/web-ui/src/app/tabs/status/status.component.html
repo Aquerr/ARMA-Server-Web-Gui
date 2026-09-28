@@ -12,11 +12,11 @@
               <mat-checkbox id="perform-update-checkbox" [(ngModel)]="performUpdate"></mat-checkbox>
               <span class="server-toggle-update-checkbox-text">Perform Arma update during start?</span>
             </div>
-            <button mat-flat-button color="primary" (click)="toggleServer()">{{ "START" }}</button>
+            <button matButton="filled" (click)="toggleServer()">{{ "START" }}</button>
           </div>
         } @else {
           <div>
-            <button mat-flat-button color="primary" (click)="toggleServer()">{{ "STOP" }}</button>
+            <button matButton="filled" (click)="toggleServer()">{{ "STOP" }}</button>
           </div>
         }
     </div>

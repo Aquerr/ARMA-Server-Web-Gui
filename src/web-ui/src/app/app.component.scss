@@ -1,6 +1,4 @@
-.page-content {
-  padding: 10px;
-}
+@use 'variables' as *;
 
 .router-wrapper {
   display: flex;
@@ -22,7 +20,7 @@
 
 .side-menu-wrapper {
   position: fixed;
-  border-right: #373e45 solid 1px;
+  border-right: var(--aswg-color-border) solid 1px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -33,15 +31,11 @@
   left: 0;
   right: 0;
   margin-top: 50px;
-  background-color: var(--aswg-bg-primary-bg-color);
-
-  ::ng-deep .mdc-list {
-    padding: 0 !important;
-  }
+  background-color: var(--aswg-color-surface);
 }
 
 .footer {
-  border-top: var(--aswg-border-color) solid 1px;
+  border-top: var(--aswg-color-border) solid 1px;
   padding: 15px 10px 15px 10px;
   display: flex;
   flex-direction: row;
@@ -55,7 +49,7 @@
   width: 100%;
 }
 
-@media (max-width: 800px) {
+@media (max-width: $aswg-mobile-breakpoint) {
   footer {
     display: flex;
     align-items: center;
