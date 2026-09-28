@@ -52,6 +52,8 @@
 }
 
 .mod-list-item-expansion-panel-header {
+  position: relative;
+  padding-right: 48px;
   background-color: var(--aswg-color-surface);
   display: flex;
   flex-direction: row;
@@ -68,4 +70,13 @@
 .mod-list-item-warning-icon {
   color: var(--aswg-color-danger);
   margin-left: 10px;
+}
+
+.mod-list-item-drag-handle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  color: var(--aswg-color-text-muted);
+  cursor: grab;
 }

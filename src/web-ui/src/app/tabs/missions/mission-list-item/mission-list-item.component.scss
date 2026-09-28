@@ -1,14 +1,16 @@
+@use "variables" as *;
+
 .list-item-container {
-  padding: 20px 10px;
+  padding: 20px 48px 20px 10px;
   border-bottom: solid 1px #444c56;
   display: grid;
   grid-template-columns: 1fr 1fr;
   flex-direction: row;
   align-items: center;
-  box-sizing: border-box;
   cursor: move;
   font-size: 14px;
   word-wrap: anywhere;
+  position: relative;
 }
 
 .additional-info {
@@ -32,4 +34,31 @@
 .additional-info-buttons {
   display: flex;
   flex-direction: row;
+}
+
+.mission-list-item-drag-handle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  color: var(--aswg-color-text-muted);
+}
+
+@media (max-width: $aswg-mobile-breakpoint) {
+  .list-item-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .additional-info-text {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .additional-info {
+    display: flex;
+    flex-direction: column;
+  }
 }
