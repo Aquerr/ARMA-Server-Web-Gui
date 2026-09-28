@@ -7,7 +7,8 @@
     "build": "ng build",
     "prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test --coverage",
+    "test-watch": "ng test --coverage --watch=true",
+    "test": "ng test --coverage --no-watch",
     "lint": "ng lint"
   },
   "private": true,
