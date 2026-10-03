@@ -1,6 +1,14 @@
-import { Component, ChangeDetectionStrategy, input, inject, OnInit, DestroyRef, ChangeDetectorRef } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  input,
+  OnInit
+} from "@angular/core";
 import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
-import { MatIconButton } from "@angular/material/button";
+import { MatFabButton } from "@angular/material/button";
 import { VoteCmdListItemComponent } from "./vote-cmd-list-item/vote-cmd-list-item.component";
 import { MatIcon } from "@angular/material/icon";
 import { VoteCmdFormGroupWrapperControls } from "@app/tabs/security/security-form.service";
@@ -10,9 +18,9 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
   selector: "app-vote-cmds-list",
   templateUrl: "./vote-cmds-list.component.html",
   imports: [
-    MatIconButton,
     VoteCmdListItemComponent,
-    MatIcon
+    MatIcon,
+    MatFabButton
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: "./vote-cmds-list.component.scss"
