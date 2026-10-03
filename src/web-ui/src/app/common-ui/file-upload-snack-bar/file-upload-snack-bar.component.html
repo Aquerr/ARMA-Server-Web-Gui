@@ -5,23 +5,24 @@
       <mat-icon>close</mat-icon>
     </button>
   </div>
-
-  @for (file of getUploadingFiles(); track file.fileName; let i = $index) {
-    <div class="file-row">
-      <div class="file-meta">
-        <div class="file-info">
-          <div class="file-name" [title]="file.fileName">{{ file.fileName }}</div>
-          <div class="file-size">{{ file.uploadedSize | filesize }} / {{ file.totalSize | filesize }}</div>
+  <div class="snackbar-body">
+    @for (file of getUploadingFiles(); track file.fileName; let i = $index) {
+      <div class="file-row">
+        <div class="file-meta">
+          <div class="file-info">
+            <span class="file-name" [title]="file.fileName">{{ file.fileName }}</span>
+            <div class="file-size">{{ file.uploadedSize | filesize }} / {{ file.totalSize | filesize }}</div>
+          </div>
+          <button class="cancel-btn" (click)="cancelUpload(file)" matTooltip="Cancel" aria-label="Cancel upload">
+            <mat-icon>close</mat-icon>
+          </button>
         </div>
-        <button class="cancel-btn" (click)="cancelUpload(file)" matTooltip="Cancel" aria-label="Cancel upload">
-          <mat-icon>close</mat-icon>
-        </button>
+        <mat-progress-bar mode="determinate"
+                          [value]="file.progress"
+                          [bufferValue]="file.totalSize"
+        />
+        <div class="progress-label">{{ file.progress }}%</div>
       </div>
-      <mat-progress-bar mode="determinate"
-                        [value]="file.progress"
-                        [bufferValue]="file.totalSize"
-      />
-      <div class="progress-label">{{ file.progress }}%</div>
-    </div>
-  }
+    }
+  </div>
 </div>

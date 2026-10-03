@@ -1,6 +1,6 @@
 .upload-snackbar {
   width: 300px;
-  color: var(--aswg-color-on-brand);
+  color: var(--aswg-color-text);
 }
 
 .snackbar-header {
@@ -8,7 +8,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 14px 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid color-mix(in rgb, var(--aswg-color-text), 20%);
   margin-bottom: 0;
 }
 

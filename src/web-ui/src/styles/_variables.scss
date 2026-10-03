@@ -1,4 +1,3 @@
-// Global static values
 $aswg-mobile-breakpoint: 800px;
 $aswg-page-padding: 10px;
 $aswg-spacing-large: 1.5rem;
@@ -7,3 +6,12 @@ $aswg-navbar-brand-size: 50px;
 $aswg-drag-transition-duration: 250ms;
 $aswg-drag-transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 $aswg-expansion-panel-color: #2d333b;
+$aswg-color-on-snackbar: #2d333b;
+
+html[data-theme='light'] {
+  $aswg-color-on-snackbar: #adbac7
+}
+
+html[data-theme='dark'] {
+  $aswg-color-on-snackbar: #adbac7
+}

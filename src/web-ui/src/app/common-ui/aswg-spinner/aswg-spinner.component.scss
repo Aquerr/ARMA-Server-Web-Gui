@@ -49,7 +49,7 @@
 .la-ball-clip-rotate-multiple {
   display: block;
   font-size: 0;
-  color: #fff;
+  color: var(--aswg-color-brand);
 }
 
 .la-ball-clip-rotate-multiple.la-dark {
@@ -179,6 +179,7 @@
     transform: translate(-50%, -50%) rotate(360deg);
   }
 }
+
 @-moz-keyframes ball-clip-rotate-multiple-rotate {
   0% {
     -moz-transform: translate(-50%, -50%) rotate(0deg);
@@ -193,6 +194,7 @@
     transform: translate(-50%, -50%) rotate(360deg);
   }
 }
+
 @-o-keyframes ball-clip-rotate-multiple-rotate {
   0% {
     -o-transform: translate(-50%, -50%) rotate(0deg);
@@ -207,6 +209,7 @@
     transform: translate(-50%, -50%) rotate(360deg);
   }
 }
+
 @keyframes ball-clip-rotate-multiple-rotate {
   0% {
     -webkit-transform: translate(-50%, -50%) rotate(0deg);

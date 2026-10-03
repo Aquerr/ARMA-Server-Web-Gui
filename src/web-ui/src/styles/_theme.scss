@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 @use './light_theme-colors' as light;
 @use './dark_theme-colors' as dark;
+@use "variables" as *;
 
 html {
   --mat-menu-item-leading-spacing: 12px;
@@ -19,6 +20,22 @@ html[data-theme='light'] {
     typography: Roboto,
     density: 0,
   ));
+
+  @include mat.theme-overrides((
+    primary: #594acb
+  ));
+
+  @include mat.icon-button-overrides((
+    icon-color: #594acb
+  ));
+
+  @include mat.fab-overrides((
+    small-container-color: #594acb
+  ));
+
+  @include mat.snack-bar-overrides((
+    container-color: #fcf8ff
+  ))
 }
 
 html[data-theme='dark'] {
@@ -56,6 +73,10 @@ html[data-theme='dark'] {
     icon-color: #46954a
   ));
 
+  @include mat.fab-overrides((
+    small-container-color: #46954a
+  ));
+
   @include mat.paginator-overrides((
     enabled-icon-color: #46954a
   ));
@@ -64,6 +85,10 @@ html[data-theme='dark'] {
     enabled-arrow-color: #46954a,
     focused-arrow-color: #46954a
   ));
+
+  @include mat.snack-bar-overrides((
+    container-color: #22272e
+  ))
 }
 
 
