@@ -92,7 +92,7 @@ public class JobService
 
     public boolean runNow(String jobName)
     {
-        AswgJob aswgJob = aswgJobsMap.get(jobName);
+        AswgJob aswgJob = AswgJobName.findByCode(jobName).map(this.aswgJobsMap::get).orElse(null);
         if (aswgJob == null)
         {
             log.error("Job '{}' not found!", jobName);

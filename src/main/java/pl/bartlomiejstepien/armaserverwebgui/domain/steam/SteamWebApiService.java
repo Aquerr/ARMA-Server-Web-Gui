@@ -148,7 +148,7 @@ public class SteamWebApiService
                     .stream()
                     .map(this.armaWorkshopModConverter::convert)
                     .toList();
-            log.info("Got workshop info for mods: {}", workshopMods);
+            log.info("Got workshop data for mods: {}", workshopMods);
             return workshopMods;
         }
         catch (Exception exception)

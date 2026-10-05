@@ -14,6 +14,7 @@ import { MatIcon } from "@angular/material/icon";
 import { DatePipe, NgClass } from "@angular/common";
 import { JobStatus } from "@model/job-settings.model";
 import { DialogService } from "@service/dialog.service";
+import { finalize } from "rxjs";
 
 @Component({
   selector: "app-job-view",
@@ -72,7 +73,11 @@ export class JobViewComponent implements OnInit {
     this.maskService.show();
 
     const parameters: Record<string, string> = {};
-    this.formService.getParametersControl(this.form).value.forEach((parameter: { name: string; description: string; value: string }) => {
+    this.formService.getParametersControl(this.form).value.forEach((parameter: {
+      name: string;
+      description: string;
+      value: string;
+    }) => {
       parameters[parameter.name] = parameter.value;
     });
 
@@ -95,10 +100,16 @@ export class JobViewComponent implements OnInit {
     const onCloseCallback = (result: boolean) => {
       if (!result) return;
       this.maskService.show();
-      this.jobSettingsService.runJobNow(this.jobName).subscribe(() => {
-        this.maskService.hide();
-        this.notificationService.successNotification("Job has been started!");
-      });
+      this.jobSettingsService.runJobNow(this.jobName)
+        .pipe(finalize(() => this.maskService.hide()))
+        .subscribe({
+          next: () => {
+            this.notificationService.successNotification("Job has been started!");
+          },
+          error: () => {
+            this.notificationService.errorNotification("Could not start job. Checks logs for more info.");
+          }
+        });
     };
     this.dialogService.openCommonConfirmationDialog({
       question: `Are you sure you want to start <strong>${this.jobName}</strong> job now?`
