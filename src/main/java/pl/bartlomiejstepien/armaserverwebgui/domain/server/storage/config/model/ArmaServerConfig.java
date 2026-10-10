@@ -39,7 +39,7 @@ public class ArmaServerConfig
     private int motdInterval = 5; // seconds
 
     @CfgProperty(name = "BattlEye", type = PropertyType.INTEGER)
-    private int battleEye = 1;
+    private int battlEye = 1;
 
     @CfgProperty(name = "persistent", type = PropertyType.INTEGER)
     private int persistent = 0;

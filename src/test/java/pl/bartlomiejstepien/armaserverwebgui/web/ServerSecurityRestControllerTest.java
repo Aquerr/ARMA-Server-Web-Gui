@@ -50,7 +50,7 @@ class ServerSecurityRestControllerTest extends BaseIntegrationTest
         armaServerConfig.setPassword("server_password");
         armaServerConfig.setPasswordAdmin("admin_password");
         armaServerConfig.setServerCommandPassword("command_password");
-        armaServerConfig.setBattleEye(1);
+        armaServerConfig.setBattlEye(1);
         armaServerConfig.setVerifySignatures(2);
         armaServerConfig.setAllowedFilePatching(1);
         armaServerConfig.setFilePatchingExceptions(new String[]{"312312312312321"});

@@ -23,7 +23,7 @@ export interface SecurityFormControls {
   serverPassword: FormControl<string>;
   serverAdminPassword: FormControl<string>;
   serverCommandPassword: FormControl<string>;
-  battleEye: FormControl<boolean>;
+  battlEye: FormControl<boolean>;
   verifySignatures: FormControl<boolean>;
   allowedFilePatching: FormControl<AllowedFilePatching>;
   filePatchingIgnoredClients: FormControl<string[]>;
@@ -48,7 +48,7 @@ export class SecurityFormService {
       serverPassword: this.fb.nonNullable.control(""),
       serverAdminPassword: this.fb.nonNullable.control(""),
       serverCommandPassword: this.fb.nonNullable.control(""),
-      battleEye: [true, [Validators.required]],
+      battlEye: [true, [Validators.required]],
       verifySignatures: [true, [Validators.required]],
       allowedFilePatching: [AllowedFilePatching.NOT_ALLOWED, [Validators.required]],
       filePatchingIgnoredClients: this.fb.nonNullable.control<string[]>([]),
@@ -68,7 +68,7 @@ export class SecurityFormService {
       serverPassword: data.serverPassword,
       serverAdminPassword: data.serverAdminPassword,
       serverCommandPassword: data.serverCommandPassword,
-      battleEye: data.battleEye,
+      battlEye: data.battlEye,
       verifySignatures: data.verifySignatures,
       allowedFilePatching: data.allowedFilePatching,
       filePatchingIgnoredClients: data.filePatchingIgnoredClients,
@@ -112,7 +112,7 @@ export class SecurityFormService {
       serverPassword: formValue.serverPassword,
       serverAdminPassword: formValue.serverAdminPassword,
       serverCommandPassword: formValue.serverCommandPassword,
-      battleEye: formValue.battleEye,
+      battlEye: formValue.battlEye,
       verifySignatures: formValue.verifySignatures,
       allowedFilePatching: formValue.allowedFilePatching,
       filePatchingIgnoredClients: formValue.filePatchingIgnoredClients,

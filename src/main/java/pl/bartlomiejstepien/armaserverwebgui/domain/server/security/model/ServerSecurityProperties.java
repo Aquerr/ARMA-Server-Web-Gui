@@ -15,7 +15,7 @@ public class ServerSecurityProperties
     private String serverPassword;
     private String serverAdminPassword;
     private String serverCommandPassword;
-    private boolean battleEye;
+    private boolean battlEye;
     private boolean verifySignatures;
     private AllowedFilePatching allowedFilePatching;
     private List<String> filePatchingIgnoredClients;

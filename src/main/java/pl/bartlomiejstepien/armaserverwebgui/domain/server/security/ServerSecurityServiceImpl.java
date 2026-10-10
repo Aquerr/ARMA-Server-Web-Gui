@@ -26,7 +26,7 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
                 .serverPassword(armaServerConfig.getPassword())
                 .serverAdminPassword(armaServerConfig.getPasswordAdmin())
                 .serverCommandPassword(armaServerConfig.getServerCommandPassword())
-                .battleEye(armaServerConfig.getBattleEye() == 1)
+                .battlEye(armaServerConfig.getBattlEye() == 1)
                 .verifySignatures(armaServerConfig.getVerifySignatures() == 2)
                 .allowedFilePatching(ofNullable(ServerSecurityProperties.AllowedFilePatching.findByConfigValue(armaServerConfig.getAllowedFilePatching()))
                         .orElseThrow(() -> new RuntimeException("Could not find AllowedFilePatching for config value = "
@@ -60,7 +60,7 @@ public class ServerSecurityServiceImpl implements ServerSecurityService
         armaServerConfig.setPassword(serverSecurityProperties.getServerPassword());
         armaServerConfig.setPasswordAdmin(serverSecurityProperties.getServerAdminPassword());
         armaServerConfig.setServerCommandPassword(serverSecurityProperties.getServerCommandPassword());
-        armaServerConfig.setBattleEye(serverSecurityProperties.isBattleEye() ? 1 : 0);
+        armaServerConfig.setBattlEye(serverSecurityProperties.isBattlEye() ? 1 : 0);
         armaServerConfig.setVerifySignatures(serverSecurityProperties.isVerifySignatures() ? 2 : 0);
         armaServerConfig.setAllowedFilePatching(serverSecurityProperties.getAllowedFilePatching().getConfigValue());
         armaServerConfig.setFilePatchingExceptions(serverSecurityProperties.getFilePatchingIgnoredClients().toArray(new String[0]));

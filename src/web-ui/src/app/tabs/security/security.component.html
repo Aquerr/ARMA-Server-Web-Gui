@@ -9,12 +9,12 @@
             matTooltip="Enables/Disable BattlEye anti-cheat engine. Requires installed BattlEye on server and clients."
             matTooltipPosition="right"
           >
-            <mat-label>BattleEye</mat-label>
-            <mat-select formControlName="battleEye">
+            <mat-label>BattlEye</mat-label>
+            <mat-select formControlName="battlEye">
               <mat-option [value]="true">Yes</mat-option>
               <mat-option [value]="false">No</mat-option>
             </mat-select>
-            @if (hasFormError('battleEye', 'required')) {
+            @if (hasFormError('battlEye', 'required')) {
               <mat-error>This field is required</mat-error>
             }
           </mat-form-field>
