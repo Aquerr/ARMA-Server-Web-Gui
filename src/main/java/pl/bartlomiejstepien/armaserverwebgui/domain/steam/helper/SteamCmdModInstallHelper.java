@@ -69,7 +69,7 @@ public class SteamCmdModInstallHelper
 
         saveModInDatabase(modData.getFileId(), Optional.ofNullable(modData.getWorkshopMod())
                 .map(WorkshopMod::getTitle)
-                .orElseGet(modDirectory::getDirectoryName), modDirectory, modData.getWorkshopMod());
+                .orElseGet(modDirectory::getModName), modDirectory, modData.getWorkshopMod());
         publishMessage(new WorkshopModInstallationStatus(modData.getFileId(), 100));
     }
 
