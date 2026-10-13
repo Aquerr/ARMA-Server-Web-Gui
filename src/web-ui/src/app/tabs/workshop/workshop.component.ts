@@ -9,11 +9,11 @@ import {
 } from "@angular/core";
 import { WorkshopMod, WorkshopSortingType } from "@model/workshop.model";
 import { WorkshopService } from "@service/workshop.service";
-import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { AbstractControl, FormControl, ReactiveFormsModule, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { ModInstallWebsocketService } from "./mod-install-websocket/mod-install-websocket.service";
 import { LoadingSpinnerMaskService } from "@service/loading-spinner-mask.service";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
-import { MatFormField, MatLabel } from "@angular/material/input";
+import { MatError, MatFormField, MatLabel } from "@angular/material/input";
 import { MatButton } from "@angular/material/button";
 import { WorkshopItemComponent } from "./workshop-item/workshop-item.component";
 import { MatCheckbox } from "@angular/material/checkbox";
@@ -34,7 +34,8 @@ import { AswgSearchBoxComponent } from "@common-ui/aswg-search-box/aswg-search-b
     MatCheckbox,
     MatSelect,
     MatOption,
-    AswgSearchBoxComponent
+    AswgSearchBoxComponent,
+    MatError
   ],
   styleUrls: ["./workshop.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -115,8 +116,8 @@ export class WorkshopComponent implements OnInit, OnDestroy {
     private readonly maskService: LoadingSpinnerMaskService,
     private readonly modInstallWebsocketService: ModInstallWebsocketService
   ) {
-    this.searchBoxControl = new FormControl<string>("", { nonNullable: true });
     this.searchByModIdControl = new FormControl<boolean>(false, { nonNullable: true });
+    this.searchBoxControl = new FormControl<string>("", { nonNullable: true, validators: [this.requireNumericIfSearchByModId(this.searchByModIdControl)] });
     this.sortingControl = new FormControl<WorkshopSortingType>(WorkshopSortingType.TEXT_RELEVANCE, { nonNullable: true });
     this.daysPeriodControl = new FormControl<number>(1, { nonNullable: true });
     this.modInstallWebsocketService.workShopModInstallStatus.subscribe((modInstallStatus) => {
@@ -139,11 +140,19 @@ export class WorkshopComponent implements OnInit, OnDestroy {
 
   onSearchBoxKeyDown($event: KeyboardEvent) {
     if ($event.code === "Enter" || $event.code === "NumpadEnter") {
-      this.searchWorkshop("", this.searchBoxControl.value);
+      if (this.searchBoxControl.invalid) {
+        return;
+      }
+
+      this.searchWorkshop("", this.searchBoxControl.value.trim());
     }
   }
 
   nextPage() {
+    if (this.nextCursor == "") {
+      return;
+    }
+
     this.searchWorkshop(this.nextCursor, this.lastSearchText);
   }
 
@@ -213,5 +222,17 @@ export class WorkshopComponent implements OnInit, OnDestroy {
 
   changePage(event: PageEvent) {
     this.showInstalledWorkshopsModsPage(event.pageIndex, event.pageSize);
+  }
+
+  private requireNumericIfSearchByModId(searchByModIdControl: FormControl<boolean>): ValidatorFn {
+    return (control: AbstractControl<string>): ValidationErrors | null => {
+      const isSearchByModId = searchByModIdControl.value;
+      const controlValue = control.value;
+      if (isSearchByModId && isNaN(Number(controlValue.trim()))) {
+        return { requireNumericIfSearchByModId: true };
+      } else {
+        return null;
+      }
+    };
   }
 }

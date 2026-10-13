@@ -1,5 +1,5 @@
 import { Component, input, output } from "@angular/core";
-import { MatFormField, MatInput, MatLabel, MatPrefix } from "@angular/material/input";
+import { MatError, MatFormField, MatInput, MatLabel, MatPrefix } from "@angular/material/input";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatIcon } from "@angular/material/icon";
 
@@ -11,7 +11,8 @@ import { MatIcon } from "@angular/material/icon";
     ReactiveFormsModule,
     MatPrefix,
     MatInput,
-    MatIcon
+    MatIcon,
+    MatError
   ],
   templateUrl: "./aswg-search-box.component.html",
   styleUrl: "./aswg-search-box.component.scss"

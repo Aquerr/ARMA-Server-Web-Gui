@@ -3,4 +3,7 @@
   <input matInput type="text" [formControl]="control()" [placeholder]="placeholderText()"
          (keydown)="onKeyDown($event)" />
   <span matTextPrefix><mat-icon>search</mat-icon></span>
+  <mat-error>
+    <ng-content select="[errors]"></ng-content>
+  </mat-error>
 </mat-form-field>

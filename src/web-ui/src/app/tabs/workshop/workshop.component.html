@@ -2,9 +2,18 @@
   <h1>Workshop</h1>
   <div class="search-bar-wrapper">
     <div style="display: flex; flex-direction: row">
-      <app-aswg-search-box labelText="Search workshop..."
-                           [control]="searchBoxControl"
-                           (keyDownEvent)="onSearchBoxKeyDown($event)"></app-aswg-search-box>
+      <div>
+        <app-aswg-search-box labelText="Search workshop..."
+                             [control]="searchBoxControl"
+                             (keyDownEvent)="onSearchBoxKeyDown($event)">
+          <ng-container errors>
+            @if (searchBoxControl?.hasError("requireNumericIfSearchByModId")) {
+              Mod id must be numeric!
+            }
+            <mat-error></mat-error>
+          </ng-container>
+        </app-aswg-search-box>
+      </div>
       <div class="search-by-mod-checkbox">
         <mat-checkbox [formControl]="searchByModIdControl">Search by mod id</mat-checkbox>
       </div>
