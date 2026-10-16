@@ -1,7 +1,7 @@
 import { HttpClient, HttpEvent } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Mod } from "@model/mod.model";
+import { Mod, ModPreset } from "@model/mod.model";
 import { API_BASE_URL } from "@environments/environment";
 
 @Injectable({
@@ -15,61 +15,83 @@ export class ServerModsService {
   constructor(private httpClient: HttpClient) {
   }
 
-  uploadMod(formData: FormData): Observable<HttpEvent<object>> {
+  public uploadMod(formData: FormData): Observable<HttpEvent<object>> {
     return this.httpClient.post(this.MODS_FILES_URL, formData, {
       reportUploadProgress: true,
       observe: "events"
     });
   }
 
-  checkModFilesExists(modFileName: string): Observable<DoesModExistsResponse> {
+  public checkModFilesExists(modFileName: string): Observable<DoesModExistsResponse> {
     return this.httpClient.get<DoesModExistsResponse>(
       `${this.MODS_FILES_URL}/${modFileName}/exists`
     );
   }
 
-  getInstalledMods(): Observable<GetModsResponse> {
+  public getInstalledMods(): Observable<GetModsResponse> {
     return this.httpClient.get<GetModsResponse>(this.MODS_URL);
   }
 
-  deleteMod(modName: string): Observable<void> {
+  public deleteMod(modName: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.MODS_URL}`, { body: { name: modName } });
   }
 
-  saveEnabledMods(saveEnabledModsRequest: SaveEnabledModsRequest) {
+  public saveEnabledMods(saveEnabledModsRequest: SaveEnabledModsRequest) {
     return this.httpClient.post<void>(`${this.MODS_URL}/enabled`, saveEnabledModsRequest);
   }
 
-  manageMod(name: string) {
+  public manageMod(name: string) {
     return this.httpClient.post(`${this.MODS_URL}/manage`, { name: name });
   }
 
-  getModPresetsNames(): Observable<ModPresetNamesResponse> {
-    return this.httpClient.get<ModPresetNamesResponse>(`${this.MODS_PRESETS_URL}`);
+  public getModPresetByName(name: string): Observable<ModPreset> {
+    return this.httpClient.get<ModPreset>(`${this.MODS_PRESETS_URL}`, {
+      params: {
+        name: name
+      }
+    }
+    );
   }
 
-  importPreset(request: ModPresetImportRequest) {
+  public getModPresetById(id: number): Observable<ModPreset> {
+    return this.httpClient.get<ModPreset>(`${this.MODS_PRESETS_URL}`, {
+      params: {
+        id: id
+      }
+    }
+    );
+  }
+
+  public getModPresetsNames(): Observable<ModPresetNamesResponse> {
+    return this.httpClient.get<ModPresetNamesResponse>(`${this.MODS_PRESETS_URL}`, {
+      params: {
+        "names-only": true
+      }
+    });
+  }
+
+  public importPreset(request: ModPresetImportRequest) {
     return this.httpClient.post(`${this.MODS_PRESETS_URL}/import`, request);
   }
 
-  selectPreset(request: ModPresetSelectRequest) {
+  public selectPreset(request: ModPresetSelectRequest) {
     return this.httpClient.post(`${this.MODS_PRESETS_URL}/select`, request);
   }
 
-  deletePreset(presetName: string): Observable<ModPresetDeleteResponse> {
+  public deletePreset(presetName: string): Observable<ModPresetDeleteResponse> {
     return this.httpClient.delete<ModPresetDeleteResponse>(
       `${this.MODS_PRESETS_URL}/${presetName}`
     );
   }
 
-  savePreset(request: ModPresetSaveRequest): Observable<ModPresetSaveResponse> {
+  public savePreset(request: ModPresetSaveRequest): Observable<ModPresetSaveResponse> {
     return this.httpClient.put<ModPresetSaveResponse>(
       `${this.MODS_PRESETS_URL}/${request.name}`,
       request
     );
   }
 
-  deleteNotManagedMod(directoryName: string) {
+  public deleteNotManagedMod(directoryName: string) {
     return this.httpClient.delete(`${this.MODS_URL}/not-managed`, { body: { directoryName: directoryName } });
   }
 }

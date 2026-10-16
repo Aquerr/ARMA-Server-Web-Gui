@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModPresetsAdd;
 import pl.bartlomiejstepien.armaserverwebgui.application.security.authorize.annotation.HasPermissionModPresetsDelete;
@@ -35,18 +38,28 @@ public class ModsPresetsRestController
 
     @HasPermissionModPresetsView
     @GetMapping
-    public ModPresetNamesResponse getModPresetsNames()
+    public ResponseEntity<?> getModPresets(
+            @RequestParam(value = "id", required = false) Long id,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "names-only", required = false) Boolean returnNamesOnly
+    )
     {
-        return new ModPresetNamesResponse(this.modPresetService.getModPresetsNames().stream()
-                .sorted(String.CASE_INSENSITIVE_ORDER)
-                .toList());
-    }
+        if (id != null)
+        {
+            return ResponseEntity.ok(this.modPresetService.getModPreset(id));
+        }
+        else if (name != null)
+        {
+            return ResponseEntity.ok(this.modPresetService.getModPreset(name));
+        }
+        else if (Boolean.TRUE.equals(returnNamesOnly))
+        {
+            return ResponseEntity.ok(new ModPresetNamesResponse(this.modPresetService.getModPresetsNames().stream()
+                    .sorted(String.CASE_INSENSITIVE_ORDER)
+                    .toList()));
+        }
 
-    @HasPermissionModPresetsView
-    @GetMapping("/{id}")
-    public ModPreset getModPreset(@PathVariable("id") Long id)
-    {
-        return this.modPresetService.getModPreset(id);
+        return ResponseEntity.ok().body(this.modPresetService.getModPresets());
     }
 
     @HasPermissionModPresetsAdd

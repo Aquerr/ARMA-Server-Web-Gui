@@ -19,8 +19,9 @@ export enum ModStatus {
 }
 
 export interface ModPresetEntry {
-  id: number;
+  id?: number;
   name: string;
+  modId: number;
 }
 
 export interface ModPreset {

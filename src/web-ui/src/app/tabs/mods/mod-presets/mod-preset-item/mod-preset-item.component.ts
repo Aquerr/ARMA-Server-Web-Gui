@@ -18,6 +18,7 @@ export class ModPresetItemComponent {
   @Output() presetSelected = new EventEmitter<string>();
   @Output() presetDeleted = new EventEmitter<string>();
   @Output() presetSaved = new EventEmitter<string>();
+  @Output() presetDownloaded = new EventEmitter<string>();
 
   deletePreset($event: MouseEvent) {
     $event.stopPropagation();
@@ -31,5 +32,10 @@ export class ModPresetItemComponent {
 
   selectPreset() {
     this.presetSelected.emit(this.presetName);
+  }
+
+  downloadPreset(event: MouseEvent) {
+    event.stopPropagation();
+    this.presetDownloaded.emit(this.presetName);
   }
 }

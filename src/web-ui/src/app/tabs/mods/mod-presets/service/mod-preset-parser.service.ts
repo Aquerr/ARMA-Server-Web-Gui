@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ModPreset, ModPresetEntry } from "../../../../model/mod.model";
+import { ModPreset, ModPresetEntry } from "@model/mod.model";
 
 @Injectable({
   providedIn: "root"
@@ -20,7 +20,7 @@ export class ModPresetParserService {
       const modId = this.getModIdFromRow(row);
       const modTitle = this.getModTitleFromRow(row);
       if (modId != null && modTitle != null) {
-        mods.push({ id: modId, name: modTitle });
+        mods.push({ name: modTitle, modId: modId });
       }
     }
     const presetName

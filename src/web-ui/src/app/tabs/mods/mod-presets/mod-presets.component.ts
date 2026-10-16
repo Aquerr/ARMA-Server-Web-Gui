@@ -28,7 +28,8 @@ import {
   ModToImport
 } from "./mod-preset-import-confirmation-dialog/mod-preset-import-confirmation-dialog.component";
 import { WorkshopService } from "@service/workshop.service";
-import { map } from "rxjs";
+import { finalize, map } from "rxjs";
+import { ModPresetHtmlGeneratorService } from "@app/tabs/mods/mod-presets/service/mod-preset-html-generator.service";
 
 @Component({
   selector: "app-mod-presets",
@@ -65,6 +66,7 @@ export class ModPresetsComponent {
     private dialogService: DialogService,
     private modPresetParserService: ModPresetParserService,
     private worksopService: WorkshopService,
+    private modPresetHtmlGeneratorService: ModPresetHtmlGeneratorService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
     this.reloadModPresets();
@@ -93,12 +95,12 @@ export class ModPresetsComponent {
         this.worksopService.getInstalledWorkshopItems().pipe(map((response) => {
           return modPreset.entries.map((entry) => {
             const modToImport = {
-              id: entry.id,
+              id: entry.modId,
               name: entry.name,
               status: ModStatus.MISSING_FILES
             };
 
-            const foundMod = response.mods.find((workshopMod) => workshopMod.fileId === entry.id);
+            const foundMod = response.mods.find((workshopMod) => workshopMod.fileId === entry.modId);
             if (foundMod) {
               modToImport.status = ModStatus.READY;
             } else {
@@ -174,6 +176,26 @@ export class ModPresetsComponent {
 
   onPresetDelete(presetName: string) {
     this.showModalDeletePreset(presetName);
+  }
+
+  onPresetDownload(presetName: string) {
+    this.downloadModPreset(presetName);
+  }
+
+  downloadModPreset(presetName: string) {
+    this.maskService.show();
+    this.modsService.getModPresetByName(presetName)
+      .pipe(finalize(() => this.maskService.hide()))
+      .subscribe((modPreset) => {
+        const presetHtml = this.modPresetHtmlGeneratorService.generateHtmlFile(modPreset);
+        const blob = new Blob([presetHtml], { type: "text/html;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = presetName + ".html";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
   }
 
   private removePresetFromList(list: string[], presetName: string) {

@@ -15,10 +15,12 @@ import pl.bartlomiejstepien.armaserverwebgui.BaseIntegrationTest;
 import pl.bartlomiejstepien.armaserverwebgui.TestUtils;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModPresetService;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.ModService;
+import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.dto.ModPreset;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.InstalledModEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetEntity;
 import pl.bartlomiejstepien.armaserverwebgui.domain.server.mod.model.ModPresetSaveParams;
 import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetEntryRepository;
+import pl.bartlomiejstepien.armaserverwebgui.repository.ModPresetRepository;
 
 import java.util.List;
 
@@ -30,6 +32,8 @@ import static org.mockito.Mockito.verify;
 class ModsPresetsRestControllerTest extends BaseIntegrationTest
 {
     @Autowired
+    private ModPresetRepository modPresetRepository;
+    @Autowired
     private ModPresetService modPresetService;
     @Autowired
     private ModService modService;
@@ -37,6 +41,50 @@ class ModsPresetsRestControllerTest extends BaseIntegrationTest
     private ModPresetEntryRepository modPresetEntryRepository;
     @Captor
     private ArgumentCaptor<List<ModPresetEntity.EntryEntity>> modPresetEntryEntityArgumentCaptor;
+
+    @Test
+    void shouldGetModPresetById()
+    {
+        // given
+        var modPresetEntity = modPresetRepository.saveAndFlush(ModPresetEntity.builder()
+                .name("Get_Test")
+                .build());
+
+        // when
+        var response = getAuthenticatedRequest("/api/v1/mods-presets?id=" + modPresetEntity.getId(), ModPreset.class);
+
+        // then
+        assertThat(response.getBody()).satisfies(modPreset -> {
+            assertThat(modPreset.getId()).isEqualTo(modPresetEntity.getId());
+            assertThat(modPreset.getName()).isEqualTo("Get_Test");
+            assertThat(modPreset.getEntries()).isEmpty();
+        });
+
+        // teardown
+        modPresetRepository.deleteById(modPresetEntity.getId());
+    }
+
+    @Test
+    void shouldGetModPresetByName()
+    {
+        // given
+        var modPresetEntity = modPresetRepository.saveAndFlush(ModPresetEntity.builder()
+                .name("Get_Test")
+                .build());
+
+        // when
+        var response = getAuthenticatedRequest("/api/v1/mods-presets?name=" + modPresetEntity.getName(), ModPreset.class);
+
+        // then
+        assertThat(response.getBody()).satisfies(modPreset -> {
+            assertThat(modPreset.getId()).isEqualTo(modPresetEntity.getId());
+            assertThat(modPreset.getName()).isEqualTo("Get_Test");
+            assertThat(modPreset.getEntries()).isEmpty();
+        });
+
+        // teardown
+        modPresetRepository.deleteById(modPresetEntity.getId());
+    }
 
     @Test
     void shouldGetModPresetsNames()
@@ -49,7 +97,7 @@ class ModsPresetsRestControllerTest extends BaseIntegrationTest
         }
 
         // when
-        var response = getAuthenticatedRequest("/api/v1/mods-presets", ModsPresetsRestController.ModPresetNamesResponse.class);
+        var response = getAuthenticatedRequest("/api/v1/mods-presets?names-only=true", ModsPresetsRestController.ModPresetNamesResponse.class);
 
         // then
         assertThat(response.getBody().getPresets()).containsExactly(
